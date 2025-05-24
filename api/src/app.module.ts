@@ -14,6 +14,7 @@ import { RolesGuard } from "./_guards/roles.guard";
 import { PaymentsModule } from "./payments/payments.module";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { ContactModule } from "./contact/contact.module";
+import { ChatModule } from "./chat/chat.module";
 
 @Module({
 	imports: [
@@ -50,6 +51,7 @@ import { ContactModule } from "./contact/contact.module";
 		FavoritesModule,
 		PaymentsModule,
 		ContactModule,
+		ChatModule,
 	],
 	providers: [
 		JwtService,

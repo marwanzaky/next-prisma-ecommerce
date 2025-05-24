@@ -27,7 +27,8 @@
 			"@redux/*": ["redux/*"],
 			"@services/*": ["redux/services/*"],
 			"@utils/*": ["./utils/*"],
-			"@data/*": ["./data/*"]
+			"@data/*": ["./data/*"],
+			"@lib/*": ["./lib/*"]
 		}
 	},
 	"include": [
