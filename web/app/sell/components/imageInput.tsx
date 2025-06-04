@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 
-import Icon from "@ui/Icon";
+import Icon from "_shared/ui/icon";
 
 type ImageInputProps = {
 	value?: string | undefined;
@@ -45,7 +45,7 @@ export default function ImageInput({ value, onChange }: ImageInputProps) {
 	};
 
 	return (
-		<div className="w-16 h-16 rounded-xl overflow-hidden outline-none shadow-[0_0_0_1pt_#ecf0f1] focus:shadow-[0_0_0_2pt_cornflowerblue]">
+		<div className="w-full h-16 rounded-xl overflow-hidden outline-none shadow-[0_0_0_1pt_#ecf0f1] focus:shadow-[0_0_0_2pt_cornflowerblue]">
 			<input
 				ref={inputRef}
 				className="hidden"
@@ -64,10 +64,10 @@ export default function ImageInput({ value, onChange }: ImageInputProps) {
 			) : (
 				<div
 					role="button"
-					className="h-full w-full bg-custom-bg-dark flex justify-center items-center"
+					className="h-full w-full bg-custom-background-foreground flex justify-center items-center"
 					onClick={() => inputRef.current?.click()}
 				>
-					<Icon className="filter-placeholder" icon="upload_file" />
+					<Icon className="filter-custom-placeholder" icon="upload_file" />
 				</div>
 			)}
 		</div>

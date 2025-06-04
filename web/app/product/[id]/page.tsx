@@ -1,6 +1,4 @@
-import Layout from "@components/layout";
-import Product from "@components/product";
-
+import ProductDetails from "@components/productDetails";
 import { productsService } from "@redux/services/productsService";
 
 import { IProduct } from "_shared/interfaces";
@@ -13,11 +11,7 @@ export default async function Page({
 	const { id } = await params;
 	const product = await getProduct(id);
 
-	return (
-		<Layout title={product.name}>
-			<Product product={product} />
-		</Layout>
-	);
+	return <ProductDetails product={product} />;
 }
 
 async function getProduct(id: string): Promise<IProduct> {

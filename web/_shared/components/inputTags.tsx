@@ -5,15 +5,15 @@ import { forwardRef, useEffect, useState } from "react";
 import clsx from "clsx";
 import { cva } from "class-variance-authority";
 
-import Icon from "@ui/Icon";
+import Icon from "_shared/ui/icon";
 
 import { Badge } from "./badge";
 
 const inputTagsVariants = cva(
 	[
 		"w-full flex flex-wrap gap-2",
-		"rounded-xl bg-bg-dark",
-		"outline-none shadow-[0_0_0_1pt_#ecf0f1] focus-within:shadow-[0_0_0_2pt_cornflowerblue]",
+		"rounded-xl bg-custom-background-foreground",
+		"outline-none shadow-[0_0_0_1pt_#ecf0f1] focus-within:shadow-[0_0_0_2pt_cornflowerblue] transition-shadow",
 	],
 	{
 		variants: {

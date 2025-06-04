@@ -14,12 +14,14 @@ import { productsService } from "@redux/services/productsService";
 import { selectCartTotalStr } from "@redux/selectors/cartSelectors";
 
 import { useQuery } from "@tanstack/react-query";
+import { useToast } from "_shared/shadcn/hooks/use-toast";
 
 type CartItem = IProduct & { imgUrl: string; quantity: number; total: number };
 
 export function useCart() {
 	const dispatch = useDispatch<AppDispatch>();
 
+	const { toast } = useToast();
 	const { items } = useAppSelector((state) => state.cartReducer);
 	const cartTotalStr = useAppSelector(selectCartTotalStr);
 
@@ -76,7 +78,7 @@ export function useCart() {
 			header: "",
 			type: "action",
 			action: (row) => {
-				dispatch(deleteCartItemAsync({ productId: row._id }));
+				dispatch(deleteCartItemAsync({ product: row, toast }));
 			},
 			actionIcon: "delete",
 			className: "sm:w-[15%]",

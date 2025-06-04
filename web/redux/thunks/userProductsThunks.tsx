@@ -2,7 +2,8 @@ import { productsService } from "@redux/services/productsService";
 import { usersService } from "@redux/services/usersService";
 import { RootState } from "@redux/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IUpdateProduct } from "_shared/interfaces";
+import { IProduct, IUpdateProduct } from "_shared/interfaces";
+import { ToastService } from "_shared/shadcn/hooks/use-toast";
 
 export const getUserProductsAsync = createAsyncThunk(
 	"userProducts/getUserProducts",
@@ -19,7 +20,10 @@ export const getUserProductsAsync = createAsyncThunk(
 
 export const postUserProductAsync = createAsyncThunk(
 	"cart/postUserProduct",
-	async (data: Required<IUpdateProduct>, { getState, rejectWithValue }) => {
+	async (
+		{ data, toast }: { data: Required<IUpdateProduct>; toast: ToastService },
+		{ getState, rejectWithValue },
+	) => {
 		const state = getState() as RootState;
 
 		try {
@@ -28,7 +32,11 @@ export const postUserProductAsync = createAsyncThunk(
 				data,
 			);
 
-			alert("The item successfully added to the cart");
+			toast({
+				title: "Product listed",
+				description: `${data.name} has been added successfully.`,
+				duration: 3000,
+			});
 
 			return updatedCart;
 		} catch (error: any) {
@@ -40,13 +48,29 @@ export const postUserProductAsync = createAsyncThunk(
 export const updateUserProductAsync = createAsyncThunk(
 	"userProducts/updateUserProduct",
 	async (
-		{ id, data }: { id: string; data: IUpdateProduct },
+		{
+			id,
+			data,
+			toast,
+		}: { id: string; data: IUpdateProduct; toast: ToastService },
 		{ getState, rejectWithValue },
 	) => {
 		const state = getState() as RootState;
 
 		try {
-			return await productsService.update(state.authReducer.token, id, data);
+			const response = await productsService.update(
+				state.authReducer.token,
+				id,
+				data,
+			);
+
+			toast({
+				title: "Product updated",
+				description: `${data.name} has been successfully updated.`,
+				duration: 3000,
+			});
+
+			return response;
 		} catch (error: any) {
 			return rejectWithValue(error.message);
 		}
@@ -55,11 +79,25 @@ export const updateUserProductAsync = createAsyncThunk(
 
 export const removeUserProductAsync = createAsyncThunk(
 	"userProducts/removeUserProduct",
-	async ({ id }: { id: string }, { getState, rejectWithValue }) => {
+	async (
+		{ product, toast }: { product: IProduct; toast: ToastService },
+		{ getState, rejectWithValue },
+	) => {
 		const state = getState() as RootState;
 
 		try {
-			return await productsService.remove(state.authReducer.token, id);
+			const response = await productsService.remove(
+				state.authReducer.token,
+				product._id,
+			);
+
+			toast({
+				title: "Product deleted",
+				description: `${product.name} has been permanently removed.`,
+				duration: 3000,
+			});
+
+			return response;
 		} catch (error: any) {
 			return rejectWithValue(error.message);
 		}

@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@lib/utils";
 
 export type SectionProps = {
 	className?: string;
@@ -7,8 +7,6 @@ export type SectionProps = {
 
 export function Section({ className, children }: SectionProps) {
 	return (
-		<section className={clsx("max-w-[1075px] mx-auto px-[10px]", className)}>
-			{children}
-		</section>
+		<section className={cn("py-4 lg:py-8", className)}>{children}</section>
 	);
 }

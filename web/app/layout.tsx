@@ -3,7 +3,12 @@ import AppProviders from "@redux/appProviders";
 import AppStateInit from "@components/appStateInit";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import Chatbot from "@components/chatbot";
+
+import { cn } from "@lib/utils";
+import Footer from "@components/footer";
+import Navigation from "@components/navigation";
+import { Container } from "_shared/ui/container";
+import { Toaster } from "_shared/shadcn/toaster";
 
 export const metadata = {
 	title: "Mamolio",
@@ -21,13 +26,31 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body>
+			<body className={cn("min-h-screen bg-background")}>
 				<AppProviders>
 					<AppStateInit />
 					<Analytics />
 					<SpeedInsights />
-					<Chatbot />
-					{children}
+					<Toaster />
+					{/* <Chatbot /> */}
+
+					{/* Banner */}
+					<div className="h-[2.625rem] flex justify-center items-center text-center text-white bg-custom-primary-foreground leading-none">
+						Free shipping on orders over $50
+					</div>
+
+					{/* Navigation */}
+					<div className="border-b-2">
+						<Container>
+							<Navigation />
+						</Container>
+					</div>
+
+					{/* Page */}
+					<Container>{children}</Container>
+
+					{/* Footer */}
+					<Footer />
 				</AppProviders>
 			</body>
 		</html>

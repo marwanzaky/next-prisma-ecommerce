@@ -1,0 +1,73 @@
+import { cn } from "@lib/utils";
+import Icon from "_shared/ui/icon";
+import { Section } from "_shared/components/section";
+import { TypographyH3 } from "_shared/shadcn/typography";
+
+export default function WhyChooseUs() {
+	return (
+		<Section className="lg:!pt-0 space-y-2 lg:space-y-4">
+			<TypographyH3 className="text-center lg:text-left">
+				Why should you choose us?
+			</TypographyH3>
+
+			<div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+				<Reason
+					icon="local_shipping"
+					title="Free Shipping"
+					des="All purchases over $199 are eligible for free shipping via USPS First Class Mail."
+				/>
+				<Reason
+					icon="payments"
+					title="Easy Payments"
+					des="All payments are processed instantly over a secure payment protocol."
+				/>
+				<Reason
+					icon="attach_money"
+					title="Money-Back Guarantee"
+					des="If an item arrived damaged or you've changed your mind, you can send it back for a full refund."
+				/>
+				<Reason
+					icon="inventory_2"
+					title="Finest Quality"
+					des="Designed to last, each of our products has been crafted with the finest materials."
+				/>
+			</div>
+		</Section>
+	);
+}
+
+function Reason({
+	title,
+	des,
+	icon,
+}: {
+	title: string;
+	des: string;
+	icon: string;
+}) {
+	return (
+		<div className="group">
+			<div
+				className={cn(
+					"mx-auto lg:mx-0 mb-8 flex justify-center items-center",
+					"w-[4.375rem] h-[4.375rem]",
+					"bg-custom-background-foreground rounded-xl",
+					"group-hover:bg-custom-primary-background transition-colors",
+				)}
+			>
+				<Icon
+					className="group-hover:filter-custom-primary-foreground transition-all"
+					icon={icon}
+					size={32}
+				/>
+			</div>
+
+			<div className="text-center lg:text-left font-bold mb-5 truncate">
+				{title}
+			</div>
+			<div className="text-center lg:text-left text-custom-grey max-w-xs mx-auto lg:mx-0">
+				{des}
+			</div>
+		</div>
+	);
+}

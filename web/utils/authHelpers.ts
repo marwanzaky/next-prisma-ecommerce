@@ -6,20 +6,18 @@ import { getUserProductsAsync } from "@redux/thunks/userProductsThunks";
 import { getMeAsync, loginAsync } from "@redux/thunks/authThunks";
 import { getCartMeAsync } from "@redux/thunks/cartThunks";
 import { getFavoritesAsync } from "@redux/thunks/favoritesThunks";
+import { ToastService } from "_shared/shadcn/hooks/use-toast";
 
 export const handleLogin = async (
 	email: string,
 	password: string,
 	dispatch: AppDispatch,
 	router: AppRouterInstance,
+	toast: ToastService,
 ) => {
-	try {
-		await dispatch(loginAsync({ email, password, router })).unwrap();
-		await dispatch(getMeAsync());
-		await dispatch(getCartMeAsync());
-		await dispatch(getFavoritesAsync());
-		await dispatch(getUserProductsAsync());
-	} catch (error) {
-		console.error("Login failed:", error);
-	}
+	await dispatch(loginAsync({ email, password, router, toast })).unwrap();
+	await dispatch(getMeAsync());
+	await dispatch(getCartMeAsync());
+	await dispatch(getFavoritesAsync());
+	await dispatch(getUserProductsAsync());
 };

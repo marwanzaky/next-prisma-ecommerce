@@ -1,20 +1,24 @@
 "use client";
 
-import Layout from "@components/layout";
-
-import { ButtonFull } from "@ui/Button";
-
-import Dialog from "_shared/components/dialog";
 import { Table } from "_shared/components/table";
 
 import ImageInput from "./components/imageInput";
 import { useSell } from "@hooks/useSell";
 import { InputCurrencyRange } from "_shared/components/InputCurrencyRange";
 import { InputText } from "_shared/components/inputText";
-import { Button } from "_shared/components/button";
 import { Textarea } from "_shared/components/textarea";
 import { Section } from "_shared/components/section";
 import { InputTags } from "_shared/components/inputTags";
+import { Button } from "_shared/shadcn/button";
+import { TypographyH4 } from "_shared/shadcn/typography";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "_shared/shadcn/dialog";
 
 export default function Page() {
 	const {
@@ -46,37 +50,40 @@ export default function Page() {
 	} = useSell();
 
 	return (
-		<Layout title="Sell">
-			<Section>
-				<h4 className="text-center">Your Products</h4>
+		<Section className="space-y-4">
+			<TypographyH4 className="text-center">Your Products</TypographyH4>
 
-				<div className="flex flex-col gap-4">
-					<Table columns={columns} data={tableData}></Table>
+			<div className="flex flex-col gap-4">
+				<Table columns={columns} data={tableData}></Table>
 
-					<div className="flex justify-end">
-						<ButtonFull
-							className="!mr-0"
-							onClick={() => {
-								resetForm();
-								setDisplayDialog(true);
-							}}
-						>
-							Add item
-						</ButtonFull>
-					</div>
+				<div className="flex justify-end">
+					<Button
+						className="!mr-0"
+						onClick={() => {
+							resetForm();
+							setDisplayDialog(true);
+						}}
+					>
+						Add item
+					</Button>
 				</div>
+			</div>
 
-				<Dialog
-					className="w-96"
-					title="Add item"
-					isOpen={displayDialog}
-					onClose={() => setDisplayDialog(false)}
-				>
-					<form className="flex flex-col gap-4" onSubmit={onSubmitProduct}>
+			<Dialog open={displayDialog} onOpenChange={setDisplayDialog}>
+				<DialogContent className="sm:max-w-[425px]">
+					<DialogHeader>
+						<DialogTitle>Add item</DialogTitle>
+						<DialogDescription>
+							Complete the form to publish your product for sale on the
+							platform.
+						</DialogDescription>
+					</DialogHeader>
+
+					<form onSubmit={onSubmitProduct} className="space-y-4">
 						<InputText
 							type="text"
 							id="name"
-							placeholder="Product name"
+							placeholder="Product Name"
 							icon="person"
 							value={name}
 							onChange={(e) => setName(e.target.value)}
@@ -84,7 +91,7 @@ export default function Page() {
 						/>
 						<Textarea
 							id="description"
-							placeholder="Product description"
+							placeholder="Product Description"
 							icon="description"
 							value={description}
 							onChange={(e) => setDescription(e.target.value)}
@@ -92,7 +99,7 @@ export default function Page() {
 						/>
 						<InputCurrencyRange
 							minPlaceholder="Price"
-							maxPlaceholder="Compare price"
+							maxPlaceholder="Compare Price"
 							minValue={price}
 							maxValue={priceCompare}
 							onMinChange={(value) => setPrice(value)}
@@ -102,10 +109,9 @@ export default function Page() {
 						<InputTags
 							value={tags}
 							onChange={(value) => setTags(value)}
-							placeholder="Enter tags"
+							placeholder="Enter Tags"
 						/>
-
-						<div className="flex gap-4 flex-wrap">
+						<div className="grid grid-cols-5 gap-4">
 							{Array.from(Array(10).keys()).map((index) => (
 								<ImageInput
 									key={index}
@@ -115,21 +121,28 @@ export default function Page() {
 							))}
 						</div>
 
-						<Button size="md">Add</Button>
+						<DialogFooter>
+							<Button type="submit">Add</Button>
+						</DialogFooter>
 					</form>
-				</Dialog>
+				</DialogContent>
+			</Dialog>
 
-				<Dialog
-					className="w-96"
-					title="Edit item"
-					isOpen={displayEditDialog}
-					onClose={() => setDisplayEditDialog(false)}
-				>
-					<form className="flex flex-col gap-4" onSubmit={onUpdateProduct}>
+			<Dialog open={displayEditDialog} onOpenChange={setDisplayEditDialog}>
+				<DialogContent className="sm:max-w-[425px]">
+					<DialogHeader>
+						<DialogTitle>Edit item</DialogTitle>
+						<DialogDescription>
+							Make changes to your product details to keep your listing accurate
+							and up to date.
+						</DialogDescription>
+					</DialogHeader>
+
+					<form onSubmit={onUpdateProduct} className="space-y-4">
 						<InputText
 							type="text"
 							id="name"
-							placeholder="Product name"
+							placeholder="Product Name"
 							icon="inventory_2"
 							value={name}
 							onChange={(e) => setName(e.target.value)}
@@ -137,7 +150,7 @@ export default function Page() {
 						/>
 						<Textarea
 							id="description"
-							placeholder="Product description"
+							placeholder="Product Description"
 							icon="description"
 							value={description}
 							onChange={(e) => setDescription(e.target.value)}
@@ -145,7 +158,7 @@ export default function Page() {
 						/>
 						<InputCurrencyRange
 							minPlaceholder="Price"
-							maxPlaceholder="Compare price"
+							maxPlaceholder="Compare Price"
 							minValue={price}
 							maxValue={priceCompare}
 							onMinChange={(value) => setPrice(value)}
@@ -155,10 +168,9 @@ export default function Page() {
 						<InputTags
 							value={tags}
 							onChange={(value) => setTags(value)}
-							placeholder="Enter tags"
+							placeholder="Enter Tags"
 						/>
-
-						<div className="flex gap-4 flex-wrap">
+						<div className="grid grid-cols-5 gap-4">
 							{Array.from(Array(10).keys()).map((index) => (
 								<ImageInput
 									key={index}
@@ -168,10 +180,12 @@ export default function Page() {
 							))}
 						</div>
 
-						<Button size="md">Update</Button>
+						<DialogFooter>
+							<Button type="submit">Update</Button>
+						</DialogFooter>
 					</form>
-				</Dialog>
-			</Section>
-		</Layout>
+				</DialogContent>
+			</Dialog>
+		</Section>
 	);
 }

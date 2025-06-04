@@ -66,7 +66,7 @@ export const favoritesSlice = createSlice({
 			.addCase(removeFavoritesAsync.fulfilled, (state, action) => {
 				state.loading = false;
 				state.items = [...state.items].filter(
-					(item) => item._id !== action.meta.arg.productId,
+					(item) => item._id !== action.meta.arg.product._id,
 				);
 			})
 			.addCase(removeFavoritesAsync.rejected, (state, action) => {

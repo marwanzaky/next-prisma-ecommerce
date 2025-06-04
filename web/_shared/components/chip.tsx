@@ -1,4 +1,5 @@
-import Icon from "@ui/Icon";
+import Icon from "_shared/ui/icon";
+import { Badge } from "_shared/shadcn/badge";
 
 export type ChipProps = {
 	children?: React.ReactNode;
@@ -7,13 +8,14 @@ export type ChipProps = {
 
 export function Chip({ children, onClick }: ChipProps) {
 	return (
-		<div className="bg-gray-200 py-2 px-4 rounded-full flex flex-shrink-0 items-center gap-2 whitespace-nowrap">
-			{children}
+		<Badge variant="secondary" className="space-x-1 shrink-0">
+			<div>{children}</div>
 			<Icon
 				className="cursor-pointer hover:filter-primary-dark"
 				icon="close"
+				size={16}
 				onClick={onClick}
 			/>
-		</div>
+		</Badge>
 	);
 }

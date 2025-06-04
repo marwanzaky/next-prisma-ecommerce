@@ -31,14 +31,6 @@
 			"@lib/*": ["./lib/*"]
 		}
 	},
-	"include": [
-		"next-env.d.ts",
-		".next/types/**/*.ts",
-		"**/*.ts",
-		"**/*.tsx",
-		"components/ui/ProductItem/index.js",
-		"components/ui/Info/index.js",
-		"components/footer/index.js"
-	],
+	"include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"],
 	"exclude": ["node_modules"]
 }

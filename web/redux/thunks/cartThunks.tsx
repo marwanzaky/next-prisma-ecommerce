@@ -3,6 +3,7 @@ import { guestCartService } from "@redux/services/guestCartService";
 import { RootState } from "@redux/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IProduct } from "_shared/interfaces";
+import { ToastService } from "_shared/shadcn/hooks/use-toast";
 
 export const getCartMeAsync = createAsyncThunk(
 	"cart/getCartMe",
@@ -25,7 +26,11 @@ export const getCartMeAsync = createAsyncThunk(
 export const postCartItemAsync = createAsyncThunk(
 	"cart/postCartItem",
 	async (
-		{ product, quantity = 1 }: { product: IProduct; quantity?: number },
+		{
+			product,
+			toast,
+			quantity = 1,
+		}: { product: IProduct; toast: ToastService; quantity?: number },
 		{ getState, rejectWithValue },
 	) => {
 		const state = getState() as RootState;
@@ -35,7 +40,11 @@ export const postCartItemAsync = createAsyncThunk(
 			if (isAuthenticated === false) {
 				const updatedCart = await guestCartService.postItem(product, quantity);
 
-				alert("The item was added to the cart (guest)");
+				toast({
+					title: "Added to cart (guest)",
+					description: `${product.name} has been added to your cart.`,
+					duration: 3000,
+				});
 
 				return updatedCart;
 			}
@@ -46,7 +55,11 @@ export const postCartItemAsync = createAsyncThunk(
 				quantity,
 			);
 
-			alert("The item was added to the cart");
+			toast({
+				title: "Added to cart",
+				description: `${product.name} has been added to your cart.`,
+				duration: 3000,
+			});
 
 			return updatedCart;
 		} catch (error: any) {
@@ -83,7 +96,7 @@ export const updateCartItemQuantityAsync = createAsyncThunk(
 export const deleteCartItemAsync = createAsyncThunk(
 	"cart/deleteCartItem",
 	async (
-		{ productId }: { productId: string },
+		{ product, toast }: { product: IProduct; toast: ToastService },
 		{ getState, rejectWithValue },
 	) => {
 		const state = getState() as RootState;
@@ -91,19 +104,27 @@ export const deleteCartItemAsync = createAsyncThunk(
 
 		try {
 			if (isAuthenticated === false) {
-				const updatedCart = await guestCartService.deleteItem(productId);
+				const updatedCart = await guestCartService.deleteItem(product._id);
 
-				alert("The item was removed from the cart (guest)");
+				toast({
+					title: "Removed from cart (guest)",
+					description: `${product.name} has been removed from your cart.`,
+					duration: 3000,
+				});
 
 				return updatedCart;
 			}
 
 			const updatedCart = await cartsService.deleteItem(
 				state.authReducer.token,
-				productId,
+				product._id,
 			);
 
-			alert("The item was removed from the cart");
+			toast({
+				title: "Removed from cart",
+				description: `${product.name} has been removed from your cart.`,
+				duration: 3000,
+			});
 
 			return updatedCart;
 		} catch (error: any) {

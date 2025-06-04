@@ -1,23 +1,35 @@
-import Layout from "@components/layout";
-
 import Header from "@components/header";
-import Products from "@ui/Products";
 import WhyChooseUs from "@components/whyChooseUs";
 import Testimonials from "@components/testimonials";
 
 import { IProduct } from "_shared/interfaces";
 import { productsService } from "@redux/services/productsService";
+import { TypographyH3 } from "_shared/shadcn/typography";
+import ProductCart from "_shared/ui/productCart";
+import { Section } from "_shared/components/section";
 
 export default async function Page() {
 	const data = await getProducts();
 
 	return (
-		<Layout>
+		<>
 			<Header />
-			<Products title="Featured collection" data={data} />
+
+			<Section className="space-y-2 lg:space-y-4">
+				<TypographyH3 className="text-center lg:text-left">
+					Featured collection
+				</TypographyH3>
+
+				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4">
+					{data.map((item) => (
+						<ProductCart key={item._id} data={item} />
+					))}
+				</div>
+			</Section>
+
 			<WhyChooseUs />
 			<Testimonials />
-		</Layout>
+		</>
 	);
 }
 

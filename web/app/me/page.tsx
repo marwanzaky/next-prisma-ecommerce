@@ -2,18 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import Layout from "@components/layout";
-
-import { ButtonFull, ButtonIcon } from "@ui/Button";
-
 import { useDispatch } from "react-redux";
 
 import { AppDispatch, useAppSelector } from "@redux/store";
-import { Avatar } from "_shared/components/avatar";
 import { updateMeAsync, updateMyPasswordAsync } from "@redux/thunks/authThunks";
 import { InputText } from "_shared/components/inputText";
 import { Section } from "_shared/components/section";
-import { Button } from "_shared/components/button";
+import { Button } from "_shared/shadcn/button";
+import { ButtonIcon } from "_shared/ui/buttonIcon";
+import { TypographyH3, TypographyH4 } from "_shared/shadcn/typography";
+import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
 
 export default function Page() {
 	const dispatch = useDispatch<AppDispatch>();
@@ -81,101 +79,102 @@ export default function Page() {
 	}, [user]);
 
 	return (
-		<Layout title="Settings">
+		<>
 			{user == null ? (
-				<Section>
-					<div className="m-auto max-w-lg">
-						<h2>loading...</h2>
-					</div>
+				<Section className="m-auto max-w-lg">
+					<TypographyH3>loading...</TypographyH3>
 				</Section>
 			) : (
-				<Section>
-					<div className="m-auto max-w-lg">
-						<h1>Settings</h1>
+				<Section className="m-auto max-w-lg">
+					<TypographyH3>Settings</TypographyH3>
 
-						<div className="flex flex-col gap-8 mb-8">
-							<form>
-								<input
-									ref={inputRef}
-									className="hidden"
-									type="file"
-									accept=".png, .jpg, .jpeg"
-									onChange={onAvatarChange}
+					<div className="flex flex-col gap-8">
+						<form className="space-y-4">
+							<input
+								ref={inputRef}
+								className="hidden"
+								type="file"
+								accept=".png, .jpg, .jpeg"
+								onChange={onAvatarChange}
+							/>
+
+							<TypographyH4>Personal Information</TypographyH4>
+
+							<div className="flex flex-col gap-4">
+								<div className="flex items-center gap-4">
+									<Avatar className="h-12 w-12">
+										<AvatarImage src={photo || "img/avatar.jpg"} />
+									</Avatar>
+
+									<div className="flex items-center gap-2">
+										<Button
+											variant="secondary"
+											type="button"
+											onClick={() => inputRef.current?.click()}
+										>
+											Change avatar
+										</Button>
+
+										<ButtonIcon
+											type="button"
+											icon="delete"
+											onClick={() => setPhoto(null)}
+										/>
+									</div>
+								</div>
+
+								<InputText
+									type="text"
+									id="name"
+									placeholder={name}
+									icon="person"
+									onChange={(e) => setName(e.target.value)}
+								/>
+								<InputText
+									type="text"
+									id="email"
+									placeholder={email}
+									icon="mail"
+									onChange={(e) => setEmail(e.target.value)}
 								/>
 
-								<h4 className="">Personal Information</h4>
+								<Button size="lg" onClick={saveChanges}>
+									Save
+								</Button>
+							</div>
+						</form>
 
-								<div className="flex flex-col gap-4">
-									<div className="flex items-center gap-4">
-										<Avatar size="lg" imgUrl={photo}></Avatar>
+						<form className="space-y-4" onSubmit={updateMyPasswordForm}>
+							<TypographyH4>Change Password</TypographyH4>
 
-										<div className="flex items-center">
-											<ButtonFull
-												type="button"
-												onClick={() => inputRef.current?.click()}
-											>
-												Change avatar
-											</ButtonFull>
-											<ButtonIcon
-												type="button"
-												icon="delete"
-												onClick={() => setPhoto(null)}
-											></ButtonIcon>
-										</div>
-									</div>
+							<div className="flex flex-col gap-4">
+								<InputText
+									type="password"
+									id="curpass"
+									placeholder="Current Password"
+									icon="password"
+									onChange={(e) => setCurrentPassword(e.target.value)}
+								/>
+								<InputText
+									type="password"
+									id="newpass"
+									placeholder="New Password"
+									icon="password"
+									onChange={(e) => setNewPassword(e.target.value)}
+								/>
+								<InputText
+									type="password"
+									id="confpass"
+									placeholder="Confirm Password"
+									icon="password"
+									onChange={(e) => setConfirmPassword(e.target.value)}
+								/>
 
-									<InputText
-										type="text"
-										id="name"
-										placeholder={name}
-										icon="person"
-										onChange={(e) => setName(e.target.value)}
-									/>
-									<InputText
-										type="text"
-										id="email"
-										placeholder={email}
-										icon="mail"
-										onChange={(e) => setEmail(e.target.value)}
-									/>
+								<Button size="lg">Save</Button>
+							</div>
+						</form>
 
-									<Button size="md" onClick={saveChanges}>
-										Save
-									</Button>
-								</div>
-							</form>
-
-							<form onSubmit={updateMyPasswordForm}>
-								<h4 className="">Change Password</h4>
-
-								<div className="flex flex-col gap-4">
-									<InputText
-										type="password"
-										id="curpass"
-										placeholder="Current password"
-										icon="password"
-										onChange={(e) => setCurrentPassword(e.target.value)}
-									/>
-									<InputText
-										type="password"
-										id="newpass"
-										placeholder="New password"
-										icon="password"
-										onChange={(e) => setNewPassword(e.target.value)}
-									/>
-									<InputText
-										type="password"
-										id="confpass"
-										placeholder="Confirm password"
-										icon="password"
-										onChange={(e) => setConfirmPassword(e.target.value)}
-									/>
-
-									<Button size="md">Save</Button>
-								</div>
-							</form>
-
-							{/* <form>
+						{/* <form>
 								<h4 className="">Delete Account</h4>
 
 								<p className="mb-4">
@@ -186,10 +185,9 @@ export default function Page() {
 
 								<ButtonFullRed>Yes, delete my account</ButtonFullRed>
 							</form> */}
-						</div>
 					</div>
 				</Section>
 			)}
-		</Layout>
+		</>
 	);
 }

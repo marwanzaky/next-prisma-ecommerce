@@ -10,11 +10,14 @@ import {
 } from "@redux/thunks/userProductsThunks";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "_shared/shadcn/hooks/use-toast";
 
 type CartItem = IProduct & { imgUrl: string };
 
 export function useSell() {
 	const router = useRouter();
+	const { toast } = useToast();
+
 	const dispatch = useDispatch<AppDispatch>();
 
 	const { isAuthenticated } = useAppSelector((state) => state.authReducer);
@@ -62,7 +65,7 @@ export function useSell() {
 			width: "38px",
 			action: (row) => {
 				if (confirm("Are you sure you want to delete this product?")) {
-					dispatch(removeUserProductAsync({ id: row._id }));
+					dispatch(removeUserProductAsync({ product: row, toast }));
 				}
 			},
 			actionIcon: "delete",
@@ -105,12 +108,15 @@ export function useSell() {
 		if (priceUsd && priceCompareUsd) {
 			dispatch(
 				postUserProductAsync({
-					name,
-					description,
-					price: priceUsd * 100,
-					priceCompare: priceCompareUsd * 100,
-					imgUrls: base64s,
-					tags,
+					data: {
+						name,
+						description,
+						price: priceUsd * 100,
+						priceCompare: priceCompareUsd * 100,
+						imgUrls: base64s,
+						tags,
+					},
+					toast,
 				}),
 			);
 		}
@@ -135,6 +141,7 @@ export function useSell() {
 						imgUrls: base64s,
 						tags,
 					},
+					toast,
 				}),
 			);
 		}

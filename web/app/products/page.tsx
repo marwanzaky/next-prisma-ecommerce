@@ -1,24 +1,37 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import {
 	GetAllProductsOptions,
 	productsService,
 } from "@redux/services/productsService";
 import { useQuery } from "@tanstack/react-query";
 
-import Layout from "@components/layout";
+import { stringify } from "qs";
 
-import ProductItem from "@ui/ProductItem";
-import { ButtonFull, ButtonGhostGrey } from "@ui/Button";
-
-import Select from "_shared/components/select";
+import ProductItem from "_shared/ui/productCart";
 import { IProduct } from "_shared/interfaces";
-import Dialog from "_shared/components/dialog";
 import { Chip } from "_shared/components/chip";
 import { Section } from "_shared/components/section";
-import { useRouter, useSearchParams } from "next/navigation";
-import { stringify } from "qs";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "_shared/shadcn/select";
+import { Button } from "_shared/shadcn/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "_shared/shadcn/dialog";
+import { TypographyP } from "_shared/shadcn/typography";
 import { InputCurrencyRange } from "_shared/components/InputCurrencyRange";
 import RadioWithLabel from "_shared/components/radioWithLabel";
 
@@ -139,15 +152,13 @@ export default function Page() {
 	}, [sort, minPrice, maxPrice, rating]);
 
 	return (
-		<Layout title="Products">
+		<div>
 			<Section>
 				<div className="flex items-center justify-between gap-4 mb-4">
 					<div className="flex items-center gap-4 flex-1 min-w-0">
-						<ButtonGhostGrey onClick={openFilterDialog}>
-							All filters
-						</ButtonGhostGrey>
+						<Button onClick={openFilterDialog}>All filters</Button>
 
-						<div className="flex flex-1 items-center gap-4 scrollbar-hide overflow-auto">
+						<div className="flex flex-1 items-center gap-2 scrollbar-hide overflow-auto">
 							{minPrice && maxPrice && (
 								<Chip onClick={clearPriceRange}>
 									${(minPrice / 100).toFixed(2)} - $
@@ -185,111 +196,127 @@ export default function Page() {
 
 					<div className="flex justify-end items-center gap-4 flex-shrink-0">
 						{isLoading === false && (
-							<p className="text-grey hidden sm:block">
+							<TypographyP className="text-muted-foreground hidden sm:block">
 								Showing {data?.length} Products
-							</p>
+							</TypographyP>
 						)}
 
 						<div className="flex items-center gap-2">
-							<p className="hidden sm:block">Sort by:</p>
+							<TypographyP className="hidden sm:block whitespace-nowrap">
+								Sort by:
+							</TypographyP>
 
 							<Select
-								options={options}
 								value={sort}
-								onChange={(val) => setSort(val as SortOption)}
-							/>
+								onValueChange={(value) => setSort(value as SortOption)}
+							>
+								<SelectTrigger>
+									<SelectValue />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectGroup>
+										{options.map((item) => (
+											<SelectItem
+												key={`select-item-${item.value}`}
+												value={item.value}
+											>
+												{item.label}
+											</SelectItem>
+										))}
+									</SelectGroup>
+								</SelectContent>
+							</Select>
 						</div>
 					</div>
 				</div>
 
-				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4">
 					{data?.map((item) => (
 						<ProductItem key={item._id} data={item} />
 					))}
 				</div>
 			</Section>
 
-			<Dialog
-				className="flex flex-col gap-8"
-				title="Filters"
-				width="384px"
-				isOpen={visible}
-				onClose={() => setVisible(false)}
-			>
-				<div className="flex flex-col gap-4">
-					<div className="flex flex-col gap-2">
-						<div className="text-lg">Price</div>
+			<Dialog open={visible} onOpenChange={setVisible}>
+				<DialogContent className="sm:max-w-[24rem]">
+					<DialogHeader>
+						<DialogTitle>Filters</DialogTitle>
+					</DialogHeader>
 
-						<InputCurrencyRange
-							minValue={draftMinPrice}
-							maxValue={draftMaxPrice}
-							onMinChange={(value) => setDraftMinPrice(value)}
-							onMaxChange={(value) => setDraftMaxPrice(value)}
-						/>
-					</div>
-
-					<div className="flex flex-col gap-2">
-						<div className="text-lg">Rating</div>
-
+					<div className="flex flex-col gap-4">
 						<div className="flex flex-col gap-2">
-							<RadioWithLabel
-								name="rate"
-								id="rate5"
-								value="rate5"
-								checked={draftRating === 5}
-								onChange={(e) => setDraftRating(5)}
-								label="★★★★★"
-								labelClassName="text-primary-dark"
-							/>
-							<RadioWithLabel
-								name="rate"
-								id="rate4"
-								value="rate4"
-								checked={draftRating === 4}
-								onChange={(e) => setDraftRating(4)}
-								label="★★★★"
-								labelClassName="text-primary-dark"
-							/>
-							<RadioWithLabel
-								name="rate"
-								id="rate3"
-								value="rate3"
-								checked={draftRating === 3}
-								onChange={(e) => setDraftRating(3)}
-								label="★★★"
-								labelClassName="text-primary-dark"
-							/>
-							<RadioWithLabel
-								name="rate"
-								id="rate2"
-								value="rate2"
-								checked={draftRating === 2}
-								onChange={(e) => setDraftRating(2)}
-								label="★★"
-								labelClassName="text-primary-dark"
-							/>
-							<RadioWithLabel
-								name="rate"
-								id="rate1"
-								value="rate1"
-								checked={draftRating === 1}
-								onChange={(e) => setDraftRating(1)}
-								label="★"
-								labelClassName="text-primary-dark"
+							<div className="text-lg">Price</div>
+
+							<InputCurrencyRange
+								minValue={draftMinPrice}
+								maxValue={draftMaxPrice}
+								onMinChange={(value) => setDraftMinPrice(value)}
+								onMaxChange={(value) => setDraftMaxPrice(value)}
 							/>
 						</div>
-					</div>
-				</div>
 
-				<div className="flex gap-2">
-					<ButtonGhostGrey className="w-full" onClick={cancelFilters}>
-						Cancel
-					</ButtonGhostGrey>
-					<ButtonFull className="w-full !m-0" onClick={applyFilters}>
-						Apply filter
-					</ButtonFull>
-				</div>
+						<div className="flex flex-col gap-2">
+							<div className="text-lg">Rating</div>
+
+							<div className="flex flex-col gap-2">
+								<RadioWithLabel
+									name="rate"
+									id="rate5"
+									value="rate5"
+									checked={draftRating === 5}
+									onChange={(e) => setDraftRating(5)}
+									label="★★★★★"
+									labelClassName="text-[1rem] text-[1rem] text-custom-primary-foreground"
+								/>
+								<RadioWithLabel
+									name="rate"
+									id="rate4"
+									value="rate4"
+									checked={draftRating === 4}
+									onChange={(e) => setDraftRating(4)}
+									label="★★★★"
+									labelClassName="text-[1rem] text-custom-primary-foreground"
+								/>
+								<RadioWithLabel
+									name="rate"
+									id="rate3"
+									value="rate3"
+									checked={draftRating === 3}
+									onChange={(e) => setDraftRating(3)}
+									label="★★★"
+									labelClassName="text-[1rem] text-custom-primary-foreground"
+								/>
+								<RadioWithLabel
+									name="rate"
+									id="rate2"
+									value="rate2"
+									checked={draftRating === 2}
+									onChange={(e) => setDraftRating(2)}
+									label="★★"
+									labelClassName="text-[1rem] text-custom-primary-foreground"
+								/>
+								<RadioWithLabel
+									name="rate"
+									id="rate1"
+									value="rate1"
+									checked={draftRating === 1}
+									onChange={(e) => setDraftRating(1)}
+									label="★"
+									labelClassName="text-[1rem] text-custom-primary-foreground"
+								/>
+							</div>
+						</div>
+					</div>
+
+					<DialogFooter>
+						<Button variant="ghost" onClick={cancelFilters}>
+							Cancel
+						</Button>
+
+						<Button onClick={applyFilters}>Apply filter</Button>
+					</DialogFooter>
+				</DialogContent>
 			</Dialog>
-		</Layout>
+		</div>
 	);
 }

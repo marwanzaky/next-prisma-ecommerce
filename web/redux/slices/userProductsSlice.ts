@@ -81,7 +81,7 @@ const userProductsSlice = createSlice({
 			.addCase(removeUserProductAsync.fulfilled, (state, action) => {
 				state.loading = false;
 				state.products = [...state.products].filter(
-					(item) => item._id !== action.meta.arg.id,
+					(item) => item._id !== action.meta.arg.product._id,
 				);
 			})
 			.addCase(removeUserProductAsync.rejected, (state, action) => {

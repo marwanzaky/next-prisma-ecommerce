@@ -1,4 +1,4 @@
-import { ButtonIcon } from "@ui/Button";
+import { ButtonIcon } from "_shared/ui/buttonIcon";
 import { InputText } from "../inputText";
 
 export type Column<T = any> = {

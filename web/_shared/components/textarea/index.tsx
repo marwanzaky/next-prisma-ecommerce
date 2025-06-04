@@ -1,12 +1,14 @@
-import Icon from "@ui/Icon";
+import Icon from "_shared/ui/icon";
+
 import { cva } from "class-variance-authority";
-import clsx from "clsx";
+
+import { cn } from "@lib/utils";
 
 const textareaVariants = cva(
 	[
 		"flex w-full h-52 max-h-96 min-h-[62px] px-[25px] py-5 leading-6",
-		"rounded-xl bg-bg-dark",
-		"outline-none shadow-[0_0_0_1pt_#ecf0f1] focus:shadow-[0_0_0_2pt_cornflowerblue]",
+		"rounded-xl bg-custom-background-foreground",
+		"outline-none shadow-[0_0_0_1pt_#ecf0f1] focus:shadow-[0_0_0_2pt_cornflowerblue] transition-shadow",
 	],
 	{
 		variants: {},
@@ -31,13 +33,13 @@ export function Textarea({
 		<div className={className}>
 			<div className="relative">
 				<textarea
-					className={clsx(textareaVariants({}), styleClass)}
+					className={cn(textareaVariants({}), styleClass)}
 					{...inputProps}
 				/>
 
 				{icon && (
 					<div className="absolute top-[calc(31px-12px)] right-[25px]">
-						<Icon className="filter-placeholder" icon={icon} />
+						<Icon className="filter-custom-placeholder" icon={icon} />
 					</div>
 				)}
 			</div>

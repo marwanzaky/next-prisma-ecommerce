@@ -1,17 +1,16 @@
-# Next.js ecommerce
+# MERN e-commerce
 
-## 🖐️ About
+## About
 
-[Website](https://mamolio.vercel.app/) project is built from the ground up using modern technologies such as Next.js, React.js, Redux, and Tailwind CSS.
+[Website](https://mamolio.vercel.app) project is an ecommerce store built from the ground up with MERN stack.
 
 <div>
   <img src="https://img.shields.io/badge/-TypeScript-2c3e50.svg?logo=typescript&style=flat">
   <img src="https://img.shields.io/badge/-Next.js-2c3e50.svg?logo=next.js&style=flat">
   <img src="https://img.shields.io/badge/-React.js-2c3e50.svg?logo=react&style=flat">
   <img src="https://img.shields.io/badge/-Redux-2c3e50.svg?logo=redux&style=flat">
-  <img src="https://img.shields.io/badge/-HTML5-2c3e50.svg?logo=html5&style=flat">
-  <img src="https://img.shields.io/badge/-CSS3-2c3e50.svg?logo=css3&style=flat">
   <img src="https://img.shields.io/badge/-Tailwind CSS-2c3e50.svg?logo=tailwindcss&style=flat">
+  <img src="https://img.shields.io/badge/-Shadcn-2c3e50.svg?logo=shadcnui&style=flat">
   <img src="https://img.shields.io/badge/-PWA-2c3e50.svg?logo=pwa&style=flat">
   <img src="https://img.shields.io/badge/-Swagger-2c3e50.svg?logo=swagger&style=flat">
   <img src="https://img.shields.io/badge/-Nest.js-2c3e50.svg?logo=nestjs&style=flat">
@@ -22,8 +21,18 @@
   <img src="https://img.shields.io/badge/-Docker-2c3e50.svg?logo=docker&style=flat">
 </div>
 
-## 📃 Available Pages
+## Technologies
+- TypeScript
+- Next.js
+- Redux
+- Tailwind CSS
+- Shadcn UI
+- Nest.js
+- MongoDB
+- Swagger
+- JWT
 
+## Available Pages
 - Home: `/`
 - Products: `/products`
 - Product: `/product/:id`
@@ -34,7 +43,7 @@
 - Signup: `/signup`
 - Account: `/me`
 
-## 📬 Contact
+## Contact
 
 Have questions, feedback, or want to collaborate? Feel free to reach out!
 

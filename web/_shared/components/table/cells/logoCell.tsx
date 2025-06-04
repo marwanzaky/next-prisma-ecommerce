@@ -17,7 +17,10 @@ export function LogoCell({ label, imgUrl, href }: LogoCellProps) {
 				</div>
 			</Link>
 
-			<Link className="text-base hidden md:block" href={href}>
+			<Link
+				className="hidden md:block hover:text-custom-primary-foreground transition-colors"
+				href={href}
+			>
 				{label}
 			</Link>
 		</div>

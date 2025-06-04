@@ -13,7 +13,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "_shared/components/dialog-v2";
+} from "_shared/shadcn/dialog";
 
 type ChatbotMessage = {
 	type: "ai" | "user";
@@ -48,7 +48,7 @@ function Message({
 				>
 					{children}
 				</div>
-				<div className="text-gray-500 text-xs">{date}</div>
+				<div className="text-gray-500 text-xs leading-none">{date}</div>
 			</div>
 		</div>
 	);
@@ -85,11 +85,14 @@ export default function Chatbot() {
 	}, [messages]);
 
 	return (
-		<Dialog modal={false} open={visible} onOpenChange={setVisible}>
-			<DialogContent className="max-w-sm translate-x-0 translate-y-0 left-auto right-8 top-auto bottom-8 data-[state=closed]:slide-out-to-top-8 data-[state=open]:slide-in-from-top-8">
+		<Dialog modal={false} open={visible}>
+			<DialogContent className="max-w-sm left-auto top-auto translate-x-0 translate-y-0 bottom-4 right-4">
 				<DialogHeader>
 					<DialogTitle>AI Assistance</DialogTitle>
-					<DialogDescription>AI Assistance</DialogDescription>
+					<DialogDescription>
+						Get instant help with your shopping, orders, and questions—24/7 AI
+						support.
+					</DialogDescription>
 				</DialogHeader>
 
 				<div
@@ -109,7 +112,7 @@ export default function Chatbot() {
 
 				<DialogFooter className="sm:justify-start">
 					<InputText
-						className="!w-full"
+						className="w-full"
 						placeholder="Enter your message"
 						value={inputValue}
 						onChange={(e) => setInputValue(e.target.value)}
