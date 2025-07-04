@@ -1,4 +1,4 @@
-import "./globals.scss";
+import "./globals.css";
 import AppProviders from "@redux/appProviders";
 import AppStateInit from "@components/appStateInit";
 import { Analytics } from "@vercel/analytics/react";
