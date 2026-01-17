@@ -55,8 +55,20 @@ export function useSell() {
 		{
 			header: "Stock",
 			field: "stock",
-			type: "text",
+			type: "number-input",
 			width: "10%",
+			onChange: (value, row) => {
+				dispatch(
+					updateUserProductAsync({
+						id: row._id,
+						data: {
+							name: row.name,
+							stock: value,
+						},
+						toast,
+					}),
+				);
+			},
 		},
 		{
 			field: "_id",
@@ -93,7 +105,6 @@ export function useSell() {
 	const tableData: CartItem[] = products.map((item) => ({
 		...item,
 		imgUrl: item.imgUrls[0],
-		stock: 1,
 	}));
 
 	useEffect(() => {
@@ -115,6 +126,7 @@ export function useSell() {
 						priceCompare: priceCompareUsd * 100,
 						imgUrls: base64s,
 						tags,
+						stock: 1,
 					},
 					toast,
 				}),

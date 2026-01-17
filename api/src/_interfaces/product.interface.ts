@@ -3,6 +3,7 @@ export interface IProduct {
 	name: string;
 	price: number;
 	priceCompare: number;
+	stock: number;
 	discount: string;
 	avgRatings: number;
 	numReviews: number;

@@ -34,7 +34,7 @@ export const postUserProductAsync = createAsyncThunk(
 
 			toast({
 				title: "Product listed",
-				description: `${data.name} has been added successfully.`,
+				description: `"${data.name}" has been added successfully.`,
 				duration: 3000,
 			});
 
@@ -66,7 +66,7 @@ export const updateUserProductAsync = createAsyncThunk(
 
 			toast({
 				title: "Product updated",
-				description: `${data.name} has been successfully updated.`,
+				description: `"${data.name}" has been successfully updated.`,
 				duration: 3000,
 			});
 
@@ -93,7 +93,7 @@ export const removeUserProductAsync = createAsyncThunk(
 
 			toast({
 				title: "Product deleted",
-				description: `${product.name} has been permanently removed.`,
+				description: `"${product.name}" has been permanently removed.`,
 				duration: 3000,
 			});
 

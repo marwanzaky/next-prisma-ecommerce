@@ -31,6 +31,12 @@ export class Product extends Document implements Omit<IProduct, "_id"> {
 
 	@Prop({
 		type: Number,
+		default: 1,
+	})
+	stock!: number;
+
+	@Prop({
+		type: Number,
 		default: 0,
 	})
 	avgRatings!: number;

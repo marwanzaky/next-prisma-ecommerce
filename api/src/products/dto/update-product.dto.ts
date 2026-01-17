@@ -31,4 +31,9 @@ export class UpdateProductDto {
 	@IsString({ each: true })
 	@IsOptional()
 	readonly tags?: string[];
+
+	@ApiProperty()
+	@IsNumber()
+	@IsOptional()
+	readonly stock?: number;
 }

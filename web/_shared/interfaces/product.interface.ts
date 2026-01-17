@@ -18,5 +18,11 @@ export interface IProduct {
 
 export type IUpdateProduct = Pick<
 	Partial<IProduct>,
-	"name" | "price" | "priceCompare" | "description" | "imgUrls" | "tags"
+	| "name"
+	| "price"
+	| "priceCompare"
+	| "description"
+	| "imgUrls"
+	| "tags"
+	| "stock"
 >;
