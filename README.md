@@ -1,4 +1,5 @@
 # MERN e-commerce
+<img width="50%" height="1702" alt="mamolio vercel app_" src="https://github.com/user-attachments/assets/eda10bb3-8d5b-4775-8d45-b05ace8b258b" />
 
 ## About
 
@@ -44,6 +45,11 @@
 - Account: `/me`
 
 ## Features
+### Shop
+- Sort by Relevancy, Most Popular, Low Price, or High Price.
+- Filter by Rates, or Price ranges
+<img width="100%" height="518" alt="image" src="https://github.com/user-attachments/assets/475d2693-a5e0-444b-8fa1-b5cebdb75b82" />
+
 ### Form validation
 - Name: max 20 characters
 - Email: must be a valid email format
