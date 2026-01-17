@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import { useDispatch } from "react-redux";
 
@@ -13,26 +13,22 @@ import { ButtonIcon } from "_shared/ui/buttonIcon";
 import { TypographyH3, TypographyH4 } from "_shared/shadcn/typography";
 import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
 
-export default function Page() {
+import { useForm } from "react-hook-form";
+import { IUpdateUser } from "_shared/interfaces";
+import { toast } from "_shared/shadcn/hooks/use-toast";
+
+function PersonalInformationForm() {
+	const {
+		register,
+		handleSubmit,
+		watch,
+		formState: { errors },
+		reset,
+		setValue,
+		formState,
+	} = useForm<IUpdateUser>();
 	const dispatch = useDispatch<AppDispatch>();
-	const { user } = useAppSelector((state) => state.authReducer);
-
 	const inputRef = useRef<HTMLInputElement>(null);
-
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [currentPassword, setCurrentPassword] = useState("");
-	const [newPassword, setNewPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
-	const [photo, setPhoto] = useState<string | null>();
-
-	const saveChanges: React.MouseEventHandler<HTMLButtonElement> = async (
-		event,
-	) => {
-		event.preventDefault();
-		dispatch(updateMeAsync({ name, email, photo }));
-	};
-
 	const onAvatarChange: React.ChangeEventHandler<HTMLInputElement> = async (
 		event,
 	) => {
@@ -51,32 +47,192 @@ export default function Page() {
 		const reader = new FileReader();
 
 		reader.onload = () => {
-			setPhoto(reader.result as string);
+			setValue("photo", reader.result as string, { shouldDirty: true });
 		};
 
 		reader.readAsDataURL(img);
 		event.target.value = "";
 	};
-
-	const updateMyPasswordForm: React.FormEventHandler<HTMLFormElement> = async (
-		event,
-	) => {
-		event.preventDefault();
-
-		if (newPassword === confirmPassword) {
-			dispatch(updateMyPasswordAsync({ currentPassword, newPassword }));
-		} else {
-			alert("The passwords you entered do not match");
-		}
-	};
+	const { user } = useAppSelector((state) => state.authReducer);
 
 	useEffect(() => {
-		if (user) {
-			setName(user.name);
-			setEmail(user.email);
-			setPhoto(user.photo);
-		}
+		user && reset(user);
 	}, [user]);
+
+	return (
+		<form
+			onSubmit={handleSubmit((data) => {
+				dispatch(updateMeAsync(data));
+			})}
+			className="space-y-4"
+		>
+			<input
+				ref={inputRef}
+				className="hidden"
+				type="file"
+				accept=".png, .jpg, .jpeg"
+				onChange={onAvatarChange}
+			/>
+
+			<TypographyH4>Personal Information</TypographyH4>
+
+			<div className="flex flex-col gap-4">
+				<div className="flex items-center gap-4">
+					<Avatar className="h-12 w-12">
+						<AvatarImage src={watch("photo") || "img/avatar.jpg"} />
+					</Avatar>
+
+					<div className="flex items-center gap-2">
+						<Button
+							variant="secondary"
+							type="button"
+							onClick={() => inputRef.current?.click()}
+						>
+							Change avatar
+						</Button>
+
+						<ButtonIcon
+							type="button"
+							icon="delete"
+							onClick={() => setValue("photo", "", { shouldDirty: true })}
+						/>
+					</div>
+				</div>
+
+				<InputText
+					type="text"
+					placeholder="Enter Name"
+					icon="person"
+					message={errors.name?.message}
+					{...register("name", {
+						required: "This field is required",
+						minLength: { value: 2, message: "Name is too short" },
+						maxLength: { value: 16, message: "Name is too long" },
+						pattern: {
+							value: /^[a-zA-Z\s'-]+$/,
+							message: "Invalid characters in name",
+						},
+					})}
+				/>
+				<InputText
+					type="text"
+					placeholder="Enter Email"
+					icon="mail"
+					message={errors.email?.message}
+					{...register("email", {
+						required: "This field is required",
+						minLength: { value: 2, message: "Email is too short" },
+						maxLength: { value: 32, message: "Email is too long" },
+						pattern: {
+							value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+							message: "Invalid characters in email",
+						},
+					})}
+				/>
+
+				<Button size="lg" type="submit" disabled={!formState.isDirty}>
+					Save
+				</Button>
+			</div>
+		</form>
+	);
+}
+
+function ChangePasswordForm() {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		formState,
+		reset,
+	} = useForm<{
+		currentPassword: string;
+		newPassword: string;
+		confirmPassword: string;
+	}>();
+	const dispatch = useDispatch<AppDispatch>();
+
+	return (
+		<form
+			className="space-y-4"
+			onSubmit={handleSubmit((data) => {
+				const { currentPassword, newPassword, confirmPassword } = data;
+				if (newPassword === confirmPassword) {
+					dispatch(updateMyPasswordAsync({ currentPassword, newPassword }));
+					reset();
+				} else {
+					toast({
+						title: "The passwords you entered do not match",
+						duration: 3000,
+						variant: "destructive",
+					});
+				}
+			})}
+		>
+			<TypographyH4>Change Password</TypographyH4>
+
+			<div className="flex flex-col gap-4">
+				<InputText
+					type="password"
+					placeholder="Current Password"
+					icon="password"
+					message={errors.currentPassword?.message}
+					{...register("currentPassword", {
+						required: "This field is required",
+						minLength: { value: 8, message: "Password is too short" },
+						maxLength: { value: 32, message: "Password is too long" },
+					})}
+				/>
+				<InputText
+					type="password"
+					placeholder="New Password"
+					icon="password"
+					message={errors.newPassword?.message}
+					{...register("newPassword", {
+						required: "This field is required",
+						minLength: { value: 8, message: "Password is too short" },
+						maxLength: { value: 32, message: "Password is too long" },
+					})}
+				/>
+				<InputText
+					type="password"
+					placeholder="Confirm Password"
+					icon="password"
+					message={errors.confirmPassword?.message}
+					{...register("confirmPassword", {
+						required: "This field is required",
+						minLength: { value: 8, message: "Password is too short" },
+						maxLength: { value: 32, message: "Password is too long" },
+					})}
+				/>
+
+				<Button size="lg" type="submit" disabled={!formState.isDirty}>
+					Save
+				</Button>
+			</div>
+		</form>
+	);
+}
+
+// function DeleteAccountForm() {
+// 	return (
+// 		<form>
+// 			<h4 className="">Delete Account</h4>
+
+// 			<p className="mb-4">
+// 				No longer want to use our service? You can delete your account here.
+// 				This action is not reversible. All information related to this account
+// 				will be deleted permanently.
+// 			</p>
+
+// 			<ButtonFullRed>Yes, delete my account</ButtonFullRed>
+// 		</form>
+// 	);
+// }
+
+export default function Page() {
+	const dispatch = useDispatch<AppDispatch>();
+	const { user } = useAppSelector((state) => state.authReducer);
 
 	return (
 		<>
@@ -89,102 +245,9 @@ export default function Page() {
 					<TypographyH3>Settings</TypographyH3>
 
 					<div className="flex flex-col gap-8">
-						<form className="space-y-4">
-							<input
-								ref={inputRef}
-								className="hidden"
-								type="file"
-								accept=".png, .jpg, .jpeg"
-								onChange={onAvatarChange}
-							/>
-
-							<TypographyH4>Personal Information</TypographyH4>
-
-							<div className="flex flex-col gap-4">
-								<div className="flex items-center gap-4">
-									<Avatar className="h-12 w-12">
-										<AvatarImage src={photo || "img/avatar.jpg"} />
-									</Avatar>
-
-									<div className="flex items-center gap-2">
-										<Button
-											variant="secondary"
-											type="button"
-											onClick={() => inputRef.current?.click()}
-										>
-											Change avatar
-										</Button>
-
-										<ButtonIcon
-											type="button"
-											icon="delete"
-											onClick={() => setPhoto(null)}
-										/>
-									</div>
-								</div>
-
-								<InputText
-									type="text"
-									id="name"
-									placeholder={name}
-									icon="person"
-									onChange={(e) => setName(e.target.value)}
-								/>
-								<InputText
-									type="text"
-									id="email"
-									placeholder={email}
-									icon="mail"
-									onChange={(e) => setEmail(e.target.value)}
-								/>
-
-								<Button size="lg" onClick={saveChanges}>
-									Save
-								</Button>
-							</div>
-						</form>
-
-						<form className="space-y-4" onSubmit={updateMyPasswordForm}>
-							<TypographyH4>Change Password</TypographyH4>
-
-							<div className="flex flex-col gap-4">
-								<InputText
-									type="password"
-									id="curpass"
-									placeholder="Current Password"
-									icon="password"
-									onChange={(e) => setCurrentPassword(e.target.value)}
-								/>
-								<InputText
-									type="password"
-									id="newpass"
-									placeholder="New Password"
-									icon="password"
-									onChange={(e) => setNewPassword(e.target.value)}
-								/>
-								<InputText
-									type="password"
-									id="confpass"
-									placeholder="Confirm Password"
-									icon="password"
-									onChange={(e) => setConfirmPassword(e.target.value)}
-								/>
-
-								<Button size="lg">Save</Button>
-							</div>
-						</form>
-
-						{/* <form>
-								<h4 className="">Delete Account</h4>
-
-								<p className="mb-4">
-									No longer want to use our service? You can delete your account
-									here. This action is not reversible. All information related
-									to this account will be deleted permanently.
-								</p>
-
-								<ButtonFullRed>Yes, delete my account</ButtonFullRed>
-							</form> */}
+						<PersonalInformationForm />
+						<ChangePasswordForm />
+						{/* <DeleteAccountForm /> */}
 					</div>
 				</Section>
 			)}

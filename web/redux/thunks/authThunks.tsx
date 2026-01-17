@@ -2,7 +2,8 @@ import { usersService } from "@redux/services/usersService";
 import { RootState } from "@redux/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IUpdateUser } from "_shared/interfaces";
-import { ToastService } from "_shared/shadcn/hooks/use-toast";
+import { toast, ToastService } from "_shared/shadcn/hooks/use-toast";
+import { ToastAction } from "_shared/shadcn/toast";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const loginAsync = createAsyncThunk(
@@ -58,12 +59,21 @@ export const signupAsync = createAsyncThunk(
 		try {
 			const data = await usersService.signup(name, email, password);
 
-			alert("Account created successfully!");
+			toast({
+				title: "Account created successfully!",
+				duration: 3000,
+			});
 
 			router.push("/signin");
 			return data;
 		} catch (error: any) {
-			alert(error.message);
+			toast({
+				title: "Uh oh! Something went wrong.",
+				description: error.message,
+				duration: 3000,
+				variant: "destructive",
+				action: <ToastAction altText="Try again">Try again</ToastAction>,
+			});
 
 			return rejectWithValue(error.message);
 		}
@@ -94,7 +104,10 @@ export const updateMeAsync = createAsyncThunk(
 				updatedUser,
 			);
 
-			alert("User settings updated successfully!");
+			toast({
+				title: "User settings updated successfully!",
+				duration: 3000,
+			});
 
 			return data;
 		} catch (error: any) {
@@ -117,11 +130,20 @@ export const updateMyPasswordAsync = createAsyncThunk(
 				payload,
 			);
 
-			alert("User password updated successfully!");
+			toast({
+				title: "User password updated successfully!",
+				duration: 3000,
+			});
 
 			return data;
 		} catch (error: any) {
-			alert(error.message);
+			toast({
+				title: "Uh oh! Something went wrong.",
+				description: error.message,
+				duration: 3000,
+				variant: "destructive",
+				action: <ToastAction altText="Try again">Try again</ToastAction>,
+			});
 
 			return rejectWithValue(error.message);
 		}

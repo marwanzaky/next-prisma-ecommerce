@@ -11,6 +11,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Section } from "_shared/components/section";
 import { Button } from "_shared/shadcn/button";
 import { TypographyH4 } from "_shared/shadcn/typography";
+import { toast } from "_shared/shadcn/hooks/use-toast";
 
 type Form = {
 	name: string;
@@ -22,7 +23,11 @@ type Form = {
 export default function Signup() {
 	const router = useRouter();
 
-	const { register, handleSubmit } = useForm<Form>();
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<Form>();
 
 	const dispatch = useDispatch<AppDispatch>();
 
@@ -32,7 +37,11 @@ export default function Signup() {
 		if (password === confirmPassword) {
 			dispatch(signupAsync({ name, email, password, router }));
 		} else {
-			alert("The passwords you entered do not match");
+			toast({
+				title: "The passwords you entered do not match",
+				duration: 3000,
+				variant: "destructive",
+			});
 		}
 	};
 
@@ -50,29 +59,53 @@ export default function Signup() {
 						type="text"
 						placeholder="Enter Name"
 						icon="person"
-						required
-						{...register("name", { required: true })}
+						message={errors.name?.message}
+						{...register("name", {
+							required: "This field is required",
+							minLength: { value: 2, message: "Name is too short" },
+							maxLength: { value: 16, message: "Name is too long" },
+							pattern: {
+								value: /^[a-zA-Z\s'-]+$/,
+								message: "Invalid characters in name",
+							},
+						})}
 					/>
 					<InputText
-						type="email"
+						type="text"
 						placeholder="Enter Email"
 						icon="mail"
-						required
-						{...register("email", { required: true })}
+						message={errors.email?.message}
+						{...register("email", {
+							required: "This field is required",
+							minLength: { value: 2, message: "Email is too short" },
+							maxLength: { value: 32, message: "Email is too long" },
+							pattern: {
+								value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+								message: "Invalid characters in email",
+							},
+						})}
 					/>
 					<InputText
 						type="password"
 						placeholder="Enter Password"
 						icon="password"
-						required
-						{...register("password", { required: true })}
+						message={errors.password?.message}
+						{...register("password", {
+							required: "This field is required",
+							minLength: { value: 8, message: "Password is too short" },
+							maxLength: { value: 32, message: "Password is too long" },
+						})}
 					/>
 					<InputText
 						type="password"
 						placeholder="Repeat Password"
 						icon="password"
-						required
-						{...register("confirmPassword", { required: true })}
+						message={errors.confirmPassword?.message}
+						{...register("confirmPassword", {
+							required: "This field is required",
+							minLength: { value: 8, message: "Password is too short" },
+							maxLength: { value: 32, message: "Password is too long" },
+						})}
 					/>
 
 					<Button size="lg" type="submit">

@@ -10,6 +10,7 @@ import { InputText } from "_shared/components/inputText";
 import { Textarea } from "_shared/components/textarea";
 import { Button } from "_shared/shadcn/button";
 import { TypographyH2, TypographyH4, TypographyP } from "_shared/ui/typography";
+import { toast } from "_shared/shadcn/hooks/use-toast";
 
 type Inputs = {
 	name: string;
@@ -27,10 +28,13 @@ export default function Contact() {
 		formState: { errors },
 	} = useForm<Inputs>();
 
-	const onSubmit: SubmitHandler<Inputs> = (data) => {
-		contactService.contact(data);
+	const onSubmit: SubmitHandler<Inputs> = async (data) => {
+		await contactService.contact(data);
 
-		alert("Message sent successfully. Thank you!");
+		toast({
+			title: "Message sent successfully. Thank you!",
+		});
+
 		router.push("/");
 	};
 

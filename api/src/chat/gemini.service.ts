@@ -45,7 +45,8 @@ export class GeminiService {
 	}
 
 	async request(body: GeminiRequestBody): Promise<GeminiResponse> {
-		const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+		const model = process.env.AI_MODEL || "gemini-2.0-flash";
+		const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
 		const response = await fetch(endpoint, {
 			method: "POST",
 			body: JSON.stringify(body),

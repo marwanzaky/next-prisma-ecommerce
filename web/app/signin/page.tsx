@@ -21,7 +21,11 @@ export default function Page() {
 	const router = useRouter();
 	const { toast } = useToast();
 
-	const { register, handleSubmit } = useForm<Inputs>();
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<Inputs>();
 
 	const dispatch = useDispatch();
 
@@ -43,15 +47,25 @@ export default function Page() {
 						type="text"
 						placeholder="Enter Email"
 						icon="mail"
-						required
-						{...register("email", { required: true })}
+						message={errors.email?.message}
+						{...register("email", {
+							required: "This field is required",
+							minLength: { value: 2, message: "Email is too short" },
+							maxLength: { value: 32, message: "Email is too long" },
+							pattern: {
+								value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+								message: "Invalid characters in email",
+							},
+						})}
 					/>
 					<InputText
 						type="password"
 						placeholder="Enter Password"
 						icon="password"
-						required
-						{...register("password", { required: true })}
+						message={errors.password?.message}
+						{...register("password", {
+							required: "This field is required",
+						})}
 					/>
 
 					<Button size="lg" type="submit">
