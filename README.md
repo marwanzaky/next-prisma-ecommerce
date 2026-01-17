@@ -43,6 +43,10 @@
 - Signup: `/signup`
 - Account: `/me`
 
+## Features
+### Form validation
+<img width="512" height="573" alt="Untitled" src="https://github.com/user-attachments/assets/cea44838-27c7-4470-a80a-d51a4e7f48c5" />
+
 ## Contact
 
 Have questions, feedback, or want to collaborate? Feel free to reach out!
