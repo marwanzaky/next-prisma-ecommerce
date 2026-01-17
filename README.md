@@ -1,5 +1,9 @@
 # MERN e-commerce
-<img width="50%" height="1702" alt="mamolio vercel app_" src="https://github.com/user-attachments/assets/eda10bb3-8d5b-4775-8d45-b05ace8b258b" />
+<div style="display: flex;">
+<img width="50%" height="100%" alt="mamolio vercel app_" src="https://github.com/user-attachments/assets/eda10bb3-8d5b-4775-8d45-b05ace8b258b" />
+<img width="auto" height="512px" alt="mamolio vercel app_(iPhone 12 Pro) (1)" src="https://github.com/user-attachments/assets/00f87721-deb0-4c11-8d5e-d468a42c06a7" />
+</div>
+
 
 ## About
 
