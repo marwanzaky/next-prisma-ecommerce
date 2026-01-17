@@ -45,7 +45,19 @@
 
 ## Features
 ### Form validation
-<img width="512" height="573" alt="Untitled" src="https://github.com/user-attachments/assets/cea44838-27c7-4470-a80a-d51a4e7f48c5" />
+- Name: max 20 characters
+- Email: must be a valid email format
+- Password: minimum 8 characters
+- Confirm password: must match password
+- All fields are required
+<img width="448px" height="573" alt="Untitled" src="https://github.com/user-attachments/assets/cea44838-27c7-4470-a80a-d51a4e7f48c5" />
+
+### Inventory Management
+- Create, edit, and delete products
+- Inline stock updates with validation
+- Price comparison support
+- Real-time UI updates synced with backend
+<img width="448px" height="1408" alt="asdf" src="https://github.com/user-attachments/assets/d6e1ed8b-9bad-42bb-b175-662d44b90892" />
 
 ## Contact
 
