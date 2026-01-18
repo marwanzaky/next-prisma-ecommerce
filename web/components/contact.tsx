@@ -58,35 +58,51 @@ export default function Contact() {
 					type="text"
 					placeholder="Name"
 					icon="person"
-					message={errors.name && "This field is required"}
-					{...register("name", { required: true })}
+					message={errors.name?.message}
+					{...register("name", {
+						required: "This field is required.",
+						minLength: { value: 2, message: "Name is too short." },
+						maxLength: { value: 16, message: "Name is too long." },
+						pattern: {
+							value: /^[a-zA-Z\s'-]+$/,
+							message: "Invalid characters in name.",
+						},
+					})}
 				/>
 				<InputText
-					type="email"
+					type="text"
 					placeholder="Email"
 					icon="send"
-					message={errors.email && "This field is required"}
-					{...register("email", { required: true })}
+					message={errors.email?.message}
+					{...register("email", {
+						required: "This field is required.",
+						minLength: { value: 2, message: "Email is too short." },
+						maxLength: { value: 32, message: "Email is too long." },
+						pattern: {
+							value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+							message: "Invalid characters in email.",
+						},
+					})}
 				/>
 				<InputText
 					type="text"
 					placeholder="Subject"
 					icon="subject"
-					message={
-						errors.subject && errors.subject.type === "required"
-							? "This field is required"
-							: errors.subject && errors.subject.type === "maxLength"
-							? "This field must be 64 characters or fewer."
-							: ""
-					}
-					{...register("subject", { required: true, maxLength: 64 })}
+					message={errors.subject?.message}
+					{...register("subject", {
+						required: "This field is required.",
+						maxLength: {
+							value: 64,
+							message: "This field must be 64 characters or fewer.",
+						},
+					})}
 				/>
 				<Textarea
 					styleClass="h-36"
 					placeholder="Message"
 					icon="mail"
-					message={errors.message && "This field is required"}
-					{...register("message", { required: true })}
+					message={errors.message?.message}
+					{...register("message", { required: "This field is required." })}
 				/>
 
 				<Button size="lg" type="submit">

@@ -11,6 +11,18 @@ import {
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "_shared/shadcn/hooks/use-toast";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "_shared/shadcn/alertDialog";
+import { ButtonIcon } from "_shared/ui/buttonIcon";
 
 type CartItem = IProduct & { imgUrl: string };
 
@@ -65,7 +77,6 @@ export function useSell() {
 							name: row.name,
 							stock: value,
 						},
-						toast,
 					}),
 				);
 			},
@@ -73,14 +84,36 @@ export function useSell() {
 		{
 			field: "_id",
 			header: "",
-			type: "action",
+			type: "custom",
 			width: "38px",
-			action: (row) => {
-				if (confirm("Are you sure you want to delete this product?")) {
-					dispatch(removeUserProductAsync({ product: row, toast }));
-				}
+			render(value, row) {
+				return (
+					<AlertDialog>
+						<AlertDialogTrigger asChild>
+							<ButtonIcon icon="delete" />
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+								<AlertDialogDescription>
+									This action cannot be undone. This will permanently delete the
+									product data from our servers.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction
+									onClick={() => {
+										dispatch(removeUserProductAsync({ product: row, toast }));
+									}}
+								>
+									Continue
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
+				);
 			},
-			actionIcon: "delete",
 		},
 		{
 			field: "_id",

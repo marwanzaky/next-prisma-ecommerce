@@ -52,7 +52,7 @@ export const updateUserProductAsync = createAsyncThunk(
 			id,
 			data,
 			toast,
-		}: { id: string; data: IUpdateProduct; toast: ToastService },
+		}: { id: string; data: IUpdateProduct; toast?: ToastService },
 		{ getState, rejectWithValue },
 	) => {
 		const state = getState() as RootState;
@@ -64,11 +64,12 @@ export const updateUserProductAsync = createAsyncThunk(
 				data,
 			);
 
-			toast({
-				title: "Product updated",
-				description: `"${data.name}" has been successfully updated.`,
-				duration: 3000,
-			});
+			toast &&
+				toast({
+					title: "Product updated",
+					description: `"${data.name}" has been successfully updated.`,
+					duration: 3000,
+				});
 
 			return response;
 		} catch (error: any) {

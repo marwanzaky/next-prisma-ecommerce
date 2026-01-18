@@ -105,12 +105,12 @@ function PersonalInformationForm() {
 					icon="person"
 					message={errors.name?.message}
 					{...register("name", {
-						required: "This field is required",
-						minLength: { value: 2, message: "Name is too short" },
-						maxLength: { value: 16, message: "Name is too long" },
+						required: "This field is required.",
+						minLength: { value: 2, message: "Name is too short." },
+						maxLength: { value: 16, message: "Name is too long." },
 						pattern: {
 							value: /^[a-zA-Z\s'-]+$/,
-							message: "Invalid characters in name",
+							message: "Invalid characters in name.",
 						},
 					})}
 				/>
@@ -120,12 +120,12 @@ function PersonalInformationForm() {
 					icon="mail"
 					message={errors.email?.message}
 					{...register("email", {
-						required: "This field is required",
-						minLength: { value: 2, message: "Email is too short" },
-						maxLength: { value: 32, message: "Email is too long" },
+						required: "This field is required.",
+						minLength: { value: 2, message: "Email is too short." },
+						maxLength: { value: 32, message: "Email is too long." },
 						pattern: {
 							value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-							message: "Invalid characters in email",
+							message: "Invalid characters in email.",
 						},
 					})}
 				/>
@@ -178,9 +178,9 @@ function ChangePasswordForm() {
 					icon="password"
 					message={errors.currentPassword?.message}
 					{...register("currentPassword", {
-						required: "This field is required",
-						minLength: { value: 8, message: "Password is too short" },
-						maxLength: { value: 32, message: "Password is too long" },
+						required: "This field is required.",
+						minLength: { value: 8, message: "Password is too short." },
+						maxLength: { value: 32, message: "Password is too long." },
 					})}
 				/>
 				<InputText
@@ -189,9 +189,9 @@ function ChangePasswordForm() {
 					icon="password"
 					message={errors.newPassword?.message}
 					{...register("newPassword", {
-						required: "This field is required",
-						minLength: { value: 8, message: "Password is too short" },
-						maxLength: { value: 32, message: "Password is too long" },
+						required: "This field is required.",
+						minLength: { value: 8, message: "Password is too short." },
+						maxLength: { value: 32, message: "Password is too long." },
 					})}
 				/>
 				<InputText
@@ -200,9 +200,9 @@ function ChangePasswordForm() {
 					icon="password"
 					message={errors.confirmPassword?.message}
 					{...register("confirmPassword", {
-						required: "This field is required",
-						minLength: { value: 8, message: "Password is too short" },
-						maxLength: { value: 32, message: "Password is too long" },
+						required: "This field is required.",
+						minLength: { value: 8, message: "Password is too short." },
+						maxLength: { value: 32, message: "Password is too long." },
 					})}
 				/>
 

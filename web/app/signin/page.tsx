@@ -49,9 +49,9 @@ export default function Page() {
 						icon="mail"
 						message={errors.email?.message}
 						{...register("email", {
-							required: "This field is required",
-							minLength: { value: 2, message: "Email is too short" },
-							maxLength: { value: 32, message: "Email is too long" },
+							required: "This field is required.",
+							minLength: { value: 2, message: "Email is too short." },
+							maxLength: { value: 32, message: "Email is too long." },
 							pattern: {
 								value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
 								message: "Invalid characters in email",
@@ -64,7 +64,7 @@ export default function Page() {
 						icon="password"
 						message={errors.password?.message}
 						{...register("password", {
-							required: "This field is required",
+							required: "This field is required.",
 						})}
 					/>
 
