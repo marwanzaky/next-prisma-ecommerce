@@ -26,7 +26,7 @@ export default function Contact() {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<Inputs>();
+	} = useForm<Inputs>({ mode: "onTouched" });
 
 	const onSubmit: SubmitHandler<Inputs> = async (data) => {
 		await contactService.contact(data);
@@ -59,6 +59,7 @@ export default function Contact() {
 					placeholder="Name"
 					icon="person"
 					message={errors.name?.message}
+					hasError={!!errors.name}
 					{...register("name", {
 						required: "This field is required.",
 						minLength: { value: 2, message: "Name is too short." },
@@ -74,6 +75,7 @@ export default function Contact() {
 					placeholder="Email"
 					icon="send"
 					message={errors.email?.message}
+					hasError={!!errors.email}
 					{...register("email", {
 						required: "This field is required.",
 						minLength: { value: 2, message: "Email is too short." },
@@ -89,6 +91,7 @@ export default function Contact() {
 					placeholder="Subject"
 					icon="subject"
 					message={errors.subject?.message}
+					hasError={!!errors.subject}
 					{...register("subject", {
 						required: "This field is required.",
 						maxLength: {
@@ -102,6 +105,7 @@ export default function Contact() {
 					placeholder="Message"
 					icon="mail"
 					message={errors.message?.message}
+					hasError={!!errors.message}
 					{...register("message", { required: "This field is required." })}
 				/>
 

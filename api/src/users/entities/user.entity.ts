@@ -21,6 +21,7 @@ export class User extends Document implements Omit<IUser, "_id"> {
 		unique: true,
 		required: true,
 		lowercase: true,
+		index: true,
 		validate: {
 			validator: (value: string) => isEmail(value),
 			message: "Please enter a valid email",

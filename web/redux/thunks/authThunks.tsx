@@ -50,11 +50,10 @@ export const signupAsync = createAsyncThunk(
 			name: string;
 			email: string;
 			password: string;
-			router: AppRouterInstance;
 		},
 		{ rejectWithValue },
 	) => {
-		const { name, email, password, router } = credentials;
+		const { name, email, password } = credentials;
 
 		try {
 			const data = await usersService.signup(name, email, password);
@@ -64,7 +63,6 @@ export const signupAsync = createAsyncThunk(
 				duration: 3000,
 			});
 
-			router.push("/signin");
 			return data;
 		} catch (error: any) {
 			toast({
@@ -145,6 +143,26 @@ export const updateMyPasswordAsync = createAsyncThunk(
 				action: <ToastAction altText="Try again">Try again</ToastAction>,
 			});
 
+			return rejectWithValue(error.message);
+		}
+	},
+);
+
+export const deleteMeAsync = createAsyncThunk(
+	"auth/deleteMe",
+	async (_, { getState, rejectWithValue }) => {
+		const state = getState() as RootState;
+
+		try {
+			const data = await usersService.deleteMe(state.authReducer.token);
+
+			toast({
+				title: "User deleted successfully!",
+				duration: 3000,
+			});
+
+			return data;
+		} catch (error: any) {
 			return rejectWithValue(error.message);
 		}
 	},

@@ -14,9 +14,15 @@ const inputTextVariants = cva(
 				sm: "px-[25px] h-[48px]",
 				md: "px-[25px] h-[62px]",
 			},
+			hasError: {
+				// true: "text-red-500 focus:shadow-[0_0_0_2pt_#ef4444]",
+				true: "",
+				false: "",
+			},
 		},
 		defaultVariants: {
 			size: "md",
+			hasError: false,
 		},
 	},
 );
@@ -29,6 +35,7 @@ type InputTextProps = Omit<
 	icon?: string;
 	size?: "md" | "sm";
 	message?: string;
+	hasError?: boolean;
 };
 
 export function InputText({
@@ -37,13 +44,14 @@ export function InputText({
 	icon,
 	size,
 	message,
+	hasError,
 	...inputProps
 }: InputTextProps) {
 	return (
 		<div className={className}>
 			<div className="relative">
 				<input
-					className={clsx(inputTextVariants({ size }), styleClass)}
+					className={clsx(inputTextVariants({ size, hasError }), styleClass)}
 					{...inputProps}
 				/>
 

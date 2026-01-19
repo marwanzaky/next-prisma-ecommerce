@@ -11,8 +11,15 @@ const textareaVariants = cva(
 		"outline-none shadow-[0_0_0_1pt_#ecf0f1] focus:shadow-[0_0_0_2pt_cornflowerblue] transition-shadow",
 	],
 	{
-		variants: {},
-		defaultVariants: {},
+		variants: {
+			hasError: {
+				true: "",
+				false: "",
+			},
+		},
+		defaultVariants: {
+			hasError: false,
+		},
 	},
 );
 
@@ -20,6 +27,7 @@ type TextareaProps = Omit<React.ComponentProps<"textarea">, "size"> & {
 	styleClass?: string;
 	icon?: string;
 	message?: string;
+	hasError?: boolean;
 };
 
 export function Textarea({
@@ -27,13 +35,14 @@ export function Textarea({
 	styleClass,
 	icon,
 	message,
+	hasError,
 	...inputProps
 }: TextareaProps) {
 	return (
 		<div className={className}>
 			<div className="relative">
 				<textarea
-					className={cn(textareaVariants({}), styleClass)}
+					className={cn(textareaVariants({ hasError }), styleClass)}
 					{...inputProps}
 				/>
 

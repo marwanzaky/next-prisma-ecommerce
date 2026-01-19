@@ -5,17 +5,36 @@ import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 import { AppDispatch, useAppSelector } from "@redux/store";
-import { updateMeAsync, updateMyPasswordAsync } from "@redux/thunks/authThunks";
+import {
+	deleteMeAsync,
+	updateMeAsync,
+	updateMyPasswordAsync,
+} from "@redux/thunks/authThunks";
 import { InputText } from "_shared/components/inputText";
 import { Section } from "_shared/components/section";
 import { Button } from "_shared/shadcn/button";
 import { ButtonIcon } from "_shared/ui/buttonIcon";
-import { TypographyH3, TypographyH4 } from "_shared/shadcn/typography";
+import {
+	TypographyH3,
+	TypographyH4,
+	TypographyMuted,
+} from "_shared/shadcn/typography";
 import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
 
 import { useForm } from "react-hook-form";
 import { IUpdateUser } from "_shared/interfaces";
 import { toast } from "_shared/shadcn/hooks/use-toast";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "_shared/shadcn/alertDialog";
 
 function PersonalInformationForm() {
 	const {
@@ -214,24 +233,50 @@ function ChangePasswordForm() {
 	);
 }
 
-// function DeleteAccountForm() {
-// 	return (
-// 		<form>
-// 			<h4 className="">Delete Account</h4>
+function DeleteAccountForm() {
+	const dispatch = useDispatch<AppDispatch>();
 
-// 			<p className="mb-4">
-// 				No longer want to use our service? You can delete your account here.
-// 				This action is not reversible. All information related to this account
-// 				will be deleted permanently.
-// 			</p>
+	return (
+		<form className="space-y-4">
+			<TypographyH4>Delete Account</TypographyH4>
 
-// 			<ButtonFullRed>Yes, delete my account</ButtonFullRed>
-// 		</form>
-// 	);
-// }
+			<div className="flex flex-col gap-4">
+				<TypographyMuted>
+					No longer want to use our service? You can delete your account here.
+					This action is not reversible. All information related to this account
+					will be deleted permanently.
+				</TypographyMuted>
+
+				<AlertDialog>
+					<AlertDialogTrigger asChild>
+						<Button variant="destructive">Yes, delete my account</Button>
+					</AlertDialogTrigger>
+					<AlertDialogContent>
+						<AlertDialogHeader>
+							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+							<AlertDialogDescription>
+								This action cannot be undone. This will permanently delete your
+								account and remove your data from our servers.
+							</AlertDialogDescription>
+						</AlertDialogHeader>
+						<AlertDialogFooter>
+							<AlertDialogCancel>Cancel</AlertDialogCancel>
+							<AlertDialogAction
+								onClick={() => {
+									dispatch(deleteMeAsync());
+								}}
+							>
+								Continue
+							</AlertDialogAction>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialog>
+			</div>
+		</form>
+	);
+}
 
 export default function Page() {
-	const dispatch = useDispatch<AppDispatch>();
 	const { user } = useAppSelector((state) => state.authReducer);
 
 	return (
@@ -247,7 +292,8 @@ export default function Page() {
 					<div className="flex flex-col gap-8">
 						<PersonalInformationForm />
 						<ChangePasswordForm />
-						{/* <DeleteAccountForm /> */}
+
+						{user.role === "admin" && <DeleteAccountForm />}
 					</div>
 				</Section>
 			)}

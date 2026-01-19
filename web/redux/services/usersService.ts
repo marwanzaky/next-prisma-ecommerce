@@ -9,6 +9,7 @@ export const usersService = {
 	getMeProducts,
 	updateMe,
 	updateMyPassword,
+	deleteMe,
 };
 
 async function login(
@@ -131,6 +132,24 @@ async function updateMyPassword(
 			"Content-type": "application/json",
 		},
 		body: JSON.stringify({ currentPassword, newPassword }),
+	});
+
+	const data = await response.json();
+
+	if (!response.ok) {
+		throw new Error(data.message);
+	}
+
+	return data;
+}
+
+async function deleteMe(token: string): Promise<{ token: string }> {
+	const response = await fetch(`${baseUrl}/users/deleteMe`, {
+		method: "DELETE",
+		headers: {
+			Authorization: `Bearer ${token}`,
+			"Content-type": "application/json",
+		},
 	});
 
 	const data = await response.json();

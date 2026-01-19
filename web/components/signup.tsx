@@ -26,28 +26,26 @@ export default function Signup() {
 	const {
 		register,
 		handleSubmit,
+		watch,
 		formState: { errors },
-	} = useForm<Form>();
+	} = useForm<Form>({ mode: "onTouched" });
+
+	const password = watch("password");
 
 	const dispatch = useDispatch<AppDispatch>();
 
-	const onSubmit: SubmitHandler<Form> = (data) => {
-		const { name, email, password, confirmPassword } = data;
-
-		if (password === confirmPassword) {
-			dispatch(signupAsync({ name, email, password, router }));
-		} else {
-			toast({
-				title: "The passwords you entered do not match",
-				duration: 3000,
-				variant: "destructive",
-			});
-		}
-	};
-
 	return (
 		<Section>
-			<form onSubmit={handleSubmit(onSubmit)} className="m-auto max-w-lg">
+			<form
+				onSubmit={handleSubmit(async ({ name, email, password }) => {
+					const action = await dispatch(signupAsync({ name, email, password }));
+
+					if (signupAsync.fulfilled.match(action)) {
+						router.push("/signin");
+					}
+				})}
+				className="m-auto max-w-lg"
+			>
 				<TypographyH4 className="text-center mb-4">Sign Up</TypographyH4>
 				<p className="text-center text-grey mb-8 text-muted-foreground">
 					Create an account to unlock all the benefits to easily save and
@@ -60,6 +58,7 @@ export default function Signup() {
 						placeholder="Enter Name"
 						icon="person"
 						message={errors.name?.message}
+						hasError={!!errors.name}
 						{...register("name", {
 							required: "This field is required.",
 							minLength: { value: 2, message: "Name is too short." },
@@ -75,6 +74,7 @@ export default function Signup() {
 						placeholder="Enter Email"
 						icon="mail"
 						message={errors.email?.message}
+						hasError={!!errors.email}
 						{...register("email", {
 							required: "This field is required.",
 							minLength: { value: 2, message: "Email is too short." },
@@ -90,6 +90,7 @@ export default function Signup() {
 						placeholder="Enter Password"
 						icon="password"
 						message={errors.password?.message}
+						hasError={!!errors.password}
 						{...register("password", {
 							required: "This field is required.",
 							minLength: { value: 8, message: "Password is too short." },
@@ -101,10 +102,11 @@ export default function Signup() {
 						placeholder="Repeat Password"
 						icon="password"
 						message={errors.confirmPassword?.message}
+						hasError={!!errors.confirmPassword}
 						{...register("confirmPassword", {
 							required: "This field is required.",
-							minLength: { value: 8, message: "Password is too short." },
-							maxLength: { value: 32, message: "Password is too long." },
+							validate: (value) =>
+								value === password || "Passwords do not match.",
 						})}
 					/>
 
