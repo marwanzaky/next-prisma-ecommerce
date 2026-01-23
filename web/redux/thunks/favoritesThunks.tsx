@@ -34,7 +34,7 @@ export const postFavoritesAsync = createAsyncThunk(
 
 			toast({
 				title: "Added to favorites",
-				description: `${product.name} is now in your favorites.`,
+				description: `"${product.name}" is now in your favorites.`,
 				duration: 3000,
 			});
 
@@ -61,7 +61,7 @@ export const removeFavoritesAsync = createAsyncThunk(
 
 			toast({
 				title: "Removed to favorites",
-				description: `${product.name} has been removed from your favorites.`,
+				description: `"${product.name}" has been removed from your favorites.`,
 				duration: 3000,
 			});
 

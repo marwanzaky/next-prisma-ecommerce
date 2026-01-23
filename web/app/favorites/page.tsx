@@ -5,19 +5,45 @@ import { useFavorites } from "@hooks/useFavorites";
 import ProductItem from "_shared/ui/productCart";
 import { TypographyH4 } from "_shared/shadcn/typography";
 import { Section } from "_shared/components/section";
+import {
+	Empty,
+	EmptyContent,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyTitle,
+} from "_shared/components/empty";
+import { Button } from "_shared/shadcn/button";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+	const router = useRouter();
 	const { items } = useFavorites();
 
 	return (
 		<Section className="space-y-2 lg:space-y-4">
 			<TypographyH4 className="text-center">Your Favorites</TypographyH4>
-
-			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4">
-				{items.map((item) => (
-					<ProductItem data={item} key={item._id}></ProductItem>
-				))}
-			</div>
+			{items.length > 0 ? (
+				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4">
+					{items.map((item) => (
+						<ProductItem data={item} key={item._id}></ProductItem>
+					))}
+				</div>
+			) : (
+				<Empty className="border border-dashed">
+					<EmptyHeader>
+						<EmptyTitle>Nothing here... yet.</EmptyTitle>
+						<EmptyDescription className="max-w-xs text-pretty">
+							Start favoriting items to compare, shop, and keep track of things
+							you love.
+						</EmptyDescription>
+					</EmptyHeader>
+					<EmptyContent>
+						<Button variant="outline" onClick={() => router.push("/products")}>
+							Continue shopping
+						</Button>
+					</EmptyContent>
+				</Empty>
+			)}
 		</Section>
 	);
 }

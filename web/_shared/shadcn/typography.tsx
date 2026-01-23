@@ -31,19 +31,6 @@ export function TypographyH2({ className, children }: Typography) {
 	);
 }
 
-export function TypographyH4({ className, children }: Typography) {
-	return (
-		<h4
-			className={cn(
-				"scroll-m-20 text-xl font-semibold tracking-tight",
-				className,
-			)}
-		>
-			{children}
-		</h4>
-	);
-}
-
 export function TypographyH3({ className, children }: Typography) {
 	return (
 		<h3
@@ -54,6 +41,19 @@ export function TypographyH3({ className, children }: Typography) {
 		>
 			{children}
 		</h3>
+	);
+}
+
+export function TypographyH4({ className, children }: Typography) {
+	return (
+		<h4
+			className={cn(
+				"scroll-m-20 text-xl font-semibold tracking-tight",
+				className,
+			)}
+		>
+			{children}
+		</h4>
 	);
 }
 

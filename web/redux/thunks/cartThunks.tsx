@@ -42,7 +42,7 @@ export const postCartItemAsync = createAsyncThunk(
 
 				toast({
 					title: "Added to cart (guest)",
-					description: `${product.name} has been added to your cart.`,
+					description: `"${product.name}" has been added to your cart.`,
 					duration: 3000,
 				});
 
@@ -57,7 +57,7 @@ export const postCartItemAsync = createAsyncThunk(
 
 			toast({
 				title: "Added to cart",
-				description: `${product.name} has been added to your cart.`,
+				description: `"${product.name}" has been added to your cart.`,
 				duration: 3000,
 			});
 
@@ -108,7 +108,7 @@ export const deleteCartItemAsync = createAsyncThunk(
 
 				toast({
 					title: "Removed from cart (guest)",
-					description: `${product.name} has been removed from your cart.`,
+					description: `"${product.name}" has been removed from your cart.`,
 					duration: 3000,
 				});
 
@@ -122,7 +122,7 @@ export const deleteCartItemAsync = createAsyncThunk(
 
 			toast({
 				title: "Removed from cart",
-				description: `${product.name} has been removed from your cart.`,
+				description: `"${product.name}" has been removed from your cart.`,
 				duration: 3000,
 			});
 

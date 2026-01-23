@@ -19,6 +19,13 @@ import {
 	DialogTitle,
 } from "_shared/shadcn/dialog";
 import { Controller } from "react-hook-form";
+import {
+	Empty,
+	EmptyContent,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyTitle,
+} from "_shared/components/empty";
 
 export default function Page() {
 	const {
@@ -42,25 +49,40 @@ export default function Page() {
 		onUpdateProduct,
 	} = useSell();
 
+	const addItem = () => {
+		resetForm();
+		setDisplayDialog(true);
+	};
+
 	return (
 		<Section className="space-y-4">
 			<TypographyH4 className="text-center">Your Products</TypographyH4>
 
-			<div className="flex flex-col gap-4">
-				<Table columns={columns} data={tableData}></Table>
+			{tableData.length > 0 ? (
+				<div className="flex flex-col gap-4">
+					<Table columns={columns} data={tableData}></Table>
 
-				<div className="flex justify-end">
-					<Button
-						className="!mr-0"
-						onClick={() => {
-							resetForm();
-							setDisplayDialog(true);
-						}}
-					>
-						Add item
-					</Button>
+					<div className="flex justify-end">
+						<Button className="!mr-0" onClick={addItem}>
+							Add item
+						</Button>
+					</div>
 				</div>
-			</div>
+			) : (
+				<Empty className="border border-dashed">
+					<EmptyHeader>
+						<EmptyTitle>Nothing here... yet.</EmptyTitle>
+						<EmptyDescription className="max-w-xs text-pretty">
+							Get started by creating your first product.
+						</EmptyDescription>
+					</EmptyHeader>
+					<EmptyContent>
+						<Button variant="outline" onClick={addItem}>
+							Add
+						</Button>
+					</EmptyContent>
+				</Empty>
+			)}
 
 			<Dialog open={displayDialog} onOpenChange={setDisplayDialog}>
 				<DialogContent className="sm:max-w-[425px]">
