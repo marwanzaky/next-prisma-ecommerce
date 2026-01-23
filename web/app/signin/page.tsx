@@ -25,17 +25,18 @@ export default function Page() {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<Inputs>();
+	} = useForm<Inputs>({ mode: "onTouched" });
 
 	const dispatch = useDispatch();
 
-	const onSubmit: SubmitHandler<Inputs> = (data) => {
-		handleLogin(data.email, data.password, dispatch, router, toast);
-	};
-
 	return (
 		<Section>
-			<form onSubmit={handleSubmit(onSubmit)} className="m-auto max-w-lg">
+			<form
+				onSubmit={handleSubmit(({ email, password }) => {
+					handleLogin(email, password, dispatch, router, toast);
+				})}
+				className="m-auto max-w-lg"
+			>
 				<TypographyH4 className="text-center mb-4">Sign In</TypographyH4>
 				<p className="text-center text-grey mb-8 text-muted-foreground">
 					Sign in to get personalized product recommendations, save and

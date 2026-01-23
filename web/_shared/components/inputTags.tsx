@@ -34,10 +34,11 @@ type InputTagsProps = Omit<
 > & {
 	value: string[];
 	onChange: React.Dispatch<React.SetStateAction<string[]>>;
+	message?: string;
 };
 
 const InputTags = forwardRef<HTMLInputElement, InputTagsProps>(
-	({ className, value, onChange, ...props }, ref) => {
+	({ className, value, onChange, message, ...inputProps }, ref) => {
 		const [pendingDataPoint, setPendingDataPoint] = useState("");
 
 		useEffect(() => {
@@ -60,43 +61,50 @@ const InputTags = forwardRef<HTMLInputElement, InputTagsProps>(
 		};
 
 		return (
-			<div className={clsx(inputTagsVariants({ size: "md" }), className)}>
-				{value.map((item) => (
-					<Badge className="flex gap-1 hover:bg-gray-300" key={item}>
-						{item}
+			<>
+				<div className={clsx(inputTagsVariants({ size: "md" }), className)}>
+					{value.map((item) => (
+						<Badge className="flex gap-1 hover:bg-gray-300" key={item}>
+							{item}
 
-						<Icon
-							className="cursor-pointer"
-							onClick={() => {
-								onChange(value.filter((i) => i !== item));
-							}}
-							icon="close"
-							size={16}
-						/>
-					</Badge>
-				))}
+							<Icon
+								className="cursor-pointer"
+								onClick={() => {
+									onChange(value.filter((i) => i !== item));
+								}}
+								icon="close"
+								size={16}
+							/>
+						</Badge>
+					))}
 
-				<input
-					ref={ref}
-					className="flex-1 outline-none bg-transparent leading-none"
-					value={pendingDataPoint}
-					onChange={(e) => setPendingDataPoint(e.target.value)}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" || e.key === ",") {
-							e.preventDefault();
-							addPendingDataPoint();
-						} else if (
-							e.key === "Backspace" &&
-							pendingDataPoint.length === 0 &&
-							value.length > 0
-						) {
-							e.preventDefault();
-							onChange(value.slice(0, -1));
-						}
-					}}
-					{...props}
-				/>
-			</div>
+					<input
+						ref={ref}
+						className="flex-1 outline-none bg-transparent leading-none"
+						value={pendingDataPoint}
+						onChange={(e) => setPendingDataPoint(e.target.value)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" || e.key === ",") {
+								e.preventDefault();
+								addPendingDataPoint();
+							} else if (
+								e.key === "Backspace" &&
+								pendingDataPoint.length === 0 &&
+								value.length > 0
+							) {
+								e.preventDefault();
+								onChange(value.slice(0, -1));
+							}
+						}}
+						{...inputProps}
+					/>
+				</div>
+				{message && (
+					<div className="text-red-600 text-xs leading-none mt-2">
+						{message}
+					</div>
+				)}
+			</>
 		);
 	},
 );

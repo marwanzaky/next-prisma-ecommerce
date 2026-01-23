@@ -29,13 +29,23 @@ export default function Contact() {
 	} = useForm<Inputs>({ mode: "onTouched" });
 
 	const onSubmit: SubmitHandler<Inputs> = async (data) => {
-		await contactService.contact(data);
+		try {
+			await contactService.contact(data);
 
-		toast({
-			title: "Message sent successfully. Thank you!",
-		});
+			toast({
+				title: "Message sent successfully. Thank you!",
+			});
 
-		router.push("/");
+			router.push("/");
+		} catch (error) {
+			toast({
+				title: "Something went wrong",
+				description: "Please try again later.",
+				variant: "destructive",
+			});
+
+			console.error(error);
+		}
 	};
 
 	return (

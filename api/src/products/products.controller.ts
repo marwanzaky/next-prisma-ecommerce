@@ -70,41 +70,9 @@ export class ProductsController {
 		@Req() req: IRequest,
 		@Body() createProductDto: CreateProductDto,
 	) {
-		const {
-			name,
-			price,
-			priceCompare,
-			description,
-			imgUrls: imgBase64s,
-			tags,
-		} = createProductDto;
-
-		const imgUrlPromises = await imgBase64s.map(async (imgBase64) => {
-			const base64 = imgBase64.split("base64,")[1];
-			const fileBuffer = Buffer.from(base64, "base64");
-			const fileName = `product-imgs/${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
-
-			const { imgUrl } = await this.supabaseService.uploadFile(
-				"uploads",
-				fileName,
-				fileBuffer,
-				"image/png",
-			);
-
-			return imgUrl;
+		return this.productsService.create(req.user.id, {
+			...createProductDto,
 		});
-
-		const imgUrls = await Promise.all(imgUrlPromises);
-
-		return this.productsService.create(
-			name,
-			price,
-			priceCompare,
-			imgUrls,
-			description,
-			tags || [],
-			req.user.id,
-		);
 	}
 
 	@Get(":id")

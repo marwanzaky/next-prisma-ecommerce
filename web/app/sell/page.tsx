@@ -14,38 +14,31 @@ import { TypographyH4 } from "_shared/shadcn/typography";
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 } from "_shared/shadcn/dialog";
+import { Controller } from "react-hook-form";
 
 export default function Page() {
 	const {
 		columns,
 		tableData,
 
-		name,
-		setName,
-		description,
-		setDescription,
-		price,
-		setPrice,
-		priceCompare,
-		setPriceCompare,
-		tags,
-		setTags,
-		base64s,
-		setBase64s,
+		// Form
+		register,
+		errors,
+		formState,
+		handleSubmit,
+		control,
+		resetForm,
 
 		displayDialog,
 		setDisplayDialog,
 		displayEditDialog,
 		setDisplayEditDialog,
 
-		resetForm,
-		imageInputOnClick,
-		onSubmitProduct,
+		onAddProduct,
 		onUpdateProduct,
 	} = useSell();
 
@@ -73,50 +66,94 @@ export default function Page() {
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
 						<DialogTitle>Add item</DialogTitle>
-						<DialogDescription>
-							Complete the form to publish your product for sale on the
-							platform.
-						</DialogDescription>
 					</DialogHeader>
 
-					<form onSubmit={onSubmitProduct} className="space-y-4">
+					<form onSubmit={handleSubmit(onAddProduct)} className="space-y-4">
 						<InputText
 							type="text"
 							id="name"
 							placeholder="Product Name"
 							icon="person"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							required
+							message={errors.name?.message}
+							{...register("name", {
+								required: "This field is required.",
+								minLength: { value: 2, message: "Name is too short." },
+								maxLength: { value: 32, message: "Name is too long." },
+								pattern: {
+									value: /^[a-zA-Z\s'-]+$/,
+									message: "Invalid characters in name.",
+								},
+							})}
 						/>
 						<Textarea
 							id="description"
 							placeholder="Product Description"
 							icon="description"
-							value={description}
-							onChange={(e) => setDescription(e.target.value)}
-							required
+							message={errors.description?.message}
+							{...register("description", {
+								required: "This field is required.",
+							})}
 						/>
-						<InputCurrencyRange
-							minPlaceholder="Price"
-							maxPlaceholder="Compare Price"
-							minValue={price}
-							maxValue={priceCompare}
-							onMinChange={(value) => setPrice(value)}
-							onMaxChange={(value) => setPriceCompare(value)}
-							required
+						<Controller
+							name="priceRangeUsd"
+							control={control}
+							rules={{
+								validate: ({ min, max }) =>
+									min != null || max != null || "This field is required.",
+							}}
+							render={({ field, fieldState }) => (
+								<InputCurrencyRange
+									minPlaceholder="Price"
+									maxPlaceholder="Compare Price"
+									minValue={field.value.min}
+									maxValue={field.value.max}
+									onMinChange={(min) =>
+										field.onChange({
+											min,
+											max:
+												field.value.max == null
+													? min
+													: Math.max(min || 0, field.value.max),
+										})
+									}
+									onMaxChange={(max) =>
+										field.onChange({
+											min:
+												field.value.min == null
+													? max
+													: Math.min(field.value.min, max || 0),
+											max,
+										})
+									}
+									message={fieldState.error?.message}
+								/>
+							)}
 						/>
-						<InputTags
-							value={tags}
-							onChange={(value) => setTags(value)}
-							placeholder="Enter Tags"
+						<Controller
+							name="tags"
+							control={control}
+							rules={{
+								validate: (value) =>
+									value.length > 0 || "This field is required.",
+							}}
+							render={({ field, fieldState }) => (
+								<InputTags
+									{...field}
+									placeholder="Enter Tags"
+									message={fieldState.error?.message}
+									value={field.value ?? []}
+								/>
+							)}
 						/>
 						<div className="grid grid-cols-5 gap-4">
-							{Array.from(Array(10).keys()).map((index) => (
-								<ImageInput
+							{Array.from({ length: 10 }).map((_, index) => (
+								<Controller
 									key={index}
-									value={base64s[index]}
-									onChange={(base64) => imageInputOnClick(index, base64)}
+									name={`base64s.${index}`}
+									control={control}
+									render={({ field }) => (
+										<ImageInput value={field.value} onChange={field.onChange} />
+									)}
 								/>
 							))}
 						</div>
@@ -132,56 +169,113 @@ export default function Page() {
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
 						<DialogTitle>Edit item</DialogTitle>
-						<DialogDescription>
-							Make changes to your product details to keep your listing accurate
-							and up to date.
-						</DialogDescription>
 					</DialogHeader>
 
-					<form onSubmit={onUpdateProduct} className="space-y-4">
+					<form onSubmit={handleSubmit(onUpdateProduct)} className="space-y-4">
 						<InputText
 							type="text"
 							id="name"
 							placeholder="Product Name"
 							icon="inventory_2"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							required
+							message={errors.name?.message}
+							{...register("name", {
+								required: "This field is required.",
+								minLength: { value: 2, message: "Name is too short." },
+								maxLength: { value: 48, message: "Name is too long." },
+								pattern: {
+									value: /^[a-zA-Z\s'-]+$/,
+									message: "Invalid characters in name.",
+								},
+							})}
 						/>
 						<Textarea
 							id="description"
 							placeholder="Product Description"
 							icon="description"
-							value={description}
-							onChange={(e) => setDescription(e.target.value)}
-							required
+							message={errors.description?.message}
+							{...register("description", {
+								required: "This field is required.",
+							})}
 						/>
-						<InputCurrencyRange
-							minPlaceholder="Price"
-							maxPlaceholder="Compare Price"
-							minValue={price}
-							maxValue={priceCompare}
-							onMinChange={(value) => setPrice(value)}
-							onMaxChange={(value) => setPriceCompare(value)}
-							required
+						<Controller
+							name="priceRangeUsd"
+							control={control}
+							rules={{
+								validate: ({ min, max }) =>
+									min != null ||
+									max != null ||
+									"Price and compare price is required.",
+							}}
+							render={({ field, fieldState }) => (
+								<InputCurrencyRange
+									minPlaceholder="Price"
+									maxPlaceholder="Compare Price"
+									minValue={field.value.min}
+									maxValue={field.value.max}
+									onMinChange={(min) =>
+										field.onChange({
+											min,
+											max:
+												field.value.max == null
+													? min
+													: Math.max(min || 0, field.value.max),
+										})
+									}
+									onMaxChange={(max) =>
+										field.onChange({
+											min:
+												field.value.min == null
+													? max
+													: Math.min(field.value.min, max || 0),
+											max,
+										})
+									}
+									message={fieldState.error?.message}
+								/>
+							)}
 						/>
-						<InputTags
-							value={tags}
-							onChange={(value) => setTags(value)}
-							placeholder="Enter Tags"
+						<Controller
+							name="tags"
+							control={control}
+							rules={{
+								validate: (value) =>
+									value.length > 0 || "This field is required.",
+							}}
+							render={({ field, fieldState }) => (
+								<InputTags
+									{...field}
+									placeholder="Enter Tags"
+									message={fieldState.error?.message}
+									value={field.value ?? []}
+								/>
+							)}
 						/>
 						<div className="grid grid-cols-5 gap-4">
-							{Array.from(Array(10).keys()).map((index) => (
-								<ImageInput
+							{Array.from({ length: 10 }).map((_, index) => (
+								<Controller
 									key={index}
-									value={base64s[index]}
-									onChange={(base64) => imageInputOnClick(index, base64)}
+									name={`base64s.${index}`}
+									control={control}
+									render={({ field, fieldState }) => (
+										<ImageInput value={field.value} onChange={field.onChange} />
+									)}
 								/>
 							))}
 						</div>
 
-						<DialogFooter>
-							<Button type="submit">Update</Button>
+						<DialogFooter className="gap-2">
+							<Button
+								variant="secondary"
+								onClick={() => {
+									setDisplayEditDialog(false);
+								}}
+								type="button"
+							>
+								Cancel
+							</Button>
+							<Button type="submit" disabled={!formState.isDirty}>
+								Update
+							</Button>
 						</DialogFooter>
 					</form>
 				</DialogContent>

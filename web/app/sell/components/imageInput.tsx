@@ -4,12 +4,16 @@ import { useRef, useState } from "react";
 
 import Icon from "_shared/ui/icon";
 
-type ImageInputProps = {
+type ImageInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 	value?: string | undefined;
 	onChange?: (base64: string | undefined) => void;
 };
 
-export default function ImageInput({ value, onChange }: ImageInputProps) {
+export default function ImageInput({
+	value,
+	onChange,
+	...inputProps
+}: ImageInputProps) {
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const [base64, setBase64] = useState(value);
@@ -52,6 +56,7 @@ export default function ImageInput({ value, onChange }: ImageInputProps) {
 				type="file"
 				accept=".png, .jpg, .jpeg"
 				onChange={onFileChange}
+				{...inputProps}
 			/>
 
 			{base64 ? (

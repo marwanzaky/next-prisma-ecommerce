@@ -23,8 +23,21 @@ import {
 	AlertDialogTrigger,
 } from "_shared/shadcn/alertDialog";
 import { ButtonIcon } from "_shared/ui/buttonIcon";
+import { useForm } from "react-hook-form";
 
 type CartItem = IProduct & { imgUrl: string };
+
+type Inputs = {
+	productId: string;
+	name: string;
+	description: string;
+	priceRangeUsd: {
+		min?: number;
+		max?: number;
+	};
+	tags: string[];
+	base64s: string[];
+};
 
 export function useSell() {
 	const router = useRouter();
@@ -35,14 +48,16 @@ export function useSell() {
 	const { isAuthenticated } = useAppSelector((state) => state.authReducer);
 	const { products } = useAppSelector((state) => state.userProductsReducer);
 
-	const [productId, setProductId] = useState("");
-
-	const [name, setName] = useState("");
-	const [description, setDescription] = useState("");
-	const [priceUsd, setPriceUsd] = useState<number>();
-	const [priceCompareUsd, setPriceCompareUsd] = useState<number>();
-	const [tags, setTags] = useState<string[]>([]);
-	const [base64s, setBase64s] = useState<string[]>([]);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		formState,
+		control,
+		reset,
+	} = useForm<Inputs>({
+		mode: "onTouched",
+	});
 
 	const [displayDialog, setDisplayDialog] = useState(false);
 	const [displayEditDialog, setDisplayEditDialog] = useState(false);
@@ -121,13 +136,17 @@ export function useSell() {
 			type: "action",
 			width: "38px",
 			action: (row) => {
-				setName(row.name);
-				setDescription(row.description);
-				setPriceUsd(row.price / 100);
-				setPriceCompareUsd(row.priceCompare / 100);
-				setBase64s(row.imgUrls);
-				setProductId(row._id);
-				setTags(row.tags);
+				reset({
+					productId: row._id,
+					name: row.name,
+					description: row.description,
+					priceRangeUsd: {
+						min: row.price / 100,
+						max: row.priceCompare / 100,
+					},
+					base64s: row.imgUrls,
+					tags: row.tags,
+				});
 
 				setDisplayEditDialog(true);
 			},
@@ -146,18 +165,22 @@ export function useSell() {
 		}
 	}, []);
 
-	const onSubmitProduct: React.FormEventHandler<HTMLFormElement> = (event) => {
-		event.preventDefault();
-
-		if (priceUsd && priceCompareUsd) {
+	const onAddProduct = ({
+		name,
+		description,
+		priceRangeUsd,
+		tags,
+		base64s,
+	}: Inputs) => {
+		if (priceRangeUsd.min && priceRangeUsd.max) {
 			dispatch(
 				postUserProductAsync({
 					data: {
 						name,
 						description,
-						price: priceUsd * 100,
-						priceCompare: priceCompareUsd * 100,
-						imgUrls: base64s,
+						price: priceRangeUsd.min * 100,
+						priceCompare: priceRangeUsd.max * 100,
+						imgUrls: base64s.filter(Boolean),
 						tags,
 						stock: 1,
 					},
@@ -171,19 +194,24 @@ export function useSell() {
 		resetForm();
 	};
 
-	const onUpdateProduct: React.FormEventHandler<HTMLFormElement> = (event) => {
-		event.preventDefault();
-
-		if (priceUsd && priceCompareUsd) {
+	const onUpdateProduct = ({
+		productId,
+		name,
+		description,
+		priceRangeUsd,
+		tags,
+		base64s,
+	}: Inputs) => {
+		if (priceRangeUsd.min && priceRangeUsd.max) {
 			dispatch(
 				updateUserProductAsync({
 					id: productId,
 					data: {
 						name,
 						description,
-						price: priceUsd * 100,
-						priceCompare: priceCompareUsd * 100,
-						imgUrls: base64s,
+						price: priceRangeUsd.min * 100,
+						priceCompare: priceRangeUsd.max * 100,
+						imgUrls: base64s.filter(Boolean),
 						tags,
 					},
 					toast,
@@ -196,23 +224,17 @@ export function useSell() {
 		resetForm();
 	};
 
-	const imageInputOnClick = (index: number, base64: string | undefined) => {
-		if (base64) {
-			setBase64s((prev) => {
-				const updatedBase64s = [...prev];
-				updatedBase64s[index] = base64;
-				return updatedBase64s;
-			});
-		}
-	};
-
 	const resetForm = () => {
-		setName("");
-		setDescription("");
-		setPriceUsd(undefined);
-		setPriceCompareUsd(undefined);
-		setBase64s([]);
-		setTags([]);
+		reset({
+			name: "",
+			description: "",
+			priceRangeUsd: {
+				min: undefined,
+				max: undefined,
+			},
+			tags: [],
+			base64s: [],
+		});
 	};
 
 	return {
@@ -221,27 +243,20 @@ export function useSell() {
 		columns,
 		tableData,
 
-		name,
-		setName,
-		description,
-		setDescription,
-		price: priceUsd,
-		setPrice: setPriceUsd,
-		priceCompare: priceCompareUsd,
-		setPriceCompare: setPriceCompareUsd,
-		tags,
-		setTags,
-		base64s,
-		setBase64s,
+		// Form
+		register,
+		errors,
+		formState,
+		handleSubmit,
+		control,
+		resetForm,
 
 		displayDialog,
 		setDisplayDialog,
 		displayEditDialog,
 		setDisplayEditDialog,
 
-		resetForm,
-		imageInputOnClick,
-		onSubmitProduct,
+		onAddProduct,
 		onUpdateProduct,
 	};
 }

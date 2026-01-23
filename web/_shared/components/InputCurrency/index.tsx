@@ -8,6 +8,7 @@ type InputCurrencyProps = {
 	placeholder?: string;
 	size?: "sm" | "md";
 	required?: boolean;
+	message?: string;
 };
 
 export function InputCurrency({
@@ -17,6 +18,7 @@ export function InputCurrency({
 	placeholder,
 	size = "sm",
 	required,
+	message,
 }: InputCurrencyProps) {
 	const [inputValue, setInputValue] = useState("");
 
@@ -50,6 +52,7 @@ export function InputCurrency({
 			onChange={(e) => setInputValue(e.target.value)}
 			onBlur={handleBlur}
 			required={required}
+			message={message}
 		/>
 	);
 }

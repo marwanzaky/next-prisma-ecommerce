@@ -11,6 +11,7 @@ type InputCurrencyRangeProps = {
 	onMaxChange: (value: number | undefined) => void;
 	required?: boolean;
 	size?: "md" | "sm";
+	message?: string;
 };
 
 export function InputCurrencyRange({
@@ -23,31 +24,26 @@ export function InputCurrencyRange({
 	onMaxChange,
 	required,
 	size,
+	message,
 }: InputCurrencyRangeProps) {
 	return (
 		<div className={clsx("flex gap-4", className)}>
 			<InputCurrency
 				placeholder={minPlaceholder}
 				onChange={onMinChange}
-				onBlur={(value) => {
-					if (value === undefined || maxValue === undefined) return;
-					if (value > maxValue) onMinChange(maxValue);
-				}}
 				value={minValue}
 				required={required}
 				size={size}
+				message={message}
 			/>
 
 			<InputCurrency
 				placeholder={maxPlaceholder}
 				onChange={onMaxChange}
-				onBlur={(value) => {
-					if (value === undefined || minValue === undefined) return;
-					if (value < minValue) onMaxChange(minValue);
-				}}
 				value={maxValue}
 				required={required}
 				size={size}
+				message={message}
 			/>
 		</div>
 	);
