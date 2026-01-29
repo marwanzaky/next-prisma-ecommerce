@@ -24,7 +24,7 @@ export class GetAllProductsDto {
 	@ApiPropertyOptional({ type: String, example: "iPhone" })
 	@IsOptional()
 	@IsString()
-	readonly searchTerm?: string;
+	readonly name?: string;
 
 	@ApiPropertyOptional({ type: [String] })
 	@IsOptional()

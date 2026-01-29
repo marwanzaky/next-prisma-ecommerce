@@ -78,6 +78,19 @@ export class UsersService {
 		return user;
 	}
 
+	async findPublicById(id: string): Promise<User> {
+		const user = await this.userModel
+			.findById(id)
+			.select("_id name photo")
+			.lean();
+
+		if (!user) {
+			throw new NotFoundException("Could not find the user");
+		}
+
+		return user;
+	}
+
 	updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
 		return this.userModel.findByIdAndUpdate(id, updateUserDto, {
 			new: true,

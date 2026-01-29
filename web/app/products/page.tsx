@@ -34,10 +34,12 @@ import {
 import { TypographyP } from "_shared/shadcn/typography";
 import { InputCurrencyRange } from "_shared/components/InputCurrencyRange";
 import RadioWithLabel from "_shared/components/radioWithLabel";
+import { InputText } from "_shared/components/inputText";
 
 type SortOption = "relevancy" | "most-popular" | "low-price" | "high-price";
 
 type Params = {
+	name: string | undefined;
 	sort: SortOption;
 	minPrice: string | undefined;
 	maxPrice: string | undefined;
@@ -54,6 +56,8 @@ export default function Page() {
 		initialParams.sort || "relevancy",
 	);
 
+	const [name, setName] = useState<string | undefined>();
+
 	const [minPrice, setMinPrice] = useState<number | undefined>(
 		initialParams.minPrice ? parseInt(initialParams.minPrice) : undefined,
 	);
@@ -64,6 +68,8 @@ export default function Page() {
 	const [rating, setRating] = useState<number | undefined>(
 		initialParams.rating ? parseInt(initialParams.rating) : undefined,
 	);
+
+	const [draftName, setDraftName] = useState<string | undefined>();
 
 	const [draftMinPrice, setDraftMinPrice] = useState<number | undefined>(
 		undefined,
@@ -87,6 +93,7 @@ export default function Page() {
 	const productsOptions: GetAllProductsOptions = {
 		sort: sortMap[sort],
 		query: {
+			name,
 			minPrice,
 			maxPrice,
 			avgRatings: rating,
@@ -110,6 +117,7 @@ export default function Page() {
 
 	const updateParams = () => {
 		const params: Params = {
+			name,
 			sort,
 			minPrice: minPrice?.toString(),
 			maxPrice: maxPrice?.toString(),
@@ -122,6 +130,7 @@ export default function Page() {
 	const openFilterDialog = () => {
 		setVisible(true);
 
+		setDraftName(name);
 		setDraftMaxPrice(maxPrice && maxPrice / 100);
 		setDraftMinPrice(minPrice && minPrice / 100);
 		setDraftRating(rating);
@@ -136,7 +145,12 @@ export default function Page() {
 		setRating(undefined);
 	};
 
+	const clearName = () => {
+		setName(undefined);
+	};
+
 	const applyFilters = () => {
+		setName(draftName);
 		setMaxPrice(draftMaxPrice && draftMaxPrice * 100);
 		setMinPrice(draftMinPrice && draftMinPrice * 100);
 		setRating(draftRating);
@@ -149,7 +163,7 @@ export default function Page() {
 
 	useEffect(() => {
 		updateParams();
-	}, [sort, minPrice, maxPrice, rating]);
+	}, [name, sort, minPrice, maxPrice, rating]);
 
 	return (
 		<div>
@@ -159,6 +173,10 @@ export default function Page() {
 						<Button onClick={openFilterDialog}>All filters</Button>
 
 						<div className="flex flex-1 items-center gap-2 scrollbar-hide overflow-auto">
+							{name !== undefined && (
+								<Chip onClick={clearName}>Search &quot;{name}&quot;</Chip>
+							)}
+
 							{minPrice && maxPrice && (
 								<Chip onClick={clearPriceRange}>
 									${(minPrice / 100).toFixed(2)} - $
@@ -238,14 +256,26 @@ export default function Page() {
 			</Section>
 
 			<Dialog open={visible} onOpenChange={setVisible}>
-				<DialogContent className="sm:max-w-[24rem]">
+				<DialogContent
+					className="sm:max-w-[24rem]"
+					onSubmit={(e) => {
+						e.preventDefault();
+						applyFilters();
+					}}
+				>
 					<DialogHeader>
 						<DialogTitle>Filters</DialogTitle>
 					</DialogHeader>
 
-					<div className="flex flex-col gap-4">
-						<div className="flex flex-col gap-2">
-							<div className="text-lg">Price</div>
+					<form>
+						<div className="flex flex-col gap-4">
+							<InputText
+								size="sm"
+								placeholder="Search for a product"
+								icon="search"
+								value={draftName || ""}
+								onChange={(event) => setDraftName(event.target.value)}
+							/>
 
 							<InputCurrencyRange
 								minValue={draftMinPrice}
@@ -253,10 +283,6 @@ export default function Page() {
 								onMinChange={(value) => setDraftMinPrice(value)}
 								onMaxChange={(value) => setDraftMaxPrice(value)}
 							/>
-						</div>
-
-						<div className="flex flex-col gap-2">
-							<div className="text-lg">Rating</div>
 
 							<div className="flex flex-col gap-2">
 								<RadioWithLabel
@@ -306,15 +332,15 @@ export default function Page() {
 								/>
 							</div>
 						</div>
-					</div>
 
-					<DialogFooter>
-						<Button variant="ghost" onClick={cancelFilters}>
-							Cancel
-						</Button>
+						<DialogFooter>
+							<Button variant="ghost" onClick={cancelFilters}>
+								Cancel
+							</Button>
 
-						<Button onClick={applyFilters}>Apply filter</Button>
-					</DialogFooter>
+							<Button type="submit">Apply filter</Button>
+						</DialogFooter>
+					</form>
 				</DialogContent>
 			</Dialog>
 		</div>

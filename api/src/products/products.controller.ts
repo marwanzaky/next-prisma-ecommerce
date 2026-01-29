@@ -36,7 +36,7 @@ export class ProductsController {
 		const {
 			sortProperty,
 			sortOrder,
-			searchTerm,
+			name,
 			excludeIds,
 			minPrice,
 			maxPrice,
@@ -51,7 +51,7 @@ export class ProductsController {
 				order: sortOrder,
 			},
 			query: {
-				name: searchTerm,
+				name,
 				excludeIds,
 				minPrice,
 				maxPrice,

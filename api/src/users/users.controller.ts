@@ -16,6 +16,7 @@ import { IRequest } from "src/_interfaces/request.interface";
 import { UpdateUserPasswordDto } from "./dto/update-user-password.dto";
 import { ProductsService } from "src/products/products.service";
 import { Roles } from "src/_decorators/roles.decorator";
+import { Public } from "src/auth/auth.guard";
 
 @Controller("users")
 @ApiBearerAuth("Authorization")
@@ -74,6 +75,15 @@ export class UsersController {
 			request.user.id,
 			updateUserPasswordDto,
 		);
+	}
+
+	@Get("public/:id")
+	@Public()
+	@ApiOperation({
+		summary: "Get a specific public user",
+	})
+	async getPublicUser(@Param("id") id: string) {
+		return this.usersService.findPublicById(id);
 	}
 
 	@Get()

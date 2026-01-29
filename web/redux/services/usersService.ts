@@ -5,11 +5,16 @@ const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 export const usersService = {
 	login,
 	signup,
+
+	// My account
 	getMe,
 	getMeProducts,
 	updateMe,
 	updateMyPassword,
 	deleteMe,
+
+	// Users
+	getPublicById,
 };
 
 async function login(
@@ -151,6 +156,18 @@ async function deleteMe(token: string): Promise<{ token: string }> {
 			"Content-type": "application/json",
 		},
 	});
+
+	const data = await response.json();
+
+	if (!response.ok) {
+		throw new Error(data.message);
+	}
+
+	return data;
+}
+
+async function getPublicById(id: string): Promise<IUser> {
+	const response = await fetch(`${baseUrl}/users/public/${id}`);
 
 	const data = await response.json();
 

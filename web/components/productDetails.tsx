@@ -106,9 +106,10 @@ function Preview({ product }: { product: IProduct }) {
 			<div className="grid grid-cols-4 gap-2 md:gap-4">
 				{product.imgUrls.map((img, i) => (
 					<Image
+						role="button"
 						className={cn(
-							"w-full rounded-md opacity-100 hover:opacity-50 shadow-md",
-							i === imgIndex && "border border-black",
+							"w-full rounded-md opacity-100 hover:opacity-50 shadow-md border border-transparent hover:border-black",
+							i === imgIndex && "border-primary",
 						)}
 						key={`${product.name} ${i + 1}`}
 						src={img}
@@ -155,7 +156,9 @@ function Details({ product }: { product: IProduct }) {
 				</Breadcrumb>
 
 				<div className="space-y-1 lg:space-y-2">
-					<h3 className="text-2xl truncate">{product.name}</h3>
+					<h1 className="scroll-m-20 text-4xl tracking-tight lg:text-5xl">
+						{product.name}
+					</h1>
 
 					<div className="flex items-center gap-2">
 						<div className="text-4xl">
@@ -227,7 +230,6 @@ function Details({ product }: { product: IProduct }) {
 				<AccordionItem value="item-2">
 					<AccordionTrigger>Shipping and Refund Policy</AccordionTrigger>
 					<AccordionContent>
-						{/* TODO: email should be dynamic */}
 						<TypographyH4>Refund Policy</TypographyH4>
 						<TypographyP>
 							We have a 30-day return policy, which means you have 30 days after
