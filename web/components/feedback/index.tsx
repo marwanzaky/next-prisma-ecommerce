@@ -1,4 +1,3 @@
-import { TypographyH4 } from "_shared/shadcn/typography";
 import Overview from "./overview";
 import Reviews from "./reviews";
 import { IProduct } from "_shared/interfaces";

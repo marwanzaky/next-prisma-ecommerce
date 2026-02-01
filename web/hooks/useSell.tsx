@@ -23,7 +23,10 @@ import {
 	AlertDialogTrigger,
 } from "_shared/shadcn/alertDialog";
 import { ButtonIcon } from "_shared/ui/buttonIcon";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+
+import { InitialConfigType } from "@lexical/react/LexicalComposer";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
 type CartItem = IProduct & { imgUrl: string };
 
@@ -48,6 +51,25 @@ export function useSell() {
 	const { isAuthenticated } = useAppSelector((state) => state.authReducer);
 	const { products } = useAppSelector((state) => state.userProductsReducer);
 
+	const initialConfig: InitialConfigType = {
+		namespace: "MyEditor",
+		theme: {
+			paragraph: "editor-paragraph",
+		},
+		onError: (error: Error) => {
+			console.error(error);
+		},
+	};
+
+	const [editorState, setEditorState] = useState<string>();
+
+	function PluginOnChange(editorState: string, isEmpty: boolean): void {
+		setValue("description", isEmpty ? "" : editorState, {
+			shouldValidate: true,
+			shouldDirty: true,
+		});
+	}
+
 	const {
 		register,
 		handleSubmit,
@@ -55,8 +77,14 @@ export function useSell() {
 		formState,
 		control,
 		reset,
+		setValue,
 	} = useForm<Inputs>({
 		mode: "onTouched",
+	});
+
+	const description = useWatch({
+		control,
+		name: "description",
 	});
 
 	const [displayDialog, setDisplayDialog] = useState(false);
@@ -148,6 +176,8 @@ export function useSell() {
 					tags: row.tags,
 				});
 
+				setEditorState(row.description);
+
 				setDisplayEditDialog(true);
 			},
 			actionIcon: "edit",
@@ -172,7 +202,7 @@ export function useSell() {
 		tags,
 		base64s,
 	}: Inputs) => {
-		if (priceRangeUsd.min && priceRangeUsd.max) {
+		if (priceRangeUsd.min && priceRangeUsd.max && description) {
 			dispatch(
 				postUserProductAsync({
 					data: {
@@ -251,6 +281,13 @@ export function useSell() {
 		control,
 		resetForm,
 
+		//
+		initialConfig,
+		MyOnChangePlugin,
+		PluginOnChange,
+		LoadDescriptionPlugin,
+		description,
+
 		displayDialog,
 		setDisplayDialog,
 		displayEditDialog,
@@ -259,4 +296,53 @@ export function useSell() {
 		onAddProduct,
 		onUpdateProduct,
 	};
+}
+import { $generateNodesFromDOM, $generateHtmlFromNodes } from "@lexical/html";
+import { $getRoot, $insertNodes } from "lexical";
+
+function MyOnChangePlugin({
+	onChange,
+}: {
+	onChange: (html: string, isEmpty: boolean) => void;
+}) {
+	const [editor] = useLexicalComposerContext();
+
+	useEffect(() => {
+		return editor.registerUpdateListener(({ editorState }) => {
+			editorState.read(() => {
+				const root = $getRoot();
+				const html = $generateHtmlFromNodes(editor);
+				const isEmpty = root.getTextContent().trim().length === 0;
+
+				onChange(html, isEmpty);
+			});
+		});
+	}, [editor, onChange]);
+
+	return null;
+}
+
+function LoadDescriptionPlugin({ html }: { html?: string }) {
+	const [editor] = useLexicalComposerContext();
+
+	useEffect(() => {
+		if (!html) return;
+
+		editor.update(() => {
+			const root = $getRoot();
+
+			if (root.getTextContent().trim().length > 0) return;
+
+			root.clear();
+
+			const parser = new DOMParser();
+			const dom = parser.parseFromString(html, "text/html");
+			const nodes = $generateNodesFromDOM(editor, dom);
+
+			root.select();
+			$insertNodes(nodes);
+		});
+	}, [editor, html]);
+
+	return null;
 }

@@ -6,7 +6,7 @@ import ImageInput from "./components/imageInput";
 import { useSell } from "@hooks/useSell";
 import { InputCurrencyRange } from "_shared/components/InputCurrencyRange";
 import { InputText } from "_shared/components/inputText";
-import { Textarea } from "_shared/components/textarea";
+import { textareaVariants } from "_shared/components/textarea";
 import { Section } from "_shared/components/section";
 import { InputTags } from "_shared/components/inputTags";
 import { Button } from "_shared/shadcn/button";
@@ -27,6 +27,14 @@ import {
 	EmptyTitle,
 } from "_shared/components/empty";
 
+import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { cn } from "@lib/utils";
+
 export default function Page() {
 	const {
 		columns,
@@ -39,6 +47,13 @@ export default function Page() {
 		handleSubmit,
 		control,
 		resetForm,
+
+		//
+		initialConfig,
+		MyOnChangePlugin,
+		LoadDescriptionPlugin,
+		PluginOnChange,
+		description,
 
 		displayDialog,
 		setDisplayDialog,
@@ -107,15 +122,43 @@ export default function Page() {
 								},
 							})}
 						/>
-						<Textarea
-							id="description"
-							placeholder="Product Description"
-							icon="description"
-							message={errors.description?.message}
-							{...register("description", {
-								required: "This field is required.",
-							})}
-						/>
+
+						<div className="relative">
+							<LexicalComposer initialConfig={initialConfig}>
+								<RichTextPlugin
+									contentEditable={
+										<ContentEditable
+											className={cn(
+												textareaVariants({}),
+												"block overflow-y-scroll",
+											)}
+											aria-placeholder="Product Description"
+											placeholder={
+												<div className="absolute top-[1.25rem] left-[25px] text-gray-400">
+													Product Description
+												</div>
+											}
+										/>
+									}
+									ErrorBoundary={LexicalErrorBoundary}
+								/>
+								<HistoryPlugin />
+								<AutoFocusPlugin />
+								<MyOnChangePlugin onChange={PluginOnChange} />
+
+								<div className="mt-2 text-red-600 text-xs">
+									{errors.description?.message}
+								</div>
+
+								<input
+									type="hidden"
+									{...register("description", {
+										required: "This field is required.",
+									})}
+								/>
+							</LexicalComposer>
+						</div>
+
 						<Controller
 							name="priceRangeUsd"
 							control={control}
@@ -210,15 +253,44 @@ export default function Page() {
 								},
 							})}
 						/>
-						<Textarea
-							id="description"
-							placeholder="Product Description"
-							icon="description"
-							message={errors.description?.message}
-							{...register("description", {
-								required: "This field is required.",
-							})}
-						/>
+
+						<div className="relative">
+							<LexicalComposer initialConfig={initialConfig}>
+								<RichTextPlugin
+									contentEditable={
+										<ContentEditable
+											className={cn(
+												textareaVariants({}),
+												"block overflow-y-scroll",
+											)}
+											aria-placeholder="Product Description"
+											placeholder={
+												<div className="absolute top-[1.25rem] left-[25px] text-gray-400">
+													Product Description
+												</div>
+											}
+										/>
+									}
+									ErrorBoundary={LexicalErrorBoundary}
+								/>
+								<HistoryPlugin />
+								<AutoFocusPlugin />
+								<LoadDescriptionPlugin html={description} />
+								<MyOnChangePlugin onChange={PluginOnChange} />
+
+								<div className="mt-2 text-red-600 text-xs">
+									{errors.description?.message}
+								</div>
+
+								<input
+									type="hidden"
+									{...register("description", {
+										required: "This field is required.",
+									})}
+								/>
+							</LexicalComposer>
+						</div>
+
 						<Controller
 							name="priceRangeUsd"
 							control={control}

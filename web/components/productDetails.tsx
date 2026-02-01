@@ -23,7 +23,6 @@ import {
 	GetAllProductsOptions,
 	productsService,
 } from "@redux/services/productsService";
-// import { TypographyH3, TypographyP } from "_shared/shadcn/typography";
 import ProductCart from "_shared/ui/productCart";
 import { cn } from "@lib/utils";
 import { ButtonIcon } from "_shared/ui/buttonIcon";
@@ -222,9 +221,10 @@ function Details({ product }: { product: IProduct }) {
 				<AccordionItem value="item-1">
 					<AccordionTrigger>Description</AccordionTrigger>
 					<AccordionContent asChild>
-						<TypographyP className="whitespace-pre-wrap">
-							{product.description}
-						</TypographyP>
+						<div
+							className="product-description"
+							dangerouslySetInnerHTML={{ __html: product.description }}
+						/>
 					</AccordionContent>
 				</AccordionItem>
 				<AccordionItem value="item-2">

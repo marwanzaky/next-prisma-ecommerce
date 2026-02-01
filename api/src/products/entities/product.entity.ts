@@ -12,7 +12,6 @@ export class Product extends Document implements Omit<IProduct, "_id"> {
 	@Prop({
 		type: String,
 		required: [true, "A product must have a name"],
-		unique: true,
 		trim: true,
 	})
 	name!: string;
