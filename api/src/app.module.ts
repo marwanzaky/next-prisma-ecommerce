@@ -15,6 +15,7 @@ import { PaymentsModule } from "./payments/payments.module";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { ContactModule } from "./contact/contact.module";
 import { ChatModule } from "./chat/chat.module";
+import { UploadsModule } from "./uploads/uploads.module";
 
 @Module({
 	imports: [
@@ -52,6 +53,7 @@ import { ChatModule } from "./chat/chat.module";
 		PaymentsModule,
 		ContactModule,
 		ChatModule,
+		UploadsModule,
 	],
 	providers: [
 		JwtService,

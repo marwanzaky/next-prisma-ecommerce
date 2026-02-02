@@ -1,27 +1,19 @@
+"use client";
+
 import ProductDetails from "@components/productDetails";
 import { productsService } from "@redux/services/productsService";
+import { useQuery } from "@tanstack/react-query";
 
-import { IProduct } from "_shared/interfaces";
+import { useParams } from "next/navigation";
 
-export default async function Page({
-	params,
-}: {
-	params: Promise<{ id: string }>;
-}) {
-	const { id } = await params;
-	const product = await getProduct(id);
+export default function Page() {
+	const params = useParams<{ id: string }>();
 
-	return <ProductDetails product={product} />;
-}
+	const { data, isLoading } = useQuery({
+		queryKey: ["product", params.id],
+		queryFn: () => productsService.getProduct(params.id),
+		staleTime: 1000 * 60 * 5,
+	});
 
-async function getProduct(id: string): Promise<IProduct> {
-	return await productsService.getProduct(id);
-}
-
-export async function generateStaticParams() {
-	const data = await productsService.getAllProducts();
-
-	return data.map((product) => ({
-		id: product._id,
-	}));
+	return isLoading ? <></> : data ? <ProductDetails product={data} /> : <></>;
 }

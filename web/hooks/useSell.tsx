@@ -1,6 +1,6 @@
-import { IProduct } from "_shared/interfaces";
-import { Column } from "_shared/components/table";
-import { LogoCell } from "_shared/components/table/cells/logoCell";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "@redux/store";
 import {
@@ -8,8 +8,11 @@ import {
 	removeUserProductAsync,
 	updateUserProductAsync,
 } from "@redux/thunks/userProductsThunks";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+
+import { IProduct } from "_shared/interfaces";
+import { Column } from "_shared/components/table";
+import { LogoCell } from "_shared/components/table/cells/logoCell";
+
 import { useToast } from "_shared/shadcn/hooks/use-toast";
 import {
 	AlertDialog,
@@ -23,10 +26,12 @@ import {
 	AlertDialogTrigger,
 } from "_shared/shadcn/alertDialog";
 import { ButtonIcon } from "_shared/ui/buttonIcon";
+import { ImageNode } from "_shared/nodes/imageNode";
+
 import { useForm, useWatch } from "react-hook-form";
 
 import { InitialConfigType } from "@lexical/react/LexicalComposer";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { LineBreakNode, ParagraphNode } from "lexical";
 
 type CartItem = IProduct & { imgUrl: string };
 
@@ -53,15 +58,12 @@ export function useSell() {
 
 	const initialConfig: InitialConfigType = {
 		namespace: "MyEditor",
+		nodes: [ImageNode, ParagraphNode, LineBreakNode],
 		theme: {
 			paragraph: "editor-paragraph",
 		},
-		onError: (error: Error) => {
-			console.error(error);
-		},
+		onError: console.error,
 	};
-
-	const [editorState, setEditorState] = useState<string>();
 
 	function PluginOnChange(editorState: string, isEmpty: boolean): void {
 		setValue("description", isEmpty ? "" : editorState, {
@@ -176,8 +178,6 @@ export function useSell() {
 					tags: row.tags,
 				});
 
-				setEditorState(row.description);
-
 				setDisplayEditDialog(true);
 			},
 			actionIcon: "edit",
@@ -283,9 +283,7 @@ export function useSell() {
 
 		//
 		initialConfig,
-		MyOnChangePlugin,
 		PluginOnChange,
-		LoadDescriptionPlugin,
 		description,
 
 		displayDialog,
@@ -296,53 +294,4 @@ export function useSell() {
 		onAddProduct,
 		onUpdateProduct,
 	};
-}
-import { $generateNodesFromDOM, $generateHtmlFromNodes } from "@lexical/html";
-import { $getRoot, $insertNodes } from "lexical";
-
-function MyOnChangePlugin({
-	onChange,
-}: {
-	onChange: (html: string, isEmpty: boolean) => void;
-}) {
-	const [editor] = useLexicalComposerContext();
-
-	useEffect(() => {
-		return editor.registerUpdateListener(({ editorState }) => {
-			editorState.read(() => {
-				const root = $getRoot();
-				const html = $generateHtmlFromNodes(editor);
-				const isEmpty = root.getTextContent().trim().length === 0;
-
-				onChange(html, isEmpty);
-			});
-		});
-	}, [editor, onChange]);
-
-	return null;
-}
-
-function LoadDescriptionPlugin({ html }: { html?: string }) {
-	const [editor] = useLexicalComposerContext();
-
-	useEffect(() => {
-		if (!html) return;
-
-		editor.update(() => {
-			const root = $getRoot();
-
-			if (root.getTextContent().trim().length > 0) return;
-
-			root.clear();
-
-			const parser = new DOMParser();
-			const dom = parser.parseFromString(html, "text/html");
-			const nodes = $generateNodesFromDOM(editor, dom);
-
-			root.select();
-			$insertNodes(nodes);
-		});
-	}, [editor, html]);
-
-	return null;
 }

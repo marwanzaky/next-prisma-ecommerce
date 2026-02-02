@@ -333,7 +333,7 @@ export default function Page() {
 							</div>
 						</div>
 
-						<DialogFooter>
+						<DialogFooter className="mt-4">
 							<Button variant="ghost" onClick={cancelFilters}>
 								Cancel
 							</Button>

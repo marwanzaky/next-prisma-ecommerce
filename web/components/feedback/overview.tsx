@@ -84,7 +84,7 @@ export default function Overview({ product }: { product: IProduct }) {
 			</div>
 
 			<Dialog open={displayDialog} onOpenChange={setDisplayDialog}>
-				<DialogContent onSubmit={submitDialog} className="sm:max-w-[24rem] ">
+				<DialogContent className="sm:max-w-[24rem] ">
 					<DialogHeader>
 						<DialogTitle>Write a review</DialogTitle>
 						<DialogDescription>
@@ -112,7 +112,9 @@ export default function Overview({ product }: { product: IProduct }) {
 					</div>
 
 					<DialogFooter>
-						<Button type="submit">Submit</Button>
+						<Button type="button" onClick={submitDialog}>
+							Submit
+						</Button>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>

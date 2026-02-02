@@ -312,8 +312,9 @@ export default function ProductDetails({ product }: { product: IProduct }) {
 					<Details product={product} />
 				</div>
 
-				{process.env.NEXT_PUBLIC_REVIEWS === "true" &&
-					product.reviews.length > 0 && <Feedback product={product} />}
+				{process.env.NEXT_PUBLIC_REVIEWS === "true" && (
+					<Feedback product={product} />
+				)}
 			</Section>
 
 			{data && (

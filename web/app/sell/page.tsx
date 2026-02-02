@@ -34,6 +34,9 @@ import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { cn } from "@lib/utils";
+import { ImageToolbarButton } from "@hooks/imageTooltbarButton";
+import { MyOnChangePlugin } from "@hooks/myOnChangePlugin";
+import { LoadDescriptionPlugin } from "@hooks/loadDescriptionPlugin";
 
 export default function Page() {
 	const {
@@ -50,8 +53,6 @@ export default function Page() {
 
 		//
 		initialConfig,
-		MyOnChangePlugin,
-		LoadDescriptionPlugin,
 		PluginOnChange,
 		description,
 
@@ -145,6 +146,7 @@ export default function Page() {
 								<HistoryPlugin />
 								<AutoFocusPlugin />
 								<MyOnChangePlugin onChange={PluginOnChange} />
+								<ImageToolbarButton />
 
 								<div className="mt-2 text-red-600 text-xs">
 									{errors.description?.message}
@@ -276,6 +278,7 @@ export default function Page() {
 								<HistoryPlugin />
 								<AutoFocusPlugin />
 								<LoadDescriptionPlugin html={description} />
+								<ImageToolbarButton />
 								<MyOnChangePlugin onChange={PluginOnChange} />
 
 								<div className="mt-2 text-red-600 text-xs">

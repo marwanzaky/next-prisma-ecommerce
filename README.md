@@ -17,10 +17,11 @@
   <img src="https://img.shields.io/badge/-Tailwind CSS-2c3e50.svg?logo=tailwindcss&style=flat">
   <img src="https://img.shields.io/badge/-Shadcn-2c3e50.svg?logo=shadcnui&style=flat">
   <img src="https://img.shields.io/badge/-PWA-2c3e50.svg?logo=pwa&style=flat">
-  <img src="https://img.shields.io/badge/-Swagger-2c3e50.svg?logo=swagger&style=flat">
   <img src="https://img.shields.io/badge/-Nest.js-2c3e50.svg?logo=nestjs&style=flat">
   <img src="https://img.shields.io/badge/-Node.js-2c3e50.svg?logo=node.js&style=flat">
   <img src="https://img.shields.io/badge/-MongoDB-2c3e50.svg?logo=mongodb&style=flat">
+  <img src="https://img.shields.io/badge/-Cloudinary-2c3e50.svg?logo=cloudinary&style=flat">
+  <img src="https://img.shields.io/badge/-Swagger-2c3e50.svg?logo=swagger&style=flat">
   <img src="https://img.shields.io/badge/-JWT-2c3e50.svg?logo=JSON%20web%20tokens&style=flat">
   <img src="https://img.shields.io/badge/-Stripe-2c3e50.svg?logo=stripe&style=flat">
   <img src="https://img.shields.io/badge/-Docker-2c3e50.svg?logo=docker&style=flat">
@@ -34,6 +35,7 @@
 - Shadcn UI
 - Nest.js
 - MongoDB
+- Cloudinary
 - Swagger
 - JWT
 
@@ -54,7 +56,7 @@
 - Filter by Rates, or Price ranges
 <img width="100%" height="518" alt="image" src="https://github.com/user-attachments/assets/475d2693-a5e0-444b-8fa1-b5cebdb75b82" />
 
-### Form validation
+### Form Validation
 - Name: max 20 characters
 - Email: must be a valid email format
 - Password: minimum 8 characters
