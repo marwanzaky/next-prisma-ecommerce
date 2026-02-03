@@ -116,11 +116,7 @@ export default function Page() {
 							{...register("name", {
 								required: "This field is required.",
 								minLength: { value: 2, message: "Name is too short." },
-								maxLength: { value: 32, message: "Name is too long." },
-								pattern: {
-									value: /^[a-zA-Z\s'-]+$/,
-									message: "Invalid characters in name.",
-								},
+								maxLength: { value: 64, message: "Name is too long." },
 							})}
 						/>
 
@@ -248,11 +244,7 @@ export default function Page() {
 							{...register("name", {
 								required: "This field is required.",
 								minLength: { value: 2, message: "Name is too short." },
-								maxLength: { value: 48, message: "Name is too long." },
-								pattern: {
-									value: /^[a-zA-Z\s'-]+$/,
-									message: "Invalid characters in name.",
-								},
+								maxLength: { value: 64, message: "Name is too long." },
 							})}
 						/>
 

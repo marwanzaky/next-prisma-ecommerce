@@ -38,7 +38,7 @@ import { InputText } from "_shared/components/inputText";
 
 type SortOption = "relevancy" | "most-popular" | "low-price" | "high-price";
 
-type Params = {
+export type ProductsPageParams = {
 	name: string | undefined;
 	sort: SortOption;
 	minPrice: string | undefined;
@@ -50,7 +50,9 @@ export default function Page() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	const initialParams = Object.fromEntries(searchParams.entries()) as Params;
+	const initialParams = Object.fromEntries(
+		searchParams.entries(),
+	) as ProductsPageParams;
 
 	const [sort, setSort] = useState<SortOption>(
 		initialParams.sort || "relevancy",
@@ -116,7 +118,7 @@ export default function Page() {
 	const [visible, setVisible] = useState(false);
 
 	const updateParams = () => {
-		const params: Params = {
+		const params: ProductsPageParams = {
 			name,
 			sort,
 			minPrice: minPrice?.toString(),
@@ -165,6 +167,13 @@ export default function Page() {
 		updateParams();
 	}, [name, sort, minPrice, maxPrice, rating]);
 
+	useEffect(() => {
+		const params = Object.fromEntries(
+			searchParams.entries(),
+		) as ProductsPageParams;
+		setName(params.name);
+	}, [searchParams]);
+
 	return (
 		<div>
 			<Section>
@@ -173,7 +182,7 @@ export default function Page() {
 						<Button onClick={openFilterDialog}>All filters</Button>
 
 						<div className="flex flex-1 items-center gap-2 scrollbar-hide overflow-auto">
-							{name !== undefined && (
+							{name && name !== undefined && (
 								<Chip onClick={clearName}>Search &quot;{name}&quot;</Chip>
 							)}
 

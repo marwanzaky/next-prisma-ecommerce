@@ -69,7 +69,9 @@
 - Inline stock updates with validation
 - Price comparison support
 - Real-time UI updates synced with backend
-<img width="448px" height="1408" alt="asdf" src="https://github.com/user-attachments/assets/d6e1ed8b-9bad-42bb-b175-662d44b90892" />
+<img width="auto" height="512px" alt="asdf" src="https://github.com/user-attachments/assets/d6e1ed8b-9bad-42bb-b175-662d44b90892" />
+<img width="auto" height="512px" alt="Screenshot edited" src="https://github.com/user-attachments/assets/90d75c92-6121-4556-acf5-a486d56e2e5b" />
+
 
 ## Contact
 

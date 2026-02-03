@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import { useAppSelector } from "@redux/store";
@@ -18,24 +18,54 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "_shared/shadcn/dropdown";
+import { InputText } from "_shared/components/inputText";
+import { useEffect, useState } from "react";
+import { ProductsPageParams } from "app/products/page";
 
 export default function Navigation() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
 
 	const { isAuthenticated, user } = useAppSelector(
 		(state) => state.authReducer,
 	);
 	const { items } = useAppSelector((state) => state.cartReducer);
 
+	const [search, setSearch] = useState<string>("");
+
+	useEffect(() => {
+		const params = Object.fromEntries(
+			searchParams.entries(),
+		) as ProductsPageParams;
+		setSearch(params.name ? params.name : "");
+	}, [searchParams]);
+
 	return (
-		<nav className="flex justify-between py-3 md:py-5">
-			<div className="flex-1 flex items-center">
+		<nav className="flex justify-between gap-4 h-16 md:h-20">
+			<div className="flex-1 flex items-center gap-4">
 				<Link
-					className="font-bold text-lg hover:text-custom-primary-foreground transition-colors"
+					className="hidden lg:block font-bold text-lg hover:text-custom-primary-foreground transition-colors"
 					href="/"
 				>
 					{process.env.NEXT_PUBLIC_NAME}
 				</Link>
+
+				<form
+					onSubmit={(event) => {
+						event.preventDefault();
+						const params = new URLSearchParams();
+						params.set("name", search ? search : "");
+						router.push(`/products?${params.toString()}`);
+					}}
+				>
+					<InputText
+						size="sm"
+						icon="search"
+						placeholder="Search..."
+						value={search}
+						onChange={(event) => setSearch(event.target.value)}
+					/>
+				</form>
 			</div>
 
 			<ul className="flex-[2] hidden sm:flex items-center justify-center gap-10">
@@ -47,7 +77,7 @@ export default function Navigation() {
 				<NavLi href="/contact" name="Contact" />
 			</ul>
 
-			<div className="flex-1 flex justify-end">
+			<div className="flex-1 flex items-center justify-end">
 				<ButtonIcon icon="storefront" onClick={() => router.push("/sell")} />
 				<ButtonIcon icon="favorite" onClick={() => router.push("/favorites")} />
 				<ButtonIcon
@@ -103,13 +133,13 @@ export default function Navigation() {
 									</DropdownMenuContent>
 								</DropdownMenu>
 							</div>
-					  )
+						)
 					: process.env.NEXT_PUBLIC_ACCOUNT === "true" && (
 							<ButtonIcon
 								icon="person"
 								onClick={() => router.push("/signin")}
 							/>
-					  )}
+						)}
 			</div>
 		</nav>
 	);

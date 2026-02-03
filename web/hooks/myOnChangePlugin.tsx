@@ -18,6 +18,12 @@ export function MyOnChangePlugin({
 				function serializeNode(node: any): string {
 					const type = node.getType ? node.getType() : null;
 
+					if (type === "paragraph") {
+						const children = node.getChildren();
+						const inner = children.map(serializeNode).join("");
+						return `<p>${inner || "<br/>"}</p>`;
+					}
+
 					if (type === "image") {
 						const json = node.exportJSON();
 						return `<img src="${json.src}" alt="${json.alt ?? ""}" />`;
