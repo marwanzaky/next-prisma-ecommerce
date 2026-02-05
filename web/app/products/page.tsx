@@ -179,7 +179,9 @@ export default function Page() {
 			<Section>
 				<div className="flex items-center justify-between gap-4 mb-4">
 					<div className="flex items-center gap-4 flex-1 min-w-0">
-						<Button onClick={openFilterDialog}>All filters</Button>
+						<Button variant="outline" onClick={openFilterDialog}>
+							All filters
+						</Button>
 
 						<div className="flex flex-1 items-center gap-2 scrollbar-hide overflow-auto">
 							{name && name !== undefined && (

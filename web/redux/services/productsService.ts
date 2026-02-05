@@ -1,10 +1,12 @@
 import {
+	ICreateProduct,
 	IGetAllProductsDto,
 	IProduct,
 	IUpdateProduct,
 } from "_shared/interfaces";
 
 import { stringify } from "qs";
+import { jsonToFormData } from "./helper";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 
@@ -73,17 +75,22 @@ async function getProduct(id: string): Promise<IProduct> {
 	return data;
 }
 
-async function post(
-	token: string,
-	product: Required<IUpdateProduct>,
-): Promise<IProduct> {
+async function post(token: string, product: ICreateProduct): Promise<IProduct> {
+	const formData = jsonToFormData({
+		...product,
+		imgFiles: undefined,
+	} satisfies ICreateProduct);
+
+	product.imgFiles?.forEach((file) => {
+		formData.append("imgFiles", file);
+	});
+
 	const response = await fetch(`${baseUrl}/products`, {
 		method: "POST",
 		headers: {
 			Authorization: `Bearer ${token}`,
-			"Content-Type": "application/json",
 		},
-		body: JSON.stringify(product),
+		body: formData,
 	});
 
 	const data = await response.json();
@@ -100,13 +107,28 @@ async function update(
 	id: string,
 	product: IUpdateProduct,
 ): Promise<IProduct> {
+	const formData = jsonToFormData({
+		...product,
+		newImgs: undefined,
+		keptImgs: undefined,
+	} satisfies IUpdateProduct);
+
+	product.newImgs?.forEach((img) => {
+		formData.append("newImgs", img.file);
+		formData.append("newImgsIndex", String(img.index));
+	});
+
+	product.keptImgs?.forEach((img) => {
+		formData.append("keptImgsUrl", img.url);
+		formData.append("keptImgsIndex", String(img.index));
+	});
+
 	const response = await fetch(`${baseUrl}/products/${id}`, {
 		method: "PATCH",
 		headers: {
 			Authorization: `Bearer ${token}`,
-			"Content-Type": "application/json",
 		},
-		body: JSON.stringify(product),
+		body: formData,
 	});
 
 	const data = await response.json();

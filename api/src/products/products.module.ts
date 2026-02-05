@@ -5,11 +5,13 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { Product, ProductSchema } from "./entities/product.entity";
 import { Review, ReviewSchema } from "src/reviews/entities/review.entity";
 import { SupabaseService } from "./supabase.service";
+import { CloudinaryModule } from "src/_modules/cloudinary/uploads.module";
 
 @Module({
 	imports: [
 		MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
 		MongooseModule.forFeature([{ name: Review.name, schema: ReviewSchema }]),
+		CloudinaryModule,
 	],
 	controllers: [ProductsController],
 	providers: [ProductsService, SupabaseService],

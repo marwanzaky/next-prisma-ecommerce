@@ -212,7 +212,7 @@ export default function Page() {
 							{Array.from({ length: 10 }).map((_, index) => (
 								<Controller
 									key={index}
-									name={`base64s.${index}`}
+									name={`images.${index}`}
 									control={control}
 									render={({ field }) => (
 										<ImageInput value={field.value} onChange={field.onChange} />
@@ -343,9 +343,9 @@ export default function Page() {
 							{Array.from({ length: 10 }).map((_, index) => (
 								<Controller
 									key={index}
-									name={`base64s.${index}`}
+									name={`images.${index}`}
 									control={control}
-									render={({ field, fieldState }) => (
+									render={({ field }) => (
 										<ImageInput value={field.value} onChange={field.onChange} />
 									)}
 								/>

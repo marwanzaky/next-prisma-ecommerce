@@ -44,7 +44,10 @@ type Inputs = {
 		max?: number;
 	};
 	tags: string[];
-	base64s: string[];
+	images: {
+		url?: string;
+		file?: File;
+	}[];
 };
 
 export function useSell() {
@@ -174,8 +177,8 @@ export function useSell() {
 						min: row.price / 100,
 						max: row.priceCompare / 100,
 					},
-					base64s: row.imgUrls,
 					tags: row.tags,
+					images: row.imgUrls.map((el) => ({ url: el })),
 				});
 
 				setDisplayEditDialog(true);
@@ -200,7 +203,7 @@ export function useSell() {
 		description,
 		priceRangeUsd,
 		tags,
-		base64s,
+		images,
 	}: Inputs) => {
 		if (priceRangeUsd.min && priceRangeUsd.max && description) {
 			dispatch(
@@ -210,7 +213,10 @@ export function useSell() {
 						description,
 						price: priceRangeUsd.min * 100,
 						priceCompare: priceRangeUsd.max * 100,
-						imgUrls: base64s.filter(Boolean),
+						imgFiles: images
+							.filter(Boolean)
+							.map((img) => img.file)
+							.filter((img) => img !== undefined),
 						tags,
 						stock: 1,
 					},
@@ -230,8 +236,16 @@ export function useSell() {
 		description,
 		priceRangeUsd,
 		tags,
-		base64s,
+		images,
 	}: Inputs) => {
+		const newImgs = images
+			.map((img, index) => (img?.file ? { file: img.file, index } : null))
+			.filter((el) => el !== null);
+
+		const keptImgs = images
+			.map((img, index) => (img?.url ? { url: img.url, index } : null))
+			.filter((el) => el !== null);
+
 		if (priceRangeUsd.min && priceRangeUsd.max) {
 			dispatch(
 				updateUserProductAsync({
@@ -241,7 +255,8 @@ export function useSell() {
 						description,
 						price: priceRangeUsd.min * 100,
 						priceCompare: priceRangeUsd.max * 100,
-						imgUrls: base64s.filter(Boolean),
+						newImgs,
+						keptImgs,
 						tags,
 					},
 					toast,
@@ -263,7 +278,7 @@ export function useSell() {
 				max: undefined,
 			},
 			tags: [],
-			base64s: [],
+			images: [],
 		});
 	};
 

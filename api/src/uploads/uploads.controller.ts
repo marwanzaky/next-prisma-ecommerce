@@ -7,13 +7,13 @@ import {
 import { ApiOperation } from "@nestjs/swagger";
 
 import { Public } from "src/auth/auth.guard";
-import { UploadsService } from "./uploads.service";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { CloudinaryService } from "src/_modules/cloudinary/cloudinary.service";
 
 @Controller("uploads")
 @Public()
 export class UploadsController {
-	constructor(private uploadsService: UploadsService) {}
+	constructor(private cloudinaryService: CloudinaryService) {}
 
 	@Post()
 	@ApiOperation({
@@ -23,7 +23,7 @@ export class UploadsController {
 	async uploadFile(@UploadedFile() file: Express.Multer.File) {
 		if (!file) throw new Error("No file provided");
 
-		const url = await this.uploadsService.uploadFile(file);
+		const url = await this.cloudinaryService.uploadFile(file);
 		return { url };
 	}
 }

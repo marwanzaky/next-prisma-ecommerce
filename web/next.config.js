@@ -8,10 +8,13 @@ const withPWA = require("next-pwa")({
 });
 
 module.exports = withPWA({
+	turbopack: {},
+	cacheComponents: true,
 	reactStrictMode: true,
 	images: {
 		domains: [
 			process.env.NEXT_PUBLIC_DOMAINS,
+			"res.cloudinary.com",
 			"mamolio.up.railway.app",
 			"i.etsystatic.com",
 			"mzkdoyjeakimztiocfrp.supabase.co",

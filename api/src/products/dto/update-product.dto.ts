@@ -1,4 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdateProductDto {
@@ -10,17 +11,14 @@ export class UpdateProductDto {
 	@ApiProperty()
 	@IsNumber()
 	@IsOptional()
+	@Type(() => Number)
 	readonly price?: number;
 
 	@ApiProperty()
 	@IsNumber()
 	@IsOptional()
+	@Type(() => Number)
 	readonly priceCompare?: number;
-
-	@ApiProperty()
-	@IsString({ each: true })
-	@IsOptional()
-	readonly imgUrls?: string[];
 
 	@ApiProperty()
 	@IsString()
@@ -36,4 +34,21 @@ export class UpdateProductDto {
 	@IsNumber()
 	@IsOptional()
 	readonly stock?: number;
+
+	@ApiPropertyOptional({ type: [Number] })
+	@Type(() => Number)
+	@IsNumber({}, { each: true })
+	@IsOptional()
+	newImgsIndex?: number[];
+
+	@ApiPropertyOptional({ type: [String] })
+	@IsString({ each: true })
+	@IsOptional()
+	keptImgsUrl?: string[];
+
+	@ApiPropertyOptional({ type: [Number] })
+	@Type(() => Number)
+	@IsNumber({}, { each: true })
+	@IsOptional()
+	keptImgsIndex?: number[];
 }

@@ -3,7 +3,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { Readable } from "stream";
 
 @Injectable()
-export class UploadsService {
+export class CloudinaryService {
 	constructor() {
 		cloudinary.config({
 			cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -17,7 +17,6 @@ export class UploadsService {
 			const stream = cloudinary.uploader.upload_stream(
 				{ folder: "products" },
 				(error, result) => {
-					console.log("result", result);
 					if (error) return reject(error);
 					resolve(result?.secure_url);
 				},

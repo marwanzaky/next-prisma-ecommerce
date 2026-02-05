@@ -1,14 +1,27 @@
 import "./globals.css";
-import AppProviders from "@redux/appProviders";
-import AppStateInit from "@components/appStateInit";
+
+import { Poppins } from "next/font/google";
+
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-import { cn } from "@lib/utils";
 import Footer from "@components/footer";
 import Navigation from "@components/navigation";
+import AppStateInit from "@components/appStateInit";
+
 import { Container } from "_shared/ui/container";
 import { Toaster } from "_shared/shadcn/toaster";
+
+import AppProviders from "@redux/appProviders";
+
+import { cn } from "@lib/utils";
+
+const poppins = Poppins({
+	subsets: ["latin"],
+	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+	variable: "--font-poppins",
+	display: "swap",
+});
 
 export const metadata = {
 	title: "Mamolio",

@@ -2,7 +2,7 @@ import { productsService } from "@redux/services/productsService";
 import { usersService } from "@redux/services/usersService";
 import { RootState } from "@redux/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IProduct, IUpdateProduct } from "_shared/interfaces";
+import { ICreateProduct, IProduct, IUpdateProduct } from "_shared/interfaces";
 import { ToastService } from "_shared/shadcn/hooks/use-toast";
 
 export const getUserProductsAsync = createAsyncThunk(
@@ -21,7 +21,7 @@ export const getUserProductsAsync = createAsyncThunk(
 export const postUserProductAsync = createAsyncThunk(
 	"cart/postUserProduct",
 	async (
-		{ data, toast }: { data: Required<IUpdateProduct>; toast: ToastService },
+		{ data, toast }: { data: ICreateProduct; toast: ToastService },
 		{ getState, rejectWithValue },
 	) => {
 		const state = getState() as RootState;
