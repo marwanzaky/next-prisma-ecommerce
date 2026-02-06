@@ -35,6 +35,7 @@ import { TypographyP } from "_shared/shadcn/typography";
 import { InputCurrencyRange } from "_shared/components/InputCurrencyRange";
 import RadioWithLabel from "_shared/components/radioWithLabel";
 import { InputText } from "_shared/components/inputText";
+import { formatPrice } from "@utils/formatPrice";
 
 type SortOption = "relevancy" | "most-popular" | "low-price" | "high-price";
 
@@ -190,18 +191,17 @@ export default function Page() {
 
 							{minPrice && maxPrice && (
 								<Chip onClick={clearPriceRange}>
-									${(minPrice / 100).toFixed(2)} - $
-									{(maxPrice / 100).toFixed(2)}
+									{formatPrice(minPrice)} - {formatPrice(maxPrice)}
 								</Chip>
 							)}
 							{minPrice != undefined && maxPrice == null && (
 								<Chip onClick={clearPriceRange}>
-									Above ${(minPrice / 100).toFixed(2)}
+									Above {formatPrice(minPrice)}
 								</Chip>
 							)}
 							{minPrice == null && maxPrice != undefined && (
 								<Chip onClick={clearPriceRange}>
-									Under ${(maxPrice / 100).toFixed(2)}
+									Under {formatPrice(maxPrice)}
 								</Chip>
 							)}
 

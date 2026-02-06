@@ -1,5 +1,6 @@
 import { ButtonIcon } from "_shared/ui/buttonIcon";
 import { InputText } from "../inputText";
+import { formatPrice } from "@utils/formatPrice";
 
 export type Column<T = any> = {
 	field: keyof T;
@@ -62,10 +63,7 @@ export function Table({ className, columns, data }: TableProps) {
 											}
 										/>
 									) : column.type === "usd" ? (
-										"$" +
-										(row[column.field] / 100).toLocaleString(undefined, {
-											minimumFractionDigits: 2,
-										})
+										formatPrice(row[column.field])
 									) : column.type === "custom" && column.render ? (
 										column.render(row[column.field], row)
 									) : column.type === "action" &&

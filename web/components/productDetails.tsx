@@ -46,6 +46,7 @@ import { Section } from "_shared/components/section";
 import { useToast } from "_shared/shadcn/hooks/use-toast";
 import { TypographyH4, TypographyP } from "_shared/ui/typography";
 import { TypographyH3 as ShadcnTypographyH3 } from "_shared/shadcn/typography";
+import { formatPrice } from "@utils/formatPrice";
 
 function Preview({ product }: { product: IProduct }) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =
@@ -160,12 +161,12 @@ function Details({ product }: { product: IProduct }) {
 					</h1>
 
 					<div className="flex items-center gap-2">
-						<div className="text-4xl">
-							{"$" + (product.price / 100).toFixed(2)}
-						</div>
-						<div className="text-muted-foreground line-through text-2xl">
-							{"$" + (product.priceCompare / 100).toFixed(2)}
-						</div>
+						<div className="text-4xl">{formatPrice(product.price)}</div>
+						{product.priceCompare > product.price && (
+							<div className="text-muted-foreground line-through text-2xl">
+								{formatPrice(product.priceCompare)}
+							</div>
+						)}
 					</div>
 
 					{process.env.NEXT_PUBLIC_REVIEWS === "true" && (

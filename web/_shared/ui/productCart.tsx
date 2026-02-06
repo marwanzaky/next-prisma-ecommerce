@@ -15,6 +15,7 @@ import { AppDispatch } from "@redux/store";
 import { cn } from "@lib/utils";
 import { ButtonIcon } from "_shared/ui/buttonIcon";
 import { useToast } from "_shared/shadcn/hooks/use-toast";
+import { formatPrice } from "@utils/formatPrice";
 
 type ProductCartProps = {
 	data: IProduct;
@@ -74,12 +75,12 @@ export default function ProductCart({ data }: ProductCartProps) {
 				)}
 
 				<div className="flex items-center gap-x-2">
-					<div className="text-2xl leading-none">
-						{"$" + (data.price / 100).toFixed(2)}
-					</div>
-					<div className="text-lg text-gray-500 line-through leading-none">
-						{"$" + (data.priceCompare / 100).toFixed(2)}
-					</div>
+					<div className="text-2xl leading-none">{formatPrice(data.price)}</div>
+					{data.priceCompare > data.price && (
+						<div className="text-lg text-gray-500 line-through leading-none">
+							{formatPrice(data.priceCompare)}
+						</div>
+					)}
 				</div>
 
 				<ButtonIcon
