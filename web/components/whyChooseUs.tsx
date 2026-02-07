@@ -62,10 +62,10 @@ function Reason({
 				/>
 			</div>
 
-			<div className="text-center lg:text-left font-bold mb-5 truncate">
+			<div className="text-center font-bold mb-5 truncate lg:text-left text-sm md:text-base">
 				{title}
 			</div>
-			<div className="text-center lg:text-left text-custom-grey max-w-xs mx-auto lg:mx-0">
+			<div className="text-center text-custom-grey max-w-xs mx-auto lg:mx-0 lg:text-left text-sm md:text-base">
 				{des}
 			</div>
 		</div>

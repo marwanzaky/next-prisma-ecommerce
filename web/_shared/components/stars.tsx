@@ -32,7 +32,10 @@ export default function Stars({
 	return (
 		<div className={cn("flex items-center gap-x-0.5", className)}>
 			<div className="flex filter-custom-primary-foreground">{stars}</div>
-			<div className="leading-none text-custom-primary-foreground font-medium">
+			<div
+				className="leading-none text-custom-primary-foreground font-medium"
+				style={{ fontSize: size }}
+			>
 				{displayTotal ? `(${total})` : ""}
 			</div>
 		</div>

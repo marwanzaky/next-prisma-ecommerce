@@ -23,7 +23,7 @@ export default function Page() {
 		<Section className="space-y-2 lg:space-y-4">
 			<TypographyH4 className="text-center">Your Favorites</TypographyH4>
 			{items.length > 0 ? (
-				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4">
+				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
 					{items.map((item) => (
 						<ProductItem data={item} key={item._id}></ProductItem>
 					))}

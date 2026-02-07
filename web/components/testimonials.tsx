@@ -40,7 +40,7 @@ function Testimonial({
 				<Icon icon="format_quote" size={32} />
 			</div>
 
-			<blockquote className="text-center lg:text-left italic max-w-xs mx-auto lg:max-w-none lg:mx-0">
+			<blockquote className="text-center italic max-w-xs mx-auto lg:text-left lg:max-w-none lg:mx-0 text-sm md:text-base">
 				{blockquote}
 				<cite className="block mt-5 before:content-['\2014_\0020']">
 					{cite}

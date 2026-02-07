@@ -50,7 +50,7 @@ export default function Reviews({ product }: { product: IProduct }) {
 						/>
 
 						<div>
-							<div className="leading-none mb-0.5">
+							<div className="leading-none mb-0.5 text-sm">
 								<Link
 									href={`/user/${review.user._id}`}
 									className="hover:underline"
@@ -68,7 +68,7 @@ export default function Reviews({ product }: { product: IProduct }) {
 								value={review.rating}
 								displayTotal={false}
 							/>
-							<p className="text-custom-grey">{review.description}</p>
+							<p className="text-custom-grey text-sm">{review.description}</p>
 						</div>
 					</div>
 				))

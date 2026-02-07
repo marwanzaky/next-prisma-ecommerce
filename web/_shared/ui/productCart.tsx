@@ -16,6 +16,7 @@ import { cn } from "@lib/utils";
 import { ButtonIcon } from "_shared/ui/buttonIcon";
 import { useToast } from "_shared/shadcn/hooks/use-toast";
 import { formatPrice } from "@utils/formatPrice";
+import { useIsMobile } from "_shared/shadcn/hooks/use-mobile";
 
 type ProductCartProps = {
 	data: IProduct;
@@ -62,22 +63,26 @@ export default function ProductCart({ data }: ProductCartProps) {
 				/>
 			</Link>
 
-			<div className="relative p-2 sm:p-4">
-				<h3 className="text-lg truncate leading-none mb-1">{data.name}</h3>
+			<div className="relative p-2 md:p-4">
+				<h3 className="truncate !leading-none mb-1 text-base md:text-lg">
+					{data.name}
+				</h3>
 
 				{process.env.NEXT_PUBLIC_REVIEWS === "true" && (
 					<Stars
 						className="mb-2"
-						size={18}
+						size={useIsMobile() ? 15 : 18}
 						value={data.avgRatings}
 						total={data.numReviews}
 					/>
 				)}
 
 				<div className="flex items-center gap-x-2">
-					<div className="text-2xl leading-none">{formatPrice(data.price)}</div>
+					<div className="!leading-none text-base md:text-2xl">
+						{formatPrice(data.price)}
+					</div>
 					{data.priceCompare > data.price && (
-						<div className="text-lg text-gray-500 line-through leading-none">
+						<div className="text-gray-500 line-through !leading-none text-sm md:text-lg">
 							{formatPrice(data.priceCompare)}
 						</div>
 					)}
