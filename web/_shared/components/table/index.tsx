@@ -5,7 +5,14 @@ import { formatPrice } from "@utils/formatPrice";
 export type Column<T = any> = {
 	field: keyof T;
 	header: string;
-	type: "text" | "usd" | "custom" | "number-input" | "action" | "checkbox";
+	type:
+		| "text"
+		| "usd"
+		| "custom"
+		| "number-input"
+		| "action"
+		| "checkbox"
+		| "date";
 	className?: string;
 	width?: string;
 
@@ -64,6 +71,8 @@ export function Table({ className, columns, data }: TableProps) {
 										/>
 									) : column.type === "usd" ? (
 										formatPrice(row[column.field])
+									) : column.type === "date" ? (
+										new Date(row[column.field]).toLocaleDateString("en-GB")
 									) : column.type === "custom" && column.render ? (
 										column.render(row[column.field], row)
 									) : column.type === "action" &&

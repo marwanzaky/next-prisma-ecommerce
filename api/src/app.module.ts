@@ -12,8 +12,7 @@ import { CartsModule } from "./carts/carts.module";
 import { FavoritesModule } from "./favorites/favorites.module";
 import { RolesGuard } from "./_guards/roles.guard";
 import { PaymentsModule } from "./payments/payments.module";
-import { MailerModule } from "@nestjs-modules/mailer";
-import { ContactModule } from "./contact/contact.module";
+import { ContactMessagesModule } from "./admin/contact-messages/contact-messages.module";
 import { ChatModule } from "./chat/chat.module";
 import { UploadsModule } from "./uploads/uploads.module";
 
@@ -33,17 +32,6 @@ import { UploadsModule } from "./uploads/uploads.module";
 			}),
 		}),
 
-		// Modules
-		MailerModule.forRoot({
-			transport: {
-				host: process.env.EMAIL_HOST,
-				auth: {
-					user: process.env.EMAIL_USERNAME,
-					pass: process.env.EMAIL_PASSWORD,
-				},
-			},
-		}),
-
 		AuthModule,
 		UsersModule,
 		ProductsModule,
@@ -51,7 +39,7 @@ import { UploadsModule } from "./uploads/uploads.module";
 		CartsModule,
 		FavoritesModule,
 		PaymentsModule,
-		ContactModule,
+		ContactMessagesModule,
 		ChatModule,
 		UploadsModule,
 	],

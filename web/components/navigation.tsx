@@ -118,6 +118,16 @@ export default function Navigation() {
 											>
 												Account
 											</DropdownMenuItem>
+
+											{user?.role === "admin" && (
+												<DropdownMenuItem
+													onClick={() => {
+														router.push("/admin/messages");
+													}}
+												>
+													Messages
+												</DropdownMenuItem>
+											)}
 										</DropdownMenuGroup>
 
 										<DropdownMenuSeparator />

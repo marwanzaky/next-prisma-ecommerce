@@ -3,16 +3,16 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import Stars from "_shared/components/stars";
-
+import { useDispatch } from "react-redux";
 import { postCartItemAsync } from "@redux/thunks/cartThunks";
-
-import { IProduct } from "_shared/interfaces";
+import { AppDispatch } from "@redux/store";
 
 import { useToggleFavorite } from "@hooks/useToggleFavorite";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@redux/store";
+
 import { cn } from "@lib/utils";
+
+import Stars from "_shared/components/stars";
+import { IProduct } from "_shared/interfaces";
 import { ButtonIcon } from "_shared/ui/buttonIcon";
 import { useToast } from "_shared/shadcn/hooks/use-toast";
 import { formatPrice } from "@utils/formatPrice";

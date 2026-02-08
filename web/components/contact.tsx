@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
 import { useRouter } from "next/navigation";
 
-import { contactService } from "@redux/services/contactService";
+import { contactMessagesService } from "@redux/services/contactMessagesService";
 import { Section } from "_shared/components/section";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { InputText } from "_shared/components/inputText";
@@ -26,11 +25,14 @@ export default function Contact() {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = useForm<Inputs>({ mode: "onTouched" });
 
 	const onSubmit: SubmitHandler<Inputs> = async (data) => {
 		try {
-			await contactService.contact(data);
+			await contactMessagesService.sendMessage(data);
+
+			reset();
 
 			toast({
 				title: "Message sent successfully. Thank you!",
