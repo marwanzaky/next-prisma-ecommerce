@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export interface IProduct {
 	_id: string;
 	name: string;
@@ -7,13 +9,11 @@ export interface IProduct {
 	discount: string;
 	avgRatings: number;
 	numReviews: number;
-	/**
-	 * base64s
-	 */
 	imgUrls: string[];
 	description: string;
 	tags: string[];
 	featured: boolean;
+	category: Types.ObjectId | null;
 }
 
 export type CreateProduct = Partial<
@@ -27,6 +27,8 @@ export type CreateProduct = Partial<
 		| "tags"
 		| "stock"
 	>
->;
+> & {
+	category?: string | null;
+};
 
-export type UpdateProduct = CreateProduct;
+export type UpdateProduct = Partial<CreateProduct>;

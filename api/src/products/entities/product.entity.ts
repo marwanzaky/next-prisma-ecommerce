@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory, Virtual } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
 import { IProduct } from "src/_interfaces/product.interface";
+import { Category } from "src/_modules/categories/entities/category.entity";
 import { User } from "src/users/entities/user.entity";
 
 @Schema({
@@ -78,6 +79,14 @@ export class Product extends Document implements Omit<IProduct, "_id"> {
 		default: false,
 	})
 	featured!: boolean;
+
+	@Prop({
+		type: mongoose.Schema.ObjectId,
+		ref: Category.name,
+		required: [true, "A product must have category value"],
+		default: null,
+	})
+	category!: mongoose.Types.ObjectId | null;
 
 	@Virtual({
 		get: function (this: Product) {

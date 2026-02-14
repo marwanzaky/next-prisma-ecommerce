@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -47,6 +47,10 @@ import { useToast } from "_shared/shadcn/hooks/use-toast";
 import { TypographyH4, TypographyP } from "_shared/ui/typography";
 import { TypographyH3 as ShadcnTypographyH3 } from "_shared/shadcn/typography";
 import { formatPrice } from "@utils/formatPrice";
+import {
+	categoriesService,
+	ICategoryTree,
+} from "@redux/services/categoriesService";
 
 function Preview({ product }: { product: IProduct }) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =
@@ -130,7 +134,24 @@ function Details({ product }: { product: IProduct }) {
 
 	const dispatch = useDispatch<AppDispatch>();
 
+	const { data } = useQuery({
+		queryKey: ["category-tree"],
+		queryFn: () => categoriesService.getCategoryTree(),
+		staleTime: 1000 * 60 * 5,
+	});
+
 	const [quantity, setQuantity] = useState(1);
+
+	const [category, setCategory] = useState<ICategoryTree>();
+
+	useEffect(() => {
+		if (data) {
+			const category = data
+				.flatMap((cat) => [...cat.children, cat])
+				.find((cat) => cat._id === product.category);
+			setCategory(category);
+		}
+	}, [data]);
 
 	return (
 		<div className="space-y-4 lg:space-y-8">
@@ -150,7 +171,7 @@ function Details({ product }: { product: IProduct }) {
 						</BreadcrumbItem>
 						<BreadcrumbSeparator />
 						<BreadcrumbItem>
-							<BreadcrumbPage>Stationery</BreadcrumbPage>
+							<BreadcrumbPage>{category?.name}</BreadcrumbPage>
 						</BreadcrumbItem>
 					</BreadcrumbList>
 				</Breadcrumb>
@@ -288,12 +309,13 @@ export default function ProductDetails({ product }: { product: IProduct }) {
 	const options: GetAllProductsOptions = {
 		query: {
 			excludeIds: [product._id],
+			category: product.category,
 			limit: 4,
 		},
 	};
 
-	const { data } = useQuery({
-		queryKey: ["products", options],
+	const { data: featuredProducts } = useQuery({
+		queryKey: ["featured-products", options],
 		queryFn: () => productsService.getAllProducts(options),
 		staleTime: 1000 * 60 * 5,
 	});
@@ -318,14 +340,14 @@ export default function ProductDetails({ product }: { product: IProduct }) {
 				)}
 			</Section>
 
-			{data && (
+			{featuredProducts && featuredProducts.length > 0 && (
 				<Section className="!pt-0 space-y-2 lg:space-y-4">
 					<ShadcnTypographyH3 className="text-center lg:text-left">
 						Featured collection
 					</ShadcnTypographyH3>
 
 					<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
-						{data.map((item) => (
+						{featuredProducts.map((item) => (
 							<ProductCart key={item._id} data={item} />
 						))}
 					</div>

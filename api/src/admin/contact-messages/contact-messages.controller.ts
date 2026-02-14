@@ -1,11 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
-import { ApiOperation } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { Public } from "src/auth/auth.guard";
 import { ContactMessagesService } from "./contact-messages.service";
 import { SendContactMessageDto } from "./dto/send-contact-message.dto";
 
 @Controller("contact-messages")
+@ApiTags("Contact Messages")
 export class ContactMessagesController {
 	constructor(private contactMessagesService: ContactMessagesService) {}
 

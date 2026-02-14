@@ -29,7 +29,7 @@ export default function ImageInput({ value, onChange }: ImageInputProps) {
 				/>
 			)}
 
-			<div className="w-full h-16 rounded-xl overflow-hidden outline-none shadow-[0_0_0_1pt_#ecf0f1] focus:shadow-[0_0_0_2pt_cornflowerblue]">
+			<div className="w-full h-[62px] rounded-xl overflow-hidden outline-none shadow-[0_0_0_1pt_#ecf0f1] focus:shadow-[0_0_0_2pt_cornflowerblue]">
 				<input
 					ref={inputRef}
 					type="file"

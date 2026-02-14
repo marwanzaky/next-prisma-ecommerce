@@ -6,7 +6,6 @@ import { useCart } from "@hooks/useCart";
 
 import { Table } from "_shared/components/table";
 import { Section } from "_shared/components/section";
-import { paymentsService } from "@redux/services/paymentsService";
 import { TypographyH4 } from "_shared/shadcn/typography";
 import { Button } from "_shared/shadcn/button";
 import {
@@ -20,23 +19,7 @@ import {
 export default function Page() {
 	const router = useRouter();
 
-	const { items, columns, tableData, cartTotalStr, similarProducts } =
-		useCart();
-
-	const checkout: React.MouseEventHandler<HTMLButtonElement> = async (
-		event,
-	) => {
-		event.preventDefault();
-
-		const res = await paymentsService.createCheckoutSession(
-			items.map((item) => ({
-				id: item.product._id,
-				quantity: item.quantity,
-			})),
-		);
-
-		(window as Window).location = res.url;
-	};
+	const { items, columns, tableData, cartTotalStr } = useCart();
 
 	return (
 		<Section>

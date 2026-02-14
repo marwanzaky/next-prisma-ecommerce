@@ -36,6 +36,7 @@ import { InputCurrencyRange } from "_shared/components/InputCurrencyRange";
 import RadioWithLabel from "_shared/components/radioWithLabel";
 import { InputText } from "_shared/components/inputText";
 import { formatPrice } from "@utils/formatPrice";
+import { categoriesService } from "@redux/services/categoriesService";
 
 type SortOption = "relevancy" | "most-popular" | "low-price" | "high-price";
 
@@ -45,6 +46,7 @@ export type ProductsPageParams = {
 	minPrice: string | undefined;
 	maxPrice: string | undefined;
 	rating: string | undefined;
+	category: string | undefined;
 };
 
 export default function Page() {
@@ -60,6 +62,8 @@ export default function Page() {
 	);
 
 	const [name, setName] = useState<string | undefined>();
+
+	const [category, setCategory] = useState<string | undefined>();
 
 	const [minPrice, setMinPrice] = useState<number | undefined>(
 		initialParams.minPrice ? parseInt(initialParams.minPrice) : undefined,
@@ -93,6 +97,12 @@ export default function Page() {
 		"high-price": { property: "price", order: "desc" },
 	};
 
+	const { data: categoriesTree } = useQuery({
+		queryKey: ["category-tree"],
+		queryFn: () => categoriesService.getCategoryTree(),
+		staleTime: 1000 * 60 * 5,
+	});
+
 	const productsOptions: GetAllProductsOptions = {
 		sort: sortMap[sort],
 		query: {
@@ -100,6 +110,11 @@ export default function Page() {
 			minPrice,
 			maxPrice,
 			avgRatings: rating,
+			category: categoriesTree
+				? categoriesTree
+						.flatMap((cat) => [...cat.children, cat])
+						.find((cat) => cat.slug === category)?._id
+				: null,
 		},
 	};
 
@@ -122,6 +137,7 @@ export default function Page() {
 		const params: ProductsPageParams = {
 			name,
 			sort,
+			category,
 			minPrice: minPrice?.toString(),
 			maxPrice: maxPrice?.toString(),
 			rating: rating?.toString(),
@@ -152,6 +168,10 @@ export default function Page() {
 		setName(undefined);
 	};
 
+	const clearCategory = () => {
+		setCategory(undefined);
+	};
+
 	const applyFilters = () => {
 		setName(draftName);
 		setMaxPrice(draftMaxPrice && draftMaxPrice * 100);
@@ -166,13 +186,14 @@ export default function Page() {
 
 	useEffect(() => {
 		updateParams();
-	}, [name, sort, minPrice, maxPrice, rating]);
+	}, [name, sort, minPrice, maxPrice, rating, category]);
 
 	useEffect(() => {
 		const params = Object.fromEntries(
 			searchParams.entries(),
 		) as ProductsPageParams;
 		setName(params.name);
+		setCategory(params.category);
 	}, [searchParams]);
 
 	return (
@@ -188,7 +209,9 @@ export default function Page() {
 							{name && name !== undefined && (
 								<Chip onClick={clearName}>Search &quot;{name}&quot;</Chip>
 							)}
-
+							{category && category !== undefined && (
+								<Chip onClick={clearCategory}>Category: {category}</Chip>
+							)}
 							{minPrice && maxPrice && (
 								<Chip onClick={clearPriceRange}>
 									{formatPrice(minPrice)} - {formatPrice(maxPrice)}

@@ -28,6 +28,7 @@ export class ProductsService {
 			description,
 			tags,
 			stock,
+			category,
 		}: CreateProduct,
 	): Promise<Product> {
 		const product = await this.productModel.create({
@@ -39,6 +40,7 @@ export class ProductsService {
 			description,
 			tags: tags || [],
 			stock,
+			category,
 		});
 
 		return product.save();
@@ -59,6 +61,7 @@ export class ProductsService {
 			featured?: boolean;
 			limit?: number;
 			avgRatings?: number;
+			category?: string;
 		};
 	}): Promise<Product[]> {
 		const { sort = {}, query = {} } = options || {};
@@ -77,6 +80,10 @@ export class ProductsService {
 
 		if (query.name) {
 			filter.name = { $regex: new RegExp(query.name, "i") };
+		}
+
+		if (query.category) {
+			filter.category = query.category;
 		}
 
 		if (query.minPrice !== undefined || query.maxPrice !== undefined) {

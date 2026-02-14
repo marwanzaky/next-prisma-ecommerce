@@ -23,6 +23,7 @@ import { ApiBearerAuth, ApiConsumes, ApiOperation } from "@nestjs/swagger";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { CloudinaryService } from "src/_modules/cloudinary/cloudinary.service";
 import { UpdateProduct } from "src/_interfaces/product.interface";
+import { Types } from "mongoose";
 
 @Controller("products")
 @ApiBearerAuth("Authorization")
@@ -48,6 +49,7 @@ export class ProductsController {
 			featured,
 			limit,
 			avgRatings,
+			category,
 		} = dto;
 
 		return this.productsService.find({
@@ -63,6 +65,7 @@ export class ProductsController {
 				featured,
 				limit,
 				avgRatings,
+				category,
 			},
 		});
 	}
@@ -108,7 +111,15 @@ export class ProductsController {
 		@Body() dto: UpdateProductDto,
 		@UploadedFiles() newImgs?: Express.Multer.File[],
 	) {
-		const { keptImgsIndex, keptImgsUrl, newImgsIndex } = dto;
+		const { newImgsIndex } = dto;
+
+		const keptImgsIndex = Array.isArray(dto.keptImgsIndex)
+			? dto.keptImgsIndex.filter((el) => el !== undefined)
+			: [dto.keptImgsIndex].filter((el) => el !== undefined);
+
+		const keptImgsUrl = Array.isArray(dto.keptImgsUrl)
+			? dto.keptImgsUrl.filter((el) => el !== undefined)
+			: [dto.keptImgsUrl].filter((el) => el !== undefined);
 
 		const product = await this.productsService.findById(id);
 
@@ -154,6 +165,9 @@ export class ProductsController {
 		}
 		if (dto.tags !== undefined) {
 			updatedProduct.tags = dto.tags;
+		}
+		if (dto.category !== undefined) {
+			updatedProduct.category = new Types.ObjectId(dto.category) as any;
 		}
 		if (finalImgUrls !== undefined) {
 			updatedProduct.imgUrls = finalImgUrls.filter((el) => el !== undefined);

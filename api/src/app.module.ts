@@ -15,6 +15,8 @@ import { PaymentsModule } from "./payments/payments.module";
 import { ContactMessagesModule } from "./admin/contact-messages/contact-messages.module";
 import { ChatModule } from "./chat/chat.module";
 import { UploadsModule } from "./uploads/uploads.module";
+import { AdminCategoriesModule } from "./admin/admin-categories/admin-categories.module";
+import { CategoriesModule } from "./categories/categories.module";
 
 @Module({
 	imports: [
@@ -42,6 +44,8 @@ import { UploadsModule } from "./uploads/uploads.module";
 		ContactMessagesModule,
 		ChatModule,
 		UploadsModule,
+		AdminCategoriesModule,
+		CategoriesModule,
 	],
 	providers: [
 		JwtService,

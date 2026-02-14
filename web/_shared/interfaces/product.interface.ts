@@ -14,18 +14,31 @@ export interface IProduct {
 	tags: string[];
 	createdAt: string;
 	stock: number;
+	category: string | null;
 }
 
 export type ICreateProduct = Pick<
 	IProduct,
-	"name" | "price" | "priceCompare" | "description" | "tags" | "stock"
+	| "name"
+	| "price"
+	| "priceCompare"
+	| "description"
+	| "tags"
+	| "stock"
+	| "category"
 > & {
 	imgFiles?: File[];
 };
 
 export type IUpdateProduct = Pick<
 	Partial<IProduct>,
-	"name" | "price" | "priceCompare" | "description" | "tags" | "stock"
+	| "name"
+	| "price"
+	| "priceCompare"
+	| "description"
+	| "tags"
+	| "stock"
+	| "category"
 > & {
 	newImgs?: {
 		file: File;

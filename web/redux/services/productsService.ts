@@ -24,6 +24,8 @@ export type GetAllProductsOptions = {
 		featured?: boolean;
 		limit?: number;
 		avgRatings?: number;
+		category?: string | null;
+		// slug?: string;
 	};
 };
 

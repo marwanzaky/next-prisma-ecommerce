@@ -71,4 +71,9 @@ export class GetAllProductsDto {
 	@Max(5)
 	@Type(() => Number)
 	readonly avgRatings?: number;
+
+	@ApiPropertyOptional()
+	@IsString()
+	@IsOptional()
+	readonly category?: string;
 }

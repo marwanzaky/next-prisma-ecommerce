@@ -2,10 +2,11 @@ import Header from "@components/header";
 import WhyChooseUs from "@components/whyChooseUs";
 import Testimonials from "@components/testimonials";
 
-import { IProduct } from "_shared/interfaces";
 import { productsService } from "@redux/services/productsService";
-import { TypographyH3 } from "_shared/shadcn/typography";
+
 import ProductCart from "_shared/ui/productCart";
+import { TypographyH3 } from "_shared/shadcn/typography";
+import { IProduct } from "_shared/interfaces";
 import { Section } from "_shared/components/section";
 
 export default async function Page() {

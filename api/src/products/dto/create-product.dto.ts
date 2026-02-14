@@ -42,4 +42,9 @@ export class CreateProductDto {
 	@IsOptional()
 	@Type(() => Number)
 	readonly stock?: number = 1;
+
+	@ApiPropertyOptional()
+	@IsString()
+	@IsOptional()
+	readonly category?: string | null;
 }

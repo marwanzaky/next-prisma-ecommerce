@@ -51,4 +51,9 @@ export class UpdateProductDto {
 	@IsNumber({}, { each: true })
 	@IsOptional()
 	keptImgsIndex?: number[];
+
+	@ApiPropertyOptional()
+	@IsString()
+	@IsOptional()
+	readonly category?: string;
 }

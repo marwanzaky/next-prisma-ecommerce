@@ -10,11 +10,10 @@ import {
 import { IProduct } from "_shared/interfaces";
 import { Column } from "_shared/components/table";
 import { LogoCell } from "_shared/components/table/cells/logoCell";
-import { productsService } from "@redux/services/productsService";
 import { selectCartTotalStr } from "@redux/selectors/cartSelectors";
 
-import { useQuery } from "@tanstack/react-query";
 import { useToast } from "_shared/shadcn/hooks/use-toast";
+import { paymentsService } from "@redux/services/paymentsService";
 
 type CartItem = IProduct & { imgUrl: string; quantity: number; total: number };
 
@@ -24,18 +23,6 @@ export function useCart() {
 	const { toast } = useToast();
 	const { items } = useAppSelector((state) => state.cartReducer);
 	const cartTotalStr = useAppSelector(selectCartTotalStr);
-
-	const { data: similarProducts } = useQuery({
-		queryKey: ["featured-products"],
-		queryFn: () =>
-			productsService.getAllProducts({
-				query: {
-					featured: true,
-					limit: 4,
-				},
-			}),
-		staleTime: 1000 * 60 * 5,
-	});
 
 	const columns: Column<CartItem>[] = [
 		{
@@ -92,11 +79,26 @@ export function useCart() {
 		total: item.product.price * item.quantity,
 	}));
 
+	const checkout: React.MouseEventHandler<HTMLButtonElement> = async (
+		event,
+	) => {
+		event.preventDefault();
+
+		const response = await paymentsService.createCheckoutSession(
+			items.map((item) => ({
+				id: item.product._id,
+				quantity: item.quantity,
+			})),
+		);
+
+		(window as Window).location = response.url;
+	};
+
 	return {
 		items,
 		columns,
 		tableData,
 		cartTotalStr,
-		similarProducts,
+		checkout,
 	};
 }

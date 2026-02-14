@@ -15,12 +15,18 @@ import {
 	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
+	DropdownMenuPortal,
 	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from "_shared/shadcn/dropdown";
 import { InputText } from "_shared/components/inputText";
 import { useEffect, useState } from "react";
 import { ProductsPageParams } from "app/products/page";
+import { useQuery } from "@tanstack/react-query";
+import { categoriesService } from "@redux/services/categoriesService";
 
 export default function Navigation() {
 	const router = useRouter();
@@ -43,6 +49,10 @@ export default function Navigation() {
 	return (
 		<nav className="flex justify-between gap-4 h-16 md:h-20">
 			<div className="flex-1 flex items-center gap-4">
+				<div>
+					<NavigationMenu />
+				</div>
+
 				<Link
 					className="hidden lg:block font-bold text-lg hover:text-custom-primary-foreground transition-colors"
 					href="/"
@@ -62,6 +72,7 @@ export default function Navigation() {
 						size="sm"
 						icon="search"
 						placeholder="Search..."
+						className="md:w-40"
 						value={search}
 						onChange={(event) => setSearch(event.target.value)}
 					/>
@@ -118,7 +129,15 @@ export default function Navigation() {
 											>
 												Account
 											</DropdownMenuItem>
+										</DropdownMenuGroup>
 
+										<DropdownMenuSeparator />
+
+										<DropdownMenuLabel className="text-sm">
+											Admin
+										</DropdownMenuLabel>
+
+										<DropdownMenuGroup>
 											{user?.role === "admin" && (
 												<DropdownMenuItem
 													onClick={() => {
@@ -126,6 +145,16 @@ export default function Navigation() {
 													}}
 												>
 													Messages
+												</DropdownMenuItem>
+											)}
+
+											{user?.role === "admin" && (
+												<DropdownMenuItem
+													onClick={() => {
+														router.push("/admin/categories");
+													}}
+												>
+													Categories
 												</DropdownMenuItem>
 											)}
 										</DropdownMenuGroup>
@@ -152,6 +181,51 @@ export default function Navigation() {
 						)}
 			</div>
 		</nav>
+	);
+}
+
+function NavigationMenu() {
+	const router = useRouter();
+
+	const { data } = useQuery({
+		queryKey: ["category-tree"],
+		queryFn: () => categoriesService.getCategoryTree(),
+		staleTime: 1000 * 60 * 5,
+	});
+
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<ButtonIcon icon="menu" />
+			</DropdownMenuTrigger>
+
+			<DropdownMenuContent side="bottom" align="start" sideOffset={4}>
+				<DropdownMenuLabel>Categories</DropdownMenuLabel>
+
+				{data?.map((cat) => (
+					<DropdownMenuSub key={`menu-sub-${cat.slug}`}>
+						<DropdownMenuSubTrigger>{cat.name}</DropdownMenuSubTrigger>
+						<DropdownMenuPortal>
+							<DropdownMenuSubContent>
+								{cat.children.map((subcat) => (
+									<DropdownMenuItem
+										key={`menu-item-${subcat.slug}`}
+										onClick={() => {
+											router.push("/products?category=");
+											const params = new URLSearchParams();
+											params.set("category", subcat.slug);
+											router.push(`/products?${params.toString()}`);
+										}}
+									>
+										{subcat.name}
+									</DropdownMenuItem>
+								))}
+							</DropdownMenuSubContent>
+						</DropdownMenuPortal>
+					</DropdownMenuSub>
+				))}
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 }
 

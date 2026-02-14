@@ -76,7 +76,7 @@ export default function Page() {
 								<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 								<AlertDialogDescription>
 									This action cannot be undone. This will permanently delete the
-									product data from our servers.
+									message data from our servers.
 								</AlertDialogDescription>
 							</AlertDialogHeader>
 							<AlertDialogFooter>

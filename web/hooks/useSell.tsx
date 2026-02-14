@@ -32,11 +32,13 @@ import { useForm, useWatch } from "react-hook-form";
 
 import { InitialConfigType } from "@lexical/react/LexicalComposer";
 import { LineBreakNode, ParagraphNode } from "lexical";
+import { ProductDialog } from "app/sell/components/productDialog";
 
 type CartItem = IProduct & { imgUrl: string };
 
-type Inputs = {
+export type SellInputs = {
 	productId: string;
+	category: string;
 	name: string;
 	description: string;
 	priceRangeUsd: {
@@ -83,7 +85,7 @@ export function useSell() {
 		control,
 		reset,
 		setValue,
-	} = useForm<Inputs>({
+	} = useForm<SellInputs>({
 		mode: "onTouched",
 	});
 
@@ -168,6 +170,7 @@ export function useSell() {
 			header: "",
 			type: "action",
 			width: "38px",
+			actionIcon: "edit",
 			action: (row) => {
 				reset({
 					productId: row._id,
@@ -179,11 +182,11 @@ export function useSell() {
 					},
 					tags: row.tags,
 					images: row.imgUrls.map((el) => ({ url: el })),
+					category: row.category ? row.category : undefined,
 				});
 
 				setDisplayEditDialog(true);
 			},
-			actionIcon: "edit",
 		},
 	];
 
@@ -204,7 +207,8 @@ export function useSell() {
 		priceRangeUsd,
 		tags,
 		images,
-	}: Inputs) => {
+		category,
+	}: SellInputs) => {
 		if (priceRangeUsd.min && priceRangeUsd.max && description) {
 			dispatch(
 				postUserProductAsync({
@@ -218,6 +222,7 @@ export function useSell() {
 							.map((img) => img.file)
 							.filter((img) => img !== undefined),
 						tags,
+						category,
 						stock: 1,
 					},
 					toast,
@@ -226,7 +231,6 @@ export function useSell() {
 		}
 
 		setDisplayDialog(false);
-
 		resetForm();
 	};
 
@@ -237,7 +241,8 @@ export function useSell() {
 		priceRangeUsd,
 		tags,
 		images,
-	}: Inputs) => {
+		category,
+	}: SellInputs) => {
 		const newImgs = images
 			.map((img, index) => (img?.file ? { file: img.file, index } : null))
 			.filter((el) => el !== null);
@@ -258,6 +263,7 @@ export function useSell() {
 						newImgs,
 						keptImgs,
 						tags,
+						category,
 					},
 					toast,
 				}),
@@ -265,7 +271,6 @@ export function useSell() {
 		}
 
 		setDisplayEditDialog(false);
-
 		resetForm();
 	};
 
@@ -279,34 +284,59 @@ export function useSell() {
 			},
 			tags: [],
 			images: [],
+			category: "",
 		});
 	};
 
-	return {
-		products,
+	const EditProductDialog = (
+		<ProductDialog
+			// React-form-hook
+			formState={formState}
+			description={description}
+			PluginOnChange={PluginOnChange}
+			register={register}
+			errors={errors}
+			initialConfig={initialConfig}
+			control={control}
+			// Edit item dialog
+			open={displayEditDialog}
+			onOpenChange={setDisplayEditDialog}
+			dialogHeader="Edit item"
+			onSubmit={handleSubmit(onUpdateProduct)}
+			cancelButtonText="Cancel"
+			cancelButtonAction={() => {
+				setDisplayEditDialog(false);
+			}}
+			submitButtonText="Update"
+			injectLoadDescriptionPlugin
+		/>
+	);
 
+	const AddProductDialog = (
+		<ProductDialog
+			// React-form-hook
+			formState={formState}
+			description={description}
+			PluginOnChange={PluginOnChange}
+			register={register}
+			errors={errors}
+			initialConfig={initialConfig}
+			control={control}
+			// Dialog
+			open={displayDialog}
+			onOpenChange={setDisplayDialog}
+			dialogHeader="Add item"
+			onSubmit={handleSubmit(onAddProduct)}
+			submitButtonText="Add"
+		/>
+	);
+
+	return {
 		columns,
 		tableData,
-
-		// Form
-		register,
-		errors,
-		formState,
-		handleSubmit,
-		control,
 		resetForm,
-
-		//
-		initialConfig,
-		PluginOnChange,
-		description,
-
-		displayDialog,
 		setDisplayDialog,
-		displayEditDialog,
-		setDisplayEditDialog,
-
-		onAddProduct,
-		onUpdateProduct,
+		AddProductDialog,
+		EditProductDialog,
 	};
 }
