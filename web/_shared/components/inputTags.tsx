@@ -61,7 +61,7 @@ const InputTags = forwardRef<HTMLInputElement, InputTagsProps>(
 		};
 
 		return (
-			<>
+			<div>
 				<div className={clsx(inputTagsVariants({ size: "md" }), className)}>
 					{value.map((item) => (
 						<Badge className="flex gap-1 hover:bg-gray-300" key={item}>
@@ -104,7 +104,7 @@ const InputTags = forwardRef<HTMLInputElement, InputTagsProps>(
 						{message}
 					</div>
 				)}
-			</>
+			</div>
 		);
 	},
 );

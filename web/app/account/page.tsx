@@ -101,20 +101,26 @@ function PersonalInformationForm() {
 						<AvatarImage src={watch("photo") || "img/avatar.jpg"} />
 					</Avatar>
 
-					<div className="flex items-center gap-2">
-						<Button
-							variant="secondary"
-							type="button"
-							onClick={() => inputRef.current?.click()}
-						>
-							Change avatar
-						</Button>
+					<div className="flex flex-col gap-2">
+						<div className="flex items-center gap-2">
+							<Button
+								variant="secondary"
+								type="button"
+								onClick={() => inputRef.current?.click()}
+							>
+								Change avatar
+							</Button>
 
-						<ButtonIcon
-							type="button"
-							icon="delete"
-							onClick={() => setValue("photo", "", { shouldDirty: true })}
-						/>
+							<ButtonIcon
+								type="button"
+								icon="delete"
+								onClick={() => setValue("photo", "", { shouldDirty: true })}
+							/>
+						</div>
+
+						<TypographyMuted className="text-xs">
+							Must be a .jpg, or .png file smaller than 4MB.
+						</TypographyMuted>
 					</div>
 				</div>
 

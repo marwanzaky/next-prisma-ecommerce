@@ -51,6 +51,11 @@ import {
 	categoriesService,
 	ICategoryTree,
 } from "@redux/services/categoriesService";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "_shared/shadcn/tooltip";
 
 function Preview({ product }: { product: IProduct }) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =
@@ -67,7 +72,7 @@ function Preview({ product }: { product: IProduct }) {
 	};
 
 	return (
-		<div className="group/container relative md:sticky md:top-0 md:h-fit">
+		<div className="group/container relative md:sticky md:top-20 md:h-fit">
 			<div className="opacity-0 group-hover/container:opacity-100 z-10 absolute top-1 right-1 transition-all">
 				{isFavorite ? (
 					<ButtonIcon
@@ -163,15 +168,36 @@ function Details({ product }: { product: IProduct }) {
 								<Link href="/">Home</Link>
 							</BreadcrumbLink>
 						</BreadcrumbItem>
+
 						<BreadcrumbSeparator />
+
 						<BreadcrumbItem>
 							<BreadcrumbLink asChild>
 								<Link href="/products">Products</Link>
 							</BreadcrumbLink>
 						</BreadcrumbItem>
+
 						<BreadcrumbSeparator />
+
 						<BreadcrumbItem>
-							<BreadcrumbPage>{category?.name}</BreadcrumbPage>
+							<BreadcrumbLink asChild>
+								<Link href={`/products?category=${category?.slug}`}>
+									{category?.name}
+								</Link>
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+
+						<BreadcrumbSeparator />
+
+						<BreadcrumbItem className="min-w-0 flex-1">
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<BreadcrumbPage className="truncate">
+										{product?.name}
+									</BreadcrumbPage>
+								</TooltipTrigger>
+								<TooltipContent>{product?.name}</TooltipContent>
+							</Tooltip>
 						</BreadcrumbItem>
 					</BreadcrumbList>
 				</Breadcrumb>

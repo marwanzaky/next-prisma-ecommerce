@@ -1,18 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-
-import {
-	GetAllProductsOptions,
-	productsService,
-} from "@redux/services/productsService";
-import { useQuery } from "@tanstack/react-query";
-
-import { stringify } from "qs";
+import { SortOption, useProducts } from "@hooks/useProducts";
 
 import ProductItem from "_shared/ui/productCart";
-import { IProduct } from "_shared/interfaces";
 import { Chip } from "_shared/components/chip";
 import { Section } from "_shared/components/section";
 import {
@@ -35,166 +25,48 @@ import { TypographyP } from "_shared/shadcn/typography";
 import { InputCurrencyRange } from "_shared/components/InputCurrencyRange";
 import RadioWithLabel from "_shared/components/radioWithLabel";
 import { InputText } from "_shared/components/inputText";
+
 import { formatPrice } from "@utils/formatPrice";
-import { categoriesService } from "@redux/services/categoriesService";
-
-type SortOption = "relevancy" | "most-popular" | "low-price" | "high-price";
-
-export type ProductsPageParams = {
-	name: string | undefined;
-	sort: SortOption;
-	minPrice: string | undefined;
-	maxPrice: string | undefined;
-	rating: string | undefined;
-	category: string | undefined;
-};
 
 export default function Page() {
-	const router = useRouter();
-	const searchParams = useSearchParams();
+	const {
+		isLoading,
+		data,
 
-	const initialParams = Object.fromEntries(
-		searchParams.entries(),
-	) as ProductsPageParams;
+		name,
+		category,
+		minPrice,
+		maxPrice,
+		rating,
+		options,
+		categories,
 
-	const [sort, setSort] = useState<SortOption>(
-		initialParams.sort || "relevancy",
-	);
+		setSort,
+		sort,
+		visible,
+		setVisible,
 
-	const [name, setName] = useState<string | undefined>();
+		draftName,
+		setDraftName,
+		draftCategory,
+		setDraftCategory,
+		draftMinPrice,
+		setDraftMinPrice,
+		draftMaxPrice,
+		setDraftMaxPrice,
+		draftRating,
+		setDraftRating,
 
-	const [category, setCategory] = useState<string | undefined>();
+		openFilterDialog,
 
-	const [minPrice, setMinPrice] = useState<number | undefined>(
-		initialParams.minPrice ? parseInt(initialParams.minPrice) : undefined,
-	);
-	const [maxPrice, setMaxPrice] = useState<number | undefined>(
-		initialParams.maxPrice ? parseInt(initialParams.maxPrice) : undefined,
-	);
+		clearName,
+		clearCategory,
+		clearRating,
+		clearPriceRange,
+		cancelFilters,
 
-	const [rating, setRating] = useState<number | undefined>(
-		initialParams.rating ? parseInt(initialParams.rating) : undefined,
-	);
-
-	const [draftName, setDraftName] = useState<string | undefined>();
-
-	const [draftMinPrice, setDraftMinPrice] = useState<number | undefined>(
-		undefined,
-	);
-	const [draftMaxPrice, setDraftMaxPrice] = useState<number | undefined>(
-		undefined,
-	);
-
-	const [draftRating, setDraftRating] = useState<number | undefined>(undefined);
-
-	const sortMap: Record<
-		SortOption,
-		{ property: keyof IProduct; order: "asc" | "desc" }
-	> = {
-		relevancy: { property: "createdAt", order: "asc" },
-		"most-popular": { property: "numReviews", order: "desc" },
-		"low-price": { property: "price", order: "asc" },
-		"high-price": { property: "price", order: "desc" },
-	};
-
-	const { data: categoriesTree } = useQuery({
-		queryKey: ["category-tree"],
-		queryFn: () => categoriesService.getCategoryTree(),
-		staleTime: 1000 * 60 * 5,
-	});
-
-	const productsOptions: GetAllProductsOptions = {
-		sort: sortMap[sort],
-		query: {
-			name,
-			minPrice,
-			maxPrice,
-			avgRatings: rating,
-			category: categoriesTree
-				? categoriesTree
-						.flatMap((cat) => [...cat.children, cat])
-						.find((cat) => cat.slug === category)?._id
-				: null,
-		},
-	};
-
-	const { data, isLoading } = useQuery({
-		queryKey: ["products", productsOptions],
-		queryFn: () => productsService.getAllProducts(productsOptions),
-		staleTime: 1000 * 60 * 5,
-	});
-
-	const options: { label: string; value: SortOption }[] = [
-		{ label: "Relevancy", value: "relevancy" },
-		{ label: "Most popular", value: "most-popular" },
-		{ label: "Low price", value: "low-price" },
-		{ label: "High price", value: "high-price" },
-	];
-
-	const [visible, setVisible] = useState(false);
-
-	const updateParams = () => {
-		const params: ProductsPageParams = {
-			name,
-			sort,
-			category,
-			minPrice: minPrice?.toString(),
-			maxPrice: maxPrice?.toString(),
-			rating: rating?.toString(),
-		};
-
-		router.push(`/products?${stringify(params, { skipNulls: true })}`);
-	};
-
-	const openFilterDialog = () => {
-		setVisible(true);
-
-		setDraftName(name);
-		setDraftMaxPrice(maxPrice && maxPrice / 100);
-		setDraftMinPrice(minPrice && minPrice / 100);
-		setDraftRating(rating);
-	};
-
-	const clearPriceRange = () => {
-		setMinPrice(undefined);
-		setMaxPrice(undefined);
-	};
-
-	const clearRating = () => {
-		setRating(undefined);
-	};
-
-	const clearName = () => {
-		setName(undefined);
-	};
-
-	const clearCategory = () => {
-		setCategory(undefined);
-	};
-
-	const applyFilters = () => {
-		setName(draftName);
-		setMaxPrice(draftMaxPrice && draftMaxPrice * 100);
-		setMinPrice(draftMinPrice && draftMinPrice * 100);
-		setRating(draftRating);
-		setVisible(false);
-	};
-
-	const cancelFilters = () => {
-		setVisible(false);
-	};
-
-	useEffect(() => {
-		updateParams();
-	}, [name, sort, minPrice, maxPrice, rating, category]);
-
-	useEffect(() => {
-		const params = Object.fromEntries(
-			searchParams.entries(),
-		) as ProductsPageParams;
-		setName(params.name);
-		setCategory(params.category);
-	}, [searchParams]);
+		applyFilters,
+	} = useProducts();
 
 	return (
 		<div>
@@ -303,6 +175,27 @@ export default function Page() {
 
 					<form>
 						<div className="flex flex-col gap-4">
+							<Select
+								value={draftCategory}
+								onValueChange={(value) => setDraftCategory(value)}
+							>
+								<SelectTrigger>
+									<SelectValue placeholder="Select Category" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectGroup>
+										{categories?.map((cat) => (
+											<SelectItem
+												key={`select-item-${cat.slug}`}
+												value={cat.slug}
+											>
+												{cat.name}
+											</SelectItem>
+										))}
+									</SelectGroup>
+								</SelectContent>
+							</Select>
+
 							<InputText
 								size="sm"
 								placeholder="Search for a product"

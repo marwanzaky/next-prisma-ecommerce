@@ -1,9 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Param,
+	Patch,
+	Post,
+} from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { Public } from "src/auth/auth.guard";
 import { ContactMessagesService } from "./contact-messages.service";
 import { SendContactMessageDto } from "./dto/send-contact-message.dto";
+import { UpdateContactMessageStatusDto } from "./dto/update-contact-message-status.dto";
 
 @Controller("contact-messages")
 @ApiTags("Contact Messages")
@@ -16,6 +25,17 @@ export class ContactMessagesController {
 	})
 	async getAll() {
 		return this.contactMessagesService.find();
+	}
+
+	@Patch(":id")
+	@ApiOperation({
+		summary: "Update contact message status (admin)",
+	})
+	async updateStatus(
+		@Param("id") id: string,
+		@Body() body: UpdateContactMessageStatusDto,
+	) {
+		return this.contactMessagesService.findByIdAndUpdate(id, body.status);
 	}
 
 	@Post()
@@ -36,7 +56,7 @@ export class ContactMessagesController {
 
 	@Delete(":id")
 	@ApiOperation({
-		summary: "Delete contact message",
+		summary: "Delete contact message (admin)",
 	})
 	async delete(@Param("id") id: string) {
 		return this.contactMessagesService.findByIdAndDelete(id);

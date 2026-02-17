@@ -15,6 +15,7 @@ import { Toaster } from "_shared/shadcn/toaster";
 import AppProviders from "@redux/appProviders";
 
 import { cn } from "@lib/utils";
+import { TooltipProvider } from "_shared/shadcn/tooltip";
 
 const poppins = Poppins({
 	subsets: ["latin"],
@@ -53,14 +54,16 @@ export default function RootLayout({
 					</div>
 
 					{/* Navigation */}
-					<div className="border-b-2">
+					<div className="border-b-2 sticky top-0 bg-white z-50">
 						<Container>
 							<Navigation />
 						</Container>
 					</div>
 
 					{/* Page */}
-					<Container>{children}</Container>
+					<Container>
+						<TooltipProvider>{children}</TooltipProvider>
+					</Container>
 
 					{/* Footer */}
 					<Footer />

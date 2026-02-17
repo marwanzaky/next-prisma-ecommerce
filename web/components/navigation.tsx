@@ -24,13 +24,15 @@ import {
 } from "_shared/shadcn/dropdown";
 import { InputText } from "_shared/components/inputText";
 import { useEffect, useState } from "react";
-import { ProductsPageParams } from "app/products/page";
 import { useQuery } from "@tanstack/react-query";
 import { categoriesService } from "@redux/services/categoriesService";
+import { useIsMobile } from "_shared/shadcn/hooks/use-mobile";
+import { ProductsPageParams } from "@hooks/useProducts";
 
 export default function Navigation() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
+	const isMobile = useIsMobile();
 
 	const { isAuthenticated, user } = useAppSelector(
 		(state) => state.authReducer,
@@ -47,8 +49,8 @@ export default function Navigation() {
 	}, [searchParams]);
 
 	return (
-		<nav className="flex justify-between gap-4 h-16 md:h-20">
-			<div className="flex-1 flex items-center gap-4">
+		<nav className="flex justify-between gap-2 md:gap-4 h-16 md:h-20">
+			<div className="flex-1 flex items-center gap-2 md:gap-4">
 				<div>
 					<NavigationMenu />
 				</div>
@@ -70,7 +72,7 @@ export default function Navigation() {
 				>
 					<InputText
 						size="sm"
-						icon="search"
+						icon={isMobile ? undefined : "search"}
 						placeholder="Search..."
 						className="md:w-40"
 						value={search}
@@ -82,7 +84,7 @@ export default function Navigation() {
 			<ul className="flex-[2] hidden sm:flex items-center justify-center gap-10">
 				<NavLi href="/" name="Home" />
 				<NavLi href="/products" name="Shop" />
-				{process.env.NEXT_PUBLIC_ABOUT === "true" && (
+				{process.env.NEXT_PUBLIC_ABOUT === "true" && !isMobile && (
 					<NavLi href="/about" name="About" />
 				)}
 				<NavLi href="/contact" name="Contact" />
@@ -124,7 +126,7 @@ export default function Navigation() {
 										<DropdownMenuGroup>
 											<DropdownMenuItem
 												onClick={() => {
-													router.push("/me");
+													router.push("/account");
 												}}
 											>
 												Account

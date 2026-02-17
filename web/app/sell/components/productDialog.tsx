@@ -187,9 +187,7 @@ export function ProductDialog({
 						control={control}
 						rules={{
 							validate: ({ min, max }) =>
-								min != null ||
-								max != null ||
-								"Price and compare price is required.",
+								min != null || max != null || "This field is required.",
 						}}
 						render={({ field, fieldState }) => (
 							<InputCurrencyRange
