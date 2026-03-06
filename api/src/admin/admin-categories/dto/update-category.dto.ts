@@ -1,24 +1,38 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { Transform, Type } from "class-transformer";
+import {
+	IsBoolean,
+	IsEmail,
+	IsNumber,
+	IsOptional,
+	IsString,
+} from "class-validator";
 
 export class UpdateCategoryDto {
-	@ApiProperty()
+	@ApiPropertyOptional()
 	@IsString()
-	@IsNotEmpty()
-	readonly name!: string;
+	@IsOptional()
+	readonly name?: string;
 
-	@ApiProperty()
+	@ApiPropertyOptional()
 	@IsEmail()
-	@IsNotEmpty()
-	readonly slug!: string;
+	@IsOptional()
+	readonly slug?: string;
 
-	@ApiProperty()
+	@ApiPropertyOptional()
 	@IsNumber()
-	@IsNotEmpty()
-	readonly sortOrder!: number;
+	@IsOptional()
+	@Type(() => Number)
+	readonly sortOrder?: number;
 
-	@ApiProperty()
+	@ApiPropertyOptional()
 	@IsString()
-	@IsNotEmpty()
-	readonly parent!: string | null;
+	@IsOptional()
+	readonly parent?: string | null;
+
+	@ApiPropertyOptional()
+	@IsBoolean()
+	@IsOptional()
+	@Transform(({ value }) => value === "true" || value === true)
+	readonly isActive?: boolean;
 }

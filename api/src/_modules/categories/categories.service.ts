@@ -40,18 +40,18 @@ export class CategoriesService {
 	async findPublic(filter?: Partial<ICategory>): Promise<Category[]> {
 		return this.categoryModel
 			.find(filter ? filter : {})
-			.select("_id name slug parent");
+			.select("_id name slug parent imgUrl");
 	}
 
 	async getPublicCategoryTree() {
 		const categories = await this.categoryModel
 			.find({ isActive: true })
-			.select("_id name slug parent")
+			.select("_id name slug parent imgUrl")
 			.lean();
 
 		const categoryMap = new Map<
 			string,
-			Pick<ICategory, "_id" | "name" | "slug"> & {
+			Pick<ICategory, "_id" | "name" | "slug" | "imgUrl"> & {
 				children: any[];
 			}
 		>();
@@ -61,6 +61,7 @@ export class CategoriesService {
 				_id: cat._id.toString(),
 				name: cat.name,
 				slug: cat.slug,
+				imgUrl: cat.imgUrl,
 				children: [],
 			});
 		});
@@ -92,6 +93,38 @@ export class CategoriesService {
 				_id: new mongoose.Types.ObjectId(id),
 			},
 			update,
+			{
+				new: true,
+				runValidators: true,
+			},
 		);
+	}
+
+	async getAllDescendantCategoryIds(category: string): Promise<string[]> {
+		const categories = await this.find();
+
+		const map = new Map<string, string[]>();
+		categories.forEach((cat: Category) => {
+			if (cat.parent) {
+				if (!map.has(cat.parent.toString())) {
+					map.set(cat.parent.toString(), []);
+				}
+
+				map.get(cat.parent.toString())?.push(cat.id.toString());
+			}
+		});
+
+		const result: string[] = [];
+		const stack = [category];
+
+		while (stack.length) {
+			const current = stack.pop() || "";
+			result.push(current);
+
+			const children = map.get(current) || [];
+			stack.push(...children);
+		}
+
+		return result;
 	}
 }

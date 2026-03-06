@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 import Icon from "_shared/ui/icon";
 import { ButtonIcon } from "_shared/ui/buttonIcon";
+import { cn } from "@lib/utils";
 
 type ImageSlot = {
 	url?: string;
@@ -11,11 +12,18 @@ type ImageSlot = {
 };
 
 type ImageInputProps = {
+	className?: string;
+	styleClass?: string;
 	value?: ImageSlot;
 	onChange?: (value: ImageSlot) => void;
 };
 
-export default function ImageInput({ value, onChange }: ImageInputProps) {
+export default function ImageInput({
+	className,
+	styleClass,
+	value,
+	onChange,
+}: ImageInputProps) {
 	const inputRef = useRef<HTMLInputElement>(null);
 	const previewUrl = value?.file ? URL.createObjectURL(value.file) : value?.url;
 
@@ -29,7 +37,12 @@ export default function ImageInput({ value, onChange }: ImageInputProps) {
 				/>
 			)}
 
-			<div className="w-full h-[62px] rounded-xl overflow-hidden outline-none shadow-[0_0_0_1pt_#ecf0f1] focus:shadow-[0_0_0_2pt_cornflowerblue]">
+			<div
+				className={cn(
+					"w-full h-[62px] rounded-xl overflow-hidden outline-none shadow-[0_0_0_1pt_#ecf0f1] focus:shadow-[0_0_0_2pt_cornflowerblue]",
+					className,
+				)}
+			>
 				<input
 					ref={inputRef}
 					type="file"
@@ -56,7 +69,7 @@ export default function ImageInput({ value, onChange }: ImageInputProps) {
 				{previewUrl ? (
 					<img
 						role="button"
-						className="h-full w-full"
+						className={cn("h-full w-full", styleClass)}
 						src={previewUrl}
 						onClick={() => inputRef.current?.click()}
 					/>

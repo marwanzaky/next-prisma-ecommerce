@@ -4,19 +4,7 @@ import { Column, Table } from "_shared/components/table";
 import { Section } from "_shared/components/section";
 import { TypographyH4, TypographyP } from "_shared/shadcn/typography";
 import { useQuery } from "@tanstack/react-query";
-import { contactMessagesService } from "@redux/services/contactMessagesService";
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger,
-} from "_shared/shadcn/alertDialog";
-import { ButtonIcon } from "_shared/ui/buttonIcon";
+
 import { useAppSelector } from "@redux/store";
 
 import { useEffect, useState } from "react";
@@ -28,7 +16,6 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "_shared/shadcn/dialog";
 import { InputText } from "_shared/components/inputText";
 import { Controller, useForm } from "react-hook-form";
@@ -45,109 +32,116 @@ import {
 	IAddAdminCategory,
 	IAdminCategory,
 } from "@redux/services/adminCategoriesService";
+import ImageInput from "app/sell/components/imageInput";
+import { LogoCell } from "_shared/components/table/cells/logoCell";
+import { Checkbox } from "_shared/shadcn/checkbox";
+import { toast } from "_shared/shadcn/hooks/use-toast";
 
 export default function Page() {
 	const columns: Column<IAdminCategory>[] = [
 		{
+			header: "Active",
+			field: "isActive",
+			type: "custom",
+			className: "first:text-center w-0",
+			render: (value: boolean, row) => {
+				return (
+					<Checkbox
+						id="category-checkbox"
+						name="category-checkbox"
+						checked={value}
+						onClick={async () => {
+							await adminCategoriesService.updateCategory(row._id, token, {
+								isActive: !value,
+							});
+
+							toast({
+								title: "Category updated",
+								description: `Category "${row.name}" has been updated successfully.`,
+								duration: 3000,
+							});
+
+							refetch();
+						}}
+					/>
+				);
+			},
+		},
+		{
 			header: "Name",
-			field: "name",
-			type: "text",
+			field: "imgUrl",
+			type: "custom",
+			className: "w-[40%]",
+			render: (value, row) => {
+				const params = new URLSearchParams();
+				params.set("category", row.slug);
+
+				return (
+					<LogoCell
+						href={`/products?${params.toString()}`}
+						label={row.name}
+						imgUrl={value}
+					/>
+				);
+			},
 		},
 		{
 			header: "Parent",
 			field: "parent",
-			type: "text",
+			type: "custom",
+			className: "w-[15%]",
+			render(value) {
+				const parentCat = data?.find((cat) => cat._id === value);
+				return <div>{parentCat?.name}</div>;
+			},
 		},
 		{
 			header: "Slug",
 			field: "slug",
 			type: "text",
+			className: "w-[15%]",
 		},
-		{
-			header: "Active",
-			field: "isActive",
-			type: "custom",
-			render: (value, row) => {
-				return <div>{row.isActive ? "Yes" : "No"}</div>;
-			},
-		},
+
 		{
 			header: "Sort",
 			field: "sortOrder",
-			type: "text",
+			type: "number-input",
+			className: "w-[10%]",
+			async onChange(value, row) {
+				await adminCategoriesService.updateCategory(row._id, token, {
+					sortOrder: value,
+				});
+
+				toast({
+					title: "Category updated",
+					description: `Category "${row.name}" has been updated successfully.`,
+					duration: 3000,
+				});
+
+				refetch();
+			},
 		},
 		{
 			header: "",
 			field: "_id",
-			type: "custom",
+			type: "action",
 			width: "38px",
-			render(value, row) {
-				return (
-					<Dialog>
-						<DialogTrigger asChild>
-							<ButtonIcon icon="edit" />
-						</DialogTrigger>
-
-						<DialogContent>
-							<DialogHeader>
-								<DialogTitle>Edit Category</DialogTitle>
-							</DialogHeader>
-
-							<form
-								onSubmit={(e) => {
-									e.preventDefault();
-									refetch();
-								}}
-								className="space-y-4"
-							>
-								<InputText
-									size="sm"
-									placeholder="Category Name"
-									value={row.name}
-									onChange={() => {}}
-								/>
-								<InputText
-									size="sm"
-									placeholder="Category Slug"
-									value={row.slug}
-									onChange={() => {}}
-								/>{" "}
-								<InputText
-									size="sm"
-									placeholder="Category Parent"
-									value={row.parent ? row.parent : undefined}
-									onChange={() => {}}
-								/>
-								<InputText
-									size="sm"
-									placeholder="Category Sort Order"
-									type="number"
-									value={row.sortOrder}
-									onChange={() => {}}
-								/>
-								<InputText
-									size="sm"
-									placeholder="Category Sort Order"
-									type="checkbox"
-									checked={row.isActive}
-									onChange={() => {}}
-								/>
-								<DialogFooter>
-									<DialogClose asChild>
-										<Button variant="outline">Cancel</Button>
-									</DialogClose>
-
-									<Button type="submit">Save</Button>
-								</DialogFooter>
-							</form>
-						</DialogContent>
-					</Dialog>
-				);
+			actionIcon: "edit",
+			action: (row) => {
+				reset({
+					...row,
+					image: {
+						url: row.imgUrl,
+					},
+				});
+				setEditDialog(true);
 			},
 		},
 	];
 
 	const { token } = useAppSelector((state) => state.authReducer);
+
+	const [editDialog, setEditDialog] = useState(false);
 
 	const { data, isLoading, refetch } = useQuery({
 		queryKey: ["categories"],
@@ -162,7 +156,6 @@ export default function Page() {
 		formState,
 		control,
 		reset,
-		setValue,
 	} = useForm<IAddAdminCategory>({
 		mode: "onTouched",
 	});
@@ -185,6 +178,19 @@ export default function Page() {
 		});
 	}, [data]);
 
+	const resetForm = () => {
+		reset({
+			name: undefined,
+			parent: undefined,
+			slug: undefined,
+			sortOrder: undefined,
+			image: {
+				file: undefined,
+				url: undefined,
+			},
+		});
+	};
+
 	return (
 		<Section>
 			<TypographyH4 className="text-center mb-2 lg:mb-4">
@@ -199,27 +205,42 @@ export default function Page() {
 				className="block ml-auto"
 				onClick={() => {
 					setOpen(true);
+					resetForm();
 				}}
 			>
 				Add category
 			</Button>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="sm:max-w-[425px]">
+				<DialogContent className="sm:max-w-[26rem]">
 					<DialogHeader>
 						<DialogTitle>Add category</DialogTitle>
 					</DialogHeader>
 
 					<form
-						onSubmit={handleSubmit((data) => {
-							adminCategoriesService.addCategory(token, {
+						onSubmit={handleSubmit(async (data) => {
+							await adminCategoriesService.addCategory(token, {
 								...data,
 								sortOrder: data.sortOrder * 1,
 							});
 							setOpen(false);
+							refetch();
 						})}
 						className="space-y-4"
 					>
+						<Controller
+							name="image"
+							control={control}
+							render={({ field }) => (
+								<ImageInput
+									className="h-32"
+									styleClass="object-cover"
+									value={field.value}
+									onChange={field.onChange}
+								/>
+							)}
+						/>
+
 						<InputText
 							type="text"
 							id="name"
@@ -287,6 +308,87 @@ export default function Page() {
 						<DialogFooter className="gap-2">
 							<Button type="submit" disabled={!formState.isDirty}>
 								Submit
+							</Button>
+						</DialogFooter>
+					</form>
+				</DialogContent>
+			</Dialog>
+
+			<Dialog open={editDialog} onOpenChange={setEditDialog}>
+				<DialogContent className="sm:max-w-[26rem]">
+					<DialogHeader>
+						<DialogTitle>Edit Category</DialogTitle>
+					</DialogHeader>
+
+					<form
+						onSubmit={handleSubmit(async (formData) => {
+							const id =
+								data?.find((cat) => cat.slug === formData.slug)?._id || "";
+
+							await adminCategoriesService.updateCategory(id, token, {
+								name: formData.name,
+								parent: formData.parent,
+								sortOrder: formData.sortOrder * 1,
+								image: formData.image.file,
+							});
+							setEditDialog(false);
+							refetch();
+						})}
+						className="space-y-4"
+					>
+						<Controller
+							name="image"
+							control={control}
+							render={({ field }) => (
+								<ImageInput
+									className="h-32"
+									styleClass="object-cover"
+									value={field.value}
+									onChange={field.onChange}
+								/>
+							)}
+						/>
+
+						<InputText
+							size="sm"
+							placeholder="Category Name"
+							message={errors.name?.message}
+							{...register("name", {
+								required: "This field is required.",
+								minLength: { value: 2, message: "Name is too short." },
+								maxLength: { value: 64, message: "Name is too long." },
+							})}
+						/>
+						<InputText
+							size="sm"
+							placeholder="Category Slug"
+							message={errors.slug?.message}
+							{...register("slug", {
+								required: "This field is required.",
+							})}
+						/>
+						<InputText
+							size="sm"
+							placeholder="Category Parent"
+							message={errors.parent?.message}
+							{...register("parent")}
+						/>
+						<InputText
+							size="sm"
+							placeholder="Category Sort Order"
+							type="number"
+							message={errors.sortOrder?.message}
+							{...register("sortOrder", {
+								required: "This field is required.",
+							})}
+						/>
+						<DialogFooter>
+							<DialogClose asChild>
+								<Button variant="outline">Cancel</Button>
+							</DialogClose>
+
+							<Button type="submit" disabled={!formState.isDirty}>
+								Save
 							</Button>
 						</DialogFooter>
 					</form>

@@ -8,9 +8,15 @@ import ProductCart from "_shared/ui/productCart";
 import { TypographyH3 } from "_shared/shadcn/typography";
 import { IProduct } from "_shared/interfaces";
 import { Section } from "_shared/components/section";
+import {
+	categoriesService,
+	ICategoryTree,
+} from "@redux/services/categoriesService";
+import Categories from "@components/categories";
 
 export default async function Page() {
-	const data = await getProducts();
+	const data = await getFeaturedCategories();
+	const categoryTree = await getCategoryTree();
 
 	return (
 		<>
@@ -18,7 +24,7 @@ export default async function Page() {
 
 			<Section className="space-y-2 lg:space-y-4">
 				<TypographyH3 className="text-center lg:text-left">
-					Featured collection
+					Featured products
 				</TypographyH3>
 
 				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
@@ -30,15 +36,20 @@ export default async function Page() {
 
 			<WhyChooseUs />
 			<Testimonials />
+			<Categories categoryTree={categoryTree} />
 		</>
 	);
 }
 
-async function getProducts(): Promise<IProduct[]> {
+async function getFeaturedCategories(): Promise<IProduct[]> {
 	return await productsService.getAllProducts({
 		query: {
 			featured: true,
 			limit: 4,
 		},
 	});
+}
+
+async function getCategoryTree(): Promise<ICategoryTree[]> {
+	return await categoriesService.getCategoryTree();
 }

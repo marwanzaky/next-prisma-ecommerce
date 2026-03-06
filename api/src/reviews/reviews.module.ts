@@ -6,6 +6,7 @@ import { ProductsService } from "src/products/products.service";
 import { Review, ReviewSchema } from "./entities/review.entity";
 import { Product, ProductSchema } from "src/products/entities/product.entity";
 import { User, UserSchema } from "src/users/entities/user.entity";
+import { CategoriesModule } from "src/_modules/categories/categories.module";
 
 @Module({
 	imports: [
@@ -14,6 +15,7 @@ import { User, UserSchema } from "src/users/entities/user.entity";
 			{ name: Product.name, schema: ProductSchema },
 			{ name: User.name, schema: UserSchema },
 		]),
+		CategoriesModule,
 	],
 	controllers: [ReviewsController],
 	providers: [ReviewsService, ProductsService],

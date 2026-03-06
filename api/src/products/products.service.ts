@@ -10,12 +10,14 @@ import {
 } from "src/_interfaces/product.interface";
 import { Product } from "./entities/product.entity";
 import { Review } from "src/reviews/entities/review.entity";
+import { CategoriesService } from "src/_modules/categories/categories.service";
 
 @Injectable()
 export class ProductsService {
 	constructor(
 		@InjectModel(Product.name) private productModel: Model<Product>,
 		@InjectModel(Review.name) private reviewModel: Model<Review>,
+		private categoriesService: CategoriesService,
 	) {}
 
 	async create(
@@ -83,7 +85,12 @@ export class ProductsService {
 		}
 
 		if (query.category) {
-			filter.category = query.category;
+			const categories =
+				await this.categoriesService.getAllDescendantCategoryIds(
+					query.category,
+				);
+
+			filter.category = { $in: categories };
 		}
 
 		if (query.minPrice !== undefined || query.maxPrice !== undefined) {

@@ -7,6 +7,7 @@ export interface ICategory {
 	parent: Types.ObjectId | null;
 	isActive: boolean;
 	sortOrder: number;
+	imgUrl?: string;
 }
 
 export type ICreateCategory = Omit<ICategory, "_id" | "isActive" | "parent"> & {

@@ -37,6 +37,12 @@ export class Category extends Document implements Omit<ICategory, "_id"> {
 		default: 0,
 	})
 	sortOrder!: number;
+
+	@Prop({
+		type: String,
+		required: true,
+	})
+	imgUrl!: string;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

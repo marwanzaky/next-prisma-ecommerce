@@ -1,5 +1,3 @@
-import { IProduct } from "_shared/interfaces";
-
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 
 export type ICategory = {
@@ -31,6 +29,7 @@ export type ICategoryTree = {
 	_id: string;
 	name: string;
 	slug: string;
+	imgUrl: string;
 	children: ICategoryTree[];
 };
 

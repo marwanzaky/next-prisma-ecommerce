@@ -213,7 +213,6 @@ function NavigationMenu() {
 									<DropdownMenuItem
 										key={`menu-item-${subcat.slug}`}
 										onClick={() => {
-											router.push("/products?category=");
 											const params = new URLSearchParams();
 											params.set("category", subcat.slug);
 											router.push(`/products?${params.toString()}`);
