@@ -118,7 +118,7 @@ export function ProductDialog({
 											{options?.map((item) => (
 												<SelectItem
 													key={`select-item-${item.name}`}
-													value={item._id}
+													value={item.id}
 												>
 													{item.name}
 												</SelectItem>

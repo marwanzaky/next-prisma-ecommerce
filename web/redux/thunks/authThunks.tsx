@@ -1,7 +1,7 @@
 import { usersService } from "@redux/services/usersService";
 import { RootState } from "@redux/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IUpdateUser } from "_shared/interfaces";
+import { UpdateUser, UpdateUserPassword } from "@shared/user.type";
 import { toast, ToastService } from "_shared/shadcn/hooks/use-toast";
 import { ToastAction } from "_shared/shadcn/toast";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -93,7 +93,7 @@ export const getMeAsync = createAsyncThunk(
 
 export const updateMeAsync = createAsyncThunk(
 	"auth/updateMe",
-	async (updatedUser: IUpdateUser, { getState, rejectWithValue }) => {
+	async (updatedUser: UpdateUser, { getState, rejectWithValue }) => {
 		const state = getState() as RootState;
 
 		try {
@@ -117,7 +117,7 @@ export const updateMeAsync = createAsyncThunk(
 export const updateMyPasswordAsync = createAsyncThunk(
 	"auth/updateMyPassword",
 	async (
-		payload: { currentPassword: string; newPassword: string },
+		updatedUserPassword: UpdateUserPassword,
 		{ getState, rejectWithValue },
 	) => {
 		const state = getState() as RootState;
@@ -125,7 +125,7 @@ export const updateMyPasswordAsync = createAsyncThunk(
 		try {
 			const data = await usersService.updateMyPassword(
 				state.authReducer.token,
-				payload,
+				updatedUserPassword,
 			);
 
 			toast({

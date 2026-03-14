@@ -1,4 +1,5 @@
-import { IProduct, IUpdateUser, IUser } from "_shared/interfaces";
+import { UpdateUser, UpdateUserPassword, User } from "@shared/user.type";
+import { IProduct } from "_shared/interfaces";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 
@@ -67,7 +68,7 @@ async function signup(
 	return data;
 }
 
-async function getMe(token: string): Promise<IUser> {
+async function getMe(token: string): Promise<User> {
 	const response = await fetch(`${baseUrl}/users/me`, {
 		headers: {
 			Authorization: `Bearer ${token}`,
@@ -101,10 +102,7 @@ async function getMeProducts(token: string): Promise<IProduct[]> {
 	return data;
 }
 
-async function updateMe(
-	token: string,
-	updatedUser: IUpdateUser,
-): Promise<IUser> {
+async function updateMe(token: string, updatedUser: UpdateUser): Promise<User> {
 	const response = await fetch(`${baseUrl}/users/updateMe`, {
 		method: "PATCH",
 		headers: {
@@ -125,10 +123,7 @@ async function updateMe(
 
 async function updateMyPassword(
 	token: string,
-	{
-		currentPassword,
-		newPassword,
-	}: { currentPassword: string; newPassword: string },
+	{ currentPassword, newPassword }: UpdateUserPassword,
 ): Promise<{ token: string }> {
 	const response = await fetch(`${baseUrl}/users/updateMyPassword`, {
 		method: "PATCH",
@@ -166,7 +161,7 @@ async function deleteMe(token: string): Promise<{ token: string }> {
 	return data;
 }
 
-async function getPublicById(id: string): Promise<IUser> {
+async function getPublicById(id: string): Promise<User> {
 	const response = await fetch(`${baseUrl}/users/public/${id}`);
 
 	const data = await response.json();

@@ -28,7 +28,8 @@
 			"@services/*": ["redux/services/*"],
 			"@utils/*": ["./utils/*"],
 			"@data/*": ["./data/*"],
-			"@lib/*": ["./lib/*"]
+			"@lib/*": ["./lib/*"],
+			"@shared/*": ["../shared/src/*"]
 		}
 	},
 	"include": [
@@ -36,7 +37,8 @@
 		".next/types/**/*.ts",
 		"**/*.ts",
 		"**/*.tsx",
-		".next/dev/types/**/*.ts"
+		".next/dev/types/**/*.ts",
+		"../shared/src/**/*"
 	],
 	"exclude": ["node_modules"]
 }

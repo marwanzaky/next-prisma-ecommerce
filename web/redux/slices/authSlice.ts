@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { IUser } from "../../_shared/interfaces";
+import { User } from "@shared/user.type";
+
 import {
 	getMeAsync,
 	loginAsync,
@@ -10,7 +11,7 @@ import {
 } from "@redux/thunks/authThunks";
 
 export type AuthState = {
-	user: IUser | null;
+	user: User | null;
 	token: string;
 	isAuthenticated: boolean;
 

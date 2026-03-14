@@ -47,15 +47,13 @@ import { useToast } from "_shared/shadcn/hooks/use-toast";
 import { TypographyH4, TypographyP } from "_shared/ui/typography";
 import { TypographyH3 as ShadcnTypographyH3 } from "_shared/shadcn/typography";
 import { formatPrice } from "@utils/formatPrice";
-import {
-	categoriesService,
-	ICategoryTree,
-} from "@redux/services/categoriesService";
+import { categoriesService } from "@redux/services/categoriesService";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
 } from "_shared/shadcn/tooltip";
+import { PublicCategoryTree } from "@shared/category.type";
 
 function Preview({ product }: { product: IProduct }) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =
@@ -147,13 +145,13 @@ function Details({ product }: { product: IProduct }) {
 
 	const [quantity, setQuantity] = useState(1);
 
-	const [category, setCategory] = useState<ICategoryTree>();
+	const [category, setCategory] = useState<PublicCategoryTree>();
 
 	useEffect(() => {
 		if (data) {
 			const category = data
 				.flatMap((cat) => [...cat.children, cat])
-				.find((cat) => cat._id === product.category);
+				.find((cat) => cat.id === product.category);
 			setCategory(category);
 		}
 	}, [data]);
@@ -269,10 +267,7 @@ function Details({ product }: { product: IProduct }) {
 				<AccordionItem value="item-1">
 					<AccordionTrigger>Description</AccordionTrigger>
 					<AccordionContent asChild>
-						<div
-							className="product-description"
-							dangerouslySetInnerHTML={{ __html: product.description }}
-						/>
+						<div dangerouslySetInnerHTML={{ __html: product.description }} />
 					</AccordionContent>
 				</AccordionItem>
 				<AccordionItem value="item-2">
@@ -340,8 +335,8 @@ export default function ProductDetails({ product }: { product: IProduct }) {
 		},
 	};
 
-	const { data: featuredProducts } = useQuery({
-		queryKey: ["featured-products", options],
+	const { data: similarProducts } = useQuery({
+		queryKey: ["similar-products", options],
 		queryFn: () => productsService.getAllProducts(options),
 		staleTime: 1000 * 60 * 5,
 	});
@@ -366,14 +361,14 @@ export default function ProductDetails({ product }: { product: IProduct }) {
 				)}
 			</Section>
 
-			{featuredProducts && featuredProducts.length > 0 && (
+			{similarProducts && similarProducts.length > 0 && (
 				<Section className="!pt-0 space-y-2 lg:space-y-4">
 					<ShadcnTypographyH3 className="text-center lg:text-left">
-						Featured collection
+						Similar products
 					</ShadcnTypographyH3>
 
 					<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
-						{featuredProducts.map((item) => (
+						{similarProducts.map((item) => (
 							<ProductCart key={item._id} data={item} />
 						))}
 					</div>

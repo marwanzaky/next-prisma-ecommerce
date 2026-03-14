@@ -8,10 +8,7 @@ import ProductCart from "_shared/ui/productCart";
 import { TypographyH3 } from "_shared/shadcn/typography";
 import { IProduct } from "_shared/interfaces";
 import { Section } from "_shared/components/section";
-import {
-	categoriesService,
-	ICategoryTree,
-} from "@redux/services/categoriesService";
+import { categoriesService } from "@redux/services/categoriesService";
 import Categories from "@components/categories";
 
 export default async function Page() {
@@ -50,6 +47,6 @@ async function getFeaturedCategories(): Promise<IProduct[]> {
 	});
 }
 
-async function getCategoryTree(): Promise<ICategoryTree[]> {
+async function getCategoryTree() {
 	return await categoriesService.getCategoryTree();
 }

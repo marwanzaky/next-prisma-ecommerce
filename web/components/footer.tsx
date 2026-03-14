@@ -60,7 +60,7 @@ export default function Footer() {
 				</div>
 
 				<div className="text-white text-center font-bold">
-					Copyright &copy; 2025 {process.env.NEXT_PUBLIC_NAME} all rights
+					Copyright &copy; 2026 {process.env.NEXT_PUBLIC_NAME} all rights
 					reserved.
 				</div>
 			</Container>

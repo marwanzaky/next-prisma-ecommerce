@@ -95,7 +95,7 @@ export function useProducts() {
 			maxPrice,
 			avgRatings: rating,
 			category: categories
-				? categories.find((cat) => cat.slug === category)?._id
+				? categories.find((cat) => cat.slug === category)?.id
 				: null,
 		},
 	};

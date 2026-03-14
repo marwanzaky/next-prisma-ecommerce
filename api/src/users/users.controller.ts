@@ -101,8 +101,7 @@ export class UsersController {
 		summary: "Create a new user (admin-only)",
 	})
 	async createUsers(@Body() createUserDto: CreateUserDto) {
-		const { name, email, password } = createUserDto;
-		return this.usersService.create(name, email, password);
+		return this.usersService.create(createUserDto);
 	}
 
 	@Get(":id")

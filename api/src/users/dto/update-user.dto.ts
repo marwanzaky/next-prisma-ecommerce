@@ -1,17 +1,18 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { UpdateUser } from "@shared/user.type";
 import { IsEmail, IsOptional } from "class-validator";
 
-export class UpdateUserDto {
-	@ApiProperty()
+export class UpdateUserDto implements UpdateUser {
+	@ApiPropertyOptional()
 	@IsOptional()
 	readonly name?: string;
 
-	@ApiProperty()
+	@ApiPropertyOptional()
 	@IsEmail()
 	@IsOptional()
 	readonly email?: string;
 
-	@ApiProperty()
+	@ApiPropertyOptional()
 	@IsOptional()
-	readonly photo?: string;
+	readonly photo?: string | null;
 }

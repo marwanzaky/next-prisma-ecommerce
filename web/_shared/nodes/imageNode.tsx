@@ -1,5 +1,5 @@
 import { DecoratorNode, NodeKey } from "lexical";
-import React, { JSX } from "react";
+import { JSX } from "react";
 
 type SerializedImageNode = {
 	type: string;

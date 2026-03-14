@@ -3,15 +3,14 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import { ICategoryTree } from "@redux/services/categoriesService";
-
 import { Section } from "_shared/components/section";
 import { Container } from "_shared/ui/container";
+import { PublicCategoryTree } from "@shared/category.type";
 
 export default function Categories({
 	categoryTree,
 }: {
-	categoryTree: ICategoryTree[];
+	categoryTree: PublicCategoryTree[];
 }) {
 	const router = useRouter();
 
@@ -31,7 +30,7 @@ export default function Categories({
 						>
 							<Image
 								className="w-full h-full absolute opacity-50 group-hover:scale-105 transition-transform"
-								src={item.imgUrl}
+								src={item.imgUrl || ""}
 								width={512}
 								height={512}
 								alt=""

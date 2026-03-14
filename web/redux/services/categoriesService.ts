@@ -1,19 +1,13 @@
-const baseUrl = process.env.NEXT_PUBLIC_SERVER;
+import { PublicCategory, PublicCategoryTree } from "@shared/category.type";
 
-export type ICategory = {
-	_id: string;
-	name: string;
-	slug: string;
-	parent?: string;
-	sortOrder: number;
-};
+const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 
 export const categoriesService = {
 	getAllCategories,
 	getCategoryTree,
 };
 
-async function getAllCategories(): Promise<ICategory[]> {
+async function getAllCategories(): Promise<PublicCategory[]> {
 	const response = await fetch(`${baseUrl}/categories`);
 
 	const data = await response.json();
@@ -25,15 +19,7 @@ async function getAllCategories(): Promise<ICategory[]> {
 	return data;
 }
 
-export type ICategoryTree = {
-	_id: string;
-	name: string;
-	slug: string;
-	imgUrl: string;
-	children: ICategoryTree[];
-};
-
-async function getCategoryTree(): Promise<ICategoryTree[]> {
+async function getCategoryTree(): Promise<PublicCategoryTree[]> {
 	const response = await fetch(`${baseUrl}/categories/tree`);
 
 	const data = await response.json();

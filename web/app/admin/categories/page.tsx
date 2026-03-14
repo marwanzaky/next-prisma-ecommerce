@@ -27,18 +27,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "_shared/shadcn/select";
-import {
-	adminCategoriesService,
-	IAddAdminCategory,
-	IAdminCategory,
-} from "@redux/services/adminCategoriesService";
+import { adminCategoriesService } from "@redux/services/adminCategoriesService";
 import ImageInput from "app/sell/components/imageInput";
 import { LogoCell } from "_shared/components/table/cells/logoCell";
 import { Checkbox } from "_shared/shadcn/checkbox";
 import { toast } from "_shared/shadcn/hooks/use-toast";
+import { Category } from "@shared/category.type";
 
 export default function Page() {
-	const columns: Column<IAdminCategory>[] = [
+	const columns: Column<Category>[] = [
 		{
 			header: "Active",
 			field: "isActive",
@@ -51,7 +48,7 @@ export default function Page() {
 						name="category-checkbox"
 						checked={value}
 						onClick={async () => {
-							await adminCategoriesService.updateCategory(row._id, token, {
+							await adminCategoriesService.updateCategory(row.id, token, {
 								isActive: !value,
 							});
 
@@ -91,7 +88,7 @@ export default function Page() {
 			type: "custom",
 			className: "w-[15%]",
 			render(value) {
-				const parentCat = data?.find((cat) => cat._id === value);
+				const parentCat = data?.find((cat) => cat.id === value);
 				return <div>{parentCat?.name}</div>;
 			},
 		},
@@ -108,7 +105,7 @@ export default function Page() {
 			type: "number-input",
 			className: "w-[10%]",
 			async onChange(value, row) {
-				await adminCategoriesService.updateCategory(row._id, token, {
+				await adminCategoriesService.updateCategory(row.id, token, {
 					sortOrder: value,
 				});
 
@@ -123,7 +120,7 @@ export default function Page() {
 		},
 		{
 			header: "",
-			field: "_id",
+			field: "id",
 			type: "action",
 			width: "38px",
 			actionIcon: "edit",
@@ -156,7 +153,16 @@ export default function Page() {
 		formState,
 		control,
 		reset,
-	} = useForm<IAddAdminCategory>({
+	} = useForm<{
+		name: string;
+		slug: string;
+		parent?: string | null;
+		sortOrder: number;
+		image: {
+			url?: string;
+			file?: File;
+		};
+	}>({
 		mode: "onTouched",
 	});
 
@@ -171,7 +177,7 @@ export default function Page() {
 			if (data) {
 				return data.map((category) => ({
 					label: category.name,
-					value: category._id,
+					value: category.id,
 				}));
 			}
 			return [];
@@ -220,8 +226,11 @@ export default function Page() {
 					<form
 						onSubmit={handleSubmit(async (data) => {
 							await adminCategoriesService.addCategory(token, {
-								...data,
+								name: data.name,
+								slug: data.slug,
+								parent: data.parent,
 								sortOrder: data.sortOrder * 1,
+								imgFile: data.image.file,
 							});
 							setOpen(false);
 							refetch();
@@ -273,7 +282,10 @@ export default function Page() {
 								name="parent"
 								control={control}
 								render={({ field }) => (
-									<Select value={field.value} onValueChange={field.onChange}>
+									<Select
+										value={field.value || ""}
+										onValueChange={field.onChange}
+									>
 										<SelectTrigger>
 											<SelectValue />
 										</SelectTrigger>
@@ -323,13 +335,13 @@ export default function Page() {
 					<form
 						onSubmit={handleSubmit(async (formData) => {
 							const id =
-								data?.find((cat) => cat.slug === formData.slug)?._id || "";
+								data?.find((cat) => cat.slug === formData.slug)?.id || "";
 
 							await adminCategoriesService.updateCategory(id, token, {
 								name: formData.name,
 								parent: formData.parent,
 								sortOrder: formData.sortOrder * 1,
-								image: formData.image.file,
+								imgFile: formData.image.file,
 							});
 							setEditDialog(false);
 							refetch();

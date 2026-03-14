@@ -17,6 +17,8 @@ import AppProviders from "@redux/appProviders";
 import { cn } from "@lib/utils";
 import { TooltipProvider } from "_shared/shadcn/tooltip";
 
+import { GoogleAnalytics } from "@next/third-parties/google";
+
 const poppins = Poppins({
 	subsets: ["latin"],
 	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -69,6 +71,7 @@ export default function RootLayout({
 					<Footer />
 				</AppProviders>
 			</body>
+			<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
 		</html>
 	);
 }

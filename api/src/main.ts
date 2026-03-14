@@ -3,7 +3,6 @@ import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { json } from "express";
-import { MongooseExceptionFilter } from "./_filters/mongoose-exception.filter";
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -33,9 +32,6 @@ async function bootstrap() {
 			persistAuthorization: true,
 		},
 	});
-
-	// Filters
-	// app.useGlobalFilters(new MongooseExceptionFilter());
 
 	await app.listen(process.env.PORT ?? 3001);
 }

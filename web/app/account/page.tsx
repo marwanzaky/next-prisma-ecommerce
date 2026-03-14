@@ -22,7 +22,6 @@ import {
 import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
 
 import { useForm } from "react-hook-form";
-import { IUpdateUser } from "_shared/interfaces";
 import { toast } from "_shared/shadcn/hooks/use-toast";
 import {
 	AlertDialog,
@@ -35,6 +34,7 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "_shared/shadcn/alertDialog";
+import { UpdateUser } from "@shared/user.type";
 
 function PersonalInformationForm() {
 	const {
@@ -45,7 +45,7 @@ function PersonalInformationForm() {
 		reset,
 		setValue,
 		formState,
-	} = useForm<IUpdateUser>();
+	} = useForm<UpdateUser>();
 	const dispatch = useDispatch<AppDispatch>();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const onAvatarChange: React.ChangeEventHandler<HTMLInputElement> = async (
@@ -114,7 +114,7 @@ function PersonalInformationForm() {
 							<ButtonIcon
 								type="button"
 								icon="delete"
-								onClick={() => setValue("photo", "", { shouldDirty: true })}
+								onClick={() => setValue("photo", null, { shouldDirty: true })}
 							/>
 						</div>
 

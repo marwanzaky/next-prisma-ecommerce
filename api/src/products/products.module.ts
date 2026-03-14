@@ -4,7 +4,7 @@ import { ProductsController } from "./products.controller";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Product, ProductSchema } from "./entities/product.entity";
 import { Review, ReviewSchema } from "src/reviews/entities/review.entity";
-import { CloudinaryModule } from "src/_modules/cloudinary/uploads.module";
+import { CloudinaryModule } from "src/_modules/cloudinary/cloudinary.module";
 import { CategoriesModule } from "src/_modules/categories/categories.module";
 
 @Module({

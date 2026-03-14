@@ -4,13 +4,12 @@ import {
 	NotFoundException,
 	UnauthorizedException,
 } from "@nestjs/common";
-import { UpdateUserDto } from "./dto/update-user.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { User } from "./entities/user.entity";
 import { Model } from "mongoose";
 import { compare } from "bcrypt";
-import { UpdateUserPasswordDto } from "./dto/update-user-password.dto";
 import { AuthService } from "src/auth/auth.service";
+import { CreateUser, UpdateUser, UpdateUserPassword } from "@shared/user.type";
 
 @Injectable()
 export class UsersService {
@@ -21,9 +20,9 @@ export class UsersService {
 
 	async updateUserPassword(
 		id: string,
-		updateUserPasswordDto: UpdateUserPasswordDto,
+		updateUserPassword: UpdateUserPassword,
 	): Promise<{ token: string } | null> {
-		const { currentPassword, newPassword } = updateUserPasswordDto;
+		const { currentPassword, newPassword } = updateUserPassword;
 
 		const user = await this.userModel.findById(id).select("+password");
 
@@ -46,7 +45,7 @@ export class UsersService {
 		};
 	}
 
-	async create(name: string, email: string, password: string): Promise<User> {
+	async create({ name, email, password }: CreateUser): Promise<User> {
 		try {
 			const user = await this.userModel.create({
 				name,
@@ -91,8 +90,8 @@ export class UsersService {
 		return user;
 	}
 
-	updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
-		return this.userModel.findByIdAndUpdate(id, updateUserDto, {
+	updateUser(id: string, updateUser: UpdateUser): Promise<User | null> {
+		return this.userModel.findByIdAndUpdate(id, updateUser, {
 			new: true,
 			runValidators: true,
 		});

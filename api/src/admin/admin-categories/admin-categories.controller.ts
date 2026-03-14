@@ -37,12 +37,23 @@ export class AdminCategoriesController {
 	@ApiOperation({
 		summary: "Create new category (admin)",
 	})
-	async create(@Body() { name, parent, slug, sortOrder }: CreateCategoryDto) {
+	@UseInterceptors(FileInterceptor("imgFile"))
+	async create(
+		@Body() { name, parent, slug, sortOrder }: CreateCategoryDto,
+		@UploadedFile() imgFile?: Express.Multer.File,
+	) {
+		let imgUrl: string | undefined;
+
+		if (imgFile) {
+			imgUrl = await this.cloudinaryService.uploadFile(imgFile);
+		}
+
 		return this.categoriesService.create({
 			name,
-			parent: parent ? parent : null,
+			parent,
 			slug,
 			sortOrder,
+			imgUrl,
 		});
 	}
 
@@ -50,16 +61,18 @@ export class AdminCategoriesController {
 	@ApiOperation({
 		summary: "Update an existing category (admin)",
 	})
-	@UseInterceptors(FileInterceptor("image"))
+	@UseInterceptors(FileInterceptor("imgFile"))
 	async update(
 		@Param("id") id: string,
 		@Body() { name, parent, slug, sortOrder, isActive }: UpdateCategoryDto,
-		@UploadedFile() file?: Express.Multer.File,
+		@UploadedFile() imgFile?: Express.Multer.File,
 	) {
-		let imageUrl: string | undefined;
+		let imgUrl: string | undefined;
 
-		if (file) {
-			imageUrl = await this.cloudinaryService.uploadFile(file);
+		if (imgFile !== undefined) {
+			imgUrl = await this.cloudinaryService.uploadFile(imgFile);
+		} else if (imgFile === null) {
+			imgUrl = "";
 		}
 
 		return this.categoriesService.findOneAndUpdate(id, {
@@ -67,7 +80,7 @@ export class AdminCategoriesController {
 			parent,
 			slug,
 			sortOrder,
-			imgUrl: imageUrl ? imageUrl : undefined,
+			imgUrl,
 			isActive,
 		});
 	}

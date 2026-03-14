@@ -2,12 +2,12 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { isEmail } from "class-validator";
 import { Document } from "mongoose";
 import { hash } from "bcrypt";
-import { IUser, UserRole } from "src/_interfaces/user.interface";
+import { UserRole, User as UserType } from "@shared/user.type";
 
 @Schema({
 	timestamps: true,
 })
-export class User extends Document implements Omit<IUser, "_id"> {
+export class User extends Document implements Omit<UserType, "_id"> {
 	@Prop({ required: true, enum: ["user", "admin"], default: "user" })
 	role!: UserRole;
 

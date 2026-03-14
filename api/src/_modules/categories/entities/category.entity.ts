@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { ICategory } from "src/_interfaces/category.interface";
 import { Document, Types } from "mongoose";
 
 @Schema({
@@ -7,7 +6,7 @@ import { Document, Types } from "mongoose";
 	toJSON: { virtuals: true },
 	toObject: { virtuals: true },
 })
-export class Category extends Document implements Omit<ICategory, "_id"> {
+export class Category extends Document {
 	@Prop({
 		required: true,
 		trim: true,
@@ -40,7 +39,6 @@ export class Category extends Document implements Omit<ICategory, "_id"> {
 
 	@Prop({
 		type: String,
-		required: true,
 	})
 	imgUrl!: string;
 }

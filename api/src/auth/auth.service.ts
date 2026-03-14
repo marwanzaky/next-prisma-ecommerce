@@ -15,7 +15,7 @@ import { compare } from "bcrypt";
 import { IRequest } from "src/_interfaces/request.interface";
 import { CartsService } from "src/carts/carts.service";
 import { UsersService } from "src/users/users.service";
-import { UserRole } from "src/_interfaces/user.interface";
+import { UserRole } from "@shared/user.type";
 
 @Injectable()
 export class AuthService {
@@ -43,9 +43,8 @@ export class AuthService {
 	}
 
 	async signUp(signupDto: SignUpDto) {
-		const { name, email, password } = signupDto;
+		const user = await this.usersService.create(signupDto);
 
-		const user = await this.usersService.create(name, email, password);
 		await this.cartsService.create(user.id, []);
 
 		return { token: await this.createAccessToken(user.id, user.role) };

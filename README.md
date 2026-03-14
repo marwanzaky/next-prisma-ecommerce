@@ -7,7 +7,7 @@
 
 ## About
 
-[Website](https://mamolio.vercel.app) project is an ecommerce store built from the ground up with MERN stack.
+[Website](https://mamolio.vercel.app) project is an ecommerce store built from the ground up to deliver speed, security, and scalability. Designed with Next.js 16, Tailwind CSS, NestJS, and MongoDB.
 
 <div>
   <img src="https://img.shields.io/badge/-TypeScript-2c3e50.svg?logo=typescript&style=flat">
@@ -48,7 +48,8 @@
 - Sell: `/sell`
 - Signin: `/signin`
 - Signup: `/signup`
-- Account: `/me`
+- Contact: `/contact`
+- Account: `/account`
 
 ## Features
 ### Shop

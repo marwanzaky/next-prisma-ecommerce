@@ -32,7 +32,10 @@ export class ContactMessagesService {
 		return this.contactMessage.find();
 	}
 
-	findByIdAndUpdate(id: string, status: IContactMessageStatus) {
+	findByIdAndUpdate(
+		id: string,
+		status: IContactMessageStatus,
+	): Promise<ContactMessage | null> {
 		return this.contactMessage.findByIdAndUpdate(
 			id,
 			{ status },

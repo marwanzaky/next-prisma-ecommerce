@@ -6,7 +6,7 @@ import {
 } from "_shared/interfaces";
 
 import { stringify } from "qs";
-import { jsonToFormData } from "./helper";
+import { jsonToFormData } from "../../utils/helper";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 

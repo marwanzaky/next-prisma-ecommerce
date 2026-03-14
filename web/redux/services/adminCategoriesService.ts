@@ -1,28 +1,11 @@
-import { IProduct } from "_shared/interfaces";
-import { jsonToFormData } from "./helper";
+import { jsonToFormData } from "../../utils/helper";
+import {
+	Category,
+	CreateCategory,
+	UpdateCategory,
+} from "@shared/category.type";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
-
-export type IAdminCategory = {
-	_id: string;
-	name: string;
-	slug: string;
-	parent?: string;
-	sortOrder: number;
-	isActive: boolean;
-	imgUrl?: string;
-};
-
-export type IAddAdminCategory = {
-	name: string;
-	slug: string;
-	parent?: string;
-	sortOrder: number;
-	image: {
-		url?: string;
-		file?: File;
-	};
-};
 
 export const adminCategoriesService = {
 	getAllCategories,
@@ -30,7 +13,7 @@ export const adminCategoriesService = {
 	updateCategory,
 };
 
-async function getAllCategories(token: string): Promise<IAdminCategory[]> {
+async function getAllCategories(token: string): Promise<Category[]> {
 	const response = await fetch(`${baseUrl}/admin/categories`, {
 		headers: {
 			Authorization: `Bearer ${token}`,
@@ -49,15 +32,16 @@ async function getAllCategories(token: string): Promise<IAdminCategory[]> {
 
 async function addCategory(
 	token: string,
-	payload: IAddAdminCategory,
-): Promise<IProduct[]> {
+	category: CreateCategory & { imgFile?: File },
+): Promise<Category[]> {
+	const formData = jsonToFormData(category);
+
 	const response = await fetch(`${baseUrl}/admin/categories`, {
 		method: "POST",
 		headers: {
 			Authorization: `Bearer ${token}`,
-			"Content-type": "application/json",
 		},
-		body: JSON.stringify(payload),
+		body: formData,
 	});
 
 	const data = await response.json();
@@ -72,15 +56,11 @@ async function addCategory(
 async function updateCategory(
 	id: string,
 	token: string,
-	payload: {
-		name?: string;
-		parent?: string;
-		image?: File;
-		sortOrder?: number;
-		isActive?: boolean;
-	},
-): Promise<IProduct[]> {
-	const formData = jsonToFormData(payload);
+	category: UpdateCategory & { imgFile?: File | null },
+): Promise<Category> {
+	console.log("category", category);
+	const formData = jsonToFormData(category);
+	console.log("formData", formData);
 
 	const response = await fetch(`${baseUrl}/admin/categories/${id}`, {
 		method: "PATCH",
