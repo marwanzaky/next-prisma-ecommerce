@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useDispatch } from "react-redux";
 
@@ -21,7 +21,7 @@ import {
 } from "_shared/shadcn/typography";
 import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "_shared/shadcn/hooks/use-toast";
 import {
 	AlertDialog,
@@ -34,54 +34,57 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "_shared/shadcn/alertDialog";
-import { UpdateUser } from "@shared/user.type";
 
 function PersonalInformationForm() {
 	const {
 		register,
 		handleSubmit,
-		watch,
 		formState: { errors },
 		reset,
 		setValue,
 		formState,
-	} = useForm<UpdateUser>();
-	const dispatch = useDispatch<AppDispatch>();
-	const inputRef = useRef<HTMLInputElement>(null);
-	const onAvatarChange: React.ChangeEventHandler<HTMLInputElement> = async (
-		event,
-	) => {
-		if (event.target.files == null || event.target.files.length === 0) {
-			return;
-		}
-
-		const img = event.target.files[0];
-
-		if (img == null || img.size > 4 * 1024 * 1024) {
-			alert("Image size exceeds the 4MB limit");
-			event.target.value = "";
-			return;
-		}
-
-		const reader = new FileReader();
-
-		reader.onload = () => {
-			setValue("photo", reader.result as string, { shouldDirty: true });
+		control,
+	} = useForm<{
+		name?: string;
+		email?: string;
+		photo: {
+			url: string;
+			file?: File;
 		};
+	}>();
 
-		reader.readAsDataURL(img);
-		event.target.value = "";
-	};
+	const dispatch = useDispatch<AppDispatch>();
 	const { user } = useAppSelector((state) => state.authReducer);
 
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	const resetForm = () => {
+		user &&
+			reset({
+				name: user.name,
+				email: user.email,
+				photo: {
+					url: user.photoUrl,
+				},
+			});
+	};
+
 	useEffect(() => {
-		user && reset(user);
+		resetForm();
 	}, [user]);
 
 	return (
 		<form
 			onSubmit={handleSubmit((data) => {
-				dispatch(updateMeAsync(data));
+				dispatch(
+					updateMeAsync({
+						name: data.name,
+						email: data.email,
+						...(data.photo.file
+							? { photoFile: data.photo.file }
+							: { photoUrl: data.photo.url }),
+					}),
+				);
 			})}
 			className="space-y-4"
 		>
@@ -90,16 +93,56 @@ function PersonalInformationForm() {
 				className="hidden"
 				type="file"
 				accept=".png, .jpg, .jpeg"
-				onChange={onAvatarChange}
+				onChange={async (event) => {
+					const file = event.target.files?.[0];
+					if (!file) return;
+
+					if (file.size > 4 * 1024 * 1024) {
+						alert("Image size exceeds the 4MB limit");
+						event.target.value = "";
+						return;
+					}
+
+					setValue("photo", { url: "", file }, { shouldDirty: true });
+					event.target.value = "";
+				}}
 			/>
 
 			<TypographyH4>Personal Information</TypographyH4>
 
 			<div className="flex flex-col gap-4">
 				<div className="flex items-center gap-4">
-					<Avatar className="h-12 w-12">
-						<AvatarImage src={watch("photo") || "img/avatar.jpg"} />
-					</Avatar>
+					<Controller
+						name="photo"
+						control={control}
+						render={({ field }) => {
+							const { value } = field;
+							const [previewUrl, setPreviewUrl] = useState(value?.url || "");
+
+							useEffect(() => {
+								let url: string | undefined;
+
+								if (value?.file) {
+									url = URL.createObjectURL(value.file);
+									setPreviewUrl(url);
+								} else {
+									setPreviewUrl(value?.url || "");
+								}
+
+								return () => {
+									if (url) {
+										URL.revokeObjectURL(url);
+									}
+								};
+							}, [value?.file, value?.url]);
+
+							return (
+								<Avatar className="h-12 w-12">
+									<AvatarImage src={previewUrl || "img/avatar.jpg"} />
+								</Avatar>
+							);
+						}}
+					/>
 
 					<div className="flex flex-col gap-2">
 						<div className="flex items-center gap-2">
@@ -114,7 +157,15 @@ function PersonalInformationForm() {
 							<ButtonIcon
 								type="button"
 								icon="delete"
-								onClick={() => setValue("photo", null, { shouldDirty: true })}
+								onClick={() => {
+									const current = user?.photoUrl;
+
+									setValue(
+										"photo",
+										{ url: "", file: undefined },
+										{ shouldDirty: !!current },
+									);
+								}}
 							/>
 						</div>
 
@@ -134,7 +185,7 @@ function PersonalInformationForm() {
 						minLength: { value: 2, message: "Name is too short." },
 						maxLength: { value: 16, message: "Name is too long." },
 						pattern: {
-							value: /^[a-zA-Z\s'-]+$/,
+							value: /^[a-zA-Z0-9\s'-]+$/,
 							message: "Invalid characters in name.",
 						},
 					})}
@@ -155,9 +206,19 @@ function PersonalInformationForm() {
 					})}
 				/>
 
-				<Button size="lg" type="submit" disabled={!formState.isDirty}>
-					Save
-				</Button>
+				<div className="flex justify-end gap-4">
+					<Button
+						variant="secondary"
+						disabled={!formState.isDirty}
+						onClick={resetForm}
+					>
+						Cancel
+					</Button>
+
+					<Button type="submit" disabled={!formState.isDirty}>
+						Save
+					</Button>
+				</div>
 			</div>
 		</form>
 	);
@@ -231,9 +292,19 @@ function ChangePasswordForm() {
 					})}
 				/>
 
-				<Button size="lg" type="submit" disabled={!formState.isDirty}>
-					Save
-				</Button>
+				<div className="flex justify-end gap-4">
+					<Button
+						variant="secondary"
+						disabled={!formState.isDirty}
+						onClick={() => reset()}
+					>
+						Cancel
+					</Button>
+
+					<Button type="submit" disabled={!formState.isDirty}>
+						Save
+					</Button>
+				</div>
 			</div>
 		</form>
 	);

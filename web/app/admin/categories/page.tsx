@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useAppSelector } from "@redux/store";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "_shared/shadcn/button";
 import {
 	Dialog,
@@ -28,6 +28,7 @@ import {
 	SelectValue,
 } from "_shared/shadcn/select";
 import { adminCategoriesService } from "@redux/services/adminCategoriesService";
+import { categoriesService } from "@redux/services/categoriesService";
 import ImageInput from "app/sell/components/imageInput";
 import { LogoCell } from "_shared/components/table/cells/logoCell";
 import { Checkbox } from "_shared/shadcn/checkbox";
@@ -146,6 +147,12 @@ export default function Page() {
 		staleTime: 0,
 	});
 
+	const { refetch: categoryTreeRefetch } = useQuery({
+		queryKey: ["category-tree"],
+		queryFn: () => categoriesService.getCategoryTree(),
+		staleTime: 1000 * 60 * 5,
+	});
+
 	const {
 		register,
 		handleSubmit,
@@ -168,20 +175,13 @@ export default function Page() {
 
 	const [open, setOpen] = useState(false);
 
-	const [options, setOptions] = useState<{ label: string; value: string }[]>(
-		[],
-	);
+	const options = useMemo(() => {
+		if (!data) return [];
 
-	useEffect(() => {
-		setOptions(() => {
-			if (data) {
-				return data.map((category) => ({
-					label: category.name,
-					value: category.id,
-				}));
-			}
-			return [];
-		});
+		return data.map((category) => ({
+			label: category.name,
+			value: category.id,
+		}));
 	}, [data]);
 
 	const resetForm = () => {
@@ -233,6 +233,7 @@ export default function Page() {
 								imgFile: data.image.file,
 							});
 							setOpen(false);
+							categoryTreeRefetch();
 							refetch();
 						})}
 						className="space-y-4"

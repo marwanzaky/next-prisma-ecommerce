@@ -32,9 +32,9 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 
 import { cn } from "@lib/utils";
 
-import { ImageToolbarButton } from "@hooks/imageTooltbarButton";
-import { MyOnChangePlugin } from "@hooks/myOnChangePlugin";
-import { LoadDescriptionPlugin } from "@hooks/loadDescriptionPlugin";
+import { ImageToolbarButton } from "_shared/components/lexical/imageTooltbarButton";
+import { MyOnChangePlugin } from "_shared/components/lexical/myOnChangePlugin";
+import { LoadDescriptionPlugin } from "_shared/components/lexical/loadDescriptionPlugin";
 
 import ImageInput from "./imageInput";
 import {
@@ -47,6 +47,7 @@ import {
 } from "_shared/shadcn/select";
 import { useQuery } from "@tanstack/react-query";
 import { categoriesService } from "@redux/services/categoriesService";
+import { useMemo } from "react";
 
 type ProductDialogProps = {
 	// React-form-hook
@@ -95,6 +96,11 @@ export function ProductDialog({
 		staleTime: 1000 * 60 * 5,
 	});
 
+	const options = useMemo(
+		() => data?.flatMap((item) => [...item.children, item]),
+		[data],
+	);
+
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="sm:max-w-[425px]">
@@ -107,7 +113,6 @@ export function ProductDialog({
 						name="category"
 						control={control}
 						render={({ field }) => {
-							const options = data?.flatMap((item) => [...item.children, item]);
 							return (
 								<Select value={field.value} onValueChange={field.onChange}>
 									<SelectTrigger>
@@ -139,7 +144,7 @@ export function ProductDialog({
 						{...register("name", {
 							required: "This field is required.",
 							minLength: { value: 2, message: "Name is too short." },
-							maxLength: { value: 64, message: "Name is too long." },
+							maxLength: { value: 80, message: "Name is too long." },
 						})}
 					/>
 

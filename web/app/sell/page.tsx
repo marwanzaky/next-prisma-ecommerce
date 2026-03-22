@@ -27,7 +27,7 @@ export default function Page() {
 	} = useSell();
 
 	return (
-		<Section className="space-y-4">
+		<Section className="space-y-2 lg:space-y-4">
 			<TypographyH4 className="text-center">Your Products</TypographyH4>
 
 			{tableData.length > 0 ? (
@@ -44,7 +44,6 @@ export default function Page() {
 						>
 							Add item
 						</Button>
-						{AddProductDialog}
 					</div>
 				</div>
 			) : (
@@ -69,6 +68,7 @@ export default function Page() {
 				</Empty>
 			)}
 
+			{AddProductDialog}
 			{EditProductDialog}
 		</Section>
 	);

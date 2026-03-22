@@ -58,9 +58,7 @@ async function updateCategory(
 	token: string,
 	category: UpdateCategory & { imgFile?: File | null },
 ): Promise<Category> {
-	console.log("category", category);
 	const formData = jsonToFormData(category);
-	console.log("formData", formData);
 
 	const response = await fetch(`${baseUrl}/admin/categories/${id}`, {
 		method: "PATCH",

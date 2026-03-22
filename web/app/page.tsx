@@ -1,6 +1,7 @@
 import Header from "@components/header";
 import WhyChooseUs from "@components/whyChooseUs";
 import Testimonials from "@components/testimonials";
+import Categories from "@components/categories";
 
 import { productsService } from "@redux/services/productsService";
 
@@ -8,8 +9,8 @@ import ProductCart from "_shared/ui/productCart";
 import { TypographyH3 } from "_shared/shadcn/typography";
 import { IProduct } from "_shared/interfaces";
 import { Section } from "_shared/components/section";
+
 import { categoriesService } from "@redux/services/categoriesService";
-import Categories from "@components/categories";
 
 export default async function Page() {
 	const data = await getFeaturedCategories();

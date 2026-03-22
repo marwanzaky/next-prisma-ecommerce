@@ -10,6 +10,7 @@ import {
 	EmptyHeader,
 	EmptyTitle,
 } from "_shared/components/empty";
+import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
 
 type AvatarInitialsProps = React.InputHTMLAttributes<HTMLInputElement> & {
 	name: string;
@@ -23,7 +24,8 @@ export function AvatarInitials({
 	return (
 		<div
 			className={cn(
-				"shrink-0 flex justify-center items-center w-10 h-10 rounded-full text-lg",
+				// h-10 w-10
+				"shrink-0 flex justify-center items-center w-8 h-8 rounded-full text-base",
 				"text-custom-primary-foreground bg-custom-primary-background",
 				className,
 			)}
@@ -42,12 +44,24 @@ export default function Reviews({ product }: { product: IProduct }) {
 			{product.reviews?.length > 0 ? (
 				product.reviews?.map((review, i) => (
 					<div key={`review ${i}`} className="mb-8 last:mb-0 flex">
-						<AvatarInitials
-							role="button"
-							className="mr-4"
-							name={review.user.name}
-							onClick={() => router.push(`/user/${review.user._id}`)}
-						/>
+						{review.user.photoUrl ? (
+							// mr-4 h-10 w-10
+							<Avatar className="mr-2 h-8 w-8">
+								<AvatarImage
+									src={review.user.photoUrl}
+									alt={`Photo of ${review.user.name}`}
+									loading="lazy"
+								/>
+							</Avatar>
+						) : (
+							// mr-4
+							<AvatarInitials
+								role="button"
+								className="mr-2"
+								name={review.user.name}
+								onClick={() => router.push(`/user/${review.user._id}`)}
+							/>
+						)}
 
 						<div>
 							<div className="leading-none mb-0.5 text-sm">

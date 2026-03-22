@@ -93,7 +93,10 @@ export const getMeAsync = createAsyncThunk(
 
 export const updateMeAsync = createAsyncThunk(
 	"auth/updateMe",
-	async (updatedUser: UpdateUser, { getState, rejectWithValue }) => {
+	async (
+		updatedUser: UpdateUser & { photoFile?: File },
+		{ getState, rejectWithValue },
+	) => {
 		const state = getState() as RootState;
 
 		try {

@@ -21,6 +21,7 @@ import {
 import { Label } from "_shared/shadcn/label";
 import Ratings from "_shared/shadcn/ratings";
 import Icon from "_shared/ui/icon";
+import { toast } from "_shared/shadcn/hooks/use-toast";
 
 export default function Overview({ product }: { product: IProduct }) {
 	const router = useRouter();
@@ -50,7 +51,10 @@ export default function Overview({ product }: { product: IProduct }) {
 			dialogDescription,
 		);
 
-		alert("Your review is sent successfully!");
+		toast({
+			title: "Your review is sent successfully!",
+			duration: 3000,
+		});
 
 		closeDialog();
 	};

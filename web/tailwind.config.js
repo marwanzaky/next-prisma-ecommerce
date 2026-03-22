@@ -88,6 +88,8 @@ module.exports = {
 					"brightness(0) saturate(100%) invert(30%) sepia(85%) saturate(1559%) hue-rotate(146deg) brightness(99%) contrast(101%)",
 				"custom-placeholder":
 					"brightness(0) saturate(100%) invert(68%) sepia(4%) saturate(720%) hue-rotate(146deg) brightness(95%) contrast(89%)",
+				"custom-star":
+					"brightness(0) saturate(100%) invert(65%) sepia(86%) saturate(1066%) hue-rotate(343deg) brightness(100%) contrast(90%);",
 			},
 		},
 	},

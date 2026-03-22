@@ -76,16 +76,16 @@ export function useProducts() {
 		"high-price": { property: "price", order: "desc" },
 	};
 
-	const { data: categoriesTree } = useQuery({
+	const { data: categoryTree } = useQuery({
 		queryKey: ["category-tree"],
 		queryFn: () => categoriesService.getCategoryTree(),
 		staleTime: 1000 * 60 * 5,
 	});
 
 	const categories = useMemo(() => {
-		if (!categoriesTree) return [];
-		return categoriesTree.flatMap((cat) => [...cat.children, cat]);
-	}, [categoriesTree]);
+		if (!categoryTree) return [];
+		return categoryTree.flatMap((cat) => [...cat.children, cat]);
+	}, [categoryTree]);
 
 	const productsOptions: GetAllProductsOptions = {
 		sort: sortMap[sort],

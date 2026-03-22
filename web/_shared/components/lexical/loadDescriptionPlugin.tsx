@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 
-import { $createImageNode, ImageNode } from "_shared/nodes/imageNode";
+import {
+	$createImageNode,
+	ImageNode,
+} from "_shared/components/lexical/nodes/imageNode";
 
 import { $insertNodes, $getRoot } from "lexical";
 import { $generateNodesFromDOM } from "@lexical/html";

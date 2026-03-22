@@ -11,8 +11,11 @@ export class User extends Document implements Omit<UserType, "_id"> {
 	@Prop({ required: true, enum: ["user", "admin"], default: "user" })
 	role!: UserRole;
 
-	@Prop()
-	photo?: string;
+	@Prop({
+		type: String,
+		default: "",
+	})
+	photoUrl?: string;
 
 	@Prop({ required: true })
 	name!: string;

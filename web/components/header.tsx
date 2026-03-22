@@ -6,9 +6,14 @@ import { useRouter } from "next/navigation";
 import { TypographyH1 } from "_shared/components/typography";
 import { TypographyP } from "_shared/shadcn/typography";
 import { Button } from "_shared/shadcn/button";
+import { createProductSlug } from "@utils/stringUtils";
 
 export default function Header() {
 	const router = useRouter();
+	const productId = process.env.NEXT_PUBLIC_HEADER_PRODUCT_ID!;
+	const productName = process.env.NEXT_PUBLIC_HEADER_PRODUCT_NAME!;
+	const productDescription =
+		process.env.NEXT_PUBLIC_HEADER_PRODUCT_DESCRIPTION!;
 
 	return (
 		<header className="full-bleed relative px-4 py-16 md:py-16">
@@ -23,10 +28,10 @@ export default function Header() {
 			<div className="space-y-4">
 				<div>
 					<TypographyH1 className="text-center text-white">
-						{process.env.NEXT_PUBLIC_HEADER_PRODUCT_NAME}
+						{productName}
 					</TypographyH1>
 					<TypographyP className="text-center text-white max-w-xs mx-auto">
-						{process.env.NEXT_PUBLIC_HEADER_PRODUCT_DESCRIPTION}
+						{productDescription}
 					</TypographyP>
 				</div>
 
@@ -34,7 +39,7 @@ export default function Header() {
 					<Button
 						onClick={() =>
 							router.push(
-								`/product/${process.env.NEXT_PUBLIC_HEADER_PRODUCT_ID}`,
+								`/product/${createProductSlug(productName, productId)}`,
 							)
 						}
 					>

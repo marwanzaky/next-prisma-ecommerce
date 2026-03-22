@@ -10,10 +10,7 @@ export type User = {
 	name: string;
 	email: string;
 
-	/**
-	 * base64
-	 */
-	photo?: string | null;
+	photoUrl?: string;
 };
 
 export type CreateUser = {
@@ -22,7 +19,7 @@ export type CreateUser = {
 	password: string;
 };
 
-export type UpdateUser = Partial<Pick<User, "name" | "email" | "photo">>;
+export type UpdateUser = Partial<Pick<User, "name" | "email" | "photoUrl">>;
 
 export type UpdateUserPassword = {
 	currentPassword: string;

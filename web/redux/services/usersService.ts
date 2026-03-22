@@ -1,4 +1,5 @@
 import { UpdateUser, UpdateUserPassword, User } from "@shared/user.type";
+import { jsonToFormData } from "@utils/helper";
 import { IProduct } from "_shared/interfaces";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
@@ -102,14 +103,18 @@ async function getMeProducts(token: string): Promise<IProduct[]> {
 	return data;
 }
 
-async function updateMe(token: string, updatedUser: UpdateUser): Promise<User> {
+async function updateMe(
+	token: string,
+	updatedUser: UpdateUser & { photoFile?: File },
+): Promise<User> {
+	const formData = jsonToFormData(updatedUser);
+
 	const response = await fetch(`${baseUrl}/users/updateMe`, {
 		method: "PATCH",
 		headers: {
 			Authorization: `Bearer ${token}`,
-			"Content-type": "application/json",
 		},
-		body: JSON.stringify(updatedUser),
+		body: formData,
 	});
 
 	const data = await response.json();

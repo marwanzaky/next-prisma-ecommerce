@@ -33,7 +33,8 @@ export default function Categories({
 								src={item.imgUrl || ""}
 								width={512}
 								height={512}
-								alt=""
+								alt={`Photo of ${item.name}`}
+								loading="lazy"
 							/>
 
 							<div className="bg-white font-light text-lg h-12 w-32 flex items-center justify-center shadow rounded z-10">

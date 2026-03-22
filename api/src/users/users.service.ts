@@ -80,7 +80,7 @@ export class UsersService {
 	async findPublicById(id: string): Promise<User> {
 		const user = await this.userModel
 			.findById(id)
-			.select("_id name photo")
+			.select("_id name photoUrl")
 			.lean();
 
 		if (!user) {

@@ -1,7 +1,7 @@
-import { TypographyH4 } from "_shared/shadcn/typography";
-import { Container } from "_shared/ui/container";
-
 import Link from "next/link";
+
+import { Container } from "_shared/ui/container";
+import { TypographyH4 } from "_shared/shadcn/typography";
 
 export default function Footer() {
 	return (
@@ -59,9 +59,18 @@ export default function Footer() {
 					</ul>
 				</div>
 
-				<div className="text-white text-center font-bold">
-					Copyright &copy; 2026 {process.env.NEXT_PUBLIC_NAME} all rights
-					reserved.
+				<div className="space-y-4">
+					<div className="flex justify-center gap-2 h-6">
+						<img src="/svgs/visa.svg" />
+						<img src="/svgs/mastercard.svg" />
+						<img src="/svgs/american_express.svg" />
+						<img src="/svgs/discover.svg" />
+					</div>
+
+					<div className="text-sm text-white text-center font-bold">
+						Copyright &copy; 2026 {process.env.NEXT_PUBLIC_NAME} all rights
+						reserved.
+					</div>
 				</div>
 			</Container>
 		</footer>

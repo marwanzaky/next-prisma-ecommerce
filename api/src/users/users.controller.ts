@@ -7,6 +7,8 @@ import {
 	Param,
 	Delete,
 	Req,
+	UseInterceptors,
+	UploadedFile,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -17,6 +19,8 @@ import { UpdateUserPasswordDto } from "./dto/update-user-password.dto";
 import { ProductsService } from "src/products/products.service";
 import { Roles } from "src/_decorators/roles.decorator";
 import { Public } from "src/auth/auth.guard";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { CloudinaryService } from "src/_modules/cloudinary/cloudinary.service";
 
 @Controller("users")
 @ApiBearerAuth("Authorization")
@@ -24,6 +28,7 @@ export class UsersController {
 	constructor(
 		private readonly usersService: UsersService,
 		private readonly productsService: ProductsService,
+		private readonly cloudinaryService: CloudinaryService,
 	) {}
 
 	@Get("/me")
@@ -48,11 +53,27 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Update the authenticated user's info",
 	})
+	@UseInterceptors(FileInterceptor("photoFile"))
 	async updateMe(
 		@Req() request: IRequest,
 		@Body() updateUserDto: UpdateUserDto,
+		@UploadedFile() photoFile?: Express.Multer.File,
 	) {
-		return this.usersService.updateUser(request.user.id, updateUserDto);
+		let photoUrl: string | undefined;
+
+		if (updateUserDto.photoUrl === "") {
+			photoUrl = "";
+		}
+
+		if (photoFile) {
+			photoUrl = await this.cloudinaryService.uploadFile(photoFile);
+		}
+
+		return this.usersService.updateUser(request.user.id, {
+			name: updateUserDto.name,
+			email: updateUserDto.email,
+			photoUrl,
+		});
 	}
 
 	@Delete("/deleteMe")

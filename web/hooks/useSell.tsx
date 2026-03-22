@@ -26,13 +26,14 @@ import {
 	AlertDialogTrigger,
 } from "_shared/shadcn/alertDialog";
 import { ButtonIcon } from "_shared/ui/buttonIcon";
-import { ImageNode } from "_shared/nodes/imageNode";
+import { ImageNode } from "_shared/components/lexical/nodes/imageNode";
 
 import { useForm, useWatch } from "react-hook-form";
 
 import { InitialConfigType } from "@lexical/react/LexicalComposer";
 import { LineBreakNode, ParagraphNode } from "lexical";
 import { ProductDialog } from "app/sell/components/productDialog";
+import { createProductSlug } from "@utils/stringUtils";
 
 type CartItem = IProduct & { imgUrl: string };
 
@@ -104,7 +105,11 @@ export function useSell() {
 			type: "custom",
 			className: "w-[10%] md:w-[60%]",
 			render: (value, row) => (
-				<LogoCell href={`product/${row._id}`} label={row.name} imgUrl={value} />
+				<LogoCell
+					href={`product/${createProductSlug(row.name, row._id)}`}
+					label={row.name}
+					imgUrl={value}
+				/>
 			),
 		},
 		{ header: "Price", field: "price", type: "usd", width: "10%" },

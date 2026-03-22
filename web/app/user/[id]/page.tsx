@@ -11,7 +11,7 @@ import {
 } from "_shared/components/empty";
 import { Section } from "_shared/components/section";
 
-import { IProduct } from "_shared/interfaces";
+import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,7 +20,6 @@ export default function Page() {
 	const params = useParams<{ id: string }>();
 
 	const [user, setUser] = useState<User>();
-	const [favProducts, setFavProducts] = useState<IProduct>();
 
 	useEffect(() => {
 		getPublicUser(params.id).then((value) => setUser(value));
@@ -31,7 +30,14 @@ export default function Page() {
 			<Section className="space-y-4">
 				<div className="flex justify-between">
 					<div className="flex items-center gap-4">
-						<AvatarInitials name={user.name} />
+						{user.photoUrl ? (
+							<Avatar className="h-10 w-10">
+								<AvatarImage src={user.photoUrl} />
+							</Avatar>
+						) : (
+							<AvatarInitials name={user.name} />
+						)}
+
 						{user.name}
 					</div>
 

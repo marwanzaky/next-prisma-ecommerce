@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -54,20 +54,13 @@ import {
 	TooltipTrigger,
 } from "_shared/shadcn/tooltip";
 import { PublicCategoryTree } from "@shared/category.type";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 function Preview({ product }: { product: IProduct }) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =
 		useToggleFavorite(product);
 
 	const [imgIndex, setImgIndex] = useState(0);
-
-	const next = () => {
-		setImgIndex((prev) => (prev + 1) % product.imgUrls.length);
-	};
-
-	const prev = () => {
-		setImgIndex((prev) => (prev === 0 ? product.imgUrls.length - 1 : prev - 1));
-	};
 
 	return (
 		<div className="group/container relative md:sticky md:top-20 md:h-fit">
@@ -90,7 +83,7 @@ function Preview({ product }: { product: IProduct }) {
 
 			<div className="relative">
 				<Image
-					className="w-full mb-2 md:mb-4 rounded-md shadow-md"
+					className="w-full mb-2 md:mb-4 rounded-md shadow-md aspect-square object-cover"
 					src={product.imgUrls[imgIndex]}
 					alt={product.name}
 					width={512}
@@ -100,13 +93,19 @@ function Preview({ product }: { product: IProduct }) {
 				<ButtonIcon
 					className="absolute shadow-md top-[calc(50%-19px)] right-[9.5px]"
 					icon="arrow_forward"
-					onClick={next}
+					onClick={() => {
+						setImgIndex((prev) => (prev + 1) % product.imgUrls.length);
+					}}
 				/>
 
 				<ButtonIcon
 					className="absolute shadow-md top-[calc(50%-19px)] left-[9.5px]"
 					icon="arrow_back"
-					onClick={prev}
+					onClick={() => {
+						setImgIndex((prev) =>
+							prev === 0 ? product.imgUrls.length - 1 : prev - 1,
+						);
+					}}
 				/>
 			</div>
 
@@ -115,7 +114,7 @@ function Preview({ product }: { product: IProduct }) {
 					<Image
 						role="button"
 						className={cn(
-							"w-full rounded-md opacity-100 hover:opacity-50 shadow-md border border-transparent hover:border-black",
+							"w-full rounded-md opacity-100 hover:opacity-50 shadow-md aspect-square object-cover border border-transparent hover:border-black",
 							i === imgIndex && "border-primary",
 						)}
 						key={`${product.name} ${i + 1}`}
@@ -137,7 +136,7 @@ function Details({ product }: { product: IProduct }) {
 
 	const dispatch = useDispatch<AppDispatch>();
 
-	const { data } = useQuery({
+	const { data: categoryTree } = useQuery({
 		queryKey: ["category-tree"],
 		queryFn: () => categoriesService.getCategoryTree(),
 		staleTime: 1000 * 60 * 5,
@@ -145,16 +144,39 @@ function Details({ product }: { product: IProduct }) {
 
 	const [quantity, setQuantity] = useState(1);
 
-	const [category, setCategory] = useState<PublicCategoryTree>();
+	const productSubcategoryTree = useMemo(() => {
+		return categoryTree
+			?.flatMap((cat) => [...cat.children, cat])
+			.find((cat) => cat.id === product.category);
+	}, [categoryTree]);
+
+	const productCategoryTree = useMemo<PublicCategoryTree | undefined>(() => {
+		if (!categoryTree) {
+			return undefined;
+		}
+
+		return categoryTree.find((rootCat) =>
+			rootCat.children.some((childCat) => childCat.id === product.category),
+		);
+	}, [categoryTree, product.category]);
 
 	useEffect(() => {
-		if (data) {
-			const category = data
-				.flatMap((cat) => [...cat.children, cat])
-				.find((cat) => cat.id === product.category);
-			setCategory(category);
-		}
-	}, [data]);
+		sendGTMEvent({
+			event: "view_item",
+			value: {
+				currency: "USD",
+				value: product.price,
+				items: [
+					{
+						item_id: product._id,
+						item_name: product.name,
+						price: product.price,
+						quantity: 1,
+					},
+				],
+			},
+		});
+	}, [product]);
 
 	return (
 		<div className="space-y-4 lg:space-y-8">
@@ -171,7 +193,9 @@ function Details({ product }: { product: IProduct }) {
 
 						<BreadcrumbItem>
 							<BreadcrumbLink asChild>
-								<Link href="/products">Products</Link>
+								<Link href={`/products?category=${productCategoryTree?.slug}`}>
+									{productCategoryTree?.name}
+								</Link>
 							</BreadcrumbLink>
 						</BreadcrumbItem>
 
@@ -179,8 +203,10 @@ function Details({ product }: { product: IProduct }) {
 
 						<BreadcrumbItem>
 							<BreadcrumbLink asChild>
-								<Link href={`/products?category=${category?.slug}`}>
-									{category?.name}
+								<Link
+									href={`/products?category=${productSubcategoryTree?.slug}`}
+								>
+									{productSubcategoryTree?.name}
 								</Link>
 							</BreadcrumbLink>
 						</BreadcrumbItem>
@@ -239,9 +265,24 @@ function Details({ product }: { product: IProduct }) {
 			<div className="space-y-2 flex flex-col">
 				<Button
 					size="lg"
-					onClick={() =>
-						dispatch(postCartItemAsync({ product, toast, quantity }))
-					}
+					onClick={() => {
+						dispatch(postCartItemAsync({ product, toast, quantity }));
+						sendGTMEvent({
+							event: "add_to_cart",
+							value: {
+								currency: "USD",
+								value: product.price,
+								items: [
+									{
+										item_id: product._id,
+										item_name: product.name,
+										price: product.price,
+										quantity: 1,
+									},
+								],
+							},
+						});
+					}}
 				>
 					Add to cart
 				</Button>
@@ -251,6 +292,23 @@ function Details({ product }: { product: IProduct }) {
 					variant="secondary"
 					onClick={() => {
 						dispatch(postCartItemAsync({ product, toast, quantity }));
+
+						sendGTMEvent({
+							event: "add_to_cart",
+							value: {
+								currency: "USD",
+								value: product.price,
+								items: [
+									{
+										item_id: product._id,
+										item_name: product.name,
+										price: product.price,
+										quantity: 1,
+									},
+								],
+							},
+						});
+
 						router.push("/cart");
 					}}
 				>
@@ -267,7 +325,10 @@ function Details({ product }: { product: IProduct }) {
 				<AccordionItem value="item-1">
 					<AccordionTrigger>Description</AccordionTrigger>
 					<AccordionContent asChild>
-						<div dangerouslySetInnerHTML={{ __html: product.description }} />
+						<div
+							className="[&_img]:rounded-md"
+							dangerouslySetInnerHTML={{ __html: product.description }}
+						/>
 					</AccordionContent>
 				</AccordionItem>
 				<AccordionItem value="item-2">

@@ -49,7 +49,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 	}
 
 	decorate() {
-		return <img src={this.__src} alt={this.__alt} className="editor-image" />;
+		return <img src={this.__src} alt={this.__alt} className="rounded-md" />;
 	}
 }
 

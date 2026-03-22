@@ -106,7 +106,7 @@ export default function Navigation() {
 							<div>
 								<DropdownMenu>
 									<DropdownMenuTrigger asChild>
-										<ImageButton imgUrl={user?.photo || "/img/avatar.jpg"} />
+										<ImageButton imgUrl={user?.photoUrl || "/img/avatar.jpg"} />
 									</DropdownMenuTrigger>
 
 									<DropdownMenuContent side="bottom" align="end" sideOffset={4}>
@@ -135,33 +135,33 @@ export default function Navigation() {
 
 										<DropdownMenuSeparator />
 
-										<DropdownMenuLabel className="text-sm">
-											Admin
-										</DropdownMenuLabel>
+										{user && user.role === "admin" && (
+											<>
+												<DropdownMenuLabel className="text-sm">
+													Admin
+												</DropdownMenuLabel>
 
-										<DropdownMenuGroup>
-											{user?.role === "admin" && (
-												<DropdownMenuItem
-													onClick={() => {
-														router.push("/admin/messages");
-													}}
-												>
-													Messages
-												</DropdownMenuItem>
-											)}
+												<DropdownMenuGroup>
+													<DropdownMenuItem
+														onClick={() => {
+															router.push("/admin/messages");
+														}}
+													>
+														Messages
+													</DropdownMenuItem>
 
-											{user?.role === "admin" && (
-												<DropdownMenuItem
-													onClick={() => {
-														router.push("/admin/categories");
-													}}
-												>
-													Categories
-												</DropdownMenuItem>
-											)}
-										</DropdownMenuGroup>
+													<DropdownMenuItem
+														onClick={() => {
+															router.push("/admin/categories");
+														}}
+													>
+														Categories
+													</DropdownMenuItem>
+												</DropdownMenuGroup>
 
-										<DropdownMenuSeparator />
+												<DropdownMenuSeparator />
+											</>
+										)}
 
 										<DropdownMenuItem
 											onClick={() => {

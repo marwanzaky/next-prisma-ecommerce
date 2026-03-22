@@ -14,5 +14,5 @@ export class UpdateUserDto implements UpdateUser {
 
 	@ApiPropertyOptional()
 	@IsOptional()
-	readonly photo?: string | null;
+	readonly photoUrl?: string;
 }

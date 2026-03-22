@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1.684211,0,0,1.684211,-6.736842,-10.105263)">
+        <circle cx="13.5" cy="15.5" r="9.5" style="fill:rgb(0,150,120);"/>
+    </g>
+    <g transform="matrix(1.142857,0,0,1.066667,-2.285714,-1.066667)">
+        <path d="M30,11.644L30,20.356C30,26.231 25.549,31 20.066,31L11.934,31C6.451,31 2,26.231 2,20.356L2,11.644C2,5.769 6.451,1 11.934,1L20.066,1C25.549,1 30,5.769 30,11.644Z" style="fill:rgb(0,150,120);"/>
+    </g>
+    <use id="diamond--1-.png" serif:id="diamond (1).png" xlink:href="#_Image1" x="4" y="7" width="24px" height="20px"/>
+    <defs>
+        <image id="_Image1" width="24px" height="20px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABf0lEQVQ4ja3UvWoUYRjF8TOr8SMYTYhoIwERsbGz8Qq8AGutLCy9AbG2EGIhamEjaG8hpBE7SwVjkSJqCFgoblRW2aDB/CzeWViXbNxd58BUM/M/7/OcM1NlQKiSHEsyNXjvH9qsqmpj1ycwg5vYxNaYVwfXcGA3+CK6JtNbfMZ17B+EH8Fj/JoQ3tMn/MA9TPfgc7jfALynrrLi25jdm+RGkssThDpMB5NsJ7mSRIVOknaSkw0Z9LSeZLaV5E5KLV81CF9OcjTJYi/gu/iOlQYyWFWCvoWZJAnm8UTp8rv/gK8rIT/A4b9mwjSeoY21CeAflC08wp4dF4cFLCl9/jgGvK1M/xDzQ5NBhTN4Uxt8HQHeqU++hOMjVQCnlU//vRLYMHXxDc9xaCR4n8l5vFZa8XMH+FY94VMsjAWvDVq4oOSxht998O365C9xSvnFTyZcxJc6l542sIwTE4MHTC4pNVyp4S9wthF4bTCFq3VjVnAOrcYM+ozmsG+cd/4AoKq0Fm8+ywYAAAAASUVORK5CYII="/>
+    </defs>
+</svg>

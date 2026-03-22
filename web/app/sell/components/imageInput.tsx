@@ -53,7 +53,7 @@ export default function ImageInput({
 						if (!file) return;
 
 						if (file.size > 4 * 1024 * 1024) {
-							alert("Image size exceeds 4MB");
+							alert("Image size exceeds the 4MB limit");
 							return;
 						}
 

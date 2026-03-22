@@ -12,12 +12,19 @@ module.exports = withPWA({
 	cacheComponents: true,
 	reactStrictMode: true,
 	images: {
-		domains: [
-			process.env.NEXT_PUBLIC_DOMAINS,
-			"res.cloudinary.com",
-			"mamolio.up.railway.app",
-			"i.etsystatic.com",
-			"mzkdoyjeakimztiocfrp.supabase.co",
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: process.env.NEXT_PUBLIC_DOMAINS,
+			},
+			{
+				protocol: "https",
+				hostname: "res.cloudinary.com",
+			},
+			{
+				protocol: "https",
+				hostname: "i.etsystatic.com",
+			},
 		],
 		formats: ["image/avif", "image/webp"],
 	},

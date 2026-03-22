@@ -13,6 +13,7 @@ export interface IProduct {
 	description: string;
 	tags: string[];
 	createdAt: string;
+	updatedAt: string;
 	stock: number;
 	category: string | null;
 }

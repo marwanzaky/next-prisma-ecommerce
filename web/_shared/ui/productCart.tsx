@@ -17,6 +17,7 @@ import { ButtonIcon } from "_shared/ui/buttonIcon";
 import { useToast } from "_shared/shadcn/hooks/use-toast";
 import { formatPrice } from "@utils/formatPrice";
 import { useIsMobile } from "_shared/shadcn/hooks/use-mobile";
+import { createProductSlug } from "@utils/stringUtils";
 
 type ProductCartProps = {
 	data: IProduct;
@@ -53,13 +54,14 @@ export default function ProductCart({ data }: ProductCartProps) {
 				)}
 			</div>
 
-			<Link href={`/product/${data._id}`}>
+			<Link href={`/product/${createProductSlug(data.name, data._id)}`}>
 				<Image
 					className="aspect-square object-cover w-full h-full"
 					src={data.imgUrls[0]}
 					alt={data.name}
 					width={512}
 					height={512}
+					loading="lazy"
 				/>
 			</Link>
 

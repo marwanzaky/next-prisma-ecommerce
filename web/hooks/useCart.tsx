@@ -14,6 +14,7 @@ import { selectCartTotalStr } from "@redux/selectors/cartSelectors";
 
 import { useToast } from "_shared/shadcn/hooks/use-toast";
 import { paymentsService } from "@redux/services/paymentsService";
+import { createProductSlug } from "@utils/stringUtils";
 
 type CartItem = IProduct & { imgUrl: string; quantity: number; total: number };
 
@@ -31,7 +32,11 @@ export function useCart() {
 			type: "custom",
 			className: "sm:w-[50%]",
 			render: (value, row) => (
-				<LogoCell href={`product/${row._id}`} label={row.name} imgUrl={value} />
+				<LogoCell
+					href={`product/${createProductSlug(row.name, row._id)}`}
+					label={row.name}
+					imgUrl={value}
+				/>
 			),
 		},
 		{

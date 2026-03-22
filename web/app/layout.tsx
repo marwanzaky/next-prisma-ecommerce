@@ -18,6 +18,7 @@ import { cn } from "@lib/utils";
 import { TooltipProvider } from "_shared/shadcn/tooltip";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { Metadata, Viewport } from "next";
 
 const poppins = Poppins({
 	subsets: ["latin"],
@@ -26,13 +27,21 @@ const poppins = Poppins({
 	display: "swap",
 });
 
-export const metadata = {
+export const metadata: Metadata = {
 	title: "Mamolio",
+	icons: {
+		icon: "/icon.svg",
+	},
 	description: "eCommerce",
 	manifest: "/manifest.json",
 	keywords: ["ecommerce", "technology", "web application"],
-	viewport:
-		"minimum-scale=1, initial-scale=1, width=device-width, shrink-to-     fit=no, viewport-fit=cover",
+};
+
+export const viewport: Viewport = {
+	width: "device-width shrink-to-fit=no",
+	initialScale: 1,
+	minimumScale: 1,
+	viewportFit: "cover",
 };
 
 export default function RootLayout({

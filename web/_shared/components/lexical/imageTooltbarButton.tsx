@@ -1,4 +1,4 @@
-import { $createImageNode } from "_shared/nodes/imageNode";
+import { $createImageNode } from "_shared/components/lexical/nodes/imageNode";
 import { ButtonIcon } from "_shared/ui/buttonIcon";
 
 import { $insertNodes } from "lexical";
