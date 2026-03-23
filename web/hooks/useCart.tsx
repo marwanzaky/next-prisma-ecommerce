@@ -43,13 +43,13 @@ export function useCart() {
 			header: "Price",
 			field: "price",
 			type: "usd",
-			className: "sm:w-[10%]",
+			className: "w-[10%]",
 		},
 		{
 			header: "Quantity",
 			field: "quantity",
 			type: "number-input",
-			className: "sm:w-[15%]",
+			className: "w-[15%]",
 			onChange: (value, row) => {
 				dispatch(
 					updateCartItemQuantityAsync({
@@ -73,7 +73,7 @@ export function useCart() {
 				dispatch(deleteCartItemAsync({ product: row, toast }));
 			},
 			actionIcon: "delete",
-			className: "sm:w-[15%]",
+			className: "w-[2.375rem]",
 		},
 	];
 

@@ -1,3 +1,4 @@
+import { User } from "@shared/user.type";
 import { IReview } from "./review.interface";
 
 export interface IProduct {
@@ -9,6 +10,7 @@ export interface IProduct {
 	avgRatings: number;
 	numReviews: number;
 	reviews: IReview[];
+	user?: Pick<User, "_id" | "name" | "photoUrl" | "updatedAt" | "createdAt">;
 	imgUrls: string[];
 	description: string;
 	tags: string[];

@@ -82,46 +82,44 @@ export function useAdminMessages() {
 		{
 			header: "",
 			field: "_id",
-			type: "action",
-			actionIcon: "visibility",
-			width: "38px",
-			action: (row) => {
-				setSelectedMessage(row);
-				setVisible(true);
-			},
-		},
-		{
-			header: "",
-			field: "_id",
 			type: "custom",
-			width: "38px",
+			className: "w-[2.375rem]",
 			render(value, row) {
 				return (
-					<AlertDialog>
-						<AlertDialogTrigger asChild>
-							<ButtonIcon icon="delete" />
-						</AlertDialogTrigger>
-						<AlertDialogContent>
-							<AlertDialogHeader>
-								<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-								<AlertDialogDescription>
-									This action cannot be undone. This will permanently delete the
-									message data from our servers.
-								</AlertDialogDescription>
-							</AlertDialogHeader>
-							<AlertDialogFooter>
-								<AlertDialogCancel>Cancel</AlertDialogCancel>
-								<AlertDialogAction
-									onClick={() => {
-										contactMessagesService.deleteMessage(token, row._id);
-										refetch();
-									}}
-								>
-									Continue
-								</AlertDialogAction>
-							</AlertDialogFooter>
-						</AlertDialogContent>
-					</AlertDialog>
+					<div className="flex gap-2">
+						<ButtonIcon
+							icon="visibility"
+							onClick={() => {
+								setSelectedMessage(row);
+								setVisible(true);
+							}}
+						/>
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<ButtonIcon icon="delete" />
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+									<AlertDialogDescription>
+										This action cannot be undone. This will permanently delete
+										the message data from our servers.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogAction
+										onClick={() => {
+											contactMessagesService.deleteMessage(token, row._id);
+											refetch();
+										}}
+									>
+										Continue
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
+					</div>
 				);
 			},
 		},

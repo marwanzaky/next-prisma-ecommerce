@@ -48,9 +48,11 @@ export default function Reviews({ product }: { product: IProduct }) {
 							// mr-4 h-10 w-10
 							<Avatar className="mr-2 h-8 w-8">
 								<AvatarImage
+									role="button"
 									src={review.user.photoUrl}
 									alt={`Photo of ${review.user.name}`}
 									loading="lazy"
+									onClick={() => router.push(`/user/${review.user._id}`)}
 								/>
 							</Avatar>
 						) : (

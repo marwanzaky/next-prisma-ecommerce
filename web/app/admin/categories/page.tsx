@@ -123,7 +123,7 @@ export default function Page() {
 			header: "",
 			field: "id",
 			type: "action",
-			width: "38px",
+			className: "w-[2.375rem]",
 			actionIcon: "edit",
 			action: (row) => {
 				reset({

@@ -131,7 +131,13 @@ export class ProductsService {
 	}
 
 	async findById(id: string): Promise<Product> {
-		const product = await this.productModel.findById(id).populate("reviews");
+		const product = await this.productModel
+			.findById(id)
+			.populate("reviews")
+			.populate({
+				path: "user",
+				select: "_id name photoUrl updatedAt createdAt",
+			});
 
 		if (!product) {
 			throw new NotFoundException("Could not find the product");

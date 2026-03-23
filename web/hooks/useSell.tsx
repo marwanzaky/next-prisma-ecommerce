@@ -103,7 +103,7 @@ export function useSell() {
 			header: "Product",
 			field: "imgUrl",
 			type: "custom",
-			className: "w-[10%] md:w-[60%]",
+			className: "w-auto md:w-[60%]",
 			render: (value, row) => (
 				<LogoCell
 					href={`product/${createProductSlug(row.name, row._id)}`}
@@ -140,57 +140,56 @@ export function useSell() {
 			field: "_id",
 			header: "",
 			type: "custom",
-			width: "38px",
+			className: "w-[5.25rem]",
 			render(value, row) {
 				return (
-					<AlertDialog>
-						<AlertDialogTrigger asChild>
-							<ButtonIcon icon="delete" />
-						</AlertDialogTrigger>
-						<AlertDialogContent>
-							<AlertDialogHeader>
-								<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-								<AlertDialogDescription>
-									This action cannot be undone. This will permanently delete the
-									product data from our servers.
-								</AlertDialogDescription>
-							</AlertDialogHeader>
-							<AlertDialogFooter>
-								<AlertDialogCancel>Cancel</AlertDialogCancel>
-								<AlertDialogAction
-									onClick={() => {
-										dispatch(removeUserProductAsync({ product: row, toast }));
-									}}
-								>
-									Continue
-								</AlertDialogAction>
-							</AlertDialogFooter>
-						</AlertDialogContent>
-					</AlertDialog>
-				);
-			},
-		},
-		{
-			field: "_id",
-			header: "",
-			type: "action",
-			width: "38px",
-			actionIcon: "edit",
-			action: (row) => {
-				reset({
-					productId: row._id,
-					name: row.name,
-					description: row.description,
-					priceRangeUsd: {
-						min: row.price / 100,
-						max: row.priceCompare / 100,
-					},
-					tags: row.tags,
-					images: row.imgUrls.map((el) => ({ url: el })),
-					category: row.category ? row.category : undefined,
-				});
+					<div className="flex gap-2">
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<ButtonIcon icon="delete" />
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+									<AlertDialogDescription>
+										This action cannot be undone. This will permanently delete
+										the product data from our servers.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogAction
+										onClick={() => {
+											dispatch(removeUserProductAsync({ product: row, toast }));
+										}}
+									>
+										Continue
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
 
-				setDisplayEditDialog(true);
+						<ButtonIcon
+							icon="edit"
+							onClick={() => {
+								reset({
+									productId: row._id,
+									name: row.name,
+									description: row.description,
+									priceRangeUsd: {
+										min: row.price / 100,
+										max: row.priceCompare / 100,
+									},
+									tags: row.tags,
+									images: row.imgUrls.map((el) => ({ url: el })),
+									category: row.category ? row.category : undefined,
+								});
+
+								setDisplayEditDialog(true);
+							}}
+						/>
+					</div>
+				);
 			},
 		},
 	];

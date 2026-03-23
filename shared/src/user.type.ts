@@ -10,6 +10,9 @@ export type User = {
 	name: string;
 	email: string;
 
+	updatedAt: string;
+	createdAt: string;
+
 	photoUrl?: string;
 };
 

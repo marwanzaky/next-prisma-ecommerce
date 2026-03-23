@@ -7,7 +7,10 @@ import { UserRole, User as UserType } from "@shared/user.type";
 @Schema({
 	timestamps: true,
 })
-export class User extends Document implements Omit<UserType, "_id"> {
+export class User
+	extends Document
+	implements Omit<UserType, "_id" | "updatedAt" | "createdAt">
+{
 	@Prop({ required: true, enum: ["user", "admin"], default: "user" })
 	role!: UserRole;
 

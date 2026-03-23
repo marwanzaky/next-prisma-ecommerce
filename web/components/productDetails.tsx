@@ -45,7 +45,10 @@ import {
 import { Section } from "_shared/components/section";
 import { useToast } from "_shared/shadcn/hooks/use-toast";
 import { TypographyH4, TypographyP } from "_shared/ui/typography";
-import { TypographyH3 as ShadcnTypographyH3 } from "_shared/shadcn/typography";
+import {
+	TypographyH3 as ShadcnTypographyH3,
+	TypographyMuted,
+} from "_shared/shadcn/typography";
 import { formatPrice } from "@utils/formatPrice";
 import { categoriesService } from "@redux/services/categoriesService";
 import {
@@ -55,6 +58,8 @@ import {
 } from "_shared/shadcn/tooltip";
 import { PublicCategoryTree } from "@shared/category.type";
 import { sendGTMEvent } from "@next/third-parties/google";
+import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
+import { stringToDate } from "@utils/stringUtils";
 
 function Preview({ product }: { product: IProduct }) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =
@@ -382,6 +387,40 @@ function Details({ product }: { product: IProduct }) {
 						</TypographyP>
 					</AccordionContent>
 				</AccordionItem>
+
+				{product.user && (
+					<AccordionItem value="item-3">
+						<AccordionTrigger>Seller Information</AccordionTrigger>
+						<AccordionContent>
+							<div className="flex items-center gap-4">
+								<Avatar className="h-12 w-12">
+									<AvatarImage
+										role="button"
+										src={product.user.photoUrl}
+										loading="lazy"
+										onClick={() => router.push(`/user/${product.user?._id}`)}
+									/>
+								</Avatar>
+
+								<div>
+									<Link
+										href={`/user/${product.user._id}`}
+										className="hover:underline"
+									>
+										{product.user.name}
+									</Link>
+
+									<TypographyMuted>
+										Selling since{" "}
+										{stringToDate(
+											product.user.createdAt || product.user.updatedAt,
+										)}
+									</TypographyMuted>
+								</div>
+							</div>
+						</AccordionContent>
+					</AccordionItem>
+				)}
 			</Accordion>
 		</div>
 	);
