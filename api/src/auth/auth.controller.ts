@@ -1,14 +1,36 @@
-import { Controller, Post, Body } from "@nestjs/common";
+import {
+	Controller,
+	Post,
+	Body,
+	Get,
+	UseGuards,
+	Req,
+	Res,
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { SignUpDto } from "./dto/signup.dto";
 import { LoginDto } from "./dto/login.dto";
 import { Public } from "./auth.guard";
 import { ApiOperation } from "@nestjs/swagger";
+import { AuthGuard } from "@nestjs/passport";
+import { IRequest } from "src/_interfaces/request.interface";
 
 @Public()
 @Controller("auth")
 export class AuthController {
 	constructor(private readonly authService: AuthService) {}
+
+	@Get("google")
+	@UseGuards(AuthGuard("google"))
+	async googleAuth() {}
+
+	@Get("google/callback")
+	@UseGuards(AuthGuard("google"))
+	async googleAuthRedirect(@Req() req: IRequest, @Res() res: any) {
+		const clientUrl = process.env.CLIENT_URL!;
+		const response = await this.authService.loginWithGoogle(req.user as any);
+		return res.redirect(`${clientUrl}/auth/success?token=${response.token}`);
+	}
 
 	@Post("signup")
 	@ApiOperation({

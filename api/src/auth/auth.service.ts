@@ -41,6 +41,29 @@ export class AuthService {
 			},
 		);
 	}
+	async loginWithGoogle(user: {
+		email: string;
+		firstName: string;
+		lastName: string;
+	}): Promise<{ token: string }> {
+		const existingUser = await this.usersService
+			.findByEmail(user.email)
+			.catch(() => null);
+
+		if (!existingUser) {
+			const randomPassword = this.generatePassword();
+
+			return await this.signUp({
+				email: user.email,
+				name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
+				password: randomPassword,
+			});
+		}
+
+		return {
+			token: await this.createAccessToken(existingUser.id, existingUser.role),
+		};
+	}
 
 	async signUp(signupDto: SignUpDto) {
 		const user = await this.usersService.create(signupDto);
@@ -70,5 +93,17 @@ export class AuthService {
 		}
 
 		return { token: await this.createAccessToken(user.id, user.role) };
+	}
+
+	generatePassword() {
+		const length = 8;
+		const charset =
+			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		let retVal = "";
+
+		for (var i = 0, n = charset.length; i < length; ++i) {
+			retVal += charset.charAt(Math.floor(Math.random() * n));
+		}
+		return retVal;
 	}
 }

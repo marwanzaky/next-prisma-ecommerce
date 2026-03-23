@@ -7,11 +7,11 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@redux/store";
 import { signupAsync } from "@redux/thunks/authThunks";
 import { InputText } from "_shared/components/inputText";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Section } from "_shared/components/section";
 import { Button } from "_shared/shadcn/button";
 import { TypographyH4 } from "_shared/shadcn/typography";
-import { toast } from "_shared/shadcn/hooks/use-toast";
+import Icon from "_shared/ui/icon";
 
 type Form = {
 	name: string;
@@ -110,9 +110,23 @@ export default function Signup() {
 						})}
 					/>
 
-					<Button size="lg" type="submit">
-						Sign up
-					</Button>
+					<div className="flex flex-col gap-2">
+						<Button size="lg" type="submit">
+							Sign up
+						</Button>
+
+						<Button
+							variant="secondary"
+							size="lg"
+							type="button"
+							onClick={() => {
+								window.location.href = `${process.env.NEXT_PUBLIC_SERVER!}/auth/google`;
+							}}
+						>
+							<Icon icon="/simple_icons/google" />
+							Sign up with Google
+						</Button>
+					</div>
 
 					<p className="text-center text-custom-background">
 						Have an account?&emsp;

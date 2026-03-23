@@ -85,7 +85,7 @@ export async function generateMetadata({ params }: Props) {
 			images: [product.imgUrls[0]],
 		},
 		alternates: {
-			canonical: `https://${process.env.NEXT_PUBLIC_WEBSITE}/products/${id}`,
+			canonical: `https://${process.env.NEXT_PUBLIC_WEBSITE!}/products/${id}`,
 		},
 	};
 }

@@ -6,11 +6,12 @@ import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { handleLogin } from "@utils/authHelpers";
 import { InputText } from "_shared/components/inputText";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Section } from "_shared/components/section";
 import { Button } from "_shared/shadcn/button";
 import { TypographyH4 } from "_shared/shadcn/typography";
 import { useToast } from "_shared/shadcn/hooks/use-toast";
+import Icon from "_shared/ui/icon";
 
 type Inputs = {
 	email: string;
@@ -69,9 +70,23 @@ export default function Page() {
 						})}
 					/>
 
-					<Button size="lg" type="submit">
-						Sign in
-					</Button>
+					<div className="flex flex-col gap-2">
+						<Button size="lg" type="submit">
+							Sign in
+						</Button>
+
+						<Button
+							variant="secondary"
+							size="lg"
+							type="button"
+							onClick={() => {
+								window.location.href = `${process.env.NEXT_PUBLIC_SERVER!}/auth/google`;
+							}}
+						>
+							<Icon icon="/simple_icons/google" />
+							Sign in with Google
+						</Button>
+					</div>
 
 					<p className="text-center text-custom-background">
 						Not a member yet?&emsp;

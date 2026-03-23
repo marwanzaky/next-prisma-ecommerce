@@ -8,6 +8,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { User, UserSchema } from "src/users/entities/user.entity";
 import { CartsModule } from "src/carts/carts.module";
 import { UsersModule } from "src/users/users.module";
+import { GoogleStrategy } from "src/google.strategy";
 
 @Module({
 	imports: [
@@ -29,7 +30,7 @@ import { UsersModule } from "src/users/users.module";
 		forwardRef(() => UsersModule),
 	],
 	controllers: [AuthController],
-	providers: [AuthService],
+	providers: [AuthService, GoogleStrategy],
 	exports: [AuthService],
 })
 export class AuthModule {}

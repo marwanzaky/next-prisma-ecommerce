@@ -3,7 +3,7 @@ import { createProductSlug } from "@utils/stringUtils";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	const baseUrl = process.env.NEXT_PUBLIC_NAME!;
+	const baseUrl = `https://${process.env.NEXT_PUBLIC_WEBSITE!}`;
 
 	const staticPages: MetadataRoute.Sitemap = [
 		{
@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 	const products = await productsService.getAllProducts();
 	const productPages: MetadataRoute.Sitemap = products.map((product) => ({
-		url: `${baseUrl}/products/${createProductSlug(product.name, product._id)}`,
+		url: `${baseUrl}/product/${createProductSlug(product.name, product._id)}`,
 		lastModified: product.updatedAt,
 		changeFrequency: "weekly" as const,
 		priority: 0.9,

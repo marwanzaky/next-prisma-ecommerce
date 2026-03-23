@@ -77,6 +77,16 @@ export class UsersService {
 		return user;
 	}
 
+	async findByEmail(email: string): Promise<User> {
+		const user = await this.userModel.findOne({ email });
+
+		if (!user) {
+			throw new NotFoundException("Could not find the user");
+		}
+
+		return user;
+	}
+
 	async findPublicById(id: string): Promise<User> {
 		const user = await this.userModel
 			.findById(id)
