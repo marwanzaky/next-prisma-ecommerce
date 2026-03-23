@@ -1,8 +1,8 @@
 # MERN e-commerce
 <div style="display: flex;">
-  <img width="50%" height="100%" alt="mamolio vercel app_ (2)" src="https://github.com/user-attachments/assets/573e662d-5d05-4ee3-b488-78d22209c746" />
-  <img width="auto" height="512px" alt="mamolio vercel app_(iPhone 12 Pro) (3)" src="https://github.com/user-attachments/assets/a89e900c-ae8a-4e53-a370-7934cb944a54" />
-  <img width="auto" height="512px" alt="mamolio vercel app_(iPhone 12 Pro) (5)" src="https://github.com/user-attachments/assets/85d44382-d6ff-4a64-8be9-20418566c77d" />
+  <img width="45%" height="auto" alt="mamolio vercel app_ (2)" src="https://github.com/user-attachments/assets/573e662d-5d05-4ee3-b488-78d22209c746" />
+  <img width="25%" height="auto" alt="mamolio vercel app_(iPhone 12 Pro) (3)" src="https://github.com/user-attachments/assets/a89e900c-ae8a-4e53-a370-7934cb944a54" />
+  <img width="25%" height="auto" alt="mamolio vercel app_(iPhone 12 Pro) (5)" src="https://github.com/user-attachments/assets/85d44382-d6ff-4a64-8be9-20418566c77d" />
 </div>
 
 
