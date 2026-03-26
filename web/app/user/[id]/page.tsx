@@ -1,20 +1,21 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+
 import { AvatarInitials } from "@components/feedback/reviews";
+
 import { usersService } from "@redux/services/usersService";
-import { User } from "@shared/user.type";
+
 import {
 	Empty,
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
-} from "_shared/components/empty";
-import { Section } from "_shared/components/section";
-
-import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
-
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+} from "@shared/components/empty";
+import { Section } from "@shared/components/section";
+import { Avatar, AvatarImage } from "@shared/shadcn/avatar";
+import { User } from "@shared/types/user.type";
 
 export default function Page() {
 	const params = useParams<{ id: string }>();

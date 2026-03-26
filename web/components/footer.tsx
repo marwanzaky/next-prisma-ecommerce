@@ -1,7 +1,8 @@
 import Link from "next/link";
 
-import { Container } from "_shared/ui/container";
-import { TypographyH4 } from "_shared/shadcn/typography";
+import { Container } from "@shared/ui/container";
+import { TypographyH4 } from "@shared/shadcn/typography";
+import Image from "next/image";
 
 export default function Footer() {
 	return (
@@ -61,10 +62,34 @@ export default function Footer() {
 
 				<div className="space-y-4">
 					<div className="flex justify-center gap-2 h-6">
-						<img src="/svgs/visa.svg" />
-						<img src="/svgs/mastercard.svg" />
-						<img src="/svgs/american_express.svg" />
-						<img src="/svgs/discover.svg" />
+						<Image
+							src="/svgs/payments/visa.svg"
+							alt="Visa"
+							width={36}
+							height={24}
+							loading="lazy"
+						/>
+						<Image
+							src="/svgs/payments/mastercard.svg"
+							alt="Mastercard"
+							width={36}
+							height={24}
+							loading="lazy"
+						/>
+						<Image
+							src="/svgs/payments/american_express.svg"
+							alt="American Express"
+							width={36}
+							height={24}
+							loading="lazy"
+						/>
+						<Image
+							src="/svgs/payments/discover.svg"
+							alt="Discover"
+							width={36}
+							height={24}
+							loading="lazy"
+						/>
 					</div>
 
 					<div className="text-sm text-white text-center font-bold">

@@ -6,7 +6,7 @@ import {
 	updateUserProductAsync,
 } from "@redux/thunks/userProductsThunks";
 
-import { IProduct } from "_shared/interfaces";
+import { IProduct } from "@shared/interfaces";
 
 export type UserProductsState = {
 	products: IProduct[];

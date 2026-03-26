@@ -1,5 +1,5 @@
-import { CartItem } from "_shared/interfaces/cart.interface";
-import { IProduct } from "_shared/interfaces";
+import { CartItem } from "@shared/interfaces/cart.interface";
+import { IProduct } from "@shared/interfaces";
 
 const STORAGE_KEY = "guest_cart";
 

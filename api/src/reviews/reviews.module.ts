@@ -2,11 +2,11 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ReviewsService } from "./reviews.service";
 import { ReviewsController } from "./reviews.controller";
-import { ProductsService } from "src/products/products.service";
+import { ProductsService } from "@products/products.service";
 import { Review, ReviewSchema } from "./entities/review.entity";
-import { Product, ProductSchema } from "src/products/entities/product.entity";
-import { User, UserSchema } from "src/users/entities/user.entity";
-import { CategoriesModule } from "src/_modules/categories/categories.module";
+import { Product, ProductSchema } from "@products/entities/product.entity";
+import { User, UserSchema } from "@users/entities/user.entity";
+import { CategoriesModule } from "@modules/categories/categories.module";
 
 @Module({
 	imports: [

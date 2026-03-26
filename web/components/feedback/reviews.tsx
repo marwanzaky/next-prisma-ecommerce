@@ -1,16 +1,18 @@
 import { cn } from "@lib/utils";
-import Stars from "_shared/components/stars";
-import { initials, stringToDate } from "@utils/stringUtils";
-import { IProduct } from "_shared/interfaces";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+
+import Stars from "@shared/components/stars";
+import { IProduct } from "@shared/interfaces";
+import { Avatar, AvatarImage } from "@shared/shadcn/avatar";
 import {
 	Empty,
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
-} from "_shared/components/empty";
-import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
+} from "@shared/components/empty";
+
+import { initials, stringToDate } from "@utils/stringUtils";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type AvatarInitialsProps = React.InputHTMLAttributes<HTMLInputElement> & {
 	name: string;

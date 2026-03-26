@@ -2,8 +2,8 @@ import { cartsService } from "@redux/services/cartsService";
 import { guestCartService } from "@redux/services/guestCartService";
 import { RootState } from "@redux/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IProduct } from "_shared/interfaces";
-import { ToastService } from "_shared/shadcn/hooks/use-toast";
+import { IProduct } from "@shared/interfaces";
+import { ToastService } from "@shared/shadcn/hooks/use-toast";
 
 export const getCartMeAsync = createAsyncThunk(
 	"cart/getCartMe",

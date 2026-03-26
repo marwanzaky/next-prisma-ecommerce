@@ -2,8 +2,8 @@ import { RootState } from "@redux/store";
 import { favoritesService } from "@redux/services/favoritesService";
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ToastService } from "_shared/shadcn/hooks/use-toast";
-import { IProduct } from "_shared/interfaces";
+import { ToastService } from "@shared/shadcn/hooks/use-toast";
+import { IProduct } from "@shared/interfaces";
 
 export const getFavoritesAsync = createAsyncThunk(
 	"favorites/getFavorites",

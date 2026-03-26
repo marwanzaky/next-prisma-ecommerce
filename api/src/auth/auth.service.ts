@@ -5,16 +5,16 @@ import {
 	UnauthorizedException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { User } from "src/users/entities/user.entity";
+import { User } from "@users/entities/user.entity";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { SignUpDto } from "./dto/signup.dto";
 import { Model } from "mongoose";
 import { LoginDto } from "./dto/login.dto";
 import { compare } from "bcrypt";
-import { IRequest } from "src/_interfaces/request.interface";
-import { CartsService } from "src/carts/carts.service";
-import { UsersService } from "src/users/users.service";
+import { IRequest } from "@interfaces/request.interface";
+import { CartsService } from "@carts/carts.service";
+import { UsersService } from "@users/users.service";
 import { UserRole } from "@shared/user.type";
 
 @Injectable()

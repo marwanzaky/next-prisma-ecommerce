@@ -6,7 +6,7 @@ import mongoose, { Model } from "mongoose";
 import {
 	IContactMessageStatus,
 	ICreateContactMessage,
-} from "src/_interfaces/contact-message.interface";
+} from "@interfaces/contact-message.interface";
 
 @Injectable()
 export class ContactMessagesService {

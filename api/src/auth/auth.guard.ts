@@ -9,7 +9,7 @@ import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 
 import { SetMetadata } from "@nestjs/common";
-import { IRequest } from "src/_interfaces/request.interface";
+import { IRequest } from "@interfaces/request.interface";
 import { AuthService } from "./auth.service";
 
 export const IS_PUBLIC_KEY = "isPublic";

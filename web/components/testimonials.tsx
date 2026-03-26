@@ -1,6 +1,6 @@
-import Icon from "_shared/ui/icon";
-import { Section } from "_shared/components/section";
-import { Container } from "_shared/ui/container";
+import Icon from "@shared/ui/icon";
+import { Section } from "@shared/components/section";
+import { Container } from "@shared/ui/container";
 
 export default function Testimonials() {
 	return (
@@ -37,7 +37,7 @@ function Testimonial({
 	return (
 		<div>
 			<div className="m-auto lg:m-0 mb-1 w-8">
-				<Icon icon="format_quote" size={32} />
+				<Icon src="icons/format_quote.svg" size={32} />
 			</div>
 
 			<blockquote className="text-center italic max-w-xs mx-auto lg:text-left lg:max-w-none lg:mx-0 text-sm md:text-base">

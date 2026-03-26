@@ -5,10 +5,10 @@ import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
-import { User, UserSchema } from "src/users/entities/user.entity";
-import { CartsModule } from "src/carts/carts.module";
-import { UsersModule } from "src/users/users.module";
-import { GoogleStrategy } from "src/google.strategy";
+import { User, UserSchema } from "@users/entities/user.entity";
+import { CartsModule } from "@carts/carts.module";
+import { UsersModule } from "@users/users.module";
+import { GoogleStrategy } from "@google.strategy";
 
 @Module({
 	imports: [

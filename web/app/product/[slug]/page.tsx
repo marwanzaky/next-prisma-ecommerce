@@ -2,7 +2,7 @@ import ProductDetails from "@components/productDetails";
 import { generateProductStructuredData } from "@lib/structured-data";
 import { productsService } from "@redux/services/productsService";
 import { createProductSlug } from "@utils/stringUtils";
-import { IProduct } from "_shared/interfaces";
+import { IProduct } from "@shared/interfaces";
 
 interface Props {
 	params: Promise<{ slug: string }>;

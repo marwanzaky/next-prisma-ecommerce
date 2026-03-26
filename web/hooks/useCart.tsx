@@ -7,12 +7,12 @@ import {
 	updateCartItemQuantityAsync,
 } from "@redux/thunks/cartThunks";
 
-import { IProduct } from "_shared/interfaces";
-import { Column } from "_shared/components/table";
-import { LogoCell } from "_shared/components/table/cells/logoCell";
-import { selectCartTotalStr } from "@redux/selectors/cartSelectors";
+import { IProduct } from "@shared/interfaces";
+import { Column } from "@shared/components/table";
+import { LogoCell } from "@shared/components/table/cells/logoCell";
+import { useToast } from "@shared/shadcn/hooks/use-toast";
 
-import { useToast } from "_shared/shadcn/hooks/use-toast";
+import { selectCartTotalStr } from "@redux/selectors/cartSelectors";
 import { paymentsService } from "@redux/services/paymentsService";
 import { createProductSlug } from "@utils/stringUtils";
 

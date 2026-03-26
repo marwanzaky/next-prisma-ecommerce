@@ -3,13 +3,13 @@
 import { useRouter } from "next/navigation";
 
 import { contactMessagesService } from "@redux/services/contactMessagesService";
-import { Section } from "_shared/components/section";
+import { Section } from "@shared/components/section";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { InputText } from "_shared/components/inputText";
-import { Textarea } from "_shared/components/textarea";
-import { Button } from "_shared/shadcn/button";
-import { TypographyH2, TypographyH4, TypographyP } from "_shared/ui/typography";
-import { toast } from "_shared/shadcn/hooks/use-toast";
+import { InputText } from "@shared/components/inputText";
+import { Textarea } from "@shared/components/textarea";
+import { Button } from "@shared/shadcn/button";
+import { TypographyH2, TypographyH4, TypographyP } from "@shared/ui/typography";
+import { toast } from "@shared/shadcn/hooks/use-toast";
 
 type Inputs = {
 	name: string;

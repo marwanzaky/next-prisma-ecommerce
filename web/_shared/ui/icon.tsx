@@ -1,27 +1,26 @@
-import { cn } from "@lib/utils";
 import Image from "next/image";
 
 type IconProps = {
+	src: string;
 	className?: string;
 	size?: number;
 	onClick?: React.MouseEventHandler<HTMLImageElement>;
-	icon: string;
 };
 
 export default function Icon({
+	src,
 	className,
-	icon,
 	onClick,
 	size = 24,
 }: IconProps) {
 	return (
 		<Image
-			className={cn("icon", className)}
-			src={`/assets/${icon}.svg`}
-			alt={icon}
+			className={className}
+			src={`/svgs/${src}`}
 			width={size}
 			height={size}
 			onClick={onClick}
+			alt={""}
 		/>
 	);
 }

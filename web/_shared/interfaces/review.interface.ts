@@ -1,4 +1,4 @@
-import { User } from "@shared/user.type";
+import { User } from "@shared/types/user.type";
 import { IProduct } from "./product.interface";
 
 export interface IReview {

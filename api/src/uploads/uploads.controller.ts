@@ -6,9 +6,9 @@ import {
 } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
 
-import { Public } from "src/auth/auth.guard";
+import { Public } from "@auth/auth.guard";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { CloudinaryService } from "src/_modules/cloudinary/cloudinary.service";
+import { CloudinaryService } from "@modules/cloudinary/cloudinary.service";
 
 @Controller("uploads")
 @Public()

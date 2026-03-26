@@ -5,7 +5,7 @@ import { forwardRef, useEffect, useState } from "react";
 import clsx from "clsx";
 import { cva } from "class-variance-authority";
 
-import Icon from "_shared/ui/icon";
+import Icon from "@shared/ui/icon";
 
 import { Badge } from "./badge";
 
@@ -72,7 +72,7 @@ const InputTags = forwardRef<HTMLInputElement, InputTagsProps>(
 								onClick={() => {
 									onChange(value.filter((i) => i !== item));
 								}}
-								icon="close"
+								src="icons/close.svg"
 								size={16}
 							/>
 						</Badge>

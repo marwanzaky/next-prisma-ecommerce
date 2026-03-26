@@ -13,9 +13,9 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
-import { CategoriesService } from "src/_modules/categories/categories.service";
+import { CategoriesService } from "@modules/categories/categories.service";
+import { CloudinaryService } from "@modules/cloudinary/cloudinary.service";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { CloudinaryService } from "src/_modules/cloudinary/cloudinary.service";
 
 @Controller("admin/categories")
 @ApiTags("Admin Categories")

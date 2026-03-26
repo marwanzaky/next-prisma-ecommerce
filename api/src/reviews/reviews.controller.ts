@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 
 import { ReviewsService } from "./reviews.service";
 import { CreateProductReviewDto } from "./dto/create-product-review.dto";
-import { IRequest } from "src/_interfaces/request.interface";
+import { IRequest } from "@interfaces/request.interface";
 
 @Controller("products/:id/reviews")
 @ApiBearerAuth("Authorization")

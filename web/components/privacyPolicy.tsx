@@ -1,5 +1,5 @@
-import { Section } from "_shared/components/section";
-import { TypographyH2, TypographyH4, TypographyP } from "_shared/ui/typography";
+import { Section } from "@shared/components/section";
+import { TypographyH2, TypographyH4, TypographyP } from "@shared/ui/typography";
 
 export default function PrivacyPolicy() {
 	return (

@@ -1,4 +1,4 @@
-import { IProduct } from "_shared/interfaces";
+import { IProduct } from "@shared/interfaces";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 

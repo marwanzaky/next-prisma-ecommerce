@@ -13,7 +13,7 @@ import { LoginDto } from "./dto/login.dto";
 import { Public } from "./auth.guard";
 import { ApiOperation } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
-import { IRequest } from "src/_interfaces/request.interface";
+import { IRequest } from "@interfaces/request.interface";
 
 @Public()
 @Controller("auth")

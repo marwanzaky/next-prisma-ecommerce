@@ -1,4 +1,4 @@
-import { ButtonIcon } from "_shared/ui/buttonIcon";
+import { ButtonIcon } from "@shared/ui/buttonIcon";
 import { InputText } from "../inputText";
 import { formatPrice } from "@utils/formatPrice";
 

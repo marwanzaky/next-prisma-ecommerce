@@ -1,6 +1,6 @@
-import { UpdateUser, UpdateUserPassword, User } from "@shared/user.type";
 import { jsonToFormData } from "@utils/helper";
-import { IProduct } from "_shared/interfaces";
+import { UpdateUser, UpdateUserPassword, User } from "@shared/types/user.type";
+import { IProduct } from "@shared/interfaces";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 

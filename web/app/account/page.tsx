@@ -3,26 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 
 import { useDispatch } from "react-redux";
-
 import { AppDispatch, useAppSelector } from "@redux/store";
 import {
 	deleteMeAsync,
 	updateMeAsync,
 	updateMyPasswordAsync,
 } from "@redux/thunks/authThunks";
-import { InputText } from "_shared/components/inputText";
-import { Section } from "_shared/components/section";
-import { Button } from "_shared/shadcn/button";
-import { ButtonIcon } from "_shared/ui/buttonIcon";
-import {
-	TypographyH3,
-	TypographyH4,
-	TypographyMuted,
-} from "_shared/shadcn/typography";
-import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
 
-import { Controller, useForm } from "react-hook-form";
-import { toast } from "_shared/shadcn/hooks/use-toast";
+import { InputText } from "@shared/components/inputText";
+import { Section } from "@shared/components/section";
+import { Button } from "@shared/shadcn/button";
+import { ButtonIcon } from "@shared/ui/buttonIcon";
+import { Avatar, AvatarImage } from "@shared/shadcn/avatar";
+import { toast } from "@shared/shadcn/hooks/use-toast";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -33,7 +26,15 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from "_shared/shadcn/alertDialog";
+} from "@shared/shadcn/alertDialog";
+
+import {
+	TypographyH3,
+	TypographyH4,
+	TypographyMuted,
+} from "@shared/shadcn/typography";
+
+import { Controller, useForm } from "react-hook-form";
 
 function PersonalInformationForm() {
 	const {

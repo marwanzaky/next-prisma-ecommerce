@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { User } from "@shared/user.type";
+import { User } from "@shared/types/user.type";
 
 import {
 	getMeAsync,

@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import Stars from "_shared/components/stars";
+import Stars from "@shared/components/stars";
 
-import { IProduct } from "_shared/interfaces";
+import { IProduct } from "@shared/interfaces";
 
 import { useAppSelector } from "@redux/store";
 import { productsService } from "@redux/services/productsService";
-import { Textarea } from "_shared/components/textarea";
-import { Button } from "_shared/shadcn/button";
-import { TypographyH4 } from "_shared/shadcn/typography";
+import { Textarea } from "@shared/components/textarea";
+import { Button } from "@shared/shadcn/button";
+import { TypographyH4 } from "@shared/shadcn/typography";
 import {
 	Dialog,
 	DialogContent,
@@ -17,11 +17,11 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "_shared/shadcn/dialog";
-import { Label } from "_shared/shadcn/label";
-import Ratings from "_shared/shadcn/ratings";
-import Icon from "_shared/ui/icon";
-import { toast } from "_shared/shadcn/hooks/use-toast";
+} from "@shared/shadcn/dialog";
+import { Label } from "@shared/shadcn/label";
+import Ratings from "@shared/shadcn/ratings";
+import Icon from "@shared/ui/icon";
+import { toast } from "@shared/shadcn/hooks/use-toast";
 
 export default function Overview({ product }: { product: IProduct }) {
 	const router = useRouter();
@@ -101,7 +101,7 @@ export default function Overview({ product }: { product: IProduct }) {
 						<Ratings
 							value={dialogRating}
 							onValueChange={setDialogRating}
-							Icon={<Icon icon="star" />}
+							Icon={<Icon src="icons/star.svg" />}
 						/>
 
 						<div className="space-y-4">

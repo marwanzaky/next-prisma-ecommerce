@@ -1,9 +1,9 @@
 "use client";
 
-import { Section } from "_shared/components/section";
-import { Button } from "_shared/shadcn/button";
-import { Container } from "_shared/ui/container";
-import { TypographyH2, TypographyH4, TypographyP } from "_shared/ui/typography";
+import { Section } from "@shared/components/section";
+import { Button } from "@shared/shadcn/button";
+import { Container } from "@shared/ui/container";
+import { TypographyH2, TypographyH4, TypographyP } from "@shared/ui/typography";
 import { useRouter } from "next/navigation";
 
 function Paragraph({

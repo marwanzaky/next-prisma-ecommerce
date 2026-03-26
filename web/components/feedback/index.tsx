@@ -1,6 +1,6 @@
 import Overview from "./overview";
 import Reviews from "./reviews";
-import { IProduct } from "_shared/interfaces";
+import { IProduct } from "@shared/interfaces";
 import { cn } from "@lib/utils";
 
 export default function ProductFeedback({ product }: { product: IProduct }) {

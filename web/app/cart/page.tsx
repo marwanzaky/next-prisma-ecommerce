@@ -4,17 +4,17 @@ import { useRouter } from "next/navigation";
 
 import { useCart } from "@hooks/useCart";
 
-import { Table } from "_shared/components/table";
-import { Section } from "_shared/components/section";
-import { TypographyH4 } from "_shared/shadcn/typography";
-import { Button } from "_shared/shadcn/button";
+import { Table } from "@shared/components/table";
+import { Section } from "@shared/components/section";
+import { TypographyH4 } from "@shared/shadcn/typography";
+import { Button } from "@shared/shadcn/button";
 import {
 	Empty,
 	EmptyContent,
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
-} from "_shared/components/empty";
+} from "@shared/components/empty";
 
 export default function Page() {
 	const router = useRouter();

@@ -2,8 +2,9 @@
 
 import { useRef } from "react";
 
-import Icon from "_shared/ui/icon";
-import { ButtonIcon } from "_shared/ui/buttonIcon";
+import Icon from "@shared/ui/icon";
+import { ButtonIcon } from "@shared/ui/buttonIcon";
+
 import { cn } from "@lib/utils";
 
 type ImageSlot = {
@@ -79,7 +80,10 @@ export default function ImageInput({
 						className="h-full w-full bg-custom-background-foreground flex justify-center items-center"
 						onClick={() => inputRef.current?.click()}
 					>
-						<Icon className="filter-custom-placeholder" icon="upload_file" />
+						<Icon
+							className="filter-custom-placeholder"
+							src="icons/upload_file.svg"
+						/>
 					</div>
 				)}
 			</div>

@@ -1,16 +1,16 @@
 "use client";
 
-import { Table } from "_shared/components/table";
-import { Section } from "_shared/components/section";
-import { TypographyH4 } from "_shared/shadcn/typography";
+import { useAdminMessages } from "@hooks/useAdminMessage";
 
+import { Table } from "@shared/components/table";
+import { Section } from "@shared/components/section";
+import { TypographyH4 } from "@shared/shadcn/typography";
 import {
 	Empty,
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
-} from "_shared/components/empty";
-import { useAdminMessages } from "@hooks/useAdminMessage";
+} from "@shared/components/empty";
 
 export default function Page() {
 	const { columns, isLoading, data, ViewMessageDialog } = useAdminMessages();

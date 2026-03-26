@@ -2,9 +2,9 @@
 
 import { SortOption, useProducts } from "@hooks/useProducts";
 
-import ProductItem from "_shared/ui/productCart";
-import { Chip } from "_shared/components/chip";
-import { Section } from "_shared/components/section";
+import ProductItem from "@shared/ui/productCart";
+import { Chip } from "@shared/components/chip";
+import { Section } from "@shared/components/section";
 import {
 	Select,
 	SelectContent,
@@ -12,19 +12,19 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "_shared/shadcn/select";
-import { Button } from "_shared/shadcn/button";
+} from "@shared/shadcn/select";
+import { Button } from "@shared/shadcn/button";
 import {
 	Dialog,
 	DialogContent,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "_shared/shadcn/dialog";
-import { TypographyP } from "_shared/shadcn/typography";
-import { InputCurrencyRange } from "_shared/components/InputCurrencyRange";
-import RadioWithLabel from "_shared/components/radioWithLabel";
-import { InputText } from "_shared/components/inputText";
+} from "@shared/shadcn/dialog";
+import { TypographyP } from "@shared/shadcn/typography";
+import { InputCurrencyRange } from "@shared/components/InputCurrencyRange";
+import RadioWithLabel from "@shared/components/radioWithLabel";
+import { InputText } from "@shared/components/inputText";
 
 import { formatPrice } from "@utils/formatPrice";
 

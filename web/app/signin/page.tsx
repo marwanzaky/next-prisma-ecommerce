@@ -4,14 +4,16 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { useDispatch } from "react-redux";
-import { handleLogin } from "@utils/authHelpers";
-import { InputText } from "_shared/components/inputText";
 import { useForm } from "react-hook-form";
-import { Section } from "_shared/components/section";
-import { Button } from "_shared/shadcn/button";
-import { TypographyH4 } from "_shared/shadcn/typography";
-import { useToast } from "_shared/shadcn/hooks/use-toast";
-import Icon from "_shared/ui/icon";
+
+import { handleLogin } from "@utils/authHelpers";
+
+import { InputText } from "@shared/components/inputText";
+import { Section } from "@shared/components/section";
+import { Button } from "@shared/shadcn/button";
+import { TypographyH4 } from "@shared/shadcn/typography";
+import { useToast } from "@shared/shadcn/hooks/use-toast";
+import Icon from "@shared/ui/icon";
 
 type Inputs = {
 	email: string;
@@ -83,7 +85,7 @@ export default function Page() {
 								window.location.href = `${process.env.NEXT_PUBLIC_SERVER!}/auth/google`;
 							}}
 						>
-							<Icon icon="/simple_icons/google" />
+							<Icon src="google.svg" />
 							Sign in with Google
 						</Button>
 					</div>

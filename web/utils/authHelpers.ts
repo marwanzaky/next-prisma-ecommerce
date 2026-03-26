@@ -6,7 +6,7 @@ import { getUserProductsAsync } from "@redux/thunks/userProductsThunks";
 import { getMeAsync, loginAsync } from "@redux/thunks/authThunks";
 import { getCartMeAsync } from "@redux/thunks/cartThunks";
 import { getFavoritesAsync } from "@redux/thunks/favoritesThunks";
-import { ToastService } from "_shared/shadcn/hooks/use-toast";
+import { ToastService } from "@shared/shadcn/hooks/use-toast";
 import { setToken } from "@redux/slices/authSlice";
 
 export const handleLogin = async (

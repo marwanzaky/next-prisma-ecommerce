@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import { Section } from "_shared/components/section";
-import { Container } from "_shared/ui/container";
-import { PublicCategoryTree } from "@shared/category.type";
+import { Section } from "@shared/components/section";
+import { Container } from "@shared/ui/container";
+import { PublicCategoryTree } from "@shared/types/category.type";
 
 export default function Categories({
 	categoryTree,

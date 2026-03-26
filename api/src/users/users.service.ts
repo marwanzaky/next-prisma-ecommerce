@@ -8,7 +8,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { User } from "./entities/user.entity";
 import { Model } from "mongoose";
 import { compare } from "bcrypt";
-import { AuthService } from "src/auth/auth.service";
+import { AuthService } from "@auth/auth.service";
 import { CreateUser, UpdateUser, UpdateUserPassword } from "@shared/user.type";
 
 @Injectable()

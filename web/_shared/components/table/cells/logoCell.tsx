@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Avatar } from "_shared/components/avatar";
+import { Avatar } from "@shared/components/avatar";
 
 export type LogoCellProps = {
 	label: string;

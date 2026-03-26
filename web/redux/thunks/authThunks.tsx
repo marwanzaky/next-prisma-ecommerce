@@ -1,9 +1,9 @@
 import { usersService } from "@redux/services/usersService";
 import { RootState } from "@redux/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { UpdateUser, UpdateUserPassword } from "@shared/user.type";
-import { toast, ToastService } from "_shared/shadcn/hooks/use-toast";
-import { ToastAction } from "_shared/shadcn/toast";
+import { UpdateUser, UpdateUserPassword } from "@shared/types/user.type";
+import { toast, ToastService } from "@shared/shadcn/hooks/use-toast";
+import { ToastAction } from "@shared/shadcn/toast";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const loginAsync = createAsyncThunk(

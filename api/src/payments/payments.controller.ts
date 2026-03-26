@@ -3,10 +3,10 @@ import { ApiOperation } from "@nestjs/swagger";
 
 import { PaymentsService } from "./payments.service";
 import { CreateCheckoutSessionDto } from "./dto/create-checkout-session.dto";
-import { ProductsService } from "src/products/products.service";
+import { ProductsService } from "@products/products.service";
 
 import Stripe from "stripe";
-import { Public } from "src/auth/auth.guard";
+import { Public } from "@auth/auth.guard";
 
 @Controller("payments")
 export class PaymentsController {

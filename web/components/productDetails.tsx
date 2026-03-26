@@ -7,26 +7,14 @@ import { useRouter } from "next/navigation";
 
 import Feedback from "@components/feedback";
 
-import Stars from "_shared/components/stars";
-
 import Link from "next/link";
 
-import { IProduct } from "_shared/interfaces";
-
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@redux/store";
-import { postCartItemAsync } from "@redux/thunks/cartThunks";
-import { InputText } from "_shared/components/inputText";
-import { useToggleFavorite } from "@hooks/useToggleFavorite";
-import { useQuery } from "@tanstack/react-query";
-import {
-	GetAllProductsOptions,
-	productsService,
-} from "@redux/services/productsService";
-import ProductCart from "_shared/ui/productCart";
-import { cn } from "@lib/utils";
-import { ButtonIcon } from "_shared/ui/buttonIcon";
-import { Button } from "_shared/shadcn/button";
+import Stars from "@shared/components/stars";
+import { IProduct } from "@shared/interfaces";
+import { InputText } from "@shared/components/inputText";
+import ProductCart from "@shared/ui/productCart";
+import { ButtonIcon } from "@shared/ui/buttonIcon";
+import { Button } from "@shared/shadcn/button";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -34,31 +22,43 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
-} from "_shared/shadcn/breadcrumb";
-
+} from "@shared/shadcn/breadcrumb";
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
-} from "_shared/shadcn/accordion";
-import { Section } from "_shared/components/section";
-import { useToast } from "_shared/shadcn/hooks/use-toast";
-import { TypographyH4, TypographyP } from "_shared/ui/typography";
+} from "@shared/shadcn/accordion";
+import { Section } from "@shared/components/section";
+import { useToast } from "@shared/shadcn/hooks/use-toast";
+import { TypographyH4, TypographyP } from "@shared/ui/typography";
 import {
 	TypographyH3 as ShadcnTypographyH3,
 	TypographyMuted,
-} from "_shared/shadcn/typography";
-import { formatPrice } from "@utils/formatPrice";
-import { categoriesService } from "@redux/services/categoriesService";
+} from "@shared/shadcn/typography";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
-} from "_shared/shadcn/tooltip";
-import { PublicCategoryTree } from "@shared/category.type";
+} from "@shared/shadcn/tooltip";
+import { PublicCategoryTree } from "@shared/types/category.type";
+import { Avatar, AvatarImage } from "@shared/shadcn/avatar";
+
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@redux/store";
+import { postCartItemAsync } from "@redux/thunks/cartThunks";
+import { useToggleFavorite } from "@hooks/useToggleFavorite";
+import { useQuery } from "@tanstack/react-query";
+import {
+	GetAllProductsOptions,
+	productsService,
+} from "@redux/services/productsService";
+import { cn } from "@lib/utils";
+
+import { formatPrice } from "@utils/formatPrice";
+import { categoriesService } from "@redux/services/categoriesService";
+
 import { sendGTMEvent } from "@next/third-parties/google";
-import { Avatar, AvatarImage } from "_shared/shadcn/avatar";
 import { stringToDate } from "@utils/stringUtils";
 
 function Preview({ product }: { product: IProduct }) {

@@ -1,6 +1,7 @@
+import { MetadataRoute } from "next";
+
 import { productsService } from "@redux/services/productsService";
 import { createProductSlug } from "@utils/stringUtils";
-import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const baseUrl = `https://${process.env.NEXT_PUBLIC_WEBSITE!}`;

@@ -1,5 +1,5 @@
 import { cn } from "@lib/utils";
-import Icon from "_shared/ui/icon";
+import Icon from "@shared/ui/icon";
 
 type StarsProps = {
 	className?: string;
@@ -19,14 +19,16 @@ export default function Stars({
 	const stars = [];
 
 	for (let i = 0; i < Math.floor(value); i++)
-		stars.push(<Icon icon="star" key={`Star ${i}`} size={size} />);
+		stars.push(<Icon src="icons/star.svg" key={`Star ${i}`} size={size} />);
 
 	if (value % 1 !== 0)
-		stars.push(<Icon icon="star_half" key={"Star half"} size={size} />);
+		stars.push(
+			<Icon src="icons/star_half.svg" key={"Star half"} size={size} />,
+		);
 
 	for (let i = 0; i < 5 - Math.ceil(value); i++)
 		stars.push(
-			<Icon icon="star_border" key={`Star border ${i}`} size={size} />,
+			<Icon src="icons/star_border.svg" key={`Star border ${i}`} size={size} />,
 		);
 
 	return (

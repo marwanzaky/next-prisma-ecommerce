@@ -3,10 +3,10 @@ import {
 	IGetAllProductsDto,
 	IProduct,
 	IUpdateProduct,
-} from "_shared/interfaces";
+} from "@shared/interfaces";
 
 import { stringify } from "qs";
-import { jsonToFormData } from "../../utils/helper";
+import { jsonToFormData } from "@utils/helper";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 

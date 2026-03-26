@@ -17,12 +17,12 @@ import { ProductsService } from "./products.service";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { GetAllProductsDto } from "./dto/get-all-products.dto";
-import { Public } from "src/auth/auth.guard";
-import { IRequest } from "src/_interfaces/request.interface";
+import { Public } from "@auth/auth.guard";
+import { IRequest } from "@interfaces/request.interface";
 import { ApiBearerAuth, ApiConsumes, ApiOperation } from "@nestjs/swagger";
 import { FilesInterceptor } from "@nestjs/platform-express";
-import { CloudinaryService } from "src/_modules/cloudinary/cloudinary.service";
-import { UpdateProduct } from "src/_interfaces/product.interface";
+import { CloudinaryService } from "@modules/cloudinary/cloudinary.service";
+import { UpdateProduct } from "@interfaces/product.interface";
 import { Types } from "mongoose";
 
 @Controller("products")

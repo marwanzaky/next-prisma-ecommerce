@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
-import { IContactMessage } from "src/_interfaces/contact-message.interface";
+import { IContactMessage } from "@interfaces/contact-message.interface";
 
 @Schema({
 	timestamps: true,

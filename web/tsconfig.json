@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "es2016",
-		"module": "commonjs",
+		"module": "node16",
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"strict": true,
@@ -10,7 +10,7 @@
 		"allowJs": true,
 		"noEmit": true,
 		"incremental": true,
-		"moduleResolution": "node",
+		"moduleResolution": "node16",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"jsx": "react-jsx",
@@ -19,17 +19,18 @@
 				"name": "next"
 			}
 		],
-		"baseUrl": ".",
 		"paths": {
 			"@ui/*": ["./components/ui/*"],
 			"@components/*": ["./components/*"],
 			"@hooks/*": ["./hooks/*"],
-			"@redux/*": ["redux/*"],
-			"@services/*": ["redux/services/*"],
+			"@redux/*": ["./redux/*"],
+			"@services/*": ["./redux/services/*"],
 			"@utils/*": ["./utils/*"],
 			"@data/*": ["./data/*"],
 			"@lib/*": ["./lib/*"],
-			"@shared/*": ["../shared/src/*"]
+			"@shared/*": ["./_shared/*"],
+			"@app/*": ["./app/*"],
+			"@shared/types/*": ["../shared/src/*"]
 		}
 	},
 	"include": [

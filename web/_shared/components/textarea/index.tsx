@@ -1,4 +1,4 @@
-import Icon from "_shared/ui/icon";
+import Icon from "@shared/ui/icon";
 
 import { cva } from "class-variance-authority";
 
@@ -48,7 +48,10 @@ export function Textarea({
 
 				{icon && (
 					<div className="absolute top-[calc(31px-12px)] right-[25px]">
-						<Icon className="filter-custom-placeholder" icon={icon} />
+						<Icon
+							className="filter-custom-placeholder"
+							src={`icons/${icon}.svg`}
+						/>
 					</div>
 				)}
 			</div>

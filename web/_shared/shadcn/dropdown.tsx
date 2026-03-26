@@ -5,7 +5,7 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, Circle } from "lucide-react";
 
 import { cn } from "@lib/utils";
-import Icon from "_shared/ui/icon";
+import Icon from "@shared/ui/icon";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -35,7 +35,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
 		{...props}
 	>
 		{children}
-		<Icon icon="chevron_forward" className="ml-auto" />
+		<Icon src="icons/chevron_forward.svg" className="ml-auto" />
 	</DropdownMenuPrimitive.SubTrigger>
 ));
 DropdownMenuSubTrigger.displayName =

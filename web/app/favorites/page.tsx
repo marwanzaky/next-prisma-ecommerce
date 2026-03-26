@@ -1,19 +1,19 @@
 "use client";
+import { useRouter } from "next/navigation";
 
 import { useFavorites } from "@hooks/useFavorites";
 
-import ProductItem from "_shared/ui/productCart";
-import { TypographyH4 } from "_shared/shadcn/typography";
-import { Section } from "_shared/components/section";
+import ProductItem from "@shared/ui/productCart";
+import { TypographyH4 } from "@shared/shadcn/typography";
+import { Section } from "@shared/components/section";
+import { Button } from "@shared/shadcn/button";
 import {
 	Empty,
 	EmptyContent,
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
-} from "_shared/components/empty";
-import { Button } from "_shared/shadcn/button";
-import { useRouter } from "next/navigation";
+} from "@shared/components/empty";
 
 export default function Page() {
 	const router = useRouter();

@@ -6,12 +6,12 @@ import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@redux/store";
 import { signupAsync } from "@redux/thunks/authThunks";
-import { InputText } from "_shared/components/inputText";
+import { InputText } from "@shared/components/inputText";
 import { useForm } from "react-hook-form";
-import { Section } from "_shared/components/section";
-import { Button } from "_shared/shadcn/button";
-import { TypographyH4 } from "_shared/shadcn/typography";
-import Icon from "_shared/ui/icon";
+import { Section } from "@shared/components/section";
+import { Button } from "@shared/shadcn/button";
+import { TypographyH4 } from "@shared/shadcn/typography";
+import Icon from "@shared/ui/icon";
 
 type Form = {
 	name: string;
@@ -123,7 +123,7 @@ export default function Signup() {
 								window.location.href = `${process.env.NEXT_PUBLIC_SERVER!}/auth/google`;
 							}}
 						>
-							<Icon icon="/simple_icons/google" />
+							<Icon src="google.svg" />
 							Sign up with Google
 						</Button>
 					</div>

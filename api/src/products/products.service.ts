@@ -7,10 +7,10 @@ import {
 	CreateProduct,
 	IProduct,
 	UpdateProduct,
-} from "src/_interfaces/product.interface";
+} from "@interfaces/product.interface";
 import { Product } from "./entities/product.entity";
-import { Review } from "src/reviews/entities/review.entity";
-import { CategoriesService } from "src/_modules/categories/categories.service";
+import { Review } from "@reviews/entities/review.entity";
+import { CategoriesService } from "@modules/categories/categories.service";
 
 @Injectable()
 export class ProductsService {

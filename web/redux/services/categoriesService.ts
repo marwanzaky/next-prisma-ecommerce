@@ -1,4 +1,7 @@
-import { PublicCategory, PublicCategoryTree } from "@shared/category.type";
+import {
+	PublicCategory,
+	PublicCategoryTree,
+} from "@shared/types/category.type";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 

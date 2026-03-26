@@ -3,13 +3,12 @@ import WhyChooseUs from "@components/whyChooseUs";
 import Testimonials from "@components/testimonials";
 import Categories from "@components/categories";
 
+import ProductCart from "@shared/ui/productCart";
+import { TypographyH3 } from "@shared/shadcn/typography";
+import { IProduct } from "@shared/interfaces";
+import { Section } from "@shared/components/section";
+
 import { productsService } from "@redux/services/productsService";
-
-import ProductCart from "_shared/ui/productCart";
-import { TypographyH3 } from "_shared/shadcn/typography";
-import { IProduct } from "_shared/interfaces";
-import { Section } from "_shared/components/section";
-
 import { categoriesService } from "@redux/services/categoriesService";
 
 export default async function Page() {

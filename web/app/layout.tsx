@@ -9,13 +9,13 @@ import Footer from "@components/footer";
 import Navigation from "@components/navigation";
 import AppStateInit from "@components/appStateInit";
 
-import { Container } from "_shared/ui/container";
-import { Toaster } from "_shared/shadcn/toaster";
+import { Container } from "@shared/ui/container";
+import { Toaster } from "@shared/shadcn/toaster";
+import { TooltipProvider } from "@shared/shadcn/tooltip";
 
 import AppProviders from "@redux/appProviders";
 
 import { cn } from "@lib/utils";
-import { TooltipProvider } from "_shared/shadcn/tooltip";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Metadata, Viewport } from "next";

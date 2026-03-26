@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
 
-import { IFavorite } from "src/_interfaces/favorite.interface";
+import { IFavorite } from "@interfaces/favorite.interface";
 
 import { User } from "../../users/entities/user.entity";
-import { Product } from "src/products/entities/product.entity";
+import { Product } from "@products/entities/product.entity";
 
 @Schema({
 	timestamps: true,

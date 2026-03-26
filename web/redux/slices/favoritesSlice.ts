@@ -5,8 +5,7 @@ import {
 	postFavoritesAsync,
 	removeFavoritesAsync,
 } from "@redux/thunks/favoritesThunks";
-
-import { IProduct } from "../../_shared/interfaces";
+import { IProduct } from "@shared/interfaces";
 
 export type FavoritesState = {
 	items: IProduct[];

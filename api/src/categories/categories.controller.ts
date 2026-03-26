@@ -1,8 +1,8 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
 
-import { CategoriesService } from "src/_modules/categories/categories.service";
-import { Public } from "src/auth/auth.guard";
+import { CategoriesService } from "@modules/categories/categories.service";
+import { Public } from "@auth/auth.guard";
 
 @Controller("categories")
 @Public()

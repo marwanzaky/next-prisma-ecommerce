@@ -1,9 +1,9 @@
-import { jsonToFormData } from "../../utils/helper";
+import { jsonToFormData } from "@utils/helper";
 import {
 	Category,
 	CreateCategory,
 	UpdateCategory,
-} from "@shared/category.type";
+} from "@shared/types/category.type";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 

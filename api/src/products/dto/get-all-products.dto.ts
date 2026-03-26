@@ -10,7 +10,7 @@ import {
 	Max,
 	Min,
 } from "class-validator";
-import { IProduct } from "src/_interfaces/product.interface";
+import { IProduct } from "@interfaces/product.interface";
 
 export class GetAllProductsDto {
 	@ApiPropertyOptional({ type: String, example: "price" })

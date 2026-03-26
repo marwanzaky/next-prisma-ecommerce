@@ -2,8 +2,8 @@ import { productsService } from "@redux/services/productsService";
 import { usersService } from "@redux/services/usersService";
 import { RootState } from "@redux/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ICreateProduct, IProduct, IUpdateProduct } from "_shared/interfaces";
-import { ToastService } from "_shared/shadcn/hooks/use-toast";
+import { ICreateProduct, IProduct, IUpdateProduct } from "@shared/interfaces";
+import { ToastService } from "@shared/shadcn/hooks/use-toast";
 
 export const getUserProductsAsync = createAsyncThunk(
 	"userProducts/getUserProducts",

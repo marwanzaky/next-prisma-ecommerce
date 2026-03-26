@@ -1,14 +1,14 @@
 "use client";
 
-import { Column, Table } from "_shared/components/table";
-import { Section } from "_shared/components/section";
-import { TypographyH4, TypographyP } from "_shared/shadcn/typography";
+import { Column, Table } from "@shared/components/table";
+import { Section } from "@shared/components/section";
+import { TypographyH4, TypographyP } from "@shared/shadcn/typography";
 import { useQuery } from "@tanstack/react-query";
 
 import { useAppSelector } from "@redux/store";
 
 import { useMemo, useState } from "react";
-import { Button } from "_shared/shadcn/button";
+import { Button } from "@shared/shadcn/button";
 import {
 	Dialog,
 	DialogClose,
@@ -16,8 +16,8 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "_shared/shadcn/dialog";
-import { InputText } from "_shared/components/inputText";
+} from "@shared/shadcn/dialog";
+import { InputText } from "@shared/components/inputText";
 import { Controller, useForm } from "react-hook-form";
 import {
 	Select,
@@ -26,14 +26,14 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "_shared/shadcn/select";
+} from "@shared/shadcn/select";
 import { adminCategoriesService } from "@redux/services/adminCategoriesService";
 import { categoriesService } from "@redux/services/categoriesService";
-import ImageInput from "app/sell/components/imageInput";
-import { LogoCell } from "_shared/components/table/cells/logoCell";
-import { Checkbox } from "_shared/shadcn/checkbox";
-import { toast } from "_shared/shadcn/hooks/use-toast";
-import { Category } from "@shared/category.type";
+import ImageInput from "@app/sell/components/imageInput";
+import { LogoCell } from "@shared/components/table/cells/logoCell";
+import { Checkbox } from "@shared/shadcn/checkbox";
+import { toast } from "@shared/shadcn/hooks/use-toast";
+import { Category } from "@shared/types/category.type";
 
 export default function Page() {
 	const columns: Column<Category>[] = [

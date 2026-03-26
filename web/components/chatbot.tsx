@@ -2,10 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { InputText } from "_shared/components/inputText";
-
-import clsx from "clsx";
-import { chatService } from "@redux/services/chatService";
+import { InputText } from "@shared/components/inputText";
 import {
 	Dialog,
 	DialogContent,
@@ -13,7 +10,10 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "_shared/shadcn/dialog";
+} from "@shared/shadcn/dialog";
+
+import clsx from "clsx";
+import { chatService } from "@redux/services/chatService";
 
 type ChatbotMessage = {
 	type: "ai" | "user";

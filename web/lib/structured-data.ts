@@ -1,4 +1,4 @@
-import { IProduct } from "_shared/interfaces";
+import { IProduct } from "@shared/interfaces";
 
 export function generateProductStructuredData(product: IProduct) {
 	return {

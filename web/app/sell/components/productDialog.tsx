@@ -1,18 +1,31 @@
 "use client";
 
+import { useMemo } from "react";
 import { SellInputs } from "@hooks/useSell";
-import { InputCurrencyRange } from "_shared/components/InputCurrencyRange";
-import { InputText } from "_shared/components/inputText";
-import { textareaVariants } from "_shared/components/textarea";
-import { InputTags } from "_shared/components/inputTags";
-import { Button } from "_shared/shadcn/button";
+
+import { InputCurrencyRange } from "@shared/components/InputCurrencyRange";
+import { InputText } from "@shared/components/inputText";
+import { textareaVariants } from "@shared/components/textarea";
+import { InputTags } from "@shared/components/inputTags";
+import { Button } from "@shared/shadcn/button";
+import { ImageToolbarButton } from "@shared/components/lexical/imageTooltbarButton";
+import { MyOnChangePlugin } from "@shared/components/lexical/myOnChangePlugin";
+import { LoadDescriptionPlugin } from "@shared/components/lexical/loadDescriptionPlugin";
 import {
 	Dialog,
 	DialogContent,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "_shared/shadcn/dialog";
+} from "@shared/shadcn/dialog";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@shared/shadcn/select";
 import {
 	Control,
 	Controller,
@@ -32,22 +45,10 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 
 import { cn } from "@lib/utils";
 
-import { ImageToolbarButton } from "_shared/components/lexical/imageTooltbarButton";
-import { MyOnChangePlugin } from "_shared/components/lexical/myOnChangePlugin";
-import { LoadDescriptionPlugin } from "_shared/components/lexical/loadDescriptionPlugin";
-
 import ImageInput from "./imageInput";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "_shared/shadcn/select";
+
 import { useQuery } from "@tanstack/react-query";
 import { categoriesService } from "@redux/services/categoriesService";
-import { useMemo } from "react";
 
 type ProductDialogProps = {
 	// React-form-hook

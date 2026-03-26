@@ -1,12 +1,32 @@
 "use client";
 
+import { useState } from "react";
 import { useAppSelector } from "@redux/store";
 import {
 	contactMessagesService,
 	IContactMessage,
 } from "@redux/services/contactMessagesService";
 
-import { Column } from "_shared/components/table";
+import { Column } from "@shared/components/table";
+import { ButtonIcon } from "@shared/ui/buttonIcon";
+import { useQuery } from "@tanstack/react-query";
+import { InputText } from "@shared/components/inputText";
+import { Textarea } from "@shared/components/textarea";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "@shared/shadcn/select";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from "@shared/shadcn/dialog";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -17,27 +37,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from "_shared/shadcn/alertDialog";
-import { ButtonIcon } from "_shared/ui/buttonIcon";
-import { useQuery } from "@tanstack/react-query";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "_shared/shadcn/dialog";
-import { InputText } from "_shared/components/inputText";
-import { useState } from "react";
-import { Textarea } from "_shared/components/textarea";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from "_shared/shadcn/select";
+} from "@shared/shadcn/alertDialog";
 
 export function useAdminMessages() {
 	const { token } = useAppSelector((state) => state.authReducer);

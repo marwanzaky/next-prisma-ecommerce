@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 
 import { CartsService } from "./carts.service";
-import { IRequest } from "src/_interfaces/request.interface";
+import { IRequest } from "@interfaces/request.interface";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 import { AddCartItemDto } from "./dto/add-cart-item.dto";
 import { UpdateCartItemDto } from "./dto/update-cart-item.dto";

@@ -9,11 +9,11 @@ import {
 	updateUserProductAsync,
 } from "@redux/thunks/userProductsThunks";
 
-import { IProduct } from "_shared/interfaces";
-import { Column } from "_shared/components/table";
-import { LogoCell } from "_shared/components/table/cells/logoCell";
+import { IProduct } from "@shared/interfaces";
+import { Column } from "@shared/components/table";
+import { LogoCell } from "@shared/components/table/cells/logoCell";
 
-import { useToast } from "_shared/shadcn/hooks/use-toast";
+import { useToast } from "@shared/shadcn/hooks/use-toast";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -24,15 +24,15 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from "_shared/shadcn/alertDialog";
-import { ButtonIcon } from "_shared/ui/buttonIcon";
-import { ImageNode } from "_shared/components/lexical/nodes/imageNode";
+} from "@shared/shadcn/alertDialog";
+import { ButtonIcon } from "@shared/ui/buttonIcon";
+import { ImageNode } from "@shared/components/lexical/nodes/imageNode";
 
 import { useForm, useWatch } from "react-hook-form";
 
 import { InitialConfigType } from "@lexical/react/LexicalComposer";
 import { LineBreakNode, ParagraphNode } from "lexical";
-import { ProductDialog } from "app/sell/components/productDialog";
+import { ProductDialog } from "@app/sell/components/productDialog";
 import { createProductSlug } from "@utils/stringUtils";
 
 type CartItem = IProduct & { imgUrl: string };

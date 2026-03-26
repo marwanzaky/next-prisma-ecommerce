@@ -3,9 +3,10 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { TypographyH1 } from "_shared/components/typography";
-import { TypographyP } from "_shared/shadcn/typography";
-import { Button } from "_shared/shadcn/button";
+import { TypographyH1 } from "@shared/components/typography";
+import { TypographyP } from "@shared/shadcn/typography";
+import { Button } from "@shared/shadcn/button";
+
 import { createProductSlug } from "@utils/stringUtils";
 
 export default function Header() {

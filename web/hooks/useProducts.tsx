@@ -7,7 +7,7 @@ import {
 	GetAllProductsOptions,
 	productsService,
 } from "@redux/services/productsService";
-import { IProduct } from "_shared/interfaces";
+import { IProduct } from "@shared/interfaces";
 
 export type SortOption =
 	| "relevancy"

@@ -1,4 +1,4 @@
-import { ICart } from "_shared/interfaces/cart.interface";
+import { ICart } from "@shared/interfaces/cart.interface";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER;
 

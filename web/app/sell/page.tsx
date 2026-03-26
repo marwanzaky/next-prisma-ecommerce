@@ -1,12 +1,12 @@
 "use client";
 
-import { Table } from "_shared/components/table";
+import { Table } from "@shared/components/table";
 
 import { useSell } from "@hooks/useSell";
 
-import { Section } from "_shared/components/section";
-import { Button } from "_shared/shadcn/button";
-import { TypographyH4 } from "_shared/shadcn/typography";
+import { Section } from "@shared/components/section";
+import { Button } from "@shared/shadcn/button";
+import { TypographyH4 } from "@shared/shadcn/typography";
 
 import {
 	Empty,
@@ -14,7 +14,7 @@ import {
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
-} from "_shared/components/empty";
+} from "@shared/components/empty";
 
 export default function Page() {
 	const {

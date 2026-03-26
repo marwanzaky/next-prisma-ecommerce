@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Req, Delete, Param } from "@nestjs/common";
 
 import { FavoritesService } from "./favorites.service";
-import { IRequest } from "src/_interfaces/request.interface";
+import { IRequest } from "@interfaces/request.interface";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 import { CreateFavoriteDto } from "./dto/create-favorite.dto";
-import { ProductsService } from "src/products/products.service";
+import { ProductsService } from "@products/products.service";
 
 @Controller("favorites")
 @ApiBearerAuth("Authorization")

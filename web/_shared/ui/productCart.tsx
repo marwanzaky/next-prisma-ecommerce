@@ -11,12 +11,13 @@ import { useToggleFavorite } from "@hooks/useToggleFavorite";
 
 import { cn } from "@lib/utils";
 
-import Stars from "_shared/components/stars";
-import { IProduct } from "_shared/interfaces";
-import { ButtonIcon } from "_shared/ui/buttonIcon";
-import { useToast } from "_shared/shadcn/hooks/use-toast";
+import Stars from "@shared/components/stars";
+import { IProduct } from "@shared/interfaces";
+import { ButtonIcon } from "@shared/ui/buttonIcon";
+import { useToast } from "@shared/shadcn/hooks/use-toast";
+import { useIsMobile } from "@shared/shadcn/hooks/use-mobile";
+
 import { formatPrice } from "@utils/formatPrice";
-import { useIsMobile } from "_shared/shadcn/hooks/use-mobile";
 import { createProductSlug } from "@utils/stringUtils";
 
 type ProductCartProps = {
@@ -93,6 +94,7 @@ export default function ProductCart({ data }: ProductCartProps) {
 				<ButtonIcon
 					className="absolute bottom-1 right-1 sm:bottom-4 sm:right-4"
 					icon="shopping_cart"
+					variant="primary"
 					onClick={() => dispatch(postCartItemAsync({ product: data, toast }))}
 				/>
 			</div>

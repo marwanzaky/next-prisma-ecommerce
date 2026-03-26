@@ -1,7 +1,7 @@
 import { cn } from "@lib/utils";
-import Icon from "_shared/ui/icon";
-import { Section } from "_shared/components/section";
-import { TypographyH3 } from "_shared/shadcn/typography";
+import Icon from "@shared/ui/icon";
+import { Section } from "@shared/components/section";
+import { TypographyH3 } from "@shared/shadcn/typography";
 
 export default function WhyChooseUs() {
 	return (
@@ -57,7 +57,7 @@ function Reason({
 			>
 				<Icon
 					className="group-hover:filter-custom-primary-foreground transition-all"
-					icon={icon}
+					src={`icons/${icon}.svg`}
 					size={32}
 				/>
 			</div>

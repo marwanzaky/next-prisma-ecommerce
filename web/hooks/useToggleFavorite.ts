@@ -5,8 +5,8 @@ import {
 	postFavoritesAsync,
 	removeFavoritesAsync,
 } from "@redux/thunks/favoritesThunks";
-import { IProduct } from "_shared/interfaces";
-import { useToast } from "_shared/shadcn/hooks/use-toast";
+import { IProduct } from "@shared/interfaces";
+import { useToast } from "@shared/shadcn/hooks/use-toast";
 
 export function useToggleFavorite(product: IProduct) {
 	const router = useRouter();

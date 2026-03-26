@@ -7,8 +7,8 @@ import { useAppSelector } from "@redux/store";
 
 import { cn } from "@lib/utils";
 
-import { ButtonIcon } from "_shared/ui/buttonIcon";
-import { ImageButton } from "_shared/ui/imageButton";
+import { ButtonIcon } from "@shared/ui/buttonIcon";
+import { ImageButton } from "@shared/ui/imageButton";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -21,12 +21,13 @@ import {
 	DropdownMenuSubContent,
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
-} from "_shared/shadcn/dropdown";
-import { InputText } from "_shared/components/inputText";
+} from "@shared/shadcn/dropdown";
+import { InputText } from "@shared/components/inputText";
+import { useIsMobile } from "@shared/shadcn/hooks/use-mobile";
+
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { categoriesService } from "@redux/services/categoriesService";
-import { useIsMobile } from "_shared/shadcn/hooks/use-mobile";
 import { ProductsPageParams } from "@hooks/useProducts";
 
 export default function Navigation() {

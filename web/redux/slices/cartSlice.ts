@@ -7,7 +7,7 @@ import {
 	updateCartItemQuantityAsync,
 } from "@redux/thunks/cartThunks";
 
-import { CartItem } from "_shared/interfaces/cart.interface";
+import { CartItem } from "@shared/interfaces/cart.interface";
 
 export type CartState = {
 	items: CartItem[];

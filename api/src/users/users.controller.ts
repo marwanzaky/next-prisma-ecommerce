@@ -14,13 +14,13 @@ import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
-import { IRequest } from "src/_interfaces/request.interface";
+import { IRequest } from "@interfaces/request.interface";
 import { UpdateUserPasswordDto } from "./dto/update-user-password.dto";
-import { ProductsService } from "src/products/products.service";
-import { Roles } from "src/_decorators/roles.decorator";
-import { Public } from "src/auth/auth.guard";
+import { ProductsService } from "@products/products.service";
+import { Roles } from "@decorators/roles.decorator";
+import { Public } from "@auth/auth.guard";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { CloudinaryService } from "src/_modules/cloudinary/cloudinary.service";
+import { CloudinaryService } from "@modules/cloudinary/cloudinary.service";
 
 @Controller("users")
 @ApiBearerAuth("Authorization")

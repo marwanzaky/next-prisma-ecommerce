@@ -4,7 +4,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { FavoritesController } from "./favorites.controller";
 import { FavoritesService } from "./favorites.service";
 import { Favorite, FavoriteSchema } from "./entities/favorite.entity";
-import { ProductsModule } from "src/products/products.module";
+import { ProductsModule } from "@products/products.module";
 
 @Module({
 	imports: [
