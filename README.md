@@ -30,7 +30,7 @@
 </div>
 
 ## Technologies
-- TypeScript
+- TypeScript 6
 - Next.js 16
 - Redux
 - Tailwind CSS
