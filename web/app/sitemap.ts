@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
-import { productsService } from "@redux/services/productsService";
-import { createProductSlug } from "@utils/stringUtils";
+import { productsService } from "@redux/services/products-service";
+import { createProductSlug } from "@utils/string-utils";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const baseUrl = `https://${process.env.NEXT_PUBLIC_WEBSITE!}`;
@@ -23,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 	const products = await productsService.getAllProducts();
 	const productPages: MetadataRoute.Sitemap = products.map((product) => ({
-		url: `${baseUrl}/product/${createProductSlug(product.name, product._id)}`,
+		url: `${baseUrl}/products/${createProductSlug(product.name, product._id)}`,
 		lastModified: product.updatedAt,
 		changeFrequency: "weekly" as const,
 		priority: 0.9,

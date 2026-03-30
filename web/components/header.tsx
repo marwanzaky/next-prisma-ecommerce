@@ -3,11 +3,10 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { TypographyH1 } from "@shared/components/typography";
-import { TypographyP } from "@shared/shadcn/typography";
-import { Button } from "@shared/shadcn/button";
-
-import { createProductSlug } from "@utils/stringUtils";
+import { createProductSlug } from "@utils/string-utils";
+import { TypographyP } from "@shadcn/components/ui/typography";
+import { Button } from "@shadcn/components/ui/button";
+import { TypographyH1 } from "@shadcn/components/ui/typography";
 
 export default function Header() {
 	const router = useRouter();
@@ -28,25 +27,27 @@ export default function Header() {
 
 			<div className="space-y-4">
 				<div>
-					<TypographyH1 className="text-center text-white">
+					<TypographyH1 className="text-center text-white text-4xl md:text-5xl">
 						{productName}
 					</TypographyH1>
-					<TypographyP className="text-center text-white max-w-xs mx-auto">
+					<TypographyP className="text-center text-muted max-w-xs mx-auto">
 						{productDescription}
 					</TypographyP>
 				</div>
 
 				<div className="flex justify-center gap-2">
 					<Button
+						size="lg"
 						onClick={() =>
 							router.push(
-								`/product/${createProductSlug(productName, productId)}`,
+								`/products/${createProductSlug(productName, productId)}`,
 							)
 						}
 					>
 						Shop now
 					</Button>
 					<Button
+						size="lg"
 						variant="ghost"
 						className="text-white"
 						onClick={() => router.push("/products")}

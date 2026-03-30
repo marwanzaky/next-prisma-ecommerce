@@ -2,19 +2,19 @@
 
 import { useRouter } from "next/navigation";
 
-import { useCart } from "@hooks/useCart";
+import { useCart } from "@hooks/use-cart";
 
-import { Table } from "@shared/components/table";
-import { Section } from "@shared/components/section";
-import { TypographyH4 } from "@shared/shadcn/typography";
-import { Button } from "@shared/shadcn/button";
+import { Table } from "@shared/components/ui/table";
+import { Section } from "@shared/components/ui/section";
+import { TypographyH4 } from "@shadcn/components/ui/typography";
 import {
 	Empty,
 	EmptyContent,
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
-} from "@shared/components/empty";
+} from "@shadcn/components/ui/empty";
+import { Button } from "@shadcn/components/ui/button";
 
 export default function Page() {
 	const router = useRouter();

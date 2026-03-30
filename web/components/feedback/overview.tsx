@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import Stars from "@shared/components/stars";
+import Stars from "@shared/components/ui/stars";
 
 import { IProduct } from "@shared/interfaces";
 
 import { useAppSelector } from "@redux/store";
-import { productsService } from "@redux/services/productsService";
-import { Textarea } from "@shared/components/textarea";
-import { Button } from "@shared/shadcn/button";
-import { TypographyH4 } from "@shared/shadcn/typography";
+import { productsService } from "@redux/services/products-service";
+import { TypographyH4 } from "@shadcn/components/ui/typography";
 import {
 	Dialog,
 	DialogContent,
@@ -17,11 +15,15 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "@shared/shadcn/dialog";
-import { Label } from "@shared/shadcn/label";
-import Ratings from "@shared/shadcn/ratings";
-import Icon from "@shared/ui/icon";
-import { toast } from "@shared/shadcn/hooks/use-toast";
+	DialogTrigger,
+} from "@shadcn/components/ui/dialog";
+import { Button } from "@shadcn/components/ui/button";
+import { TypographyMuted } from "@shadcn/components/ui/typography";
+import { toast } from "sonner";
+import { Field, FieldGroup, FieldLabel } from "@shadcn/components/ui/field";
+import { Textarea } from "@shadcn/components/ui/textarea";
+import { Star, StarIcon } from "lucide-react";
+import { cn } from "@lib/utils";
 
 export default function Overview({ product }: { product: IProduct }) {
 	const router = useRouter();
@@ -31,33 +33,9 @@ export default function Overview({ product }: { product: IProduct }) {
 	);
 
 	const [displayDialog, setDisplayDialog] = useState(false);
-	const [dialogRating, setDialogRating] = useState(5);
-	const [dialogDescription, setDialogDescription] = useState("");
-
-	const openDialog = () => {
-		if (!isAuthenticated) return router.push("/signin");
-		setDisplayDialog(true);
-	};
-
-	const closeDialog = () => {
-		setDisplayDialog(false);
-	};
-
-	const submitDialog = async () => {
-		await productsService.postProductReview(
-			token,
-			product._id,
-			dialogRating,
-			dialogDescription,
-		);
-
-		toast({
-			title: "Your review is sent successfully!",
-			duration: 3000,
-		});
-
-		closeDialog();
-	};
+	const [rating, setRating] = useState(0);
+	const [hoverRating, setHoverRating] = useState(0);
+	const [description, setDescription] = useState("");
 
 	return (
 		<div className="flex flex-col justify-center">
@@ -69,9 +47,9 @@ export default function Overview({ product }: { product: IProduct }) {
 						{product.avgRatings.toFixed(2)}
 					</div>
 					<Stars value={product.avgRatings} displayTotal={false} />
-					<div className="text-custom-grey leading-none">
+					<TypographyMuted className="leading-none">
 						{product.numReviews} reviews
-					</div>
+					</TypographyMuted>
 				</div>
 
 				<ul className="flex flex-col justify-center space-y-2">
@@ -84,44 +62,98 @@ export default function Overview({ product }: { product: IProduct }) {
 			</div>
 
 			<div className="flex justify-center">
-				<Button onClick={openDialog}>Write a review</Button>
+				<Dialog open={displayDialog} onOpenChange={setDisplayDialog}>
+					<form
+						onSubmit={async () => {
+							await productsService.postProductReview(
+								token,
+								product._id,
+								rating,
+								description,
+							);
+
+							toast("Your review is sent successfully!", {
+								position: "top-center",
+							});
+						}}
+					>
+						<DialogTrigger asChild>
+							<Button
+								size="lg"
+								onClick={(e) => {
+									if (!isAuthenticated) {
+										e.preventDefault();
+										return router.push("/signin");
+									}
+									setRating(0);
+								}}
+							>
+								Write a review
+							</Button>
+						</DialogTrigger>
+						<DialogContent className="sm:max-w-[24rem] ">
+							<DialogHeader>
+								<DialogTitle>Write a review</DialogTitle>
+								<DialogDescription>
+									Please rate your experience and share any additional feedback.
+								</DialogDescription>
+							</DialogHeader>
+
+							<FieldGroup>
+								<Field>
+									<FieldLabel>Rating</FieldLabel>
+									<div className="flex">
+										{[1, 2, 3, 4, 5].map((star) => (
+											<button
+												className="transition-transform hover:scale-110 "
+												key={star}
+												onClick={() => setRating(star)}
+												onMouseEnter={() => setHoverRating(star)}
+												onMouseLeave={() => setHoverRating(0)}
+												type="button"
+											>
+												<StarIcon
+													className={cn(
+														"h-8 w-8 mr-1 transition-colors",
+														(hoverRating || rating) >= star
+															? "fill-yellow-400 text-yellow-400"
+															: "text-muted-foreground",
+													)}
+												/>
+											</button>
+										))}
+									</div>
+								</Field>
+								<Field>
+									<FieldLabel id="description">Additional feedback</FieldLabel>
+									<Textarea
+										id="description"
+										placeholder="Describe your experience..."
+										className="min-h-32"
+										onChange={(e) => setDescription(e.target.value)}
+									></Textarea>
+								</Field>
+							</FieldGroup>
+
+							<DialogFooter>
+								<Button
+									variant="outline"
+									type="button"
+									onClick={() => {
+										setDisplayDialog(false);
+									}}
+								>
+									Cancel
+								</Button>
+
+								<Button type="submit" disabled={rating === 0}>
+									Submit
+								</Button>
+							</DialogFooter>
+						</DialogContent>
+					</form>
+				</Dialog>
 			</div>
-
-			<Dialog open={displayDialog} onOpenChange={setDisplayDialog}>
-				<DialogContent className="sm:max-w-[24rem] ">
-					<DialogHeader>
-						<DialogTitle>Write a review</DialogTitle>
-						<DialogDescription>
-							Share your experience with this product to help other shoppers
-							like you.
-						</DialogDescription>
-					</DialogHeader>
-
-					<div className="space-y-4">
-						<Ratings
-							value={dialogRating}
-							onValueChange={setDialogRating}
-							Icon={<Icon src="icons/star.svg" />}
-						/>
-
-						<div className="space-y-4">
-							<Label>Description</Label>
-							<Textarea
-								id="description"
-								placeholder="Describe your experience..."
-								icon="description"
-								onChange={(e) => setDialogDescription(e.target.value)}
-							/>
-						</div>
-					</div>
-
-					<DialogFooter>
-						<Button type="button" onClick={submitDialog}>
-							Submit
-						</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
 		</div>
 	);
 }
@@ -135,13 +167,10 @@ function OverviewRatesLi({
 }) {
 	return (
 		<li className="flex items-center">
-			<div className="w-2.5 text-custom-primary-foreground leading-none">★</div>
-			<div className="w-[3.125rem] text-center leading-none">{stars}</div>
-			<div className="h-0.5 w-full bg-custom-border">
-				<div
-					className="h-full bg-custom-primary-foreground"
-					style={{ width: percent }}
-				/>
+			<div className="w-2.5 text-primary leading-none">★</div>
+			<div className="w-12.5 text-center leading-none">{stars}</div>
+			<div className="h-0.5 w-full bg-border">
+				<div className="h-full bg-primary" style={{ width: percent }} />
 			</div>
 		</li>
 	);

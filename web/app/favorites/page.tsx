@@ -1,19 +1,20 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-import { useFavorites } from "@hooks/useFavorites";
+import { useFavorites } from "@hooks/use-favorites";
 
-import ProductItem from "@shared/ui/productCart";
-import { TypographyH4 } from "@shared/shadcn/typography";
-import { Section } from "@shared/components/section";
-import { Button } from "@shared/shadcn/button";
+import ProductCard from "@shared/components/ui/product-card";
+
 import {
 	Empty,
 	EmptyContent,
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
-} from "@shared/components/empty";
+} from "@shadcn/components/ui/empty";
+import { TypographyH4 } from "@shadcn/components/ui/typography";
+import { Section } from "@shared/components/ui/section";
+import { Button } from "@shadcn/components/ui/button";
 
 export default function Page() {
 	const router = useRouter();
@@ -25,7 +26,7 @@ export default function Page() {
 			{items.length > 0 ? (
 				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
 					{items.map((item) => (
-						<ProductItem data={item} key={item._id}></ProductItem>
+						<ProductCard data={item} key={item._id} />
 					))}
 				</div>
 			) : (

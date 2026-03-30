@@ -2,49 +2,64 @@
 
 import { useRouter } from "next/navigation";
 
-import { contactMessagesService } from "@redux/services/contactMessagesService";
-import { Section } from "@shared/components/section";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { InputText } from "@shared/components/inputText";
-import { Textarea } from "@shared/components/textarea";
-import { Button } from "@shared/shadcn/button";
-import { TypographyH2, TypographyH4, TypographyP } from "@shared/ui/typography";
-import { toast } from "@shared/shadcn/hooks/use-toast";
+import { contactMessagesService } from "@redux/services/contact-messages-service";
+import { Section } from "@shared/components/ui/section";
+import { Controller, useForm } from "react-hook-form";
+import { TypographyH2, TypographyH4 } from "@shadcn/components/ui/typography";
+import { TypographyP } from "@shadcn/components/ui/typography";
+import { Button } from "@shadcn/components/ui/button";
+import { toast } from "sonner";
+import {
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@shadcn/components/ui/field";
+import { Input } from "@shadcn/components/ui/input";
+import { Textarea } from "@shadcn/components/ui/textarea";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type Inputs = {
-	name: string;
-	email: string;
-	subject: string;
-	message: string;
-};
+const formSchema = z.object({
+	name: z
+		.string()
+		.nonempty("This field is required.")
+		.min(2, "Name is too short.")
+		.max(16, "Name is too long."),
+	email: z.email().nonempty("This field is required."),
+	subject: z
+		.string({ error: "a" })
+		.nonempty("This field is required.")
+		.max(64, "This field must be 64 characters or fewer."),
+	message: z.string().nonempty("This field is required."),
+});
 
 export default function Contact() {
 	const router = useRouter();
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-		reset,
-	} = useForm<Inputs>({ mode: "onTouched" });
+	const form = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
+		mode: "onChange",
+		defaultValues: {
+			name: "",
+			email: "",
+			subject: "",
+			message: "",
+		},
+	});
 
-	const onSubmit: SubmitHandler<Inputs> = async (data) => {
+	const onSubmit = async (data: z.infer<typeof formSchema>) => {
 		try {
+			console.log("data", data);
 			await contactMessagesService.sendMessage(data);
 
-			reset();
-
-			toast({
-				title: "Message sent successfully. Thank you!",
+			toast("Message sent successfully. Thank you!", {
+				position: "top-center",
 			});
 
 			router.push("/");
 		} catch (error) {
-			toast({
-				title: "Something went wrong",
-				description: "Please try again later.",
-				variant: "destructive",
-			});
+			toast("Something went wrong.", { position: "top-center" });
 
 			console.error(error);
 		}
@@ -53,8 +68,8 @@ export default function Contact() {
 	return (
 		<Section className="grid grid-cols-1 md:grid-cols-2 gap-12">
 			<div>
-				<TypographyH2 className="text-center lg:text-left">
-					Contact us
+				<TypographyH2 className="text-center border-none">
+					Contact Us
 				</TypographyH2>
 				<TypographyH4>Have a question?</TypographyH4>
 				<TypographyP>
@@ -65,65 +80,92 @@ export default function Contact() {
 				</TypographyP>
 			</div>
 
-			<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-				<InputText
-					type="text"
-					placeholder="Name"
-					icon="person"
-					message={errors.name?.message}
-					hasError={!!errors.name}
-					{...register("name", {
-						required: "This field is required.",
-						minLength: { value: 2, message: "Name is too short." },
-						maxLength: { value: 16, message: "Name is too long." },
-						pattern: {
-							value: /^[a-zA-Z\s'-]+$/,
-							message: "Invalid characters in name.",
-						},
-					})}
-				/>
-				<InputText
-					type="text"
-					placeholder="Email"
-					icon="send"
-					message={errors.email?.message}
-					hasError={!!errors.email}
-					{...register("email", {
-						required: "This field is required.",
-						minLength: { value: 2, message: "Email is too short." },
-						maxLength: { value: 32, message: "Email is too long." },
-						pattern: {
-							value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-							message: "Invalid characters in email.",
-						},
-					})}
-				/>
-				<InputText
-					type="text"
-					placeholder="Subject"
-					icon="subject"
-					message={errors.subject?.message}
-					hasError={!!errors.subject}
-					{...register("subject", {
-						required: "This field is required.",
-						maxLength: {
-							value: 64,
-							message: "This field must be 64 characters or fewer.",
-						},
-					})}
-				/>
-				<Textarea
-					styleClass="h-36"
-					placeholder="Message"
-					icon="mail"
-					message={errors.message?.message}
-					hasError={!!errors.message}
-					{...register("message", { required: "This field is required." })}
-				/>
-
-				<Button size="lg" type="submit">
-					Send
-				</Button>
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="flex flex-col gap-4"
+			>
+				<FieldGroup>
+					<Controller
+						name="name"
+						control={form.control}
+						render={({ field, fieldState }) => (
+							<Field data-invalid={fieldState.invalid}>
+								<FieldLabel htmlFor="name">Name</FieldLabel>
+								<Input
+									{...field}
+									id="name"
+									aria-invalid={fieldState.invalid}
+									placeholder="John Doe"
+									autoComplete="off"
+								/>
+								{fieldState.invalid && (
+									<FieldError errors={[fieldState.error]} />
+								)}
+							</Field>
+						)}
+					/>
+					<Controller
+						name="email"
+						control={form.control}
+						render={({ field, fieldState }) => (
+							<Field data-invalid={fieldState.invalid}>
+								<FieldLabel htmlFor="email">Email</FieldLabel>
+								<Input
+									{...field}
+									id="email"
+									aria-invalid={fieldState.invalid}
+									placeholder="m@example.com"
+									autoComplete="off"
+								/>
+								{fieldState.invalid && (
+									<FieldError errors={[fieldState.error]} />
+								)}
+							</Field>
+						)}
+					/>
+					<Controller
+						name="subject"
+						control={form.control}
+						render={({ field, fieldState }) => (
+							<Field data-invalid={fieldState.invalid}>
+								<FieldLabel htmlFor="subject">Subject</FieldLabel>
+								<Input
+									{...field}
+									id="subject"
+									aria-invalid={fieldState.invalid}
+									autoComplete="off"
+								/>
+								{fieldState.invalid && (
+									<FieldError errors={[fieldState.error]} />
+								)}
+							</Field>
+						)}
+					/>
+					<Controller
+						name="message"
+						control={form.control}
+						render={({ field, fieldState }) => (
+							<Field data-invalid={fieldState.invalid}>
+								<FieldLabel htmlFor="message">Message</FieldLabel>
+								<Textarea
+									{...field}
+									id="message"
+									className="h-32"
+									aria-invalid={fieldState.invalid}
+									autoComplete="off"
+								/>
+								{fieldState.invalid && (
+									<FieldError errors={[fieldState.error]} />
+								)}
+							</Field>
+						)}
+					/>
+					<Field>
+						<Button size="lg" type="submit">
+							Send
+						</Button>
+					</Field>
+				</FieldGroup>
 			</form>
 		</Section>
 	);

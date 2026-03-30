@@ -1,12 +1,11 @@
 "use client";
 
-import { Table } from "@shared/components/table";
+import { Table } from "@shared/components/ui/table";
 
-import { useSell } from "@hooks/useSell";
+import { useSell } from "@hooks/use-sell";
 
-import { Section } from "@shared/components/section";
-import { Button } from "@shared/shadcn/button";
-import { TypographyH4 } from "@shared/shadcn/typography";
+import { Section } from "@shared/components/ui/section";
+import { TypographyH4 } from "@shadcn/components/ui/typography";
 
 import {
 	Empty,
@@ -14,7 +13,8 @@ import {
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
-} from "@shared/components/empty";
+} from "@shadcn/components/ui/empty";
+import { Button } from "@shadcn/components/ui/button";
 
 export default function Page() {
 	const {
@@ -36,13 +36,13 @@ export default function Page() {
 
 					<div className="flex justify-end">
 						<Button
-							className="!mr-0"
+							className="mr-0!"
 							onClick={() => {
 								resetForm();
 								setDisplayDialog(true);
 							}}
 						>
-							Add item
+							Add product
 						</Button>
 					</div>
 				</div>
@@ -62,7 +62,7 @@ export default function Page() {
 								setDisplayDialog(true);
 							}}
 						>
-							Add
+							Add product
 						</Button>
 					</EmptyContent>
 				</Empty>

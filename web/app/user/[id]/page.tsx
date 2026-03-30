@@ -5,16 +5,16 @@ import { useParams } from "next/navigation";
 
 import { AvatarInitials } from "@components/feedback/reviews";
 
-import { usersService } from "@redux/services/usersService";
+import { usersService } from "@redux/services/users-service";
 
 import {
 	Empty,
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
-} from "@shared/components/empty";
-import { Section } from "@shared/components/section";
-import { Avatar, AvatarImage } from "@shared/shadcn/avatar";
+} from "@shadcn/components/ui/empty";
+import { Section } from "@shared/components/ui/section";
+import { Avatar, AvatarImage } from "@shadcn/components/ui/avatar";
 import { User } from "@shared/types/user.type";
 
 export default function Page() {

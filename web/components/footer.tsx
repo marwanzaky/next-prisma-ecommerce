@@ -1,8 +1,8 @@
 import Link from "next/link";
-
-import { Container } from "@shared/ui/container";
-import { TypographyH4 } from "@shared/shadcn/typography";
 import Image from "next/image";
+
+import { Container } from "@shared/components/ui/container";
+import { TypographyH4 } from "@shadcn/components/ui/typography";
 
 export default function Footer() {
 	return (
@@ -11,7 +11,7 @@ export default function Footer() {
 				<div>
 					<TypographyH4 className="text-white">Quick links</TypographyH4>
 
-					<ul className="flex gap-x-5 flex-wrap">
+					<ul className="flex gap-x-5 flex-wrap text-sm">
 						{process.env.NEXT_PUBLIC_ABOUT === "true" && (
 							<li>
 								<Link
