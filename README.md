@@ -32,8 +32,8 @@
 ## Technologies
 - TypeScript 6
 - Next.js 16
+- Tailwind CSS 4
 - Redux
-- Tailwind CSS
 - Shadcn UI
 - NestJS
 - MongoDB
@@ -45,7 +45,7 @@
 ## Available Pages
 - Home: `/`
 - Products: `/products`
-- Product: `/product/:id`
+- Product: `/products/:id`
 - Cart: `/cart`
 - Favorites: `/favorites`
 - Sell: `/sell`
