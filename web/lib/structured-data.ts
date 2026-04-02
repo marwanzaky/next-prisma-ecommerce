@@ -1,16 +1,25 @@
 import { IProduct } from "@shared/interfaces";
 
-export function generateProductStructuredData(product: IProduct) {
+import { Product, WithContext } from "schema-dts";
+
+export function generateProductStructuredData(
+	product: IProduct,
+): WithContext<Product> {
+	const baseUrl = `https://${process.env.NEXT_PUBLIC_WEBSITE!}`;
+	const productUrl = `${baseUrl}/products/${product._id}`;
+	const offerId = `${productUrl}#offer`;
+
 	return {
 		"@context": "https://schema.org",
 		"@type": "Product",
-		"@id": `https://${process.env.NEXT_PUBLIC_WEBSITE!}/products/${product._id}`,
+		"@id": productUrl,
 		name: product.name,
 		description: product.description,
 		image: product.imgUrls,
+		category: product.category ?? undefined,
 		offers: {
 			"@type": "Offer",
-			"@id": `https://${process.env.NEXT_PUBLIC_WEBSITE!}/products/${product._id}#offer`,
+			"@id": offerId,
 			price: product.price,
 			priceCurrency: "USD",
 			availability:
@@ -19,7 +28,12 @@ export function generateProductStructuredData(product: IProduct) {
 					: "https://schema.org/OutOfStock",
 			seller: {
 				"@type": "Organization",
-				name: "YourStore",
+				name: product.user?.name,
+				url: baseUrl,
+			},
+			inventoryLevel: {
+				"@type": "QuantitativeValue",
+				value: product.stock,
 			},
 		},
 		aggregateRating:
@@ -38,7 +52,7 @@ export function generateProductStructuredData(product: IProduct) {
 			},
 			author: {
 				"@type": "Person",
-				name: review.user,
+				name: review.user.name,
 			},
 			reviewBody: review.description,
 			datePublished: review.createdAt,

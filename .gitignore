@@ -7,6 +7,12 @@ node_modules
 .next/
 out/
 
+# pwa
+/web/public/sw.js
+/web/public/workbox-*.js
+/web/public/sw.js.map
+/web/public/workbox-*.js.map
+
 # logs
 logs
 *.log

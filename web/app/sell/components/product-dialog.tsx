@@ -154,7 +154,7 @@ export function ProductDialog({
 						</Field>
 
 						<Field>
-							<FieldLabel htmlFor="name">Product Description</FieldLabel>
+							<FieldLabel>Product Description</FieldLabel>
 							<div className="relative">
 								<LexicalComposer initialConfig={initialConfig}>
 									<RichTextPlugin

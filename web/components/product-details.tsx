@@ -2,17 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import Feedback from "@components/feedback";
 
-import Link from "next/link";
-
-import Stars from "@shared/components/ui/stars";
-import { IProduct } from "@shared/interfaces";
-import ProductCard from "@shared/components/ui/product-card";
-import { ButtonIcon } from "@shared/components/ui/button-icon";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -27,8 +22,6 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@shadcn/components/ui/accordion";
-import { Section } from "@shared/components/ui/section";
-import { TypographyH4 } from "@shadcn/components/ui/typography";
 import {
 	TypographyH3,
 	TypographyMuted,
@@ -38,33 +31,43 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@shadcn/components/ui/tooltip";
-import { PublicCategoryTree } from "@shared/types/category.type";
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
 } from "@shadcn/components/ui/avatar";
-
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@redux/store";
-import { postCartItemAsync } from "@redux/thunks/cart-thunks";
-import { useToggleFavorite } from "@hooks/use-toggle-favorite";
-import { useQuery } from "@tanstack/react-query";
-import {
-	GetAllProductsOptions,
-	productsService,
-} from "@redux/services/products-service";
-import { cn } from "@lib/utils";
-
-import { formatPrice } from "@utils/format-price";
-import { categoriesService } from "@redux/services/categories-service";
-
-import { sendGTMEvent } from "@next/third-parties/google";
-import { initials, stringToDate } from "@utils/string-utils";
+import { TypographyH4 } from "@shadcn/components/ui/typography";
 import { Button } from "@shadcn/components/ui/button";
 import { TypographyP } from "@shadcn/components/ui/typography";
 import { Field, FieldGroup, FieldLabel } from "@shadcn/components/ui/field";
 import { Input } from "@shadcn/components/ui/input";
+
+import {
+	GetAllProductsOptions,
+	productsService,
+} from "@redux/services/products-service";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@redux/store";
+import { categoriesService } from "@redux/services/categories-service";
+import { postCartItemAsync } from "@redux/thunks/cart-thunks";
+
+import { useToggleFavorite } from "@hooks/use-toggle-favorite";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { cn } from "@lib/utils";
+
+import { formatPrice } from "@utils/format-price";
+import { initials, stringToDate } from "@utils/string-utils";
+
+import { sendGTMEvent } from "@next/third-parties/google";
+
+import Stars from "@shared/components/ui/stars";
+import ProductCard from "@shared/components/ui/product-card";
+import { Section } from "@shared/components/ui/section";
+import { PublicCategoryTree } from "@shared/types/category.type";
+import { IProduct } from "@shared/interfaces";
+import { ButtonIcon } from "@shared/components/ui/button-icon";
 
 function Preview({ product }: { product: IProduct }) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =

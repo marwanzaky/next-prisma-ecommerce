@@ -1,5 +1,8 @@
 import "./globals.css";
 
+import { Toaster } from "sonner";
+
+import { generateOgMetadata, generateTwitterMetadata } from "@lib/generate";
 import { cn } from "@lib/utils";
 
 import { Metadata, Viewport } from "next";
@@ -17,8 +20,7 @@ import { Container } from "@shared/components/ui/container";
 import { TooltipProvider } from "@shadcn/components/ui/tooltip";
 
 import AppProviders from "@redux/app-providers";
-
-import { Toaster } from "sonner";
+import { website } from "@lib/config";
 
 const poppins = Poppins({
 	subsets: ["latin"],
@@ -28,19 +30,57 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-	title: "Mamolio",
+	title: {
+		default: website.title,
+		template: `%s | ${website.name}`,
+	},
+	description: website.description,
+	keywords: website.keywords,
+	authors: [
+		{
+			name: website.name,
+			url: website.baseUrl,
+		},
+	],
+	openGraph: {
+		...generateOgMetadata({
+			title: website.title,
+			description: website.description,
+			path: "/",
+			type: "website",
+		}),
+		url: undefined,
+	},
+	twitter: generateTwitterMetadata({
+		title: website.title,
+		description: website.description,
+	}),
 	icons: {
 		icon: "/icon.svg",
 	},
-	description: "eCommerce",
 	manifest: "/manifest.json",
-	keywords: ["ecommerce", "technology", "web application"],
+	robots: {
+		index: true,
+		follow: true,
+	},
+
+	creator: website.name,
+	publisher: website.name,
+
+	appleWebApp: {
+		capable: true,
+		statusBarStyle: "black-translucent",
+		title: website.name,
+	},
+
+	metadataBase: new URL(website.baseUrl),
 };
 
 export const viewport: Viewport = {
-	width: "device-width shrink-to-fit=no",
+	themeColor: website.themeColor,
+	width: "device-width",
 	initialScale: 1,
-	minimumScale: 1,
+	maximumScale: 5,
 	viewportFit: "cover",
 };
 

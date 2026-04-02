@@ -42,6 +42,22 @@
 - Swagger
 - JWT
 
+## Features
+- SEO friendly
+  - Dynamic product metadata
+  - Dynamic product structured data
+  - Dynamic sitemap.xml
+- Lightweight and instant load
+- High-quality code and a very structured codebase
+- Sign in/Sign up with email and password (JWT), or with Google (OAuth 2.0)
+- Easily customize design with shadcn [create](https://ui.shadcn.com/create). Copy the preset and use the command `npx shadcn@latest init --preset [CODE]` in `/web` directory
+- Full-stack Monorepo
+  - `/web` for front-end
+  - `/api` for back-end
+  - `/shared` for shared typescript files
+- Progressive Web Apps (PWA) support
+- Response on mobile, tablets, and desktop
+
 ## Available Pages
 - Home: `/`
 - Products: `/products`

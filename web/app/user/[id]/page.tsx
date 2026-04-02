@@ -1,64 +1,22 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-
-import { AvatarInitials } from "@components/feedback/reviews";
-
 import { usersService } from "@redux/services/users-service";
 
-import {
-	Empty,
-	EmptyDescription,
-	EmptyHeader,
-	EmptyTitle,
-} from "@shadcn/components/ui/empty";
-import { Section } from "@shared/components/ui/section";
-import { Avatar, AvatarImage } from "@shadcn/components/ui/avatar";
 import { User } from "@shared/types/user.type";
 
-export default function Page() {
-	const params = useParams<{ id: string }>();
+import UserProfile from "./user-profile";
 
-	const [user, setUser] = useState<User>();
+interface Props {
+	params: Promise<{ id: string }>;
+}
 
-	useEffect(() => {
-		getPublicUser(params.id).then((value) => setUser(value));
-	}, []);
+export default async function Page({ params }: Props) {
+	const { id } = await params;
 
-	return (
-		user && (
-			<Section className="space-y-4">
-				<div className="flex justify-between">
-					<div className="flex items-center gap-4">
-						{user.photoUrl ? (
-							<Avatar className="h-10 w-10">
-								<AvatarImage src={user.photoUrl} />
-							</Avatar>
-						) : (
-							<AvatarInitials name={user.name} />
-						)}
+	const user = await getPublicUser(id);
 
-						{user.name}
-					</div>
-
-					{/* <Button variant="secondary">Follow</Button> */}
-				</div>
-
-				<Empty className="border border-dashed">
-					<EmptyHeader>
-						<EmptyTitle>Nothing here... yet.</EmptyTitle>
-						<EmptyDescription className="max-w-xs text-pretty">
-							Looks like &quot;{user.name}&quot; hasn&apos;t added any favorite
-							items. Check back again later!
-						</EmptyDescription>
-					</EmptyHeader>
-				</Empty>
-			</Section>
-		)
-	);
+	return <UserProfile user={user} />;
 }
 
 async function getPublicUser(id: string): Promise<User> {
+	"use cache";
 	return await usersService.getPublicById(id);
 }

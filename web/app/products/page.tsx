@@ -24,13 +24,14 @@ import { TypographyP } from "@shadcn/components/ui/typography";
 import { InputCurrencyRange } from "@shared/components/ui/input-currency-range";
 
 import { formatPrice } from "@utils/format-price";
+
 import { Button } from "@shadcn/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@shadcn/components/ui/radio-group";
 import { Label } from "@shadcn/components/ui/label";
 import { Field, FieldGroup, FieldLabel } from "@shadcn/components/ui/field";
 import { Input } from "@shadcn/components/ui/input";
+
 import { StarIcon } from "lucide-react";
-import { cn } from "@lib/utils";
 
 export default function Page() {
 	const {

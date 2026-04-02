@@ -1,8 +1,15 @@
 import ProductDetails from "@components/product-details";
-import { generateProductStructuredData } from "@lib/structured-data";
 import { productsService } from "@redux/services/products-service";
 import { createProductSlug } from "@utils/string-utils";
 import { IProduct } from "@shared/interfaces";
+import {
+	generateOgMetadata,
+	generateTwitterMetadata,
+	getCanonicalUrl,
+} from "@lib/generate";
+import { Metadata } from "next";
+import { generateProductStructuredData } from "@lib/structured-data";
+import { website } from "@lib/config";
 
 interface Props {
 	params: Promise<{ slug: string }>;
@@ -45,7 +52,7 @@ export async function generateStaticParams() {
 	}));
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	"use cache";
 
 	const { slug } = await params;
@@ -57,35 +64,37 @@ export async function generateMetadata({ params }: Props) {
 		return {
 			title: "Product Not Found",
 			description: "This product does not exist",
+			robots: "noindex, follow",
 		};
 	}
 
 	return {
-		title: `${product.name} - Best Price & Reviews | ${process.env.NEXT_PUBLIC_NAME}`,
+		title: `${product.name} - Best Price & Reviews | ${website.name}`,
 		description: `${product.description.slice(0, 155)}...`,
-		keywords: product.tags.join(", "),
-		openGraph: {
+		keywords: [
+			product.name,
+			...(product.tags || []),
+			"shop",
+			"buy online",
+			website.name,
+		].filter(Boolean),
+		authors: [{ name: website.name }],
+		openGraph: generateOgMetadata({
 			title: product.name,
 			description: product.description,
-			images: [
-				{
-					url: product.imgUrls[0],
-					width: 1200,
-					height: 630,
-					alt: product.name,
-				},
-			],
+			path: `/products/${createProductSlug(product.name, product._id)}`,
+			image: product.imgUrls[0],
 			type: "website",
-			siteName: process.env.NEXT_PUBLIC_NAME,
-		},
-		twitter: {
-			card: "summary_large_image",
+		}),
+		twitter: generateTwitterMetadata({
 			title: product.name,
 			description: product.description,
-			images: [product.imgUrls[0]],
-		},
+			image: product.imgUrls[0],
+		}),
 		alternates: {
-			canonical: `https://${process.env.NEXT_PUBLIC_WEBSITE!}/products/${id}`,
+			canonical: getCanonicalUrl(
+				`/products/${createProductSlug(product.name, product._id)}`,
+			),
 		},
 	};
 }

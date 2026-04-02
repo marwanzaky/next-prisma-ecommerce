@@ -1,7 +1,15 @@
+"use client";
+
 import { cn } from "@lib/utils";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { initials, stringToDate } from "@utils/string-utils";
 
 import Stars from "@shared/components/ui/stars";
 import { IProduct } from "@shared/interfaces";
+
 import {
 	Avatar,
 	AvatarFallback,
@@ -13,10 +21,6 @@ import {
 	EmptyHeader,
 	EmptyTitle,
 } from "@shadcn/components/ui/empty";
-
-import { initials, stringToDate } from "@utils/string-utils";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { TypographyMuted } from "@shadcn/components/ui/typography";
 
 type AvatarInitialsProps = React.InputHTMLAttributes<HTMLInputElement> & {
