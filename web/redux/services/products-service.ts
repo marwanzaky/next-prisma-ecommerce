@@ -161,19 +161,21 @@ async function remove(token: string, id: string): Promise<null> {
 
 async function postProductReview(
 	token: string,
-	productId: string,
-	rating: number,
-	description: string,
+	product: {
+		id: string;
+		rating: number;
+		description?: string;
+	},
 ): Promise<IProduct> {
-	const response = await fetch(`${baseUrl}/products/${productId}/reviews`, {
+	const response = await fetch(`${baseUrl}/products/${product.id}/reviews`, {
 		method: "POST",
 		headers: {
 			Authorization: `Bearer ${token}`,
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify({
-			rating,
-			description,
+			rating: product.rating,
+			description: product.description,
 		}),
 	});
 

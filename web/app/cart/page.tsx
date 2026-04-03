@@ -38,14 +38,20 @@ export default function Page() {
 
 			{items.length > 0 ? (
 				<div className="flex gap-4 flex-col md:flex-row">
-					<Table className="md:w-2/3" columns={columns} data={tableData} />
+					<Table
+						className="md:w-2/3 h-fit"
+						columns={columns}
+						data={tableData}
+					/>
 
 					<Card className="md:w-1/3 h-fit">
 						<CardContent className="space-y-4">
 							<PaymentMethodSelector />
 							<OrderSummary />
 
-							<Button className="w-full">Proceed to checkout</Button>
+							<Button className="w-full" onClick={() => router.push("/signin")}>
+								Proceed to checkout
+							</Button>
 						</CardContent>
 					</Card>
 				</div>

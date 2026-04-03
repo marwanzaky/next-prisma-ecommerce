@@ -6,7 +6,7 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 
 import { uploadFile } from "@redux/services/uploads-service";
 
-export function ImageToolbarButton() {
+export function ImageToolbarButtonPlugin() {
 	const [editor] = useLexicalComposerContext();
 
 	const insertImage = async () => {

@@ -1,9 +1,8 @@
-import { DecoratorNode, NodeKey } from "lexical";
+import { DecoratorNode, NodeKey, SerializedLexicalNode } from "lexical";
 import { JSX } from "react";
 
-type SerializedImageNode = {
-	type: string;
-	version: number;
+export type SerializedImageNode = SerializedLexicalNode & {
+	type: "image";
 	src: string;
 	alt?: string;
 };
@@ -38,6 +37,10 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 			src: this.__src,
 			alt: this.__alt,
 		};
+	}
+
+	static exportHTML(src: string, alt: string): string {
+		return `<img src="${src}" alt="${alt ?? ""}" />`;
 	}
 
 	createDOM() {

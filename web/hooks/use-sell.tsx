@@ -33,6 +33,8 @@ import { InitialConfigType } from "@lexical/react/LexicalComposer";
 import { LineBreakNode, ParagraphNode } from "lexical";
 import { ProductDialog } from "@app/sell/components/product-dialog";
 import { createProductSlug } from "@utils/string-utils";
+import { YouTubeNode } from "@shared/components/ui/lexical/nodes/youtube-node";
+import { useDebouncedCallback } from "use-debounce";
 
 type CartItem = IProduct & { imgUrl: string };
 
@@ -62,19 +64,12 @@ export function useSell() {
 
 	const initialConfig: InitialConfigType = {
 		namespace: "MyEditor",
-		nodes: [ImageNode, ParagraphNode, LineBreakNode],
+		nodes: [ImageNode, YouTubeNode, ParagraphNode, LineBreakNode],
 		theme: {
 			paragraph: "editor-paragraph",
 		},
 		onError: console.error,
 	};
-
-	function PluginOnChange(editorState: string, isEmpty: boolean): void {
-		setValue("description", isEmpty ? "" : editorState, {
-			shouldValidate: true,
-			shouldDirty: true,
-		});
-	}
 
 	const {
 		register,
@@ -87,7 +82,15 @@ export function useSell() {
 	} = useForm<SellInputs>({
 		mode: "onTouched",
 	});
-
+	const debouncedSetValue = useDebouncedCallback(
+		(editorState: string, isEmpty: boolean) => {
+			setValue("description", isEmpty ? "" : editorState, {
+				shouldValidate: true,
+				shouldDirty: true,
+			});
+		},
+		300,
+	);
 	const description = useWatch({
 		control,
 		name: "description",
@@ -293,7 +296,7 @@ export function useSell() {
 			// React-form-hook
 			formState={formState}
 			description={description}
-			PluginOnChange={PluginOnChange}
+			PluginOnChange={debouncedSetValue}
 			register={register}
 			errors={errors}
 			initialConfig={initialConfig}
@@ -317,7 +320,7 @@ export function useSell() {
 			// React-form-hook
 			formState={formState}
 			description={description}
-			PluginOnChange={PluginOnChange}
+			PluginOnChange={debouncedSetValue}
 			register={register}
 			errors={errors}
 			initialConfig={initialConfig}

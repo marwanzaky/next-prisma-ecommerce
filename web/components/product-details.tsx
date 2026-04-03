@@ -68,6 +68,7 @@ import { Section } from "@shared/components/ui/section";
 import { PublicCategoryTree } from "@shared/types/category.type";
 import { IProduct } from "@shared/interfaces";
 import { ButtonIcon } from "@shared/components/ui/button-icon";
+import { renderLexicalJSONToHTML } from "@shared/components/ui/lexical/renderLexicalJSONToHTML";
 
 function Preview({ product }: { product: IProduct }) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =
@@ -172,6 +173,11 @@ function Details({ product }: { product: IProduct }) {
 		);
 	}, [categoryTree, product.category]);
 
+	const descriptionHtml = useMemo(() => {
+		const parsed = JSON.parse(product.description);
+		return renderLexicalJSONToHTML(parsed.root.children);
+	}, [product.description]);
+
 	useEffect(() => {
 		sendGTMEvent({
 			event: "view_item",
@@ -243,7 +249,7 @@ function Details({ product }: { product: IProduct }) {
 						{product.name}
 					</h1>
 
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2 overflow-hidden">
 						<div className="text-4xl">
 							{formatCurrency(product.price / 100)}
 						</div>
@@ -342,7 +348,9 @@ function Details({ product }: { product: IProduct }) {
 					<AccordionContent asChild>
 						<div
 							className="[&_img]:rounded-lg"
-							dangerouslySetInnerHTML={{ __html: product.description }}
+							dangerouslySetInnerHTML={{
+								__html: descriptionHtml,
+							}}
 						/>
 					</AccordionContent>
 				</AccordionItem>

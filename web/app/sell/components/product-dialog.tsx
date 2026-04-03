@@ -5,9 +5,12 @@ import { SellInputs } from "@hooks/use-sell";
 
 import { InputCurrencyRange } from "@shared/components/ui/input-currency-range";
 import { InputTags } from "@shared/components/ui/input-tags";
-import { ImageToolbarButton } from "@shared/components/ui/lexical/image-tooltbar-button";
-import { MyOnChangePlugin } from "@shared/components/ui/lexical/my-on-change-plugin";
-import { LoadDescriptionPlugin } from "@shared/components/ui/lexical/load-description-plugin";
+import { OnChangePlugin } from "@shared/components/ui/lexical/plugins/on-change-plugin";
+import { LoadDescriptionPlugin } from "@shared/components/ui/lexical/plugins/load-description-plugin";
+import YouTubePastePlugin from "@shared/components/ui/lexical/plugins/youTube-paste-plugin";
+import ImageInput from "@shared/components/ui/image-input";
+import { ImageToolbarButtonPlugin } from "@shared/components/ui/lexical/plugins/image-tooltbar-button-plugin";
+
 import {
 	Dialog,
 	DialogContent,
@@ -41,8 +44,6 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 
 import { cn } from "@lib/utils";
-
-import ImageInput from "../../../_shared/components/ui/image-input";
 
 import { useQuery } from "@tanstack/react-query";
 import { categoriesService } from "@redux/services/categories-service";
@@ -148,7 +149,7 @@ export function ProductDialog({
 								{...register("name", {
 									required: "This field is required.",
 									minLength: { value: 2, message: "Name is too short." },
-									maxLength: { value: 80, message: "Name is too long." },
+									maxLength: { value: 120, message: "Name is too long." },
 								})}
 							/>
 						</Field>
@@ -169,10 +170,11 @@ export function ProductDialog({
 										ErrorBoundary={LexicalErrorBoundary}
 									/>
 									<HistoryPlugin />
-									<ImageToolbarButton />
-									<MyOnChangePlugin onChange={PluginOnChange} />
+									<ImageToolbarButtonPlugin />
+									<OnChangePlugin onChange={PluginOnChange} />
+									<YouTubePastePlugin />
 									{injectLoadDescriptionPlugin && (
-										<LoadDescriptionPlugin html={description} />
+										<LoadDescriptionPlugin json={description} />
 									)}
 
 									<div className="mt-2 text-red-600 text-xs">

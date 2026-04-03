@@ -6,7 +6,7 @@ import { User } from "@users/entities/user.entity";
 interface IReview {
 	_id: string;
 	rating: number;
-	description: string;
+	description?: string;
 	product: mongoose.Schema.Types.ObjectId;
 	user: mongoose.Schema.Types.ObjectId;
 	createdAt: Date;
@@ -27,10 +27,9 @@ export class Review extends Document implements Omit<IReview, "_id"> {
 
 	@Prop({
 		type: String,
-		required: [true, "A review must have a description"],
 		trim: true,
 	})
-	description!: string;
+	description?: string;
 
 	@Prop({
 		type: mongoose.Schema.ObjectId,

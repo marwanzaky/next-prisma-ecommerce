@@ -63,95 +63,97 @@ export default function Overview({ product }: { product: IProduct }) {
 
 			<div className="flex justify-center">
 				<Dialog open={displayDialog} onOpenChange={setDisplayDialog}>
-					<form
-						onSubmit={async () => {
-							await productsService.postProductReview(
-								token,
-								product._id,
-								rating,
-								description,
-							);
+					<DialogTrigger asChild>
+						<Button
+							size="lg"
+							onClick={(e) => {
+								if (!isAuthenticated) {
+									e.preventDefault();
+									return router.push("/signin");
+								}
+								setRating(0);
+							}}
+						>
+							Write a review
+						</Button>
+					</DialogTrigger>
+					<DialogContent className="sm:max-w-[24rem] ">
+						<DialogHeader>
+							<DialogTitle>Write a review</DialogTitle>
+							<DialogDescription>
+								Please rate your experience and share any additional feedback.
+							</DialogDescription>
+						</DialogHeader>
 
-							toast("Your review is sent successfully!", {
-								position: "top-center",
-							});
-						}}
-					>
-						<DialogTrigger asChild>
+						<FieldGroup>
+							<Field>
+								<FieldLabel>Rating</FieldLabel>
+								<div className="flex">
+									{[1, 2, 3, 4, 5].map((star) => (
+										<button
+											className="transition-transform hover:scale-110 "
+											key={star}
+											onClick={() => setRating(star)}
+											onMouseEnter={() => setHoverRating(star)}
+											onMouseLeave={() => setHoverRating(0)}
+											type="button"
+										>
+											<StarIcon
+												className={cn(
+													"h-8 w-8 mr-1 transition-colors",
+													(hoverRating || rating) >= star
+														? "fill-yellow-400 text-yellow-400"
+														: "text-muted-foreground",
+												)}
+											/>
+										</button>
+									))}
+								</div>
+							</Field>
+							<Field>
+								<FieldLabel id="description">Additional feedback</FieldLabel>
+								<Textarea
+									id="description"
+									placeholder="Describe your experience..."
+									className="min-h-32"
+									onChange={(e) => setDescription(e.target.value)}
+								/>
+							</Field>
+						</FieldGroup>
+
+						<DialogFooter>
 							<Button
-								size="lg"
-								onClick={(e) => {
-									if (!isAuthenticated) {
-										e.preventDefault();
-										return router.push("/signin");
-									}
-									setRating(0);
+								variant="outline"
+								type="button"
+								onClick={() => {
+									setDisplayDialog(false);
 								}}
 							>
-								Write a review
+								Cancel
 							</Button>
-						</DialogTrigger>
-						<DialogContent className="sm:max-w-[24rem] ">
-							<DialogHeader>
-								<DialogTitle>Write a review</DialogTitle>
-								<DialogDescription>
-									Please rate your experience and share any additional feedback.
-								</DialogDescription>
-							</DialogHeader>
 
-							<FieldGroup>
-								<Field>
-									<FieldLabel>Rating</FieldLabel>
-									<div className="flex">
-										{[1, 2, 3, 4, 5].map((star) => (
-											<button
-												className="transition-transform hover:scale-110 "
-												key={star}
-												onClick={() => setRating(star)}
-												onMouseEnter={() => setHoverRating(star)}
-												onMouseLeave={() => setHoverRating(0)}
-												type="button"
-											>
-												<StarIcon
-													className={cn(
-														"h-8 w-8 mr-1 transition-colors",
-														(hoverRating || rating) >= star
-															? "fill-yellow-400 text-yellow-400"
-															: "text-muted-foreground",
-													)}
-												/>
-											</button>
-										))}
-									</div>
-								</Field>
-								<Field>
-									<FieldLabel id="description">Additional feedback</FieldLabel>
-									<Textarea
-										id="description"
-										placeholder="Describe your experience..."
-										className="min-h-32"
-										onChange={(e) => setDescription(e.target.value)}
-									></Textarea>
-								</Field>
-							</FieldGroup>
+							<Button
+								type="button"
+								disabled={rating === 0}
+								onClick={async () => {
+									console.log("sent!");
+									await productsService.postProductReview(token, {
+										id: product._id,
+										rating,
+										description,
+									});
 
-							<DialogFooter>
-								<Button
-									variant="outline"
-									type="button"
-									onClick={() => {
-										setDisplayDialog(false);
-									}}
-								>
-									Cancel
-								</Button>
+									setDisplayDialog(false);
 
-								<Button type="submit" disabled={rating === 0}>
-									Submit
-								</Button>
-							</DialogFooter>
-						</DialogContent>
-					</form>
+									toast("Your review is sent successfully!", {
+										position: "top-center",
+									});
+								}}
+							>
+								Submit
+							</Button>
+						</DialogFooter>
+					</DialogContent>
 				</Dialog>
 			</div>
 		</div>
