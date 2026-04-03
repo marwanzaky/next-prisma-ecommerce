@@ -57,7 +57,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { cn } from "@lib/utils";
 
-import { formatPrice } from "@utils/format-price";
+import { formatCurrency } from "@utils/format-price";
 import { initials, stringToDate } from "@utils/string-utils";
 
 import { sendGTMEvent } from "@next/third-parties/google";
@@ -244,10 +244,12 @@ function Details({ product }: { product: IProduct }) {
 					</h1>
 
 					<div className="flex items-center gap-2">
-						<div className="text-4xl">{formatPrice(product.price)}</div>
+						<div className="text-4xl">
+							{formatCurrency(product.price / 100)}
+						</div>
 						{product.priceCompare > product.price && (
 							<div className="text-muted-foreground line-through text-2xl">
-								{formatPrice(product.priceCompare)}
+								{formatCurrency(product.priceCompare / 100)}
 							</div>
 						)}
 					</div>

@@ -1,9 +1,15 @@
 const currency = process.env.NEXT_PUBLIC_CURRENCY || "USD";
 const locale = process.env.NEXT_PUBLIC_LOCALE || "en-US";
 
-export function formatPrice(amount: number) {
-	return new Intl.NumberFormat(locale, {
+export function formatCurrency(value: number) {
+	const formatted = new Intl.NumberFormat(locale, {
 		style: "currency",
 		currency,
-	}).format(amount / 100);
+	}).format(value);
+
+	if (currency === "MAD") {
+		return formatted.replace("MAD", "Dhs");
+	}
+
+	return formatted;
 }

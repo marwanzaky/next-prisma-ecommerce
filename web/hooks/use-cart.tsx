@@ -11,9 +11,10 @@ import { IProduct } from "@shared/interfaces";
 import { Column } from "@shared/components/ui/table";
 import { LogoCell } from "@shared/components/ui/table/cells/logo-cell";
 
-import { selectCartTotalStr } from "@redux/selectors/cart-selectors";
 import { paymentsService } from "@redux/services/payments-service";
 import { createProductSlug } from "@utils/string-utils";
+import { useMemo } from "react";
+import { formatCurrency } from "@utils/format-price";
 
 type CartItem = IProduct & { imgUrl: string; quantity: number; total: number };
 
@@ -21,7 +22,40 @@ export function useCart() {
 	const dispatch = useDispatch<AppDispatch>();
 
 	const { items } = useAppSelector((state) => state.cartReducer);
-	const cartTotalStr = useAppSelector(selectCartTotalStr);
+
+	const { total, subtotal, discount, discountPercent } = useMemo(() => {
+		if (items.length === 0) {
+			return {
+				total: "",
+				subtotal: "",
+				discount: "",
+				discountPercent: "",
+			};
+		}
+
+		const subtotalValue = items.reduce(
+			(acc, item) => acc + (item.product.priceCompare * item.quantity) / 100,
+			0,
+		);
+
+		const totalValue = items.reduce(
+			(acc, item) => acc + (item.product.price * item.quantity) / 100,
+			0,
+		);
+
+		const discountValue = subtotalValue - totalValue;
+		const discountPercentValue =
+			subtotalValue > 0 ? (discountValue / subtotalValue) * 100 : 0;
+
+		const shippingValue = 0;
+
+		return {
+			subtotal: formatCurrency(subtotalValue),
+			discount: formatCurrency(discountValue),
+			discountPercent: `${discountPercentValue.toFixed(0)}%`,
+			total: formatCurrency(totalValue + shippingValue),
+		};
+	}, [items]);
 
 	const columns: Column<CartItem>[] = [
 		{
@@ -101,7 +135,12 @@ export function useCart() {
 		items,
 		columns,
 		tableData,
-		cartTotalStr,
+
+		total,
+		subtotal,
+		discount,
+		discountPercent,
+
 		checkout,
 	};
 }

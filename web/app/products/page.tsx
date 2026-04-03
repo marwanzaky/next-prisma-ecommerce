@@ -23,7 +23,7 @@ import {
 import { TypographyP } from "@shadcn/components/ui/typography";
 import { InputCurrencyRange } from "@shared/components/ui/input-currency-range";
 
-import { formatPrice } from "@utils/format-price";
+import { formatCurrency } from "@utils/format-price";
 
 import { Button } from "@shadcn/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@shadcn/components/ui/radio-group";
@@ -91,17 +91,18 @@ export default function Page() {
 							)}
 							{minPrice && maxPrice && (
 								<Chip onClick={clearPriceRange}>
-									{formatPrice(minPrice)} - {formatPrice(maxPrice)}
+									{formatCurrency(minPrice / 100)} -{" "}
+									{formatCurrency(maxPrice / 100)}
 								</Chip>
 							)}
 							{minPrice != undefined && maxPrice == null && (
 								<Chip onClick={clearPriceRange}>
-									Above {formatPrice(minPrice)}
+									Above {formatCurrency(minPrice / 100)}
 								</Chip>
 							)}
 							{minPrice == null && maxPrice != undefined && (
 								<Chip onClick={clearPriceRange}>
-									Under {formatPrice(maxPrice)}
+									Under {formatCurrency(maxPrice / 100)}
 								</Chip>
 							)}
 

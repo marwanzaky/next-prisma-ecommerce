@@ -1,6 +1,7 @@
+import { cn } from "@lib/utils";
 import { Input } from "@shadcn/components/ui/input";
 import { ButtonIcon } from "@shared/components/ui/button-icon";
-import { formatPrice } from "@utils/format-price";
+import { formatCurrency } from "@utils/format-price";
 
 export type Column<T = any> = {
 	field: keyof T;
@@ -31,8 +32,13 @@ export type TableProps = {
 
 export function Table({ className, columns, data }: TableProps) {
 	return (
-		<div className={`w-full overflow-x-auto ${className || ""}`}>
-			<table className="w-full border rounded-xl border-separate! p-2.5">
+		<div
+			className={cn(
+				`w-full ring-1 ring-foreground/10 rounded-xl overflow-x-auto`,
+				className,
+			)}
+		>
+			<table className="w-full border-separate p-2.5">
 				<thead>
 					<tr>
 						{columns.map((column, colIndex) => (
@@ -69,7 +75,7 @@ export function Table({ className, columns, data }: TableProps) {
 											}
 										/>
 									) : column.type === "usd" ? (
-										formatPrice(row[column.field])
+										formatCurrency(row[column.field] / 100)
 									) : column.type === "date" ? (
 										new Date(row[column.field]).toLocaleDateString("en-GB")
 									) : column.type === "custom" && column.render ? (

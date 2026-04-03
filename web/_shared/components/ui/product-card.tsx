@@ -15,7 +15,7 @@ import Stars from "@shared/components/ui/stars";
 import { IProduct } from "@shared/interfaces";
 import { ButtonIcon } from "@shared/components/ui/button-icon";
 
-import { formatPrice } from "@utils/format-price";
+import { formatCurrency } from "@utils/format-price";
 import { createProductSlug } from "@utils/string-utils";
 import { useIsMobile } from "@shadcn/hooks/use-mobile";
 
@@ -81,11 +81,11 @@ export default function ProductCard({ data }: ProductCardProps) {
 
 				<div className="flex items-center gap-x-2">
 					<div className="leading-none! text-base md:text-2xl">
-						{formatPrice(data.price)}
+						{formatCurrency(data.price / 100)}
 					</div>
 					{data.priceCompare > data.price && (
 						<div className="text-gray-500 line-through leading-none! text-sm md:text-lg">
-							{formatPrice(data.priceCompare)}
+							{formatCurrency(data.priceCompare / 100)}
 						</div>
 					)}
 				</div>
