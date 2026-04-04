@@ -34,10 +34,12 @@ const formSchema = z.object({
 	message: z.string().nonempty("This field is required."),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 export default function Contact() {
 	const router = useRouter();
 
-	const form = useForm<z.infer<typeof formSchema>>({
+	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		mode: "onChange",
 		defaultValues: {
@@ -48,7 +50,7 @@ export default function Contact() {
 		},
 	});
 
-	const onSubmit = async (data: z.infer<typeof formSchema>) => {
+	const onSubmit = async (data: FormValues) => {
 		try {
 			console.log("data", data);
 			await contactMessagesService.sendMessage(data);

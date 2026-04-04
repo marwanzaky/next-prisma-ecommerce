@@ -23,6 +23,7 @@ export default function Header() {
 				className="object-center object-cover pointer-events-none z-[-1]"
 				src="/img/background.jpg"
 				alt="background"
+				fetchPriority="high"
 			/>
 
 			<div className="space-y-4">

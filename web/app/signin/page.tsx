@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { useDispatch } from "react-redux";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { handleLogin } from "@utils/auth-helpers";
 
@@ -21,26 +21,42 @@ import {
 import {
 	Field,
 	FieldDescription,
+	FieldError,
 	FieldGroup,
 	FieldLabel,
 } from "@shadcn/components/ui/field";
 import { Input } from "@shadcn/components/ui/input";
 
-type Inputs = {
-	email: string;
-	password: string;
-};
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const formSchema = z.object({
+	email: z
+		.email()
+		.max(32, "Email is too short.")
+		.nonempty("This field is required."),
+	password: z.string().nonempty("This field is required."),
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 export default function Page() {
 	const router = useRouter();
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<Inputs>({ mode: "onTouched" });
+	const form = useForm<FormValues>({
+		resolver: zodResolver(formSchema),
+		mode: "onChange",
+		defaultValues: {
+			email: "",
+			password: "",
+		},
+	});
 
 	const dispatch = useDispatch();
+
+	const onSubmit = async (data: FormValues) => {
+		handleLogin(data.email, data.password, dispatch, router);
+	};
 
 	return (
 		<Section>
@@ -53,49 +69,56 @@ export default function Page() {
 				</CardHeader>
 
 				<CardContent>
-					<form
-						onSubmit={handleSubmit(({ email, password }) => {
-							handleLogin(email, password, dispatch, router);
-						})}
-					>
+					<form onSubmit={form.handleSubmit(onSubmit)}>
 						<FieldGroup>
-							<Field>
-								<FieldLabel htmlFor="email">Email</FieldLabel>
-								<Input
-									id="email"
-									type="text"
-									placeholder="m@example.com"
-									{...register("email", {
-										required: "This field is required.",
-										minLength: { value: 2, message: "Email is too short." },
-										maxLength: { value: 32, message: "Email is too long." },
-										pattern: {
-											value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-											message: "Invalid characters in email",
-										},
-									})}
-								/>
-							</Field>
-							<Field>
-								<div className="flex items-center">
-									<FieldLabel htmlFor="password">Password</FieldLabel>
+							<Controller
+								name="email"
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel htmlFor="email">Email</FieldLabel>
+										<Input
+											{...field}
+											id="email"
+											aria-invalid={fieldState.invalid}
+											placeholder="m@example.com"
+											autoComplete="off"
+										/>
+										{fieldState.invalid && (
+											<FieldError errors={[fieldState.error]} />
+										)}
+									</Field>
+								)}
+							/>
 
-									<Link
-										href="/forgot-password"
-										className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-									>
-										Forgot your password?
-									</Link>
-								</div>
+							<Controller
+								name="password"
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<div className="flex items-center">
+											<FieldLabel htmlFor="password">Password</FieldLabel>
 
-								<Input
-									id="password"
-									type="password"
-									{...register("password", {
-										required: "This field is required.",
-									})}
-								/>
-							</Field>
+											<Link
+												href="/forgot-password"
+												className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+											>
+												Forgot your password?
+											</Link>
+										</div>
+										<Input
+											{...field}
+											id="password"
+											type="password"
+											aria-invalid={fieldState.invalid}
+											autoComplete="off"
+										/>
+										{fieldState.invalid && (
+											<FieldError errors={[fieldState.error]} />
+										)}
+									</Field>
+								)}
+							/>
 
 							<Field>
 								<Button type="submit">Login</Button>
