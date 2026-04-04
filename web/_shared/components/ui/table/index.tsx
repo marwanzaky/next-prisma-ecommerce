@@ -22,6 +22,7 @@ export type Column<T = any> = {
 
 	action?: (row: T) => void;
 	actionIcon?: string;
+	actionAriaLabel?: string;
 };
 
 export type TableProps = {
@@ -85,6 +86,7 @@ export function Table({ className, columns, data }: TableProps) {
 									  column.actionIcon ? (
 										<ButtonIcon
 											icon={column.actionIcon}
+											aria-label={column.actionAriaLabel}
 											onClick={() => column.action!(row)}
 										/>
 									) : (

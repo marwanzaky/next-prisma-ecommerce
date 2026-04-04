@@ -37,6 +37,7 @@ export function ImageToolbarButtonPlugin() {
 			size="sm"
 			type="button"
 			icon="upload"
+			aria-label="Upload image"
 			className="absolute top-0.75 right-4"
 			onClick={insertImage}
 		/>

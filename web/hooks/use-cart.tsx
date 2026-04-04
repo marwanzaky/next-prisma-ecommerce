@@ -105,6 +105,7 @@ export function useCart() {
 				dispatch(deleteCartItemAsync({ product: row }));
 			},
 			actionIcon: "delete",
+			actionAriaLabel: "Remove product",
 			className: "w-9.5",
 		},
 	];

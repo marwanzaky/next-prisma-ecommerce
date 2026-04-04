@@ -57,6 +57,12 @@
   - `/shared` for shared typescript files
 - Progressive Web Apps (PWA) support
 - Response on mobile, tablets, and desktop
+- Lighthouse scores
+  - **Semantic HTML:** Correct heading hierarchy and ARIA landmarks.
+  - **Optimized Core Web Vitals:** Near-instant page loads and minimal layout shift.
+  - **Search Engine Optimized:** Dynamic JSON-LD structured data, automated sitemaps, and optimized metadata for every product page.
+<img width="1024" height="188" alt="googlechrome github io_lighthouse_viewer_ (1)" src="https://github.com/user-attachments/assets/d77d59af-024a-4ed0-a1f8-59a0233ecb42" />
+<img width="1304" height="278" alt="www google com_search_q=mamolio oq=mamolio gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQRRg8MgYIAhBFGDwyBggDEEUYPDIICAQQRRgnGDsyBggFEEUYOzIGCAYQRRg7MgYIBxBFGEHSAQgxOTY2ajBqN6gCALACAA sourceid=chrome ie=UTF-8" src="https://github.com/user-attachments/assets/6f3ada84-47c5-42b0-af2d-cafec1003b7c" />
 
 ## Available Pages
 - Home: `/`

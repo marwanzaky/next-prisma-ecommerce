@@ -24,12 +24,7 @@ import {
 	AlertDialogTrigger,
 } from "@shadcn/components/ui/alert-dialog";
 
-import {
-	TypographyH2,
-	TypographyH3,
-	TypographyH4,
-	TypographyMuted,
-} from "@shadcn/components/ui/typography";
+import { Heading, TypographyMuted } from "@shadcn/components/ui/typography";
 
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@shadcn/components/ui/button";
@@ -96,171 +91,178 @@ function PersonalInformationForm() {
 	}, [user]);
 
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Personal information</CardTitle>
-				<CardDescription>
-					Manage your personal details and how your profile appears Enter your
-					information below
-				</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<form
-					onSubmit={handleSubmit((data) => {
-						dispatch(
-							updateMeAsync({
-								name: data.name,
-								email: data.email,
-								...(data.photo.file
-									? { photoFile: data.photo.file }
-									: { photoUrl: data.photo.url }),
-							}),
-						);
-					})}
-					className="space-y-4"
-				>
-					<input
-						ref={inputRef}
-						className="hidden"
-						type="file"
-						accept=".png, .jpg, .jpeg"
-						onChange={async (event) => {
-							const file = event.target.files?.[0];
-							if (!file) return;
+		user && (
+			<Card>
+				<CardHeader>
+					<CardTitle>Personal information</CardTitle>
+					<CardDescription>
+						Manage your personal details and how your profile appears Enter your
+						information below
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<form
+						onSubmit={handleSubmit((data) => {
+							dispatch(
+								updateMeAsync({
+									name: data.name,
+									email: data.email,
+									...(data.photo.file
+										? { photoFile: data.photo.file }
+										: { photoUrl: data.photo.url }),
+								}),
+							);
+						})}
+						className="space-y-4"
+					>
+						<input
+							ref={inputRef}
+							className="hidden"
+							type="file"
+							accept=".png, .jpg, .jpeg"
+							onChange={async (event) => {
+								const file = event.target.files?.[0];
+								if (!file) return;
 
-							if (file.size > 4 * 1024 * 1024) {
-								alert("Image size exceeds the 4MB limit");
+								if (file.size > 4 * 1024 * 1024) {
+									alert("Image size exceeds the 4MB limit");
+									event.target.value = "";
+									return;
+								}
+
+								setValue("photo", { url: "", file }, { shouldDirty: true });
 								event.target.value = "";
-								return;
-							}
+							}}
+						/>
 
-							setValue("photo", { url: "", file }, { shouldDirty: true });
-							event.target.value = "";
-						}}
-					/>
+						<FieldGroup>
+							<Field>
+								<FieldLabel>Profile Photo</FieldLabel>
+								<div className="flex items-center gap-4">
+									<Controller
+										name="photo"
+										control={control}
+										render={({ field }) => {
+											const { value } = field;
+											const [previewUrl, setPreviewUrl] = useState(
+												value?.url || "",
+											);
 
-					<FieldGroup>
-						<Field>
-							<FieldLabel>Profile Photo</FieldLabel>
-							<div className="flex items-center gap-4">
-								<Controller
-									name="photo"
-									control={control}
-									render={({ field }) => {
-										const { value } = field;
-										const [previewUrl, setPreviewUrl] = useState(
-											value?.url || "",
-										);
+											useEffect(() => {
+												let url: string | undefined;
 
-										useEffect(() => {
-											let url: string | undefined;
-
-											if (value?.file) {
-												url = URL.createObjectURL(value.file);
-												setPreviewUrl(url);
-											} else {
-												setPreviewUrl(value?.url || "");
-											}
-
-											return () => {
-												if (url) {
-													URL.revokeObjectURL(url);
+												if (value?.file) {
+													url = URL.createObjectURL(value.file);
+													setPreviewUrl(url);
+												} else {
+													setPreviewUrl(value?.url || "");
 												}
-											};
-										}, [value?.file, value?.url]);
 
-										return (
-											<Avatar className="h-12 w-12">
-												<AvatarImage src={previewUrl} />
-												<AvatarFallback>{initials(user!.name)}</AvatarFallback>
-											</Avatar>
-										);
-									}}
-								/>
+												return () => {
+													if (url) {
+														URL.revokeObjectURL(url);
+													}
+												};
+											}, [value?.file, value?.url]);
 
-								<div className="flex flex-col gap-2">
-									<div className="flex items-center gap-2">
-										<Button
-											variant="secondary"
-											type="button"
-											onClick={() => inputRef.current?.click()}
-										>
-											Change avatar
-										</Button>
+											return (
+												<Avatar className="h-12 w-12">
+													<AvatarImage
+														src={previewUrl}
+														alt={`Photo of ${user.name}`}
+														loading="lazy"
+													/>
+													<AvatarFallback>{initials(user.name)}</AvatarFallback>
+												</Avatar>
+											);
+										}}
+									/>
 
-										<ButtonIcon
-											size="sm"
-											type="button"
-											icon="delete"
-											onClick={() => {
-												const current = user?.photoUrl;
+									<div className="flex flex-col gap-2">
+										<div className="flex items-center gap-2">
+											<Button
+												variant="secondary"
+												type="button"
+												onClick={() => inputRef.current?.click()}
+											>
+												Change avatar
+											</Button>
 
-												setValue(
-													"photo",
-													{ url: "", file: undefined },
-													{ shouldDirty: !!current },
-												);
-											}}
-										/>
+											<ButtonIcon
+												size="sm"
+												type="button"
+												icon="delete"
+												aria-label="Delete avatar"
+												onClick={() => {
+													const current = user.photoUrl;
+
+													setValue(
+														"photo",
+														{ url: "", file: undefined },
+														{ shouldDirty: !!current },
+													);
+												}}
+											/>
+										</div>
+
+										<TypographyMuted className="text-xs">
+											Must be a .jpg, or .png file smaller than 4MB.
+										</TypographyMuted>
 									</div>
-
-									<TypographyMuted className="text-xs">
-										Must be a .jpg, or .png file smaller than 4MB.
-									</TypographyMuted>
 								</div>
-							</div>
-						</Field>
-						<Field>
-							<FieldLabel htmlFor="name">Full Name</FieldLabel>
-							<Input
-								id="name"
-								type="text"
-								placeholder="John Doe"
-								{...register("name", {
-									required: "This field is required.",
-									minLength: { value: 2, message: "Name is too short." },
-									maxLength: { value: 16, message: "Name is too long." },
-									pattern: {
-										value: /^[a-zA-Z0-9\s'-]+$/,
-										message: "Invalid characters in name.",
-									},
-								})}
-							/>
-						</Field>
-						<Field>
-							<FieldLabel htmlFor="name">Email</FieldLabel>
-							<Input
-								id="name"
-								type="email"
-								placeholder="m@example.com"
-								{...register("email", {
-									required: "This field is required.",
-									minLength: { value: 2, message: "Email is too short." },
-									maxLength: { value: 32, message: "Email is too long." },
-									pattern: {
-										value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-										message: "Invalid characters in email.",
-									},
-								})}
-							/>
-						</Field>
-						<Field orientation="horizontal">
-							<Button
-								variant="outline"
-								disabled={!formState.isDirty}
-								onClick={resetForm}
-							>
-								Cancel
-							</Button>
+							</Field>
+							<Field>
+								<FieldLabel htmlFor="name">Full Name</FieldLabel>
+								<Input
+									id="name"
+									type="text"
+									placeholder="John Doe"
+									{...register("name", {
+										required: "This field is required.",
+										minLength: { value: 2, message: "Name is too short." },
+										maxLength: { value: 16, message: "Name is too long." },
+										pattern: {
+											value: /^[a-zA-Z0-9\s'-]+$/,
+											message: "Invalid characters in name.",
+										},
+									})}
+								/>
+							</Field>
+							<Field>
+								<FieldLabel htmlFor="name">Email</FieldLabel>
+								<Input
+									id="name"
+									type="email"
+									placeholder="m@example.com"
+									{...register("email", {
+										required: "This field is required.",
+										minLength: { value: 2, message: "Email is too short." },
+										maxLength: { value: 32, message: "Email is too long." },
+										pattern: {
+											value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+											message: "Invalid characters in email.",
+										},
+									})}
+								/>
+							</Field>
+							<Field orientation="horizontal">
+								<Button
+									variant="outline"
+									disabled={!formState.isDirty}
+									onClick={resetForm}
+								>
+									Cancel
+								</Button>
 
-							<Button type="submit" disabled={!formState.isDirty}>
-								Save
-							</Button>
-						</Field>
-					</FieldGroup>
-				</form>
-			</CardContent>
-		</Card>
+								<Button type="submit" disabled={!formState.isDirty}>
+									Save
+								</Button>
+							</Field>
+						</FieldGroup>
+					</form>
+				</CardContent>
+			</Card>
+		)
 	);
 }
 
@@ -428,11 +430,13 @@ export default function Page() {
 		<>
 			{user == null ? (
 				<Section className="m-auto max-w-lg">
-					<TypographyH3>loading...</TypographyH3>
+					<Heading as="h3">loading...</Heading>
 				</Section>
 			) : (
 				<Section className="m-auto max-w-sm space-y-2 lg:space-y-4">
-					<TypographyH4 className="text-center">Settings</TypographyH4>
+					<Heading as="h4" className="text-center">
+						Settings
+					</Heading>
 
 					<div className="flex flex-col gap-4">
 						<PersonalInformationForm />

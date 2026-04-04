@@ -90,6 +90,7 @@ export function useAdminMessages() {
 					<div className="flex gap-2">
 						<ButtonIcon
 							icon="visibility"
+							aria-label="View message"
 							onClick={() => {
 								setSelectedMessage(row);
 								setVisible(true);
@@ -97,7 +98,7 @@ export function useAdminMessages() {
 						/>
 						<AlertDialog>
 							<AlertDialogTrigger asChild>
-								<ButtonIcon icon="delete" />
+								<ButtonIcon icon="delete" aria-label="Delete message" />
 							</AlertDialogTrigger>
 							<AlertDialogContent>
 								<AlertDialogHeader>

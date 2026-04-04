@@ -1,15 +1,15 @@
 import { cn } from "@lib/utils";
 import Icon from "@shared//components/ui/icon";
 import { Section } from "@shared/components/ui/section";
-import { TypographyH3, TypographyH4 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 import { TypographyMuted } from "@shadcn/components/ui/typography";
 
 export default function WhyChooseUs() {
 	return (
 		<Section className="lg:pt-0! space-y-2 lg:space-y-4">
-			<TypographyH3 className="text-center">
+			<Heading as="h2" variant="h3" className="text-center">
 				Why Should You Choose Us?
-			</TypographyH3>
+			</Heading>
 
 			<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
 				<Reason
@@ -63,9 +63,13 @@ function Reason({
 				/>
 			</div>
 
-			<TypographyH4 className="text-center lg:text-left truncate mb-6">
+			<Heading
+				as="h3"
+				variant="h4"
+				className="text-center lg:text-left truncate mb-6"
+			>
 				{title}
-			</TypographyH4>
+			</Heading>
 			<TypographyMuted className="text-center lg:text-left text-sm md:text-base">
 				{description}
 			</TypographyMuted>

@@ -102,11 +102,20 @@ export default function Navigation() {
 			</ul>
 
 			<div className="flex-1 flex items-center justify-end">
-				<ButtonIcon icon="storefront" onClick={() => router.push("/sell")} />
-				<ButtonIcon icon="favorite" onClick={() => router.push("/favorites")} />
+				<ButtonIcon
+					icon="storefront"
+					aria-label="Go to Sell page"
+					onClick={() => router.push("/sell")}
+				/>
+				<ButtonIcon
+					icon="favorite"
+					aria-label="Go to Favorites page"
+					onClick={() => router.push("/favorites")}
+				/>
 				<ButtonIcon
 					className="relative"
 					icon="shopping_cart"
+					aria-label="Go to Cart page"
 					onClick={() => router.push("/cart")}
 				>
 					{items.length > 0 && <Badge>{items.length}</Badge>}
@@ -204,6 +213,7 @@ export default function Navigation() {
 					: process.env.NEXT_PUBLIC_ACCOUNT === "true" && (
 							<ButtonIcon
 								icon="person"
+								aria-label="Go to Sign In page"
 								onClick={() => router.push("/signin")}
 							/>
 						)}
@@ -224,7 +234,7 @@ function NavigationMenu() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<ButtonIcon icon="menu" />
+				<ButtonIcon icon="menu" aria-label="Open categories menu" />
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent side="bottom" align="start" sideOffset={4}>

@@ -4,7 +4,7 @@ import { Button } from "@shadcn/components/ui/button";
 import { TypographyP } from "@shadcn/components/ui/typography";
 import { Section } from "@shared/components/ui/section";
 import { Container } from "@shared/components/ui/container";
-import { TypographyH2, TypographyH4 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 import { useRouter } from "next/navigation";
 
 function Paragraph({
@@ -16,7 +16,9 @@ function Paragraph({
 }) {
 	return (
 		<div>
-			<TypographyH4>{title}</TypographyH4>
+			<Heading as="h2" variant="h4">
+				{title}
+			</Heading>
 			<TypographyP>{children}</TypographyP>
 		</div>
 	);
@@ -28,9 +30,13 @@ export default function About() {
 	return (
 		<Section className="full-bleed bg-[#b2bec3]">
 			<Container>
-				<TypographyH2 className="text-center border-muted-foreground border-none">
+				<Heading
+					as="h1"
+					variant="h2"
+					className="text-center border-muted-foreground border-none"
+				>
 					What is {process.env.NEXT_PUBLIC_NAME}?
-				</TypographyH2>
+				</Heading>
 
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-12">
 					<Paragraph title="A community doing good">
@@ -54,9 +60,9 @@ export default function About() {
 				</div>
 
 				<div>
-					<TypographyH4 className="text-center mb-6">
+					<Heading as="h3" variant="h4" className="text-center mb-6">
 						Have a question? contact us here.
-					</TypographyH4>
+					</Heading>
 
 					<div className="flex justify-center">
 						<Button size="lg" onClick={() => router.push("/contact")}>

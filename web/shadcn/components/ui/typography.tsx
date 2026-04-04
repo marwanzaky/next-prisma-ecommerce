@@ -1,61 +1,41 @@
 import { cn } from "@lib/utils";
 
-type Typography = {
+const headingVariants = {
+	h1: "scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance",
+	h2: "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-10",
+	h3: "scroll-m-20 text-2xl font-semibold tracking-tight",
+	h4: "scroll-m-20 text-xl font-semibold tracking-tight",
+};
+
+type HeadingProps = {
+	as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+	variant?: keyof typeof headingVariants;
 	className?: string;
 	children: React.ReactNode;
 };
 
-export function TypographyH1({ className, children }: Typography) {
+export function Heading({
+	as: Tag,
+	variant,
+	className,
+	children,
+}: HeadingProps) {
 	return (
-		<h1
+		<Tag
 			className={cn(
-				"scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance",
+				headingVariants[variant || (Tag as keyof typeof headingVariants)],
 				className,
 			)}
 		>
 			{children}
-		</h1>
+		</Tag>
 	);
 }
 
-export function TypographyH2({ className, children }: Typography) {
-	return (
-		<h2
-			className={cn(
-				"scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-10",
-				className,
-			)}
-		>
-			{children}
-		</h2>
-	);
-}
-
-export function TypographyH3({ className, children }: Typography) {
-	return (
-		<h3
-			className={cn(
-				"scroll-m-20 text-2xl font-semibold tracking-tight",
-				className,
-			)}
-		>
-			{children}
-		</h3>
-	);
-}
-
-export function TypographyH4({ className, children }: Typography) {
-	return (
-		<h4
-			className={cn(
-				"scroll-m-20 text-xl font-semibold tracking-tight",
-				className,
-			)}
-		>
-			{children}
-		</h4>
-	);
-}
+type Typography = {
+	className?: string;
+	children: React.ReactNode;
+};
 
 export function TypographyP({ className, children }: Typography) {
 	return (
@@ -66,8 +46,5 @@ export function TypographyP({ className, children }: Typography) {
 }
 
 export function TypographyMuted({ className, children }: Typography) {
-	return (
-		// text-sm
-		<p className={cn("text-muted-foreground", className)}>{children}</p>
-	);
+	return <p className={cn("text-muted-foreground", className)}>{children}</p>;
 }

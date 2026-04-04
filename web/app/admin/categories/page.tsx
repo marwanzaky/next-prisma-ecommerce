@@ -22,7 +22,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@shadcn/components/ui/select";
-import { TypographyH4 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 import { Button } from "@shadcn/components/ui/button";
 import { Input } from "@shadcn/components/ui/input";
 import { Field, FieldGroup, FieldLabel } from "@shadcn/components/ui/field";
@@ -52,9 +52,9 @@ export default function Page() {
 
 	return (
 		<Section>
-			<TypographyH4 className="text-center mb-2 lg:mb-4">
+			<Heading as="h4" className="text-center mb-2 lg:mb-4">
 				Your Categories
-			</TypographyH4>
+			</Heading>
 
 			{!isLoading && data && data.length > 0 && (
 				<Table className="mb-8" columns={columns} data={data} />

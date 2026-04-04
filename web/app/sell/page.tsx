@@ -5,7 +5,7 @@ import { Table } from "@shared/components/ui/table";
 import { useSell } from "@hooks/use-sell";
 
 import { Section } from "@shared/components/ui/section";
-import { TypographyH4 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 
 import {
 	Empty,
@@ -28,7 +28,9 @@ export default function Page() {
 
 	return (
 		<Section className="space-y-2 lg:space-y-4">
-			<TypographyH4 className="text-center">Your Products</TypographyH4>
+			<Heading as="h4" className="text-center">
+				Your Products
+			</Heading>
 
 			{tableData.length > 0 ? (
 				<div className="flex flex-col gap-4">

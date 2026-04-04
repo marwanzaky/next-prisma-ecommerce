@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { createProductSlug } from "@utils/string-utils";
 import { TypographyP } from "@shadcn/components/ui/typography";
 import { Button } from "@shadcn/components/ui/button";
-import { TypographyH1 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 
 export default function Header() {
 	const router = useRouter();
@@ -28,9 +28,12 @@ export default function Header() {
 
 			<div className="space-y-4">
 				<div>
-					<TypographyH1 className="text-center text-white text-4xl md:text-5xl">
+					<Heading
+						as="h1"
+						className="text-center text-white text-4xl md:text-5xl"
+					>
 						{productName}
-					</TypographyH1>
+					</Heading>
 					<TypographyP className="text-center text-muted max-w-xs mx-auto">
 						{productDescription}
 					</TypographyP>

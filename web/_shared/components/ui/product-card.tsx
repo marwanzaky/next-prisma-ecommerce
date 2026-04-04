@@ -43,12 +43,14 @@ export default function ProductCard({ data }: ProductCardProps) {
 						className="scale-[.85] hover:scale-100 shadow-md transition-transform"
 						styleClass="filter-(--filter-primary)"
 						icon="favorite_fill"
+						aria-label="Remove from favorites"
 						onClick={removeFromFavorites}
 					/>
 				) : (
 					<ButtonIcon
 						className="scale-[.85] hover:scale-100 shadow-md transition-transform"
 						icon="favorite"
+						aria-label="Add to favorites"
 						onClick={addToFavorites}
 					/>
 				)}
@@ -93,6 +95,7 @@ export default function ProductCard({ data }: ProductCardProps) {
 				<ButtonIcon
 					className="absolute bottom-1 right-1 sm:bottom-4 sm:right-4"
 					icon="shopping_cart"
+					aria-label="Add to cart"
 					variant="primary"
 					onClick={() => {
 						dispatch(postCartItemAsync({ product: data }));

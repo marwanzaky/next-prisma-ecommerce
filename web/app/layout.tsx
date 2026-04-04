@@ -113,7 +113,9 @@ export default function RootLayout({
 
 					{/* Page */}
 					<Container>
-						<TooltipProvider>{children}</TooltipProvider>
+						<TooltipProvider>
+							<main>{children}</main>
+						</TooltipProvider>
 					</Container>
 
 					{/* Footer */}

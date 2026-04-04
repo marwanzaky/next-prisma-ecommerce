@@ -4,7 +4,7 @@ import { useAdminMessages } from "@hooks/use-admin-message";
 
 import { Table } from "@shared/components/ui/table";
 import { Section } from "@shared/components/ui/section";
-import { TypographyH4 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 import {
 	Empty,
 	EmptyDescription,
@@ -17,9 +17,9 @@ export default function Page() {
 
 	return (
 		<Section>
-			<TypographyH4 className="text-center mb-2 lg:mb-4">
+			<Heading as="h4" className="text-center mb-2 lg:mb-4">
 				Your Messages
-			</TypographyH4>
+			</Heading>
 
 			{!isLoading && data && data.length > 0 ? (
 				<Table className="mb-8" columns={columns} data={data} />

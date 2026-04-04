@@ -140,7 +140,7 @@ export default function Page() {
 								value={sort}
 								onValueChange={(value) => setSort(value as SortOption)}
 							>
-								<SelectTrigger>
+								<SelectTrigger aria-label={sort}>
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent>

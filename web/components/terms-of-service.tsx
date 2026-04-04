@@ -1,12 +1,16 @@
 import { TypographyP } from "@shadcn/components/ui/typography";
 import { Section } from "@shared/components/ui/section";
-import { TypographyH2, TypographyH4 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 
 export default function TermsOfService() {
 	return (
 		<Section>
-			<TypographyH2>Terms of service</TypographyH2>
-			<TypographyH4>Overview</TypographyH4>
+			<Heading as="h1" variant="h2">
+				Terms of service
+			</Heading>
+			<Heading as="h2" variant="h4">
+				Overview
+			</Heading>
 			<TypographyP>
 				This website is operated by {process.env.NEXT_PUBLIC_NAME}. Throughout
 				the site, the terms “we”, “us” and “our” refer to{" "}

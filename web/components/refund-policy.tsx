@@ -1,13 +1,16 @@
 import { TypographyP } from "@shadcn/components/ui/typography";
 import { Section } from "@shared/components/ui/section";
-import { TypographyH2, TypographyH4 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 
 export default function RefundPolicy() {
 	return (
 		<Section>
-			<TypographyH2>Refund Policy</TypographyH2>
-
-			<TypographyH4>Refund Policy</TypographyH4>
+			<Heading as="h1" variant="h2">
+				Refund Policy
+			</Heading>
+			<Heading as="h2" variant="h4">
+				Refund Policy
+			</Heading>
 			<TypographyP>
 				We have a 30-day return policy, which means you have 30 days after
 				receiving your item to request a return.
@@ -31,7 +34,9 @@ export default function RefundPolicy() {
 				<br />
 			</TypographyP>
 
-			<TypographyH4>Damages and issues</TypographyH4>
+			<Heading as="h2" variant="h4">
+				Damages and issues
+			</Heading>
 			<TypographyP>
 				Please inspect your order upon reception and contact us immediately if
 				the item is defective, damaged or if you receive the wrong item, so that
@@ -40,7 +45,9 @@ export default function RefundPolicy() {
 				<br />
 			</TypographyP>
 
-			<TypographyH4>Exceptions / non-returnable items</TypographyH4>
+			<Heading as="h2" variant="h4">
+				Exceptions / non-returnable items
+			</Heading>
 			<TypographyP>
 				Certain types of items cannot be returned, like perishable goods (such
 				as food, flowers, or plants), custom products (such as special orders or
@@ -55,7 +62,9 @@ export default function RefundPolicy() {
 				<br />
 			</TypographyP>
 
-			<TypographyH4>Refunds</TypographyH4>
+			<Heading as="h2" variant="h4">
+				Refunds
+			</Heading>
 			<TypographyP>
 				We will notify you once we&#39;ve received and inspected your return,
 				and let you know if the refund was approved or not. If approved,

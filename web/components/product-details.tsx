@@ -22,10 +22,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@shadcn/components/ui/accordion";
-import {
-	TypographyH3,
-	TypographyMuted,
-} from "@shadcn/components/ui/typography";
+import { Heading, TypographyMuted } from "@shadcn/components/ui/typography";
 import {
 	Tooltip,
 	TooltipContent,
@@ -36,7 +33,6 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from "@shadcn/components/ui/avatar";
-import { TypographyH4 } from "@shadcn/components/ui/typography";
 import { Button } from "@shadcn/components/ui/button";
 import { TypographyP } from "@shadcn/components/ui/typography";
 import { Field, FieldGroup, FieldLabel } from "@shadcn/components/ui/field";
@@ -84,12 +80,14 @@ function Preview({ product }: { product: IProduct }) {
 						className="scale-[.85] hover:scale-100 shadow-md transition-all"
 						styleClass="filter-(--filter-primary)"
 						icon="favorite_fill"
+						aria-label="Remove from favorites"
 						onClick={removeFromFavorites}
 					/>
 				) : (
 					<ButtonIcon
 						className="scale-[.85] hover:scale-100 shadow-md transition-all"
 						icon="favorite"
+						aria-label="Add to favorites"
 						onClick={addToFavorites}
 					/>
 				)}
@@ -107,6 +105,7 @@ function Preview({ product }: { product: IProduct }) {
 				<ButtonIcon
 					className="absolute shadow-md top-[calc(50%-19px)] right-[9.5px]"
 					icon="arrow_forward"
+					aria-label="Next image"
 					onClick={() => {
 						setImgIndex((prev) => (prev + 1) % product.imgUrls.length);
 					}}
@@ -115,6 +114,7 @@ function Preview({ product }: { product: IProduct }) {
 				<ButtonIcon
 					className="absolute shadow-md top-[calc(50%-19px)] left-[9.5px]"
 					icon="arrow_back"
+					aria-label="Previous image"
 					onClick={() => {
 						setImgIndex((prev) =>
 							prev === 0 ? product.imgUrls.length - 1 : prev - 1,
@@ -357,7 +357,9 @@ function Details({ product }: { product: IProduct }) {
 				<AccordionItem value="item-2">
 					<AccordionTrigger>Shipping and Refund Policy</AccordionTrigger>
 					<AccordionContent>
-						<TypographyH4 className="text-sm">Refund Policy</TypographyH4>
+						<Heading as="h4" className="text-sm">
+							Refund Policy
+						</Heading>
 						<TypographyP className="leading-5">
 							We have a 30-day return policy, which means you have 30 days after
 							receiving your item to request a return.
@@ -382,7 +384,9 @@ function Details({ product }: { product: IProduct }) {
 							<br />
 						</TypographyP>
 
-						<TypographyH4 className="text-sm">Shipping Policy</TypographyH4>
+						<Heading as="h4" className="text-sm">
+							Shipping Policy
+						</Heading>
 						<TypographyP className="leading-5">
 							All orders are processed within 1 to 3 business days (excluding
 							weekends and holidays) after receiving your order confirmation
@@ -392,9 +396,9 @@ function Details({ product }: { product: IProduct }) {
 							<br />
 						</TypographyP>
 
-						<TypographyH4 className="text-sm">
+						<Heading as="h4" className="text-sm">
 							International Shipping
-						</TypographyH4>
+						</Heading>
 						<TypographyP className="leading-5">
 							We offer international shipping to the following countries: United
 							States, United Kingdom, Australia, Canada, Germany, France, Spain,
@@ -482,7 +486,9 @@ export default function ProductDetails({ product }: { product: IProduct }) {
 
 			{similarProducts && similarProducts.length > 0 && (
 				<Section className="pt-0! space-y-2 lg:space-y-4">
-					<TypographyH3 className="text-center">Similar Products</TypographyH3>
+					<Heading as="h2" variant="h3" className="text-center">
+						Similar Products
+					</Heading>
 
 					<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
 						{similarProducts.map((item) => (

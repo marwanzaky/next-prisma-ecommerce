@@ -12,7 +12,7 @@ import {
 	EmptyHeader,
 	EmptyTitle,
 } from "@shadcn/components/ui/empty";
-import { TypographyH4 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 import { Button } from "@shadcn/components/ui/button";
 import { Card, CardContent } from "@shadcn/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@shadcn/components/ui/radio-group";
@@ -32,9 +32,9 @@ export default function Page() {
 
 	return (
 		<Section>
-			<TypographyH4 className="text-center mb-2 lg:mb-4">
+			<Heading as="h4" className="text-center mb-2 lg:mb-4">
 				Your Cart
-			</TypographyH4>
+			</Heading>
 
 			{items.length > 0 ? (
 				<div className="flex gap-4 flex-col md:flex-row">

@@ -33,6 +33,7 @@ export default function ImageInput({
 			{previewUrl && (
 				<ButtonIcon
 					icon="close"
+					aria-label="Remove image"
 					className="absolute -top-4 -right-4 z-10 scale-50 border-2"
 					onClick={() => onChange?.({ file: undefined, url: undefined })}
 				/>

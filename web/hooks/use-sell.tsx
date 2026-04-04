@@ -147,7 +147,7 @@ export function useSell() {
 					<div className="flex gap-2">
 						<AlertDialog>
 							<AlertDialogTrigger asChild>
-								<ButtonIcon icon="delete" />
+								<ButtonIcon icon="delete" aria-label="Delete product" />
 							</AlertDialogTrigger>
 							<AlertDialogContent>
 								<AlertDialogHeader>
@@ -172,6 +172,7 @@ export function useSell() {
 
 						<ButtonIcon
 							icon="edit"
+							aria-label="Edit product"
 							onClick={() => {
 								reset({
 									productId: row._id,

@@ -3,7 +3,7 @@ import WhyChooseUs from "@components/why-choose-us";
 import Testimonials from "@components/testimonials";
 import Categories from "@components/categories";
 
-import { TypographyH3 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 
 import { IProduct } from "@shared/interfaces";
 import { Section } from "@shared/components/ui/section";
@@ -21,7 +21,9 @@ export default async function Page() {
 			<Header />
 
 			<Section className="space-y-2 lg:space-y-4">
-				<TypographyH3 className="text-center">Featured Products</TypographyH3>
+				<Heading as="h2" variant="h3" className="text-center">
+					Featured Products
+				</Heading>
 
 				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
 					{data.map((item) => (

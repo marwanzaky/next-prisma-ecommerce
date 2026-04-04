@@ -1,13 +1,17 @@
 import { TypographyP } from "@shadcn/components/ui/typography";
 import { Section } from "@shared/components/ui/section";
-import { TypographyH2, TypographyH4 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 
 export default function PrivacyPolicy() {
 	return (
 		<Section>
-			<TypographyH2>Privacy Policy</TypographyH2>
+			<Heading as="h1" variant="h2">
+				Privacy Policy
+			</Heading>
 
-			<TypographyH4>Privacy Policy</TypographyH4>
+			<Heading as="h2" variant="h4">
+				Privacy Policy
+			</Heading>
 			<TypographyP>
 				This Privacy Policy describes how {process.env.NEXT_PUBLIC_WEBSITE} (the
 				“Site” or “we”) collects, uses, and discloses your Personal Information
@@ -16,7 +20,9 @@ export default function PrivacyPolicy() {
 				<br />
 			</TypographyP>
 
-			<TypographyH4>Collecting Personal Information</TypographyH4>
+			<Heading as="h2" variant="h4">
+				Collecting Personal Information
+			</Heading>
 			<TypographyP>
 				When you visit the Site, we collect certain information about your
 				device, your interaction with the Site, and information necessary to

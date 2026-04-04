@@ -12,7 +12,7 @@ import {
 	EmptyHeader,
 	EmptyTitle,
 } from "@shadcn/components/ui/empty";
-import { TypographyH4 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 import { Section } from "@shared/components/ui/section";
 import { Button } from "@shadcn/components/ui/button";
 
@@ -22,7 +22,9 @@ export default function Page() {
 
 	return (
 		<Section className="space-y-2 lg:space-y-4">
-			<TypographyH4 className="text-center">Your Favorites</TypographyH4>
+			<Heading as="h4" className="text-center">
+				Your Favorites
+			</Heading>
 			{items.length > 0 ? (
 				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
 					{items.map((item) => (

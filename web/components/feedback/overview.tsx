@@ -7,7 +7,7 @@ import { IProduct } from "@shared/interfaces";
 
 import { useAppSelector } from "@redux/store";
 import { productsService } from "@redux/services/products-service";
-import { TypographyH4 } from "@shadcn/components/ui/typography";
+import { Heading } from "@shadcn/components/ui/typography";
 import {
 	Dialog,
 	DialogContent,
@@ -39,7 +39,9 @@ export default function Overview({ product }: { product: IProduct }) {
 
 	return (
 		<div className="flex flex-col justify-center">
-			<TypographyH4 className="mx-auto mb-4">Rating and reviews</TypographyH4>
+			<Heading as="h3" variant="h4" className="mx-auto mb-4">
+				Rating and reviews
+			</Heading>
 
 			<div className="grid grid-cols-2 mb-8">
 				<div className="flex flex-col items-center justify-center space-y-2">
