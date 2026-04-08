@@ -1,3 +1,4 @@
+import { AuthGuard } from "@components/auth/auth-guard";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,5 +16,5 @@ export default function FavoritesLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return children;
+	return <AuthGuard>{children}</AuthGuard>;
 }

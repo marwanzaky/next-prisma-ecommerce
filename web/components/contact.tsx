@@ -52,7 +52,6 @@ export default function Contact() {
 
 	const onSubmit = async (data: FormValues) => {
 		try {
-			console.log("data", data);
 			await contactMessagesService.sendMessage(data);
 
 			toast("Message sent successfully. Thank you!", {

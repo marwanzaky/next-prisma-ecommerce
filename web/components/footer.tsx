@@ -14,7 +14,7 @@ export default function Footer() {
 						Quick links
 					</Heading>
 
-					<ul className="flex flex-col md:flex-row gap-5 flex-wrap text-sm">
+					<ul className="flex flex-col md:flex-row gap-y-4 gap-x-5 flex-wrap text-sm">
 						{process.env.NEXT_PUBLIC_ABOUT === "true" && (
 							<li>
 								<Link

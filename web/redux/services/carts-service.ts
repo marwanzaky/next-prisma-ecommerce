@@ -1,99 +1,29 @@
+import { clientFetch } from "@lib/api-client";
 import { ICart } from "@shared/interfaces/cart.interface";
 
-const baseUrl = process.env.NEXT_PUBLIC_SERVER;
-
 export const cartsService = {
-	getMe,
-	postItem,
-	updateItemQuantity,
-	deleteItem,
+	getMe: () => clientFetch<ICart>("/carts"),
+	postItem: (productId: string, quantity: number) =>
+		clientFetch<ICart>(`/carts/items/${productId}`, {
+			method: "POST",
+			body: JSON.stringify({
+				quantity,
+			}),
+		}),
+	updateItemQuantity: (productId: string, quantity: number) => {
+		if (quantity <= 0) {
+			quantity = 1;
+		}
+
+		return clientFetch<ICart>(`/carts/items/${productId}/quantity`, {
+			method: "PATCH",
+			body: JSON.stringify({
+				quantity,
+			}),
+		});
+	},
+	deleteItem: (productId: string) =>
+		clientFetch<ICart>(`/carts/items/${productId}`, {
+			method: "DELETE",
+		}),
 };
-
-async function getMe(token: string): Promise<ICart> {
-	const response = await fetch(`${baseUrl}/carts`, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-type": "application/json",
-		},
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function postItem(
-	token: string,
-	productId: string,
-	quantity: number,
-): Promise<ICart> {
-	const response = await fetch(`${baseUrl}/carts/items/${productId}`, {
-		method: "POST",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			quantity,
-		}),
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function updateItemQuantity(
-	token: string,
-	productId: string,
-	quantity: number,
-): Promise<ICart> {
-	if (quantity <= 0) {
-		quantity = 1;
-	}
-
-	const response = await fetch(`${baseUrl}/carts/items/${productId}/quantity`, {
-		method: "PATCH",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			quantity,
-		}),
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function deleteItem(token: string, productId: string): Promise<ICart> {
-	const response = await fetch(`${baseUrl}/carts/items/${productId}`, {
-		method: "DELETE",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-Type": "application/json",
-		},
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}

@@ -1,10 +1,12 @@
 import { $createImageNode } from "@shared/components/ui/lexical/nodes/image-node";
-import { ButtonIcon } from "@shared/components/ui/button-icon";
 
 import { $insertNodes } from "lexical";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
-import { uploadFile } from "@redux/services/uploads-service";
+import { cn } from "@lib/utils";
+import { Button } from "@shadcn/components/ui/button";
+import { ImageIcon } from "lucide-react";
+import { uploadsService } from "@redux/services/uploads-service";
 
 export function ImageToolbarButtonPlugin() {
 	const [editor] = useLexicalComposerContext();
@@ -20,7 +22,7 @@ export function ImageToolbarButtonPlugin() {
 			if (!file) return;
 
 			try {
-				const url = await uploadFile(file);
+				const url = await uploadsService.uploadFile(file);
 
 				editor.update(() => {
 					const imageNode = $createImageNode(url, file.name);
@@ -33,13 +35,32 @@ export function ImageToolbarButtonPlugin() {
 	};
 
 	return (
-		<ButtonIcon
-			size="sm"
-			type="button"
-			icon="upload"
-			aria-label="Upload image"
-			className="absolute top-0.75 right-4"
-			onClick={insertImage}
-		/>
+		<div className="sticky top-0 z-20">
+			<ToolbarGroup>
+				<Button
+					type="button"
+					variant="ghost"
+					size="sm"
+					onClick={insertImage}
+					className="h-8 w-8 p-0"
+				>
+					<ImageIcon className="h-4 w-4" />
+				</Button>
+			</ToolbarGroup>
+		</div>
+	);
+}
+
+export function ToolbarGroup({
+	children,
+	className,
+}: {
+	children: React.ReactNode;
+	className?: string;
+}) {
+	return (
+		<div className={cn("flex items-center gap-1 p-1 border-b", className)}>
+			{children}
+		</div>
 	);
 }

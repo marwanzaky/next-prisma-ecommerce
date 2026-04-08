@@ -1,4 +1,4 @@
-const baseUrl = process.env.NEXT_PUBLIC_SERVER;
+import { clientFetch } from "@lib/api-client";
 
 export type IContactMessage = {
 	_id: string;
@@ -11,91 +11,24 @@ export type IContactMessage = {
 };
 
 export const contactMessagesService = {
-	getAllMessages,
-	sendMessage,
-	updateMessageStatus,
-	deleteMessage,
+	getAllMessages: () => clientFetch<IContactMessage[]>("/contact-messages"),
+	sendMessage: (body: {
+		name: string;
+		email: string;
+		subject: string;
+		message: string;
+	}) =>
+		clientFetch<void>("/contact-messages", {
+			method: "POST",
+			body: JSON.stringify(body),
+		}),
+	updateMessageStatus: (id: string, status: "new" | "read" | "replied") =>
+		clientFetch<IContactMessage>(`/contact-messages/${id}`, {
+			method: "PATCH",
+			body: JSON.stringify({ status }),
+		}),
+	deleteMessage: (id: string) =>
+		clientFetch<void>(`/contact-messages/${id}`, {
+			method: "DELETE",
+		}),
 };
-
-async function getAllMessages(token: string): Promise<IContactMessage[]> {
-	const response = await fetch(`${baseUrl}/contact-messages`, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-type": "application/json",
-		},
-	});
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function sendMessage({
-	name,
-	email,
-	subject,
-	message,
-}: {
-	name: string;
-	email: string;
-	subject: string;
-	message: string;
-}): Promise<void> {
-	const response = await fetch(`${baseUrl}/contact-messages`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ name, email, subject, message }),
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function updateMessageStatus(
-	token: string,
-	id: string,
-	status: "new" | "read" | "replied",
-): Promise<IContactMessage> {
-	const response = await fetch(`${baseUrl}/contact-messages/${id}`, {
-		method: "PATCH",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({ status }),
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function deleteMessage(token: string, id: string): Promise<void> {
-	const response = await fetch(`${baseUrl}/contact-messages/${id}`, {
-		method: "DELETE",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-type": "application/json",
-		},
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}

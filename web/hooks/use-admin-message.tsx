@@ -41,11 +41,9 @@ import { Textarea } from "@shadcn/components/ui/textarea";
 import { Field, FieldGroup, FieldLabel } from "@shadcn/components/ui/field";
 
 export function useAdminMessages() {
-	const { token } = useAppSelector((state) => state.authReducer);
-
 	const { data, isLoading, refetch } = useQuery({
 		queryKey: ["contact-messages"],
-		queryFn: () => contactMessagesService.getAllMessages(token),
+		queryFn: () => contactMessagesService.getAllMessages(),
 		staleTime: 0,
 	});
 
@@ -112,7 +110,7 @@ export function useAdminMessages() {
 									<AlertDialogCancel>Cancel</AlertDialogCancel>
 									<AlertDialogAction
 										onClick={() => {
-											contactMessagesService.deleteMessage(token, row._id);
+											contactMessagesService.deleteMessage(row._id);
 											refetch();
 										}}
 									>
@@ -147,7 +145,6 @@ export function useAdminMessages() {
 										) => {
 											const newMessage =
 												await contactMessagesService.updateMessageStatus(
-													token,
 													selectedMessage._id,
 													value,
 												);

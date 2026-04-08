@@ -1,11 +1,12 @@
 import { IProduct } from "@shared/interfaces";
 
 import { Product, WithContext } from "schema-dts";
+import { website } from "./config";
 
 export function generateProductStructuredData(
 	product: IProduct,
 ): WithContext<Product> {
-	const baseUrl = `https://${process.env.NEXT_PUBLIC_WEBSITE!}`;
+	const { baseUrl } = website;
 	const productUrl = `${baseUrl}/products/${product._id}`;
 	const offerId = `${productUrl}#offer`;
 

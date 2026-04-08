@@ -1,8 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-import { useFavorites } from "@hooks/use-favorites";
-
 import ProductCard from "@shared/components/ui/product-card";
 
 import {
@@ -15,10 +13,11 @@ import {
 import { Heading } from "@shadcn/components/ui/typography";
 import { Section } from "@shared/components/ui/section";
 import { Button } from "@shadcn/components/ui/button";
+import { useAppSelector } from "@redux/store";
 
 export default function Page() {
 	const router = useRouter();
-	const { items } = useFavorites();
+	const { items } = useAppSelector((state) => state.favoritesReducer);
 
 	return (
 		<Section className="space-y-2 lg:space-y-4">

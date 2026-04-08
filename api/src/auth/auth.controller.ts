@@ -14,6 +14,7 @@ import { Public } from "./auth.guard";
 import { ApiOperation } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { IRequest } from "@interfaces/request.interface";
+import { Response } from "express";
 
 @Public()
 @Controller("auth")
@@ -26,17 +27,19 @@ export class AuthController {
 
 	@Get("google/callback")
 	@UseGuards(AuthGuard("google"))
-	async googleAuthRedirect(@Req() req: IRequest, @Res() res: any) {
+	async googleAuthRedirect(@Req() req: IRequest, @Res() res: Response) {
 		const clientUrl = process.env.CLIENT_URL!;
-		const response = await this.authService.loginWithGoogle(req.user as any);
-		return res.redirect(`${clientUrl}/auth/success?token=${response.token}`);
+
+		const { token } = await this.authService.loginWithGoogle(req.user as any);
+
+		return res.redirect(`${clientUrl}/auth/success?token=${token}`);
 	}
 
 	@Post("signup")
 	@ApiOperation({
 		summary: "Register a new user",
 	})
-	signUp(@Body() signupDto: SignUpDto) {
+	async signUp(@Body() signupDto: SignUpDto) {
 		return this.authService.signUp(signupDto);
 	}
 

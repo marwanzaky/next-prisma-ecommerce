@@ -22,15 +22,13 @@ import { TypographyMuted } from "@shadcn/components/ui/typography";
 import { toast } from "sonner";
 import { Field, FieldGroup, FieldLabel } from "@shadcn/components/ui/field";
 import { Textarea } from "@shadcn/components/ui/textarea";
-import { Star, StarIcon } from "lucide-react";
+import { StarIcon } from "lucide-react";
 import { cn } from "@lib/utils";
 
 export default function Overview({ product }: { product: IProduct }) {
 	const router = useRouter();
 
-	const { isAuthenticated, token } = useAppSelector(
-		(state) => state.authReducer,
-	);
+	const { isAuthenticated } = useAppSelector((state) => state.authReducer);
 
 	const [displayDialog, setDisplayDialog] = useState(false);
 	const [rating, setRating] = useState(0);
@@ -138,8 +136,7 @@ export default function Overview({ product }: { product: IProduct }) {
 								type="button"
 								disabled={rating === 0}
 								onClick={async () => {
-									console.log("sent!");
-									await productsService.postProductReview(token, {
+									await productsService.postProductReview({
 										id: product._id,
 										rating,
 										description,

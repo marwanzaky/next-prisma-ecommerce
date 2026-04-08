@@ -3,7 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-import { useAppSelector } from "@redux/store";
+import { AppDispatch, useAppSelector } from "@redux/store";
 
 import { cn } from "@lib/utils";
 
@@ -34,8 +34,17 @@ import {
 	AvatarImage,
 } from "@shadcn/components/ui/avatar";
 import { initials } from "@utils/string-utils";
-import { BadgeCheck, LogOut, Menu, MessagesSquare, Search } from "lucide-react";
+import {
+	BadgeCheck,
+	LogOut,
+	Menu,
+	MessagesSquare,
+	Search,
+	ShoppingBag,
+} from "lucide-react";
 import { Input } from "@shadcn/components/ui/input";
+import { useDispatch } from "react-redux";
+import { logOut } from "@redux/slices/auth-slice";
 
 export default function Navigation() {
 	const router = useRouter();
@@ -46,6 +55,7 @@ export default function Navigation() {
 		(state) => state.authReducer,
 	);
 	const { items } = useAppSelector((state) => state.cartReducer);
+	const dispatch = useDispatch<AppDispatch>();
 
 	const [search, setSearch] = useState<string>("");
 
@@ -57,21 +67,16 @@ export default function Navigation() {
 	}, [searchParams]);
 
 	return (
-		<nav className="flex justify-between gap-2 md:gap-4 h-16 md:h-20">
-			<div className="flex-1 flex items-center gap-2 md:gap-4">
+		<nav className="flex items-center justify-between gap-4 h-16 md:h-20">
+			<div className="flex-1 flex items-center gap-0 md:gap-4">
 				<div>
 					<NavigationMenu />
 				</div>
 
-				<Link
-					className="hidden lg:block font-bold text-lg hover:text-primary transition-colors"
-					href="/"
-				>
-					{process.env.NEXT_PUBLIC_NAME}
-				</Link>
+				<Logo className="hidden lg:block" />
 
 				<form
-					className="w-32"
+					className="max-w-32 sm:w-32"
 					onSubmit={(event) => {
 						event.preventDefault();
 						const params = new URLSearchParams();
@@ -101,11 +106,14 @@ export default function Navigation() {
 				<NavLi href="/contact" name="Contact" />
 			</ul>
 
+			<Logo className="block sm:hidden" />
+
 			<div className="flex-1 flex items-center justify-end">
 				<ButtonIcon
+					className="hidden sm:inline-flex"
 					icon="storefront"
 					aria-label="Go to Sell page"
-					onClick={() => router.push("/sell")}
+					onClick={() => router.push("/store/products")}
 				/>
 				<ButtonIcon
 					icon="favorite"
@@ -157,6 +165,16 @@ export default function Navigation() {
 										<DropdownMenuSeparator />
 
 										<DropdownMenuGroup>
+											{isMobile && (
+												<DropdownMenuItem
+													onClick={() => {
+														router.push("/store/products");
+													}}
+												>
+													<ShoppingBag />
+													Store
+												</DropdownMenuItem>
+											)}
 											<DropdownMenuItem
 												onClick={() => {
 													router.push("/account");
@@ -198,7 +216,8 @@ export default function Navigation() {
 										)}
 
 										<DropdownMenuItem
-											onClick={() => {
+											onClick={async () => {
+												await dispatch(logOut());
 												window.localStorage.clear();
 												location.reload();
 											}}
@@ -282,6 +301,20 @@ function NavLi({ href, name }: { href: string; name: string }) {
 				{name}
 			</Link>
 		</li>
+	);
+}
+
+function Logo({ className }: { className?: string }) {
+	return (
+		<Link
+			className={cn(
+				"font-bold text-lg hover:text-primary transition-colors",
+				className,
+			)}
+			href="/"
+		>
+			{process.env.NEXT_PUBLIC_NAME}
+		</Link>
 	);
 }
 

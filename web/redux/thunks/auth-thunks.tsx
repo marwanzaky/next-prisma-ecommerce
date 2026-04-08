@@ -1,5 +1,4 @@
 import { usersService } from "@redux/services/users-service";
-import { RootState } from "@redux/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UpdateUser, UpdateUserPassword } from "@shared/types/user.type";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -66,11 +65,9 @@ export const signupAsync = createAsyncThunk(
 
 export const getMeAsync = createAsyncThunk(
 	"auth/getMe",
-	async (_, { getState, rejectWithValue }) => {
-		const state = getState() as RootState;
-
+	async (_, { rejectWithValue }) => {
 		try {
-			return await usersService.getMe(state.authReducer.token);
+			return await usersService.getMe();
 		} catch (error: any) {
 			return rejectWithValue(error.message);
 		}
@@ -81,15 +78,10 @@ export const updateMeAsync = createAsyncThunk(
 	"auth/updateMe",
 	async (
 		updatedUser: UpdateUser & { photoFile?: File },
-		{ getState, rejectWithValue },
+		{ rejectWithValue },
 	) => {
-		const state = getState() as RootState;
-
 		try {
-			const data = await usersService.updateMe(
-				state.authReducer.token,
-				updatedUser,
-			);
+			const data = await usersService.updateMe(updatedUser);
 
 			toast("User settings updated successfully!", { position: "top-center" });
 
@@ -102,17 +94,9 @@ export const updateMeAsync = createAsyncThunk(
 
 export const updateMyPasswordAsync = createAsyncThunk(
 	"auth/updateMyPassword",
-	async (
-		updatedUserPassword: UpdateUserPassword,
-		{ getState, rejectWithValue },
-	) => {
-		const state = getState() as RootState;
-
+	async (updatedUserPassword: UpdateUserPassword, { rejectWithValue }) => {
 		try {
-			const data = await usersService.updateMyPassword(
-				state.authReducer.token,
-				updatedUserPassword,
-			);
+			const data = await usersService.updateMyPassword(updatedUserPassword);
 
 			toast("User password updated successfully!", { position: "top-center" });
 
@@ -130,11 +114,9 @@ export const updateMyPasswordAsync = createAsyncThunk(
 
 export const deleteMeAsync = createAsyncThunk(
 	"auth/deleteMe",
-	async (_, { getState, rejectWithValue }) => {
-		const state = getState() as RootState;
-
+	async (_, { rejectWithValue }) => {
 		try {
-			const data = await usersService.deleteMe(state.authReducer.token);
+			const data = await usersService.deleteMe();
 
 			toast("User deleted successfully!", { position: "top-center" });
 

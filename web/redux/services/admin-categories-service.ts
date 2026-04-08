@@ -1,3 +1,4 @@
+import { clientFetch } from "@lib/api-client";
 import { jsonToFormData } from "@utils/helper";
 import {
 	Category,
@@ -5,74 +6,23 @@ import {
 	UpdateCategory,
 } from "@shared/types/category.type";
 
-const baseUrl = process.env.NEXT_PUBLIC_SERVER;
-
 export const adminCategoriesService = {
-	getAllCategories,
-	addCategory,
-	updateCategory,
+	getAllCategories: () => clientFetch<Category[]>("/admin/categories"),
+	addCategory: (category: CreateCategory & { imgFile?: File }) => {
+		const formData = jsonToFormData(category);
+		return clientFetch<Category[]>("/admin/categories", {
+			method: "POST",
+			body: formData,
+		});
+	},
+	updateCategory: (
+		id: string,
+		category: UpdateCategory & { imgFile?: File | null },
+	) => {
+		const formData = jsonToFormData(category);
+		return clientFetch<Category>(`/admin/categories/${id}`, {
+			method: "PATCH",
+			body: formData,
+		});
+	},
 };
-
-async function getAllCategories(token: string): Promise<Category[]> {
-	const response = await fetch(`${baseUrl}/admin/categories`, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-type": "application/json",
-		},
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function addCategory(
-	token: string,
-	category: CreateCategory & { imgFile?: File },
-): Promise<Category[]> {
-	const formData = jsonToFormData(category);
-
-	const response = await fetch(`${baseUrl}/admin/categories`, {
-		method: "POST",
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-		body: formData,
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function updateCategory(
-	id: string,
-	token: string,
-	category: UpdateCategory & { imgFile?: File | null },
-): Promise<Category> {
-	const formData = jsonToFormData(category);
-
-	const response = await fetch(`${baseUrl}/admin/categories/${id}`, {
-		method: "PATCH",
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-		body: formData,
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}

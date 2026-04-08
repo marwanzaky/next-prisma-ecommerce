@@ -41,7 +41,7 @@ export default function ImageInput({
 
 			<div
 				className={cn(
-					"w-full aspect-square rounded-xl overflow-hidden outline-hidden border",
+					"w-full aspect-square rounded-md overflow-hidden outline-hidden border",
 					className,
 				)}
 			>

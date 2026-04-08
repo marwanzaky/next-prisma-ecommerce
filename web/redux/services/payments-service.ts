@@ -1,26 +1,14 @@
-const baseUrl = process.env.NEXT_PUBLIC_SERVER;
+import { clientFetch } from "@lib/api-client";
 
 export const paymentsService = {
-	createCheckoutSession,
+	createCheckoutSession: (
+		items: {
+			id: string;
+			quantity: number;
+		}[],
+	) =>
+		clientFetch<{ url: string }>("/payments/create-checkout-session", {
+			method: "POST",
+			body: JSON.stringify({ items }),
+		}),
 };
-
-async function createCheckoutSession(
-	items: {
-		id: string;
-		quantity: number;
-	}[],
-): Promise<{ url: string }> {
-	const response = await fetch(`${baseUrl}/payments/create-checkout-session`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ items }),
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}

@@ -9,10 +9,10 @@ import {
 	updateMeAsync,
 	updateMyPasswordAsync,
 } from "@redux/thunks/auth-thunks";
+import Cookies from "js-cookie";
 
 export type AuthState = {
 	user: User | null;
-	token: string;
 	isAuthenticated: boolean;
 
 	loading: boolean;
@@ -21,7 +21,6 @@ export type AuthState = {
 
 const initialState: AuthState = {
 	user: null,
-	token: "",
 	isAuthenticated: false,
 
 	loading: false,
@@ -33,10 +32,16 @@ export const authSlice = createSlice({
 	initialState: initialState,
 	reducers: {
 		setToken: (state, action: { payload: string }) => {
-			state.token = action.payload;
 			state.isAuthenticated = true;
+
+			Cookies.set("token", action.payload, {
+				expires: 14,
+				secure: true,
+				sameSite: "strict",
+			});
 		},
 		logOut: (): AuthState => {
+			Cookies.remove("token");
 			return initialState;
 		},
 	},
@@ -50,7 +55,12 @@ export const authSlice = createSlice({
 			.addCase(loginAsync.fulfilled, (state, action) => {
 				state.loading = false;
 				state.isAuthenticated = true;
-				state.token = action.payload.token;
+
+				Cookies.set("token", action.payload.token, {
+					expires: 14,
+					secure: true,
+					sameSite: "strict",
+				});
 			})
 			.addCase(loginAsync.rejected, (state, action) => {
 				state.loading = false;
@@ -64,7 +74,13 @@ export const authSlice = createSlice({
 			})
 			.addCase(signupAsync.fulfilled, (state, action) => {
 				state.loading = false;
-				state.token = action.payload.token;
+				state.isAuthenticated = true;
+
+				Cookies.set("token", action.payload.token, {
+					expires: 14,
+					secure: true,
+					sameSite: "strict",
+				});
 			})
 			.addCase(signupAsync.rejected, (state, action) => {
 				state.loading = false;
@@ -106,7 +122,6 @@ export const authSlice = createSlice({
 			})
 			.addCase(updateMyPasswordAsync.fulfilled, (state, action) => {
 				state.loading = false;
-				state.token = action.payload.token;
 			})
 			.addCase(updateMyPasswordAsync.rejected, (state, action) => {
 				state.loading = false;

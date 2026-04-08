@@ -5,7 +5,6 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { useForm } from "react-hook-form";
-import { useAppSelector } from "@redux/store";
 import { adminCategoriesService } from "@redux/services/admin-categories-service";
 import { categoriesService } from "@redux/services/categories-service";
 
@@ -16,8 +15,6 @@ import { Category } from "@shared/types/category.type";
 import { Checkbox } from "@shadcn/components/ui/checkbox";
 
 export function useAdminCategories() {
-	const { token } = useAppSelector((state) => state.authReducer);
-
 	const { register, handleSubmit, formState, control, reset } = useForm<{
 		name: string;
 		slug: string;
@@ -33,7 +30,7 @@ export function useAdminCategories() {
 
 	const { data, isLoading, refetch } = useQuery({
 		queryKey: ["categories"],
-		queryFn: () => adminCategoriesService.getAllCategories(token),
+		queryFn: () => adminCategoriesService.getAllCategories(),
 		staleTime: 0,
 	});
 
@@ -68,6 +65,7 @@ export function useAdminCategories() {
 		});
 	};
 
+	// TODO:
 	const columns: Column<Category>[] = [
 		{
 			header: "Active",
@@ -82,7 +80,7 @@ export function useAdminCategories() {
 							name="category-checkbox"
 							checked={value}
 							onClick={async () => {
-								await adminCategoriesService.updateCategory(row.id, token, {
+								await adminCategoriesService.updateCategory(row.id, {
 									isActive: !value,
 								});
 
@@ -136,7 +134,7 @@ export function useAdminCategories() {
 			type: "number-input",
 			className: "w-[10%]",
 			async onChange(value, row) {
-				await adminCategoriesService.updateCategory(row.id, token, {
+				await adminCategoriesService.updateCategory(row.id, {
 					sortOrder: value,
 				});
 
@@ -183,7 +181,7 @@ export function useAdminCategories() {
 		options,
 
 		categorySubmit: handleSubmit(async (data) => {
-			await adminCategoriesService.addCategory(token, {
+			await adminCategoriesService.addCategory({
 				name: data.name,
 				slug: data.slug,
 				parent: data.parent,
@@ -197,7 +195,7 @@ export function useAdminCategories() {
 		editCategorySubmit: handleSubmit(async (formData) => {
 			const id = data?.find((cat) => cat.slug === formData.slug)?.id || "";
 
-			await adminCategoriesService.updateCategory(id, token, {
+			await adminCategoriesService.updateCategory(id, {
 				name: formData.name,
 				parent: formData.parent,
 				sortOrder: formData.sortOrder * 1,

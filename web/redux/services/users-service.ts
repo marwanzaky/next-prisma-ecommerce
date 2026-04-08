@@ -1,179 +1,40 @@
-import { jsonToFormData } from "@utils/helper";
-import { UpdateUser, UpdateUserPassword, User } from "@shared/types/user.type";
-import { IProduct } from "@shared/interfaces";
+import { clientFetch } from "@lib/api-client";
 
-const baseUrl = process.env.NEXT_PUBLIC_SERVER;
+import { jsonToFormData } from "@utils/helper";
+
+import { IProduct } from "@shared/interfaces";
+import { UpdateUser, UpdateUserPassword, User } from "@shared/types/user.type";
 
 export const usersService = {
-	login,
-	signup,
+	login: (email: string, password: string) =>
+		clientFetch<{ token: string }>("/auth/login", {
+			method: "POST",
+			body: JSON.stringify({ email, password }),
+		}),
+	signup: (name: string, email: string, password: string) =>
+		clientFetch<{ token: string }>("/auth/signup", {
+			method: "POST",
+			body: JSON.stringify({ name, email, password }),
+		}),
 
 	// My account
-	getMe,
-	getMeProducts,
-	updateMe,
-	updateMyPassword,
-	deleteMe,
+	getMe: () => clientFetch<User>("/users/me"),
+	getMeProducts: () => clientFetch<IProduct[]>("/users/me/products"),
+	updateMe: (updatedUser: UpdateUser & { photoFile?: File }) =>
+		clientFetch<User>("/users/updateMe", {
+			method: "PATCH",
+			body: jsonToFormData(updatedUser),
+		}),
+	updateMyPassword: ({ currentPassword, newPassword }: UpdateUserPassword) =>
+		clientFetch<{ token: string }>("/users/updateMyPassword", {
+			method: "PATCH",
+			body: JSON.stringify({ currentPassword, newPassword }),
+		}),
+	deleteMe: () =>
+		clientFetch<User>("/users/deleteMe", {
+			method: "DELETE",
+		}),
 
 	// Users
-	getPublicById,
+	getPublicById: (id: string) => clientFetch<User>(`/users/public/${id}`),
 };
-
-async function login(
-	email: string,
-	password: string,
-): Promise<{ token: string }> {
-	const response = await fetch(`${baseUrl}/auth/login`, {
-		method: "POST",
-		headers: {
-			"Content-type": "application/json",
-		},
-		body: JSON.stringify({
-			email,
-			password,
-		}),
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function signup(
-	name: string,
-	email: string,
-	password: string,
-): Promise<{ token: string }> {
-	const response = await fetch(`${baseUrl}/auth/signup`, {
-		method: "POST",
-		headers: {
-			"Content-type": "application/json",
-		},
-		body: JSON.stringify({
-			name,
-			email,
-			password,
-		}),
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function getMe(token: string): Promise<User> {
-	const response = await fetch(`${baseUrl}/users/me`, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-type": "application/json",
-		},
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function getMeProducts(token: string): Promise<IProduct[]> {
-	const response = await fetch(`${baseUrl}/users/me/products`, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-type": "application/json",
-		},
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function updateMe(
-	token: string,
-	updatedUser: UpdateUser & { photoFile?: File },
-): Promise<User> {
-	const formData = jsonToFormData(updatedUser);
-
-	const response = await fetch(`${baseUrl}/users/updateMe`, {
-		method: "PATCH",
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-		body: formData,
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function updateMyPassword(
-	token: string,
-	{ currentPassword, newPassword }: UpdateUserPassword,
-): Promise<{ token: string }> {
-	const response = await fetch(`${baseUrl}/users/updateMyPassword`, {
-		method: "PATCH",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-type": "application/json",
-		},
-		body: JSON.stringify({ currentPassword, newPassword }),
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function deleteMe(token: string): Promise<{ token: string }> {
-	const response = await fetch(`${baseUrl}/users/deleteMe`, {
-		method: "DELETE",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-type": "application/json",
-		},
-	});
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}
-
-async function getPublicById(id: string): Promise<User> {
-	const response = await fetch(`${baseUrl}/users/public/${id}`);
-
-	const data = await response.json();
-
-	if (!response.ok) {
-		throw new Error(data.message);
-	}
-
-	return data;
-}

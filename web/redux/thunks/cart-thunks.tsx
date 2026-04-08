@@ -16,7 +16,7 @@ export const getCartMeAsync = createAsyncThunk(
 				return await guestCartService.getMe();
 			}
 
-			return await cartsService.getMe(state.authReducer.token);
+			return await cartsService.getMe();
 		} catch (error: any) {
 			return rejectWithValue(error.message);
 		}
@@ -41,11 +41,7 @@ export const postCartItemAsync = createAsyncThunk(
 				return updatedCart;
 			}
 
-			const updatedCart = await cartsService.postItem(
-				state.authReducer.token,
-				product._id,
-				quantity,
-			);
+			const updatedCart = await cartsService.postItem(product._id, quantity);
 
 			toast("Added to cart.", { position: "top-center" });
 
@@ -70,11 +66,7 @@ export const updateCartItemQuantityAsync = createAsyncThunk(
 				return await guestCartService.updateItemQuantity(productId, quantity);
 			}
 
-			return await cartsService.updateItemQuantity(
-				state.authReducer.token,
-				productId,
-				quantity,
-			);
+			return await cartsService.updateItemQuantity(productId, quantity);
 		} catch (error: any) {
 			return rejectWithValue(error.message);
 		}
@@ -96,10 +88,7 @@ export const deleteCartItemAsync = createAsyncThunk(
 				return updatedCart;
 			}
 
-			const updatedCart = await cartsService.deleteItem(
-				state.authReducer.token,
-				product._id,
-			);
+			const updatedCart = await cartsService.deleteItem(product._id);
 
 			toast("Removed from cart.", { position: "top-center" });
 

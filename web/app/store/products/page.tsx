@@ -15,19 +15,14 @@ import {
 	EmptyTitle,
 } from "@shadcn/components/ui/empty";
 import { Button } from "@shadcn/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-	const {
-		columns,
-		tableData,
-		resetForm,
-		setDisplayDialog,
-		AddProductDialog,
-		EditProductDialog,
-	} = useSell();
+	const router = useRouter();
+	const { columns, tableData } = useSell();
 
 	return (
-		<Section className="space-y-2 lg:space-y-4">
+		<Section className="max-w-2xl mx-auto space-y-2 lg:space-y-4">
 			<Heading as="h4" className="text-center">
 				Your Products
 			</Heading>
@@ -40,8 +35,7 @@ export default function Page() {
 						<Button
 							className="mr-0!"
 							onClick={() => {
-								resetForm();
-								setDisplayDialog(true);
+								router.push("/store/products/new");
 							}}
 						>
 							Add product
@@ -60,8 +54,7 @@ export default function Page() {
 						<Button
 							variant="outline"
 							onClick={() => {
-								resetForm();
-								setDisplayDialog(true);
+								router.push("/store/products/new");
 							}}
 						>
 							Add product
@@ -69,9 +62,6 @@ export default function Page() {
 					</EmptyContent>
 				</Empty>
 			)}
-
-			{AddProductDialog}
-			{EditProductDialog}
 		</Section>
 	);
 }

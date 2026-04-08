@@ -415,37 +415,20 @@ function DeleteAccountForm() {
 }
 
 export default function Page() {
-	const { user, isAuthenticated } = useAppSelector(
-		(state) => state.authReducer,
-	);
-	const router = useRouter();
-
-	useEffect(() => {
-		if (isAuthenticated === false) {
-			router.push("/signin");
-		}
-	}, []);
+	const { user } = useAppSelector((state) => state.authReducer);
 
 	return (
-		<>
-			{user == null ? (
-				<Section className="m-auto max-w-lg">
-					<Heading as="h3">loading...</Heading>
-				</Section>
-			) : (
-				<Section className="m-auto max-w-sm space-y-2 lg:space-y-4">
-					<Heading as="h4" className="text-center">
-						Settings
-					</Heading>
+		<Section className="m-auto max-w-sm space-y-2 lg:space-y-4">
+			<Heading as="h4" className="text-center">
+				Settings
+			</Heading>
 
-					<div className="flex flex-col gap-4">
-						<PersonalInformationForm />
-						<ChangePasswordForm />
+			<div className="flex flex-col gap-4">
+				<PersonalInformationForm />
+				<ChangePasswordForm />
 
-						{user.role === "admin" && <DeleteAccountForm />}
-					</div>
-				</Section>
-			)}
-		</>
+				{user && user.role === "admin" && <DeleteAccountForm />}
+			</div>
+		</Section>
 	);
 }

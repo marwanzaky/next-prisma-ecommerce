@@ -35,7 +35,6 @@ import {
 } from "@shadcn/components/ui/avatar";
 import { Button } from "@shadcn/components/ui/button";
 import { TypographyP } from "@shadcn/components/ui/typography";
-import { Field, FieldGroup, FieldLabel } from "@shadcn/components/ui/field";
 import { Input } from "@shadcn/components/ui/input";
 
 import {
@@ -65,6 +64,9 @@ import { PublicCategoryTree } from "@shared/types/category.type";
 import { IProduct } from "@shared/interfaces";
 import { ButtonIcon } from "@shared/components/ui/button-icon";
 import { renderLexicalJSONToHTML } from "@shared/components/ui/lexical/renderLexicalJSONToHTML";
+import { Separator } from "@shadcn/components/ui/separator";
+import { Heart } from "lucide-react";
+import Icon from "@shared/components/ui/icon";
 
 function Preview({ product }: { product: IProduct }) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =
@@ -148,6 +150,9 @@ function Details({ product }: { product: IProduct }) {
 	const router = useRouter();
 
 	const dispatch = useDispatch<AppDispatch>();
+
+	const { isFavorite, addToFavorites, removeFromFavorites } =
+		useToggleFavorite(product);
 
 	const { data: categoryTree } = useQuery({
 		queryKey: ["category-tree"],
@@ -266,47 +271,67 @@ function Details({ product }: { product: IProduct }) {
 				</div>
 			</div>
 
-			<FieldGroup>
-				<Field>
-					<FieldLabel htmlFor="quantity">Quantity</FieldLabel>
-					<div>
-						<Input
-							className="w-24 h-10"
-							id="quantity"
-							type="number"
-							min={1}
-							max={100}
-							value={quantity}
-							onChange={(e) => setQuantity(parseInt(e.target.value))}
-						/>
-					</div>
-				</Field>
-			</FieldGroup>
+			<Separator />
 
 			<div className="space-y-2 flex flex-col">
-				<Button
-					size="xl"
-					onClick={() => {
-						dispatch(postCartItemAsync({ product, quantity }));
-						sendGTMEvent({
-							event: "add_to_cart",
-							value: {
-								currency: "USD",
-								value: product.price,
-								items: [
-									{
-										item_id: product._id,
-										item_name: product.name,
-										price: product.price,
-										quantity: 1,
-									},
-								],
-							},
-						});
-					}}
-				>
-					Add to cart
-				</Button>
+				<div className="flex gap-2">
+					<Input
+						className="w-20 h-10 text-center"
+						id="quantity"
+						type="number"
+						min={1}
+						max={100}
+						value={quantity}
+						onChange={(e) => setQuantity(parseInt(e.target.value))}
+					/>
+					<Button
+						size="xl"
+						className="flex-1"
+						onClick={() => {
+							dispatch(postCartItemAsync({ product, quantity }));
+							sendGTMEvent({
+								event: "add_to_cart",
+								value: {
+									currency: "USD",
+									value: product.price,
+									items: [
+										{
+											item_id: product._id,
+											item_name: product.name,
+											price: product.price,
+											quantity: 1,
+										},
+									],
+								},
+							});
+						}}
+					>
+						Add to cart
+					</Button>
+
+					{isFavorite ? (
+						<Button
+							size="xl"
+							variant="outline"
+							aria-label="Remove from favorites"
+							onClick={removeFromFavorites}
+						>
+							<Icon
+								className="filter-(--filter-primary)"
+								src="icons/favorite_fill.svg"
+							/>
+						</Button>
+					) : (
+						<Button
+							size="xl"
+							variant="outline"
+							aria-label="Add to favorites"
+							onClick={addToFavorites}
+						>
+							<Icon src="icons/favorite.svg" />
+						</Button>
+					)}
+				</div>
 
 				<Button
 					size="xl"
