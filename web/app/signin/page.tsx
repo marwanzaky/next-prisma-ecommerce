@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { useDispatch } from "react-redux";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { handleLogin } from "@utils/auth-helpers";
 
@@ -20,6 +20,7 @@ import {
 } from "@shadcn/components/ui/card";
 import {
 	Field,
+	FieldContent,
 	FieldDescription,
 	FieldError,
 	FieldGroup,
@@ -29,23 +30,28 @@ import { Input } from "@shadcn/components/ui/input";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Spinner } from "@shadcn/components/ui/spinner";
 
-const formSchema = z.object({
+const SignUpSchema = z.object({
 	email: z
 		.email()
-		.max(32, "Email is too short.")
-		.nonempty("This field is required."),
+		.nonempty("This field is required.")
+		.max(32, "Email is too short."),
 	password: z.string().nonempty("This field is required."),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+type SignUpInput = z.infer<typeof SignUpSchema>;
 
 export default function Page() {
 	const router = useRouter();
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		mode: "onChange",
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+	} = useForm<SignUpInput>({
+		resolver: zodResolver(SignUpSchema),
+		mode: "onSubmit",
 		defaultValues: {
 			email: "",
 			password: "",
@@ -54,8 +60,8 @@ export default function Page() {
 
 	const dispatch = useDispatch();
 
-	const onSubmit = async (data: FormValues) => {
-		handleLogin(data.email, data.password, dispatch, router);
+	const onSubmit = async (data: SignUpInput) => {
+		await handleLogin(data.email, data.password, dispatch, router);
 	};
 
 	return (
@@ -69,59 +75,51 @@ export default function Page() {
 				</CardHeader>
 
 				<CardContent>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
+					<form onSubmit={handleSubmit(onSubmit)}>
 						<FieldGroup>
-							<Controller
-								name="email"
-								control={form.control}
-								render={({ field, fieldState }) => (
-									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel htmlFor="email">Email</FieldLabel>
-										<Input
-											{...field}
-											id="email"
-											aria-invalid={fieldState.invalid}
-											placeholder="m@example.com"
-											autoComplete="off"
-										/>
-										{fieldState.invalid && (
-											<FieldError errors={[fieldState.error]} />
-										)}
-									</Field>
-								)}
-							/>
-
-							<Controller
-								name="password"
-								control={form.control}
-								render={({ field, fieldState }) => (
-									<Field data-invalid={fieldState.invalid}>
-										<div className="flex items-center">
-											<FieldLabel htmlFor="password">Password</FieldLabel>
-
-											<Link
-												href="/forgot-password"
-												className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-											>
-												Forgot your password?
-											</Link>
-										</div>
-										<Input
-											{...field}
-											id="password"
-											type="password"
-											aria-invalid={fieldState.invalid}
-											autoComplete="off"
-										/>
-										{fieldState.invalid && (
-											<FieldError errors={[fieldState.error]} />
-										)}
-									</Field>
-								)}
-							/>
+							<Field>
+								<FieldLabel htmlFor="email">Email</FieldLabel>
+								<FieldContent>
+									<Input
+										id="email"
+										placeholder="m@example.com"
+										{...register("email")}
+									/>
+								</FieldContent>
+								<FieldError>{errors.email?.message}</FieldError>
+							</Field>
 
 							<Field>
-								<Button type="submit">Login</Button>
+								<div className="flex items-center">
+									<FieldLabel htmlFor="password">Password</FieldLabel>
+
+									<Link
+										href="/forgot-password"
+										className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+									>
+										Forgot your password?
+									</Link>
+								</div>
+								<FieldContent>
+									<Input
+										id="password"
+										type="password"
+										{...register("password")}
+									/>
+								</FieldContent>
+								<FieldError>{errors.password?.message}</FieldError>
+							</Field>
+
+							<Field>
+								<Button type="submit" disabled={isSubmitting}>
+									{isSubmitting ? (
+										<>
+											<Spinner /> Logging in...
+										</>
+									) : (
+										"Login"
+									)}
+								</Button>
 								<Button
 									type="button"
 									variant="outline"

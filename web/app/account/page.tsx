@@ -28,11 +28,12 @@ import { Heading, TypographyMuted } from "@shadcn/components/ui/typography";
 
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@shadcn/components/ui/button";
-import { toast } from "sonner";
 
 import {
 	Field,
+	FieldContent,
 	FieldDescription,
+	FieldError,
 	FieldGroup,
 	FieldLabel,
 } from "@shadcn/components/ui/field";
@@ -43,7 +44,6 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from "@shadcn/components/ui/avatar";
-import { useRouter } from "next/navigation";
 import {
 	Card,
 	CardContent,
@@ -52,23 +52,43 @@ import {
 	CardTitle,
 } from "@shadcn/components/ui/card";
 
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Spinner } from "@shadcn/components/ui/spinner";
+
+const PersonalInformationSchema = z.object({
+	name: z
+		.string()
+		.nonempty("This field is required.")
+		.regex(/^[a-zA-Z0-9\s'-]+$/, "Invalid characters in name.")
+		.min(2, "Name is too short.")
+		.max(32, "Name is too long."),
+	email: z
+		.email()
+		.nonempty("This field is required.")
+		.min(2, "Email is too short.")
+		.max(32, "Email is too short."),
+	photo: z.object({
+		url: z.url("Must be a valid URL").optional(),
+		file: z.instanceof(File).optional(),
+	}),
+});
+
+type PersonalInformationInput = z.infer<typeof PersonalInformationSchema>;
+
 function PersonalInformationForm() {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 		reset,
 		setValue,
 		formState,
 		control,
-	} = useForm<{
-		name?: string;
-		email?: string;
-		photo: {
-			url: string;
-			file?: File;
-		};
-	}>();
+	} = useForm<PersonalInformationInput>({
+		resolver: zodResolver(PersonalInformationSchema),
+		mode: "onSubmit",
+	});
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { user } = useAppSelector((state) => state.authReducer);
@@ -81,7 +101,7 @@ function PersonalInformationForm() {
 				name: user.name,
 				email: user.email,
 				photo: {
-					url: user.photoUrl,
+					url: user.photoUrl || undefined,
 				},
 			});
 	};
@@ -89,6 +109,18 @@ function PersonalInformationForm() {
 	useEffect(() => {
 		resetForm();
 	}, [user]);
+
+	const onSubmit = async (data: PersonalInformationInput) => {
+		await dispatch(
+			updateMeAsync({
+				name: data.name,
+				email: data.email,
+				...(data.photo.file
+					? { photoFile: data.photo.file }
+					: { photoUrl: data.photo.url }),
+			}),
+		);
+	};
 
 	return (
 		user && (
@@ -101,20 +133,7 @@ function PersonalInformationForm() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<form
-						onSubmit={handleSubmit((data) => {
-							dispatch(
-								updateMeAsync({
-									name: data.name,
-									email: data.email,
-									...(data.photo.file
-										? { photoFile: data.photo.file }
-										: { photoUrl: data.photo.url }),
-								}),
-							);
-						})}
-						className="space-y-4"
-					>
+					<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 						<input
 							ref={inputRef}
 							className="hidden"
@@ -130,7 +149,11 @@ function PersonalInformationForm() {
 									return;
 								}
 
-								setValue("photo", { url: "", file }, { shouldDirty: true });
+								setValue(
+									"photo",
+									{ url: undefined, file },
+									{ shouldDirty: true },
+								);
 								event.target.value = "";
 							}}
 						/>
@@ -144,23 +167,21 @@ function PersonalInformationForm() {
 										control={control}
 										render={({ field }) => {
 											const { value } = field;
-											const [previewUrl, setPreviewUrl] = useState(
-												value?.url || "",
-											);
+											const [previewUrl, setPreviewUrl] = useState(value?.url);
 
 											useEffect(() => {
-												let url: string | undefined;
+												let objectURL: string | undefined;
 
 												if (value?.file) {
-													url = URL.createObjectURL(value.file);
-													setPreviewUrl(url);
+													objectURL = URL.createObjectURL(value.file);
+													setPreviewUrl(objectURL);
 												} else {
-													setPreviewUrl(value?.url || "");
+													setPreviewUrl(value?.url);
 												}
 
 												return () => {
-													if (url) {
-														URL.revokeObjectURL(url);
+													if (objectURL) {
+														URL.revokeObjectURL(objectURL);
 													}
 												};
 											}, [value?.file, value?.url]);
@@ -194,12 +215,10 @@ function PersonalInformationForm() {
 												icon="delete"
 												aria-label="Delete avatar"
 												onClick={() => {
-													const current = user.photoUrl;
-
 													setValue(
 														"photo",
-														{ url: "", file: undefined },
-														{ shouldDirty: !!current },
+														{ url: undefined, file: undefined },
+														{ shouldDirty: !!user.photoUrl },
 													);
 												}}
 											/>
@@ -213,49 +232,48 @@ function PersonalInformationForm() {
 							</Field>
 							<Field>
 								<FieldLabel htmlFor="name">Full Name</FieldLabel>
-								<Input
-									id="name"
-									type="text"
-									placeholder="John Doe"
-									{...register("name", {
-										required: "This field is required.",
-										minLength: { value: 2, message: "Name is too short." },
-										maxLength: { value: 16, message: "Name is too long." },
-										pattern: {
-											value: /^[a-zA-Z0-9\s'-]+$/,
-											message: "Invalid characters in name.",
-										},
-									})}
-								/>
+								<FieldContent>
+									<Input
+										id="name"
+										type="text"
+										placeholder="John Doe"
+										{...register("name")}
+									/>
+								</FieldContent>
+								<FieldError>{errors.name?.message}</FieldError>
 							</Field>
 							<Field>
 								<FieldLabel htmlFor="name">Email</FieldLabel>
-								<Input
-									id="name"
-									type="email"
-									placeholder="m@example.com"
-									{...register("email", {
-										required: "This field is required.",
-										minLength: { value: 2, message: "Email is too short." },
-										maxLength: { value: 32, message: "Email is too long." },
-										pattern: {
-											value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-											message: "Invalid characters in email.",
-										},
-									})}
-								/>
+								<FieldContent>
+									<Input
+										id="name"
+										type="email"
+										placeholder="m@example.com"
+										{...register("email")}
+									/>
+								</FieldContent>
+								<FieldError>{errors.email?.message}</FieldError>
 							</Field>
 							<Field orientation="horizontal">
 								<Button
 									variant="outline"
-									disabled={!formState.isDirty}
+									disabled={!formState.isDirty || isSubmitting}
 									onClick={resetForm}
 								>
 									Cancel
 								</Button>
 
-								<Button type="submit" disabled={!formState.isDirty}>
-									Save
+								<Button
+									type="submit"
+									disabled={!formState.isDirty || isSubmitting}
+								>
+									{isSubmitting ? (
+										<>
+											<Spinner /> Saving...
+										</>
+									) : (
+										"Save"
+									)}
 								</Button>
 							</Field>
 						</FieldGroup>
@@ -266,19 +284,45 @@ function PersonalInformationForm() {
 	);
 }
 
+export const ChangePasswordSchema = z
+	.object({
+		currentPassword: z.string().nonempty("This field is required."),
+		newPassword: z
+			.string()
+			.nonempty("This field is required.")
+			.min(8, "Password is too short.")
+			.max(32, "Password is too long."),
+		confirmPassword: z.string().nonempty("This field is required."),
+	})
+	.refine((data) => data.newPassword === data.confirmPassword, {
+		message: "Passwords do not match",
+		path: ["confirmPassword"],
+	})
+	.refine((data) => data.newPassword !== data.currentPassword, {
+		message: "New password cannot be the same as the current password",
+		path: ["newPassword"],
+	});
+
+type ChangePasswordInput = z.infer<typeof ChangePasswordSchema>;
+
 function ChangePasswordForm() {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 		formState,
 		reset,
-	} = useForm<{
-		currentPassword: string;
-		newPassword: string;
-		confirmPassword: string;
-	}>();
+	} = useForm<ChangePasswordInput>({
+		resolver: zodResolver(ChangePasswordSchema),
+		mode: "onSubmit",
+	});
 	const dispatch = useDispatch<AppDispatch>();
+
+	const onSubmit = async (data: ChangePasswordInput) => {
+		const { currentPassword, newPassword } = data;
+		await dispatch(updateMyPasswordAsync({ currentPassword, newPassword }));
+		reset();
+	};
 
 	return (
 		<Card>
@@ -289,45 +333,31 @@ function ChangePasswordForm() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<form
-					onSubmit={handleSubmit((data) => {
-						const { currentPassword, newPassword, confirmPassword } = data;
-						if (newPassword === confirmPassword) {
-							dispatch(updateMyPasswordAsync({ currentPassword, newPassword }));
-							reset();
-						} else {
-							toast("The passwords you entered do not match.", {
-								position: "top-center",
-							});
-						}
-					})}
-				>
+				<form onSubmit={handleSubmit(onSubmit)}>
 					<FieldGroup>
 						<Field>
 							<FieldLabel htmlFor="current-password">
 								Current Password
 							</FieldLabel>
-							<Input
-								id="current-password"
-								type="password"
-								{...register("currentPassword", {
-									required: "This field is required.",
-									minLength: { value: 8, message: "Password is too short." },
-									maxLength: { value: 32, message: "Password is too long." },
-								})}
-							/>
+							<FieldContent>
+								<Input
+									id="current-password"
+									type="password"
+									{...register("currentPassword")}
+								/>
+							</FieldContent>
+							<FieldError>{errors.currentPassword?.message}</FieldError>
 						</Field>
 						<Field>
 							<FieldLabel htmlFor="new-password">New Password</FieldLabel>
-							<Input
-								id="new-password"
-								type="password"
-								{...register("newPassword", {
-									required: "This field is required.",
-									minLength: { value: 8, message: "Password is too short." },
-									maxLength: { value: 32, message: "Password is too long." },
-								})}
-							/>
+							<FieldContent>
+								<Input
+									id="new-password"
+									type="password"
+									{...register("newPassword")}
+								/>
+							</FieldContent>
+							<FieldError>{errors.newPassword?.message}</FieldError>
 							<FieldDescription>
 								Must be at least 8 characters long.
 							</FieldDescription>
@@ -336,29 +366,37 @@ function ChangePasswordForm() {
 							<FieldLabel htmlFor="confirm-password">
 								Confirm Password
 							</FieldLabel>
-							<Input
-								id="confirm-password"
-								type="password"
-								{...register("confirmPassword", {
-									required: "This field is required.",
-									minLength: { value: 8, message: "Password is too short." },
-									maxLength: { value: 32, message: "Password is too long." },
-								})}
-							/>
+							<FieldContent>
+								<Input
+									id="confirm-password"
+									type="password"
+									{...register("confirmPassword")}
+								/>
+							</FieldContent>
+							<FieldError>{errors.confirmPassword?.message}</FieldError>
 							<FieldDescription>Please confirm your password.</FieldDescription>
 						</Field>
 
 						<Field orientation="horizontal">
 							<Button
 								variant="outline"
-								disabled={!formState.isDirty}
+								disabled={!formState.isDirty || isSubmitting}
 								onClick={() => reset()}
 							>
 								Cancel
 							</Button>
 
-							<Button type="submit" disabled={!formState.isDirty}>
-								Save
+							<Button
+								type="submit"
+								disabled={!formState.isDirty || isSubmitting}
+							>
+								{isSubmitting ? (
+									<>
+										<Spinner /> Saving...
+									</>
+								) : (
+									"Save"
+								)}
 							</Button>
 						</Field>
 					</FieldGroup>
