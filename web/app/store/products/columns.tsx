@@ -1,13 +1,15 @@
-import { AppDispatch } from "@redux/store";
-import {
-	removeUserProductAsync,
-	updateUserProductAsync,
-} from "@redux/thunks/user-products-thunks";
-import { Column } from "@shared/components/ui/table";
-import { LogoCell } from "@shared/components/ui/table/cells/logo-cell";
-import { IProduct } from "@shared/interfaces";
-import { createProductSlug } from "@utils/string-utils";
+"use client";
 
+import { IProduct } from "@shared/interfaces";
+
+import { ColumnDef, Row } from "@tanstack/react-table";
+import Link from "next/link";
+
+import { Button } from "@shadcn/components/ui/button";
+import { ArrowUpDown, EyeIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { formatCurrency } from "@utils/format-price";
+import { Checkbox } from "@shadcn/components/ui/checkbox";
+import { Avatar, AvatarImage } from "@shadcn/components/ui/avatar";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -17,99 +19,224 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-	AlertDialogTrigger,
 } from "@shadcn/components/ui/alert-dialog";
-import { ButtonIcon } from "@shared/components/ui/button-icon";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { createProductSlug } from "@utils/string-utils";
+import { PublicCategoryTree } from "@shared/types/category.type";
+import InputWithPlusMinusButtons from "@shared/components/ui/input-with-plus-minus-buttons";
 
 export type SellProduct = IProduct & { imgUrl: string };
 
-export const getSellColumns = ({
-	dispatch,
-	router,
-}: {
-	dispatch: AppDispatch;
-	router: AppRouterInstance;
-}): Column<SellProduct>[] => [
+export const getSellColumns = (
+	categoryTree: PublicCategoryTree[] | undefined,
+	onDelete: (id: string) => void,
+	onStockChange: (id: string, value: number) => void,
+): ColumnDef<SellProduct>[] => [
 	{
-		header: "Product",
-		field: "imgUrl",
-		type: "custom",
-		className: "w-auto md:w-[60%]",
-		render: (value, row) => (
-			<LogoCell
-				href={`products/${createProductSlug(row.name, row._id)}`}
-				label={row.name}
-				imgUrl={value}
+		id: "select",
+		header: ({ table }) => (
+			<Checkbox
+				checked={
+					table.getIsAllPageRowsSelected() ||
+					(table.getIsSomePageRowsSelected() && "indeterminate")
+				}
+				onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+				aria-label="Select all"
 			/>
 		),
-	},
-	{ header: "Price", field: "price", type: "usd", width: "10%" },
-	{
-		header: "Compare",
-		field: "priceCompare",
-		type: "usd",
-		width: "10%",
-	},
-	{
-		header: "Stock",
-		field: "stock",
-		type: "number-input",
-		width: "10%",
-		onChange: (value, row) => {
-			dispatch(
-				updateUserProductAsync({
-					id: row._id,
-					data: {
-						name: row.name,
-						stock: value,
-					},
-				}),
-			);
-		},
+		cell: ({ row }) => (
+			<Checkbox
+				checked={row.getIsSelected()}
+				onCheckedChange={(value) => row.toggleSelected(!!value)}
+				aria-label="Select row"
+			/>
+		),
+		enableSorting: false,
+		enableHiding: false,
 	},
 	{
-		field: "_id",
-		header: "",
-		type: "custom",
-		className: "w-21",
-		render(value, row) {
-			return (
-				<div className="flex gap-2">
-					<ButtonIcon
-						icon="edit"
-						aria-label="Edit product"
-						onClick={async () => {
-							router.push(`/store/products/${row._id}`);
-						}}
-					/>
+		accessorKey: "name",
+		header: "Product",
+		cell: ({ row }) => {
+			const href = `${`products/${row.original._id}`}`;
+			const product = row.original;
 
-					<AlertDialog>
-						<AlertDialogTrigger asChild>
-							<ButtonIcon icon="delete" aria-label="Delete product" />
-						</AlertDialogTrigger>
-						<AlertDialogContent>
-							<AlertDialogHeader>
-								<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-								<AlertDialogDescription>
-									This action cannot be undone. This will permanently delete the
-									product data from our servers.
-								</AlertDialogDescription>
-							</AlertDialogHeader>
-							<AlertDialogFooter>
-								<AlertDialogCancel>Cancel</AlertDialogCancel>
-								<AlertDialogAction
-									onClick={() => {
-										dispatch(removeUserProductAsync({ product: row }));
-									}}
-								>
-									Continue
-								</AlertDialogAction>
-							</AlertDialogFooter>
-						</AlertDialogContent>
-					</AlertDialog>
+			const productSubcategoryTree = categoryTree
+				?.flatMap((cat) => [...cat.children, cat])
+				.find((cat) => cat.id === product.category);
+
+			return (
+				<div className="flex gap-3 items-center">
+					<Link href={href}>
+						<Avatar className="h-8 w-8 rounded-sm overflow-hidden">
+							<AvatarImage
+								className="rounded-none"
+								src={row.original.imgUrl}
+								alt={`Photo of "${row.original.name}"`}
+							/>
+						</Avatar>
+					</Link>
+
+					<div>
+						<div className="font-medium hover:text-primary transition-colors max-w-60 truncate">
+							<Link href={href}>{row.original.name}</Link>
+						</div>
+						<span className="text-muted-foreground text-xs">
+							{productSubcategoryTree?.name}
+						</span>
+					</div>
 				</div>
 			);
 		},
 	},
+	{
+		accessorKey: "category",
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+				>
+					Category
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			const productCategoryTree = categoryTree?.find((rootCat) =>
+				rootCat.children.some(
+					(childCat) => childCat.id === row.original.category,
+				),
+			);
+
+			return <div>{productCategoryTree?.name}</div>;
+		},
+	},
+	{
+		accessorKey: "price",
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+				>
+					Price
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			const formatted = formatCurrency(row.original.price / 100);
+			return <div>{formatted}</div>;
+		},
+	},
+	{
+		accessorKey: "priceCompare",
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+				>
+					Compare
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			const formatted = formatCurrency(row.original.priceCompare / 100);
+			return <div>{formatted}</div>;
+		},
+	},
+	{
+		accessorKey: "stock",
+		header: "Stock",
+		cell: ({ row }) => (
+			<InputWithPlusMinusButtons
+				min={0}
+				className="w-28"
+				size="icon-lg"
+				value={row.original.stock}
+				onChange={(value) => onStockChange(row.original._id, value)}
+			/>
+		),
+	},
+	{
+		id: "actions",
+		header: "Actions",
+		cell: ({ row }) => {
+			return <ActionsCell row={row} onDelete={onDelete} />;
+		},
+	},
 ];
+
+const ActionsCell = ({
+	row,
+	onDelete,
+}: {
+	row: Row<SellProduct>;
+	onDelete: (id: string) => void;
+}) => {
+	const router = useRouter();
+	const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+	const product = row.original;
+
+	return (
+		<>
+			<div className="flex items-center gap-1">
+				<Button
+					variant="ghost"
+					size="icon"
+					className="rounded-full"
+					aria-label={`product-${product._id}-remove`}
+					onClick={() =>
+						router.push(
+							`/products/${createProductSlug(row.original.name, row.original._id)}`,
+						)
+					}
+				>
+					<EyeIcon />
+				</Button>
+
+				<Button
+					variant="ghost"
+					size="icon"
+					className="rounded-full"
+					aria-label={`product-${product._id}-edit`}
+					onClick={() => router.push(`/store/products/${row.original._id}`)}
+				>
+					<PencilIcon />
+				</Button>
+
+				<Button
+					variant="ghost"
+					size="icon"
+					className="rounded-full"
+					aria-label={`product-${product._id}-remove`}
+					onClick={() => setShowDeleteAlert(true)}
+				>
+					<Trash2Icon />
+				</Button>
+			</div>
+
+			<AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This action cannot be undone. This will permanently delete the
+							product data from our servers.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>Cancel</AlertDialogCancel>
+						<AlertDialogAction onClick={() => onDelete(product._id)}>
+							Continue
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+		</>
+	);
+};

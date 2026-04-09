@@ -1,7 +1,7 @@
 "use client";
 
-import { useSell } from "@hooks/use-sell";
 import { ProductBase } from "../product-base";
+import { useSell } from "../use-sell";
 
 export default function Page() {
 	const {
@@ -11,6 +11,7 @@ export default function Page() {
 		onDescriptionChange,
 		addProduct,
 		description,
+		loading,
 	} = useSell();
 
 	return (
@@ -22,6 +23,7 @@ export default function Page() {
 			description={description}
 			onSubmit={addProduct}
 			submitButtonText="Save"
+			loading={loading}
 		/>
 	);
 }

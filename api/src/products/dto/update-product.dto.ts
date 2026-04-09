@@ -33,6 +33,7 @@ export class UpdateProductDto {
 	@ApiProperty()
 	@IsNumber()
 	@IsOptional()
+	@Type(() => Number)
 	readonly stock?: number;
 
 	@ApiPropertyOptional({ type: [Number] })

@@ -169,6 +169,9 @@ export class ProductsController {
 		if (dto.category !== undefined) {
 			updatedProduct.category = new Types.ObjectId(dto.category) as any;
 		}
+		if (dto.stock !== undefined) {
+			updatedProduct.stock = dto.stock;
+		}
 		if (finalImgUrls !== undefined) {
 			updatedProduct.imgUrls = finalImgUrls.filter((el) => el !== undefined);
 		}

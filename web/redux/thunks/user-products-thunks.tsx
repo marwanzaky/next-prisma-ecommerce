@@ -1,7 +1,7 @@
 import { productsService } from "@redux/services/products-service";
 import { usersService } from "@redux/services/users-service";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ICreateProduct, IProduct, IUpdateProduct } from "@shared/interfaces";
+import { ICreateProduct, IUpdateProduct } from "@shared/interfaces";
 import { toast } from "sonner";
 
 export const getUserProductsAsync = createAsyncThunk(
@@ -50,9 +50,9 @@ export const updateUserProductAsync = createAsyncThunk(
 
 export const removeUserProductAsync = createAsyncThunk(
 	"userProducts/removeUserProduct",
-	async ({ product }: { product: IProduct }, { rejectWithValue }) => {
+	async ({ id }: { id: string }, { rejectWithValue }) => {
 		try {
-			const response = await productsService.remove(product._id);
+			const response = await productsService.remove(id);
 
 			toast("Product deleted.", { position: "top-center" });
 

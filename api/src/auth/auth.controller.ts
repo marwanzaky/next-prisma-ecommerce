@@ -39,7 +39,7 @@ export class AuthController {
 	@ApiOperation({
 		summary: "Register a new user",
 	})
-	async signUp(@Body() signupDto: SignUpDto) {
+	signUp(@Body() signupDto: SignUpDto) {
 		return this.authService.signUp(signupDto);
 	}
 

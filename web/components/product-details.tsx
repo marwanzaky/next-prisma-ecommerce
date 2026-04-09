@@ -65,8 +65,10 @@ import { IProduct } from "@shared/interfaces";
 import { ButtonIcon } from "@shared/components/ui/button-icon";
 import { renderLexicalJSONToHTML } from "@shared/components/ui/lexical/renderLexicalJSONToHTML";
 import { Separator } from "@shadcn/components/ui/separator";
-import { Heart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import Icon from "@shared/components/ui/icon";
+import { Badge } from "@shadcn/components/ui/badge";
+import InputWithPlusMinusButtons from "@shared/components/ui/input-with-plus-minus-buttons";
 
 function Preview({ product }: { product: IProduct }) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =
@@ -254,7 +256,7 @@ function Details({ product }: { product: IProduct }) {
 						{product.name}
 					</h1>
 
-					<div className="flex items-center gap-2 overflow-hidden">
+					<div className="flex items-center gap-3 overflow-hidden">
 						<div className="text-4xl">
 							{formatCurrency(product.price / 100)}
 						</div>
@@ -262,6 +264,12 @@ function Details({ product }: { product: IProduct }) {
 							<div className="text-muted-foreground line-through text-2xl">
 								{formatCurrency(product.priceCompare / 100)}
 							</div>
+						)}
+
+						{product.discount !== "0%" && (
+							<Badge className="border-none bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 focus-visible:outline-none dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5">
+								{product.discount} Off
+							</Badge>
 						)}
 					</div>
 
@@ -275,14 +283,12 @@ function Details({ product }: { product: IProduct }) {
 
 			<div className="space-y-2 flex flex-col">
 				<div className="flex gap-2">
-					<Input
-						className="w-20 h-10 text-center"
-						id="quantity"
-						type="number"
+					<InputWithPlusMinusButtons
+						className="w-30"
 						min={1}
-						max={100}
+						max={10}
 						value={quantity}
-						onChange={(e) => setQuantity(parseInt(e.target.value))}
+						onChange={setQuantity}
 					/>
 					<Button
 						size="xl"
@@ -306,6 +312,7 @@ function Details({ product }: { product: IProduct }) {
 							});
 						}}
 					>
+						<ShoppingCart />
 						Add to cart
 					</Button>
 

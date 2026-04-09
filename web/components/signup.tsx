@@ -35,12 +35,9 @@ type Form = {
 export default function Signup() {
 	const router = useRouter();
 
-	const {
-		register,
-		handleSubmit,
-		watch,
-		formState: { errors },
-	} = useForm<Form>({ mode: "onTouched" });
+	const { register, handleSubmit, watch } = useForm<Form>({
+		mode: "onTouched",
+	});
 
 	const password = watch("password");
 

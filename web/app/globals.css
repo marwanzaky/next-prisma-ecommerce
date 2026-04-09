@@ -4,6 +4,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@layer utilities {
+	input[type="number"]::-webkit-inner-spin-button,
+	input[type="number"]::-webkit-outer-spin-button {
+		@apply appearance-none;
+	}
+}
+
 @layer base {
 	* {
 		@apply border-border outline-ring/50;

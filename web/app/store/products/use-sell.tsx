@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "@redux/store";
 import {
 	postUserProductAsync,
+	removeUserProductAsync,
 	updateUserProductAsync,
 } from "@redux/thunks/user-products-thunks";
 
@@ -59,7 +60,9 @@ export function useSell() {
 
 	const dispatch = useDispatch<AppDispatch>();
 
-	const { products } = useAppSelector((state) => state.userProductsReducer);
+	const { products, loading } = useAppSelector(
+		(state) => state.userProductsReducer,
+	);
 
 	const initialConfig: InitialConfigType = {
 		namespace: "MyEditor",
@@ -94,19 +97,37 @@ export function useSell() {
 		staleTime: 1000 * 60 * 5,
 	});
 
-	const columns = useMemo(
-		() => getSellColumns({ dispatch, router }),
-		[dispatch, router],
-	);
-
 	const tableData: SellProduct[] = products.map((item) => ({
 		...item,
 		imgUrl: item.imgUrls[0],
 	}));
 
 	return {
-		columns,
+		columns: getSellColumns(
+			categoryTree,
+			(id) => {
+				dispatch(removeUserProductAsync({ id }));
+			},
+			(id, value) => {
+				const product = products.find((p) => p._id === id);
+
+				dispatch(
+					updateUserProductAsync({
+						id,
+						data: {
+							stock: value,
+							keptImgs: product
+								?.imgUrls!.map((imgUrl, index) =>
+									imgUrl ? { url: imgUrl, index } : null,
+								)
+								.filter((el) => el !== null),
+						},
+					}),
+				);
+			},
+		),
 		tableData,
+		loading,
 
 		initialConfig,
 		form,
@@ -140,6 +161,8 @@ export function useSell() {
 					data: createProduct,
 				}),
 			);
+
+			form.reset();
 
 			router.push("/store/products");
 		}),

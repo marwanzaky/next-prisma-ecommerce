@@ -126,14 +126,14 @@ export default function Page() {
 
 					<div className="flex justify-end items-center gap-4 shrink-0">
 						{isLoading === false && (
-							<TypographyP className="text-muted-foreground hidden sm:block">
+							<TypographyP className="text-sm text-muted-foreground hidden sm:block">
 								Showing {data?.length} Products
 							</TypographyP>
 						)}
 
 						<div className="flex items-center gap-2">
-							<TypographyP className="hidden sm:block whitespace-nowrap">
-								Sort by:
+							<TypographyP className="text-sm hidden sm:block whitespace-nowrap">
+								Sort by
 							</TypographyP>
 
 							<Select

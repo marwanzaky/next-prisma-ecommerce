@@ -39,12 +39,16 @@ import {
 	LogOut,
 	Menu,
 	MessagesSquare,
-	Search,
+	SearchIcon,
 	ShoppingBag,
 } from "lucide-react";
-import { Input } from "@shadcn/components/ui/input";
 import { useDispatch } from "react-redux";
 import { logOut } from "@redux/slices/auth-slice";
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from "@shadcn/components/ui/input-group";
 
 export default function Navigation() {
 	const router = useRouter();
@@ -84,16 +88,16 @@ export default function Navigation() {
 						router.push(`/products?${params.toString()}`);
 					}}
 				>
-					<div className="relative">
-						<Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
-						<Input
-							type="search"
-							className="bg-background pl-9"
+					<InputGroup>
+						<InputGroupInput
 							placeholder="Search..."
 							value={search}
 							onChange={(event) => setSearch(event.target.value)}
 						/>
-					</div>
+						<InputGroupAddon align="inline-start">
+							<SearchIcon className="text-muted-foreground" />
+						</InputGroupAddon>
+					</InputGroup>
 				</form>
 			</div>
 

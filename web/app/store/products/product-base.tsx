@@ -51,8 +51,9 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@shadcn/components/ui/breadcrumb";
-import { ProductForm } from "@hooks/use-sell";
+import { ProductForm } from "@app/store/products/use-sell";
 import { PublicCategoryTree } from "@shared/types/category.type";
+import { Spinner } from "@shadcn/components/ui/spinner";
 
 type ProductBaseProps = {
 	initialConfig: InitialConfigType;
@@ -62,6 +63,8 @@ type ProductBaseProps = {
 	onDescriptionChange: (html: string, isEmpty: boolean) => void;
 	options: PublicCategoryTree[];
 	onSubmit: React.SubmitEventHandler<HTMLFormElement>;
+
+	loading: boolean;
 	injectLoadDescriptionPlugin?: boolean;
 
 	submitButtonText: string;
@@ -81,6 +84,7 @@ export function ProductBase({
 	onDescriptionChange,
 	options,
 	onSubmit,
+	loading,
 	injectLoadDescriptionPlugin,
 
 	submitButtonText,
@@ -300,7 +304,8 @@ export function ProductBase({
 							Cancel
 						</Button>
 					)}
-					<Button type="submit" disabled={!formState.isDirty}>
+					<Button type="submit" disabled={!formState.isDirty || loading}>
+						{loading && <Spinner />}
 						{submitButtonText}
 					</Button>
 				</div>

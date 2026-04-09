@@ -4,8 +4,8 @@ import { useAppSelector } from "@redux/store";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { useSell } from "@hooks/use-sell";
 import { ProductBase } from "../product-base";
+import { useSell } from "../use-sell";
 
 export default function Page() {
 	const params = useParams<{ id: string }>();
@@ -18,6 +18,7 @@ export default function Page() {
 		options,
 		description,
 		updateProduct,
+		loading,
 	} = useSell();
 
 	const { products } = useAppSelector((state) => state.userProductsReducer);
@@ -57,6 +58,7 @@ export default function Page() {
 			submitButtonText="Update"
 			cancelButtonAction={() => router.push("/store/products")}
 			injectLoadDescriptionPlugin
+			loading={loading}
 		/>
 	);
 }
