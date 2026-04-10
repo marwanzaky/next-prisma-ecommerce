@@ -8,7 +8,7 @@
 
 ## About
 
-[Website](https://mamolio.vercel.app) project is an ecommerce store built from the ground up to deliver speed, security, and scalability. Designed with Next.js 16, Tailwind CSS, NestJS, and MongoDB.
+[Website](https://mamolio.vercel.app) project is a modern ecommerce store built from the ground up to deliver speed, security, and scalability. Designed with Next.js 16, Tailwind CSS 4, NestJS, and MongoDB.
 
 <div>
   <img src="https://img.shields.io/badge/-TypeScript-2c3e50.svg?logo=typescript&style=flat">
@@ -70,33 +70,31 @@
 - Product: `/products/:id`
 - Cart: `/cart`
 - Favorites: `/favorites`
-- Sell: `/sell`
+- Store: `/store/products`
 - Signin: `/signin`
 - Signup: `/signup`
 - Contact: `/contact`
 - Account: `/account`
 
 ## Features
-### Shop
-- Sort by Relevancy, Most Popular, Low Price, or High Price.
-- Filter by Rates, or Price ranges
-<img width="100%" height="518" alt="image" src="https://github.com/user-attachments/assets/475d2693-a5e0-444b-8fa1-b5cebdb75b82" />
+### 🔎 Search & Filtering `/products`
+- Search products by name/keyword
+- Filter by category, price, or other attributes
+- Sorting options (price, newest, etc.)
+<img width="60%" height="auto" alt="mamolio store_products_sort=relevancy minPrice=299 maxPrice=1299 rating=3" src="https://github.com/user-attachments/assets/4936b492-a564-4477-85a9-40d1a42d9946" />
+<img width="35%" height="auto" alt="mamolio store_products_sort=relevancy" src="https://github.com/user-attachments/assets/745505ee-2018-4538-b355-c295927dfda9" />
 
 ### Form Validation
-- Name: max 20 characters
-- Email: must be a valid email format
-- Password: minimum 8 characters
-- Confirm password: must match password
-- All fields are required
-<img width="448px" height="573" alt="Untitled" src="https://github.com/user-attachments/assets/cea44838-27c7-4470-a80a-d51a4e7f48c5" />
+<img width="auto" height="512" alt="mamolio store_signup (2)" src="https://github.com/user-attachments/assets/b4305f17-acd7-48d1-82cb-b6d343fd2329" />
 
-### Inventory Management
+### 🛍️ Store `/store/products`
 - Create, edit, and delete products
-- Inline stock updates with validation
-- Price comparison support
-- Real-time UI updates synced with backend
-<img width="auto" height="512px" alt="asdf" src="https://github.com/user-attachments/assets/d6e1ed8b-9bad-42bb-b175-662d44b90892" />
-<img width="auto" height="512px" alt="Screenshot edited" src="https://github.com/user-attachments/assets/90d75c92-6121-4556-acf5-a486d56e2e5b" />
+- Rich WYSIWYG editor with support for:
+  - Images (`<img />`)
+  - Formatting (`<strong />`, etc.)
+  - Embedded YouTube Shorts
+<img width="60%" height="auto" alt="mamolio store_store_products" src="https://github.com/user-attachments/assets/44b16563-6378-4053-a5ea-2e955a72cb9a" />
+<img width="35%" height="auto" alt="mamolio store_store_products (1)" src="https://github.com/user-attachments/assets/3d7b487f-9232-468d-a823-8e07e5ff5f6d" />
 
 
 ## Contact
