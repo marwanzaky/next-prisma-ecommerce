@@ -406,7 +406,7 @@ function Details({ product }: { product: IProduct }) {
 					<AccordionTrigger>Description</AccordionTrigger>
 					<AccordionContent asChild>
 						<div
-							className="[&_img]:rounded-lg"
+							className="prose prose-slate text-sm [&_img]:rounded-lg"
 							dangerouslySetInnerHTML={{
 								__html: descriptionHtml,
 							}}
@@ -415,11 +415,9 @@ function Details({ product }: { product: IProduct }) {
 				</AccordionItem>
 				<AccordionItem value="item-2">
 					<AccordionTrigger>Shipping and Refund Policy</AccordionTrigger>
-					<AccordionContent>
-						<Heading as="h4" className="text-sm">
-							Refund Policy
-						</Heading>
-						<TypographyP className="leading-5">
+					<AccordionContent className="prose prose-slate text-sm">
+						<h4>Refund Policy</h4>
+						<p>
 							We have a 30-day return policy, which means you have 30 days after
 							receiving your item to request a return.
 							<br />
@@ -441,24 +439,20 @@ function Details({ product }: { product: IProduct }) {
 							{process.env.NEXT_PUBLIC_CONTACT}.
 							<br />
 							<br />
-						</TypographyP>
+						</p>
 
-						<Heading as="h4" className="text-sm">
-							Shipping Policy
-						</Heading>
-						<TypographyP className="leading-5">
+						<h4>Shipping Policy</h4>
+						<p>
 							All orders are processed within 1 to 3 business days (excluding
 							weekends and holidays) after receiving your order confirmation
 							email. You will receive another notification when your order has
 							shipped.
 							<br />
 							<br />
-						</TypographyP>
+						</p>
 
-						<Heading as="h4" className="text-sm">
-							International Shipping
-						</Heading>
-						<TypographyP className="leading-5">
+						<h4>International Shipping</h4>
+						<p>
 							We offer international shipping to the following countries: United
 							States, United Kingdom, Australia, Canada, Germany, France, Spain,
 							United Arab Emirates, Indonesia.
@@ -467,7 +461,7 @@ function Details({ product }: { product: IProduct }) {
 							Your order may be subject to import duties and taxes (including
 							VAT), which are incurred once a shipment reaches your destination
 							country.
-						</TypographyP>
+						</p>
 					</AccordionContent>
 				</AccordionItem>
 

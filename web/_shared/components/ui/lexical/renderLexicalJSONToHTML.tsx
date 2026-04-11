@@ -26,15 +26,26 @@ export function renderLexicalJSONToHTML(
 					return `<p>${childrenHTML || "<br/>"}</p>`;
 				case "linebreak":
 					return "<br/>";
-				case "text":
+				case "text": {
 					const textNode = node as SerializedTextNode;
 					let text = textNode.text ?? "";
 					const format = textNode.format ?? 0;
 
-					if (format & 1)
-						text = `<strong class="block mb-5 font-semibold">${text}</strong>`;
+					if (format & 1) text = `<strong>${text}</strong>`;
+					if (format & 2) text = `<em>${text}</em>`;
+					if (format & 8) text = `<u>${text}</u>`;
 
 					return text;
+				}
+				case "list": {
+					const listNode = node as any;
+					const tag = listNode.tag;
+					return `<${tag}>${renderLexicalJSONToHTML(listNode.children)}</${tag}>`;
+				}
+				case "listitem": {
+					const listItemNode = node as any;
+					return `<li>${renderLexicalJSONToHTML(listItemNode.children)}</li>`;
+				}
 				default:
 					return "";
 			}

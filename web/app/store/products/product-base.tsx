@@ -54,6 +54,7 @@ import {
 import { ProductForm } from "@app/store/products/use-sell";
 import { PublicCategoryTree } from "@shared/types/category.type";
 import { Spinner } from "@shadcn/components/ui/spinner";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 
 type ProductBaseProps = {
 	initialConfig: InitialConfigType;
@@ -139,7 +140,7 @@ export function ProductBase({
 												contentEditable={
 													<ContentEditable
 														className={cn(
-															"min-h-40 max-h-100 overflow-y-scroll w-full px-2.5 py-2 text-sm focus:outline-none",
+															"prose prose-slate text-sm min-h-40 max-h-100 overflow-y-scroll w-full px-2.5 py-2 focus:outline-none",
 														)}
 													/>
 												}
@@ -152,6 +153,7 @@ export function ProductBase({
 											)}
 
 											<YouTubePastePlugin />
+											<ListPlugin />
 										</LexicalComposer>
 									</div>
 									{errors.description && (

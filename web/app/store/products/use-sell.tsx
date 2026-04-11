@@ -22,6 +22,10 @@ import { useForm, useWatch } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { categoriesService } from "@redux/services/categories-service";
 import { getSellColumns, SellProduct } from "@app/store/products/columns";
+import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
+import { ListItemNode, ListNode } from "@lexical/list";
+import { CodeHighlightNode, CodeNode } from "@lexical/code";
+import { AutoLinkNode, LinkNode } from "@lexical/link";
 
 export const productSchema = z.object({
 	name: z
@@ -66,12 +70,21 @@ export function useSell() {
 
 	const initialConfig: InitialConfigType = {
 		namespace: "MyEditor",
-		nodes: [ImageNode, YouTubeNode, ParagraphNode, LineBreakNode],
-		theme: {
-			text: {
-				bold: "block mb-5 font-semibold",
-			},
-		},
+		nodes: [
+			ImageNode,
+			YouTubeNode,
+			ParagraphNode,
+			LineBreakNode,
+			ListNode,
+			ListItemNode,
+			CodeNode,
+			CodeHighlightNode,
+			TableNode,
+			TableCellNode,
+			TableRowNode,
+			AutoLinkNode,
+			LinkNode,
+		],
 		onError: console.error,
 	};
 

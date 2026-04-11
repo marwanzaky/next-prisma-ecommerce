@@ -1,15 +1,24 @@
 import { $createImageNode } from "@shared/components/ui/lexical/nodes/image-node";
 
-import { $insertNodes } from "lexical";
+import { $insertNodes, FORMAT_TEXT_COMMAND, TextFormatType } from "lexical";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
 import { cn } from "@lib/utils";
 import { Button } from "@shadcn/components/ui/button";
-import { ImageIcon } from "lucide-react";
+import { Bold, ImageIcon, Italic, List, ListOrdered } from "lucide-react";
 import { uploadsService } from "@redux/services/uploads-service";
+import { Separator } from "@shadcn/components/ui/separator";
+import {
+	INSERT_UNORDERED_LIST_COMMAND,
+	INSERT_ORDERED_LIST_COMMAND,
+} from "@lexical/list";
 
 export function ImageToolbarButtonPlugin() {
 	const [editor] = useLexicalComposerContext();
+
+	const onFormat = (format: TextFormatType) => {
+		editor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
+	};
 
 	const insertImage = async () => {
 		const input = document.createElement("input");
@@ -37,6 +46,53 @@ export function ImageToolbarButtonPlugin() {
 	return (
 		<div className="sticky top-0 z-20">
 			<ToolbarGroup>
+				<Button
+					type="button"
+					variant="ghost"
+					size="sm"
+					onClick={() => onFormat("bold")}
+					className="h-8 w-8 p-0"
+				>
+					<Bold className="h-4 w-4" />
+				</Button>
+				<Button
+					type="button"
+					variant="ghost"
+					size="sm"
+					onClick={() => onFormat("italic")}
+					className="h-8 w-8 p-0"
+				>
+					<Italic className="h-4 w-4" />
+				</Button>
+
+				<Separator orientation="vertical" />
+
+				<Button
+					type="button"
+					variant="ghost"
+					size="sm"
+					onClick={() =>
+						editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)
+					}
+					className="h-8 w-8 p-0"
+				>
+					<List className="h-4 w-4" />
+				</Button>
+
+				<Button
+					type="button"
+					variant="ghost"
+					size="sm"
+					onClick={() =>
+						editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined)
+					}
+					className="h-8 w-8 p-0"
+				>
+					<ListOrdered className="h-4 w-4" />
+				</Button>
+
+				<Separator orientation="vertical" />
+
 				<Button
 					type="button"
 					variant="ghost"
