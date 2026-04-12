@@ -8,7 +8,7 @@
 
 ## About
 
-[Website](https://mamolio.vercel.app) project is a modern ecommerce store built from the ground up to deliver speed, security, and scalability. Designed with Next.js 16, Tailwind CSS 4, NestJS, and MongoDB.
+[Website](https://mamolio.store) project is a modern ecommerce store built from the ground up to deliver speed, security, and scalability. Designed with Next.js 16, Tailwind CSS 4, NestJS, and MongoDB.
 
 <div>
   <img src="https://img.shields.io/badge/-TypeScript-2c3e50.svg?logo=typescript&style=flat">
@@ -29,18 +29,18 @@
   <img src="https://img.shields.io/badge/-Docker-2c3e50.svg?logo=docker&style=flat">
 </div>
 
-## Technologies
-- TypeScript 6
-- Next.js 16
-- Tailwind CSS 4
-- Redux
-- Shadcn UI
-- NestJS
-- MongoDB
-- Cloudinary
-- Google Analytics 4
-- Swagger
-- JWT
+## 🛠 Tech Stack
+**Frontend**
+- Framework: Next.js 16
+- Styling: Tailwind CSS 4 & Shadcn UI
+- State Management: Redux Toolkit
+- Features: PWA support, Responsive Design
+
+**Backend**
+- Framework: NestJS (Node.js)
+- Database: MongoDB with Mongoose
+- Auth: JWT & Google OAuth 2.0
+- API Docs: Swagger UI
 
 ## Features
 - SEO friendly
@@ -76,6 +76,13 @@
 - Contact: `/contact`
 - Account: `/account`
 
+## 📂 Project Structure
+```
+├── api/          # NestJS Backend
+├── web/          # Next.js Frontend
+└── shared/       # Shared TypeScript interfaces
+```
+
 ## Features
 ### 🔎 Search & Filtering `/products`
 - Search products by name/keyword
@@ -89,13 +96,9 @@
 
 ### 🛍️ Store `/store/products`
 - Create, edit, and delete products
-- Rich WYSIWYG editor with support for:
-  - Images (`<img />`)
-  - Formatting (`<strong />`, etc.)
-  - Embedded YouTube Shorts
+- Rich WYSIWYG editor with support for images, formatting, and YouTube Shorts embeds.
 <img width="60%" height="auto" alt="mamolio store_store_products" src="https://github.com/user-attachments/assets/44b16563-6378-4053-a5ea-2e955a72cb9a" />
-<img width="35%" height="auto" alt="mamolio store_store_products (1)" src="https://github.com/user-attachments/assets/3d7b487f-9232-468d-a823-8e07e5ff5f6d" />
-
+<img width="35%" height="auto" alt="mamolio store_store_products_67746fbf537e5b283bd1352a" src="https://github.com/user-attachments/assets/999dd4ea-b5ac-426b-9d4c-31d61ec56d5e" />
 
 ## Contact
 
