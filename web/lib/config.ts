@@ -1,12 +1,14 @@
-const baseUrl = `https://${process.env.NEXT_PUBLIC_WEBSITE!}`;
+const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL!;
+const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL!;
 const name = process.env.NEXT_PUBLIC_NAME!;
 const email = process.env.NEXT_PUBLIC_CONTACT!;
 
-export const website = {
-	/** Base url of your website e.g https://twitter.com */
-	baseUrl,
+const config = {
+	/** Client url of your website e.g https://twitter.com */
+	clientUrl,
+	serverUrl,
 	/** Name of your website e.g Twitter */
-	name,
+	websiteName: name,
 	title: `${name} - Global Online Marketplace for Independent Sellers`,
 	description: `Shop unique products from independent sellers worldwide. Create your own seller shop on ${name} - where anyone can sell.`,
 	keywords: [
@@ -26,6 +28,8 @@ export const website = {
 	twitterHandle: "@mamolio_store",
 	themeColor: "#009679",
 	backgroundColor: "#fff",
-	logo: `${baseUrl}/icon.svg`,
-	openGraphImage: `${baseUrl}/og-image.png`,
+	logo: `${clientUrl}/icon.svg`,
+	openGraphImage: `${clientUrl}/og-image.png`,
 };
+
+export default config;

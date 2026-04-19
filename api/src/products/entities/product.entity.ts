@@ -30,6 +30,12 @@ export class Product extends Document implements Omit<IProduct, "_id"> {
 	priceCompare!: number;
 
 	@Prop({
+		type: Boolean,
+		default: false,
+	})
+	isHero!: boolean;
+
+	@Prop({
 		type: Number,
 		default: 1,
 	})
@@ -59,6 +65,12 @@ export class Product extends Document implements Omit<IProduct, "_id"> {
 		trim: true,
 	})
 	description!: string;
+
+	@Prop({
+		type: String,
+		trim: true,
+	})
+	shortDescription?: string;
 
 	@Prop({
 		type: [String],

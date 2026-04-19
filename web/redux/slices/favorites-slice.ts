@@ -4,8 +4,8 @@ import {
 	getFavoritesAsync,
 	postFavoritesAsync,
 	removeFavoritesAsync,
-} from "@redux/thunks/favorites-thunks";
-import { IProduct } from "@shared/interfaces";
+} from "@/redux/thunks/favorites-thunks";
+import { IProduct } from "@/types/product.type";
 
 export type FavoritesState = {
 	items: IProduct[];

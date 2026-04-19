@@ -15,10 +15,6 @@ module.exports = withPWA({
 		remotePatterns: [
 			{
 				protocol: "https",
-				hostname: process.env.NEXT_PUBLIC_DOMAINS,
-			},
-			{
-				protocol: "https",
 				hostname: "res.cloudinary.com",
 			},
 			{

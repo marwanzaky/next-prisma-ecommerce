@@ -1,45 +1,65 @@
 import { MetadataRoute } from "next";
 
-import { productsService } from "@redux/services/products-service";
-import { createProductSlug } from "@utils/string-utils";
+import { productsService } from "@/redux/services/products-service";
+import { createProductSlug } from "@/utils/string-utils";
+import { locales, localizeUrl } from "@/lib/i18n";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	const baseUrl = `https://${process.env.NEXT_PUBLIC_WEBSITE!}`;
+	const getLocalizedEntries = ({
+		pathname,
+		lastModified,
+		changeFrequency,
+		priority,
+	}: {
+		pathname: string;
+		lastModified: Date;
+		changeFrequency: "daily" | "weekly" | "monthly";
+		priority: number;
+	}): MetadataRoute.Sitemap => {
+		return locales.map((locale) => ({
+			url: localizeUrl(pathname, locale),
+			lastModified,
+			changeFrequency,
+			priority,
+		}));
+	};
 
 	const staticPages: MetadataRoute.Sitemap = [
-		{
-			url: baseUrl,
+		...getLocalizedEntries({
+			pathname: "/",
 			lastModified: new Date(),
-			changeFrequency: "daily" as const,
+			changeFrequency: "daily",
 			priority: 1,
-		},
-		{
-			url: `${baseUrl}/products`,
+		}),
+		...getLocalizedEntries({
+			pathname: "/products",
 			lastModified: new Date(),
-			changeFrequency: "daily" as const,
+			changeFrequency: "daily",
 			priority: 0.95,
-		},
-		{
-			url: `${baseUrl}/about`,
+		}),
+		...getLocalizedEntries({
+			pathname: "/about",
 			lastModified: new Date(),
-			changeFrequency: "monthly" as const,
+			changeFrequency: "monthly",
 			priority: 0.8,
-		},
-		{
-			url: `${baseUrl}/contact`,
+		}),
+		...getLocalizedEntries({
+			pathname: "/contact",
 			lastModified: new Date(),
-			changeFrequency: "monthly" as const,
+			changeFrequency: "monthly",
 			priority: 0.7,
-		},
+		}),
 	];
 
 	const products = await productsService.getAllProducts();
-	const productPages: MetadataRoute.Sitemap = products.map((product) => ({
-		url: `${baseUrl}/products/${createProductSlug(product.name, product._id)}`,
-		lastModified: product.updatedAt,
-		changeFrequency: "weekly" as const,
-		priority: 0.9,
-	}));
+	const productPages = products.flatMap((product) => {
+		return getLocalizedEntries({
+			pathname: `/products/${createProductSlug(product.name, product._id)}`,
+			lastModified: new Date(product.updatedAt),
+			changeFrequency: "weekly" as const,
+			priority: 0.9,
+		});
+	});
 
 	return [...staticPages, ...productPages];
 }

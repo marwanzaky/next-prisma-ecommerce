@@ -1,13 +1,12 @@
-import { IProduct } from "@shared/interfaces";
+import { IProduct } from "@/types/product.type";
 
 import { Product, WithContext } from "schema-dts";
-import { website } from "./config";
+import config from "./config";
 
 export function generateProductStructuredData(
 	product: IProduct,
 ): WithContext<Product> {
-	const { baseUrl } = website;
-	const productUrl = `${baseUrl}/products/${product._id}`;
+	const productUrl = `${config.clientUrl}/products/${product._id}`;
 	const offerId = `${productUrl}#offer`;
 
 	return {
@@ -30,7 +29,7 @@ export function generateProductStructuredData(
 			seller: {
 				"@type": "Organization",
 				name: product.user?.name,
-				url: baseUrl,
+				url: config.clientUrl,
 			},
 			inventoryLevel: {
 				"@type": "QuantitativeValue",

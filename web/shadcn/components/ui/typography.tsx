@@ -1,4 +1,4 @@
-import { cn } from "@lib/utils";
+import { cn } from "@/lib/utils";
 
 const headingVariants = {
 	h1: "scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance",

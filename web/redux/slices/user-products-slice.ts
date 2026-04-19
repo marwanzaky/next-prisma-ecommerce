@@ -4,9 +4,9 @@ import {
 	postUserProductAsync,
 	removeUserProductAsync,
 	updateUserProductAsync,
-} from "@redux/thunks/user-products-thunks";
+} from "@/redux/thunks/user-products-thunks";
 
-import { IProduct } from "@shared/interfaces";
+import { IProduct } from "@/types/product.type";
 
 export type UserProductsState = {
 	products: IProduct[];

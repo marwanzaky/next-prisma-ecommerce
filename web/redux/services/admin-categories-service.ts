@@ -1,10 +1,10 @@
-import { clientFetch } from "@lib/api-client";
-import { jsonToFormData } from "@utils/helper";
+import { clientFetch } from "@/lib/api-client";
+import { jsonToFormData } from "@/utils/helper";
 import {
 	Category,
 	CreateCategory,
 	UpdateCategory,
-} from "@shared/types/category.type";
+} from "@/shared/types/category.type";
 
 export const adminCategoriesService = {
 	getAllCategories: () => clientFetch<Category[]>("/admin/categories"),

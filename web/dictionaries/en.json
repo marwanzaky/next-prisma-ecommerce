@@ -1,0 +1,197 @@
+{
+	"photoOf": "Photo of {{name}}",
+	"layout": {
+		"banner": "Free shipping on orders over $50"
+	},
+	"navigation": {
+		"searchPlaceholder": "Search...",
+		"li": {
+			"home": "Home",
+			"shop": "Shop",
+			"about": "About",
+			"contact": "Contact"
+		},
+		"actions": {
+			"language": "Language",
+			"store": "Store",
+			"account": "Account",
+			"admin": "Admin",
+			"messages": "Messages",
+			"categories": "Categories",
+			"logOut": "Log out"
+		}
+	},
+	"languages": {
+		"en": "English",
+		"fr": "Francais",
+		"ar": "العربية"
+	},
+	"home": {
+		"shopNow": "Shop now",
+		"explore": "Explore",
+		"featuredProducts": "Featured Products",
+		"whyChooseUs": "Why Should You Choose Us?",
+		"testimonials": {
+			"one": "One of the best purchases. Great, easy and safe to use.",
+			"two": "Simply a very elegant piece of hardware, with a gorgeous UI in the app.",
+			"three": "Delivery was awesome. One day. Payment was simple. Product is perfect and safe.",
+			"four": "Setup was quick, and everything works flawlessly. Highly recommend!"
+		},
+		"reasons": {
+			"shipping": {
+				"title": "Free Shipping",
+				"description": "All purchases over $199 are eligible for free shipping via USPS First Class Mail."
+			},
+			"payments": {
+				"title": "Easy Payments",
+				"description": "All payments are processed instantly over a secure payment protocol."
+			},
+			"refund": {
+				"title": "Money-Back Guarantee",
+				"description": "If an item arrived damaged or you've changed your mind, you can send it back for a full refund."
+			},
+			"quality": {
+				"title": "Finest Quality",
+				"description": "Designed to last, each of our products has been crafted with the finest materials."
+			}
+		}
+	},
+	"footer": {
+		"quickLinks": "Quick links",
+		"aboutUs": "About Us",
+		"refundPolicy": "Refund Policy",
+		"privacyPolicy": "Privacy Policy",
+		"termsOfService": "Terms of Service",
+		"shippingPolicy": "Shipping Policy",
+		"copyright": "Copyright © 2026 {{name}} all rights reserved."
+	},
+	"product": {
+		"home": "Home",
+		"discountOff": "Off",
+		"accordion": {
+			"description": "Description",
+			"shippingRefundPolicy": "Shipping and Refund Policy",
+			"sellerInformation": "Seller Information",
+			"sellingSince": "Selling since"
+		},
+		"dialog": {
+			"trigger": "Write a review",
+			"title": "Write a review",
+			"description": "Please rate your experience and share any additional feedback.",
+			"rating": "Rating",
+			"feedback": "Additional feedback",
+			"feedbackPlaceholder": "Describe your experience...",
+			"cancel": "Cancel",
+			"submit": "Submit",
+			"successToast": "Your review is sent successfully!"
+		},
+		"actions": {
+			"addToCart": "Add to cart",
+			"buyNow": "Buy it now",
+			"removeFromFavorites": "Remove from favorites",
+			"addToFavorites": "Add to favorites",
+			"previousImage": "Previous image",
+			"nextImage": "Next image"
+		},
+		"similarProducts": "Similar Products",
+		"ratingAndReviews": "Rating and reviews",
+		"reviewsCount": "{{count}} reviews",
+		"noReviewsTitle": "Nothing here... yet.",
+		"noReviewsDescription": "Customers who have purchased this product have not yet submitted any reviews."
+	},
+	"about": {
+		"title": "What is {{name}}?",
+		"communityTitle": "A community doing good",
+		"communityText": "{{name}} is a global online marketplace, where people come together to make, sell, buy, and collect unique items. We're also a community pushing for positive change for small businesses, people, and the planet. Here are some of the ways we're making a positive impact, together.",
+		"creatorsTitle": "Support independent creators",
+		"creatorsText": "There's no {{name}} warehouse, just millions of people selling the things they love. We make the whole process easy, helping you connect directly with makers to find something extraordinary.",
+		"peaceTitle": "Peace of mind",
+		"peaceText": "Your privacy is the highest priority of our dedicated team. And if you ever need assistance, we are always ready to step in for support.",
+		"question": "Have a question? Contact us here.",
+		"contact": "Contact"
+	},
+	"signin": {
+		"title": "Login to your account",
+		"description": "Enter your email below to login to your account",
+		"email": "Email",
+		"password": "Password",
+		"forgotPassword": "Forgot your password?",
+		"loggingIn": "Logging in...",
+		"login": "Login",
+		"loginWithGoogle": "Login with Google",
+		"noAccount": "Don't have an account?",
+		"signUp": "Sign up",
+		"emailRequired": "This field is required.",
+		"emailInvalid": "Please enter a valid email address.",
+		"emailTooLong": "Email is too long.",
+		"passwordRequired": "This field is required."
+	},
+	"signup": {
+		"title": "Create an account",
+		"description": "Enter your information below to create your account",
+		"fullName": "Full Name",
+		"emailHelp": "We'll use this to contact you. We will not share your email with anyone else.",
+		"password": "Password",
+		"passwordHelp": "Must be at least 8 characters long.",
+		"confirmPassword": "Confirm Password",
+		"confirmPasswordHelp": "Please confirm your password.",
+		"creatingAccount": "Creating account...",
+		"createAccount": "Create account",
+		"signUpWithGoogle": "Sign up with Google",
+		"alreadyHaveAccount": "Already have an account?",
+		"signIn": "Sign in",
+		"nameRequired": "This field is required.",
+		"nameShort": "Name is too short.",
+		"nameLong": "Name is too long.",
+		"emailRequired": "This field is required.",
+		"emailInvalid": "Please enter a valid email address.",
+		"emailTooLong": "Email is too long.",
+		"passwordRequired": "This field is required.",
+		"passwordShort": "Password is too short.",
+		"passwordLong": "Password is too long.",
+		"passwordsDontMatch": "Passwords don't match"
+	},
+	"productsPage": {
+		"allFilters": "All filters",
+		"search": "Search",
+		"category": "Category",
+		"above": "Above",
+		"under": "Under",
+		"rating": "Rating",
+		"showingProducts": "Showing {{count}} Products",
+		"sortBy": "Sort by",
+		"sort": {
+			"relevancy": "Relevancy",
+			"mostPopular": "Most popular",
+			"lowPrice": "Low price",
+			"highPrice": "High price"
+		},
+		"filters": "Filters",
+		"selectCategory": "Select Category",
+		"name": "Name",
+		"namePlaceholder": "e.g., notebook, wall, and printer",
+		"priceRange": "Price Range",
+		"cancel": "Cancel",
+		"applyFilter": "Apply filter"
+	},
+	"contactPage": {
+		"title": "Contact Us",
+		"subtitle": "Have a question?",
+		"description": "Email us and we'll get back to you within 24 hours. Monday-Saturday",
+		"descriptionFollowup": "Please fill the form below to contact us and we will get back to you as soon as possible. We're happy to answer questions or help.",
+		"name": "Name",
+		"subject": "Subject",
+		"message": "Message",
+		"send": "Send",
+		"sending": "Sending...",
+		"success": "Message sent successfully. Thank you!",
+		"error": "Something went wrong.",
+		"nameRequired": "This field is required.",
+		"nameShort": "Name is too short.",
+		"nameLong": "Name is too long.",
+		"subjectRequired": "This field is required.",
+		"subjectShort": "Subject is too short.",
+		"subjectLong": "Subject is too long.",
+		"messageRequired": "This field is required."
+	}
+}

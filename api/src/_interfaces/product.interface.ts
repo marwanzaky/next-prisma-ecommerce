@@ -5,12 +5,14 @@ export interface IProduct {
 	name: string;
 	price: number;
 	priceCompare: number;
+	isHero: boolean;
 	stock: number;
 	discount: string;
 	avgRatings: number;
 	numReviews: number;
 	imgUrls: string[];
 	description: string;
+	shortDescription?: string;
 	tags: string[];
 	featured: boolean;
 	category: Types.ObjectId | null;

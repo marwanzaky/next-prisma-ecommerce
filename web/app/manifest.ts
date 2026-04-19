@@ -1,16 +1,16 @@
-import { website } from "@lib/config";
+import config from "@/lib/config";
 import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
 	return {
-		name: website.name,
-		short_name: website.name.toLowerCase(),
-		description: website.description,
+		name: config.websiteName,
+		short_name: config.websiteName.toLowerCase(),
+		description: config.description,
 		start_url: "/",
 		scope: "/",
 		display: "standalone",
-		theme_color: website.themeColor,
-		background_color: website.backgroundColor,
+		theme_color: config.themeColor,
+		background_color: config.backgroundColor,
 		lang: "en-US",
 		orientation: "any",
 		dir: "auto",

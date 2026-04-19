@@ -1,8 +1,9 @@
-import { productsService } from "@redux/services/products-service";
-import { usersService } from "@redux/services/users-service";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ICreateProduct, IUpdateProduct } from "@shared/interfaces";
 import { toast } from "sonner";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+
+import { productsService } from "@/redux/services/products-service";
+import { usersService } from "@/redux/services/users-service";
+import { ICreateProduct, IUpdateProduct } from "@/types/product.type";
 
 export const getUserProductsAsync = createAsyncThunk(
 	"userProducts/getUserProducts",

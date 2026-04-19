@@ -3,6 +3,9 @@
 /api/build
 node_modules
 
+# TypeScript cache
+*.tsbuildinfo
+
 # next.js
 .next/
 out/

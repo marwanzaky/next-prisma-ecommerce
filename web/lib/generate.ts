@@ -1,6 +1,8 @@
 import { OpenGraph } from "next/dist/lib/metadata/types/opengraph-types";
 import { Twitter } from "next/dist/lib/metadata/types/twitter-types";
-import { website } from "./config";
+
+import { Locale, localizePath, locales } from "./i18n";
+import config from "./config";
 
 export function generateOgMetadata({
 	title,
@@ -19,10 +21,10 @@ export function generateOgMetadata({
 		title,
 		description,
 		url: getCanonicalUrl(path),
-		siteName: website.name,
+		siteName: config.websiteName,
 		images: [
 			{
-				url: image || website.openGraphImage,
+				url: image || config.openGraphImage,
 				width: 1200,
 				height: 630,
 				alt: title,
@@ -46,13 +48,22 @@ export function generateTwitterMetadata({
 		card: "summary_large_image",
 		title,
 		description,
-		images: [image || website.openGraphImage],
-		creator: website.twitterHandle,
-		site: website.twitterHandle,
+		images: [image || config.openGraphImage],
+		creator: config.twitterHandle,
+		site: config.twitterHandle,
 	};
 }
 
 export function getCanonicalUrl(path: string = ""): string {
 	const cleanPath = path.startsWith("/") ? path : `/${path}`;
-	return `${website.baseUrl}${cleanPath}`;
+	return `${config.clientUrl}${cleanPath}`;
+}
+
+export function generateLocaleAlternates(path: string, locale: Locale) {
+	return {
+		canonical: getCanonicalUrl(localizePath(path, locale)),
+		languages: Object.fromEntries(
+			locales.map((lang) => [lang, getCanonicalUrl(localizePath(path, lang))]),
+		) as Record<Locale, string>,
+	};
 }

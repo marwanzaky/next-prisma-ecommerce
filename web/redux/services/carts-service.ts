@@ -1,5 +1,5 @@
-import { clientFetch } from "@lib/api-client";
-import { ICart } from "@shared/interfaces/cart.interface";
+import { clientFetch } from "@/lib/api-client";
+import { ICart } from "@/types/cart.type";
 
 export const cartsService = {
 	getMe: () => clientFetch<ICart>("/carts"),

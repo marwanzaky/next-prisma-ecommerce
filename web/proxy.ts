@@ -1,0 +1,45 @@
+import { NextRequest, NextResponse } from "next/server";
+
+import {
+	defaultLocale,
+	hasLocale,
+	Locale,
+	locales,
+	localizePath,
+} from "@/lib/i18n";
+import Negotiator from "negotiator";
+import { match } from "@formatjs/intl-localematcher";
+
+function getPreferredLocale(request: NextRequest): Locale {
+	const negotiatorHeaders: Record<string, string> = {};
+	request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
+
+	const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
+
+	try {
+		return match(languages, locales, defaultLocale) as Locale;
+	} catch (e) {
+		return defaultLocale;
+	}
+}
+
+export function proxy(request: NextRequest) {
+	const { pathname } = request.nextUrl;
+
+	const [, maybeLocale] = pathname.split("/");
+
+	if (maybeLocale && hasLocale(maybeLocale)) {
+		return NextResponse.next();
+	}
+
+	const locale = getPreferredLocale(request);
+
+	const url = request.nextUrl.clone();
+	url.pathname = localizePath(pathname, locale);
+
+	return NextResponse.redirect(url);
+}
+
+export const config = {
+	matcher: ["/((?!_next|api|.*\\..*).*)"],
+};

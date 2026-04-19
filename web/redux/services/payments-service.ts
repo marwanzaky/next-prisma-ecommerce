@@ -1,4 +1,4 @@
-import { clientFetch } from "@lib/api-client";
+import { clientFetch } from "@/lib/api-client";
 
 export const paymentsService = {
 	createCheckoutSession: (

@@ -1,6 +1,6 @@
-const baseUrl = process.env.NEXT_PUBLIC_SERVER;
-
 import Cookies from "js-cookie";
+
+import config from "./config";
 
 export async function clientFetch<T>(
 	endpoint: string,
@@ -18,7 +18,7 @@ export async function clientFetch<T>(
 		delete headers["Content-Type"];
 	}
 
-	const response = await fetch(`${baseUrl}${endpoint}`, {
+	const response = await fetch(`${config.serverUrl}${endpoint}`, {
 		...options,
 		headers,
 	});

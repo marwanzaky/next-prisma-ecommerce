@@ -1,8 +1,9 @@
-import { favoritesService } from "@redux/services/favorites-service";
-
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IProduct } from "@shared/interfaces";
 import { toast } from "sonner";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+
+import { favoritesService } from "@/redux/services/favorites-service";
+
+import { IProduct } from "@/types/product.type";
 
 export const getFavoritesAsync = createAsyncThunk(
 	"favorites/getFavorites",

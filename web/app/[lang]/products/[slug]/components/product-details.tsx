@@ -1,0 +1,408 @@
+"use client";
+
+import { Heart, ShoppingCart } from "lucide-react";
+
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "@/shadcn/components/ui/breadcrumb";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/shadcn/components/ui/accordion";
+import { TypographyMuted } from "@/shadcn/components/ui/typography";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/shadcn/components/ui/tooltip";
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@/shadcn/components/ui/avatar";
+import { Button } from "@/shadcn/components/ui/button";
+
+import { AppDispatch } from "@/redux/store";
+import { categoriesService } from "@/redux/services/categories-service";
+import { postCartItemAsync } from "@/redux/thunks/cart-thunks";
+
+import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
+
+import { formatPrice } from "@/utils/format";
+import { initials, stringToDate } from "@/utils/string-utils";
+
+import { sendGTMEvent } from "@next/third-parties/google";
+
+import { PublicCategoryTree } from "@/shared/types/category.type";
+import { IProduct } from "@/types/product.type";
+import { renderLexicalJSONToHTML } from "@/shared/components/ui/lexical/renderLexicalJSONToHTML";
+import { Separator } from "@/shadcn/components/ui/separator";
+import { Badge } from "@/shadcn/components/ui/badge";
+import Stars from "@/shared/components/ui/stars";
+import InputWithPlusMinusButtons from "@/shared/components/ui/input-with-plus-minus-buttons";
+import Icon from "@/shared/components/ui/icon";
+
+import { localizePath } from "@/lib/i18n";
+
+import { useI18n } from "@/components/layout/i18n-provider";
+
+export default function ProductDetails({ product }: { product: IProduct }) {
+	const router = useRouter();
+	const { locale, t } = useI18n();
+
+	const dispatch = useDispatch<AppDispatch>();
+
+	const { isFavorite, addToFavorites, removeFromFavorites } =
+		useToggleFavorite(product);
+
+	const { data: categoryTree } = useQuery({
+		queryKey: ["category-tree"],
+		queryFn: () => categoriesService.getCategoryTree(),
+		staleTime: 1000 * 60 * 5,
+	});
+
+	const [quantity, setQuantity] = useState(1);
+
+	const productSubcategoryTree = useMemo(() => {
+		return categoryTree
+			?.flatMap((cat) => [...cat.children, cat])
+			.find((cat) => cat.id === product.category);
+	}, [categoryTree]);
+
+	const productCategoryTree = useMemo<PublicCategoryTree | undefined>(() => {
+		if (!categoryTree) {
+			return undefined;
+		}
+
+		return categoryTree.find((rootCat) =>
+			rootCat.children.some((childCat) => childCat.id === product.category),
+		);
+	}, [categoryTree, product.category]);
+
+	const descriptionHtml = useMemo(() => {
+		const parsed = JSON.parse(product.description);
+		return renderLexicalJSONToHTML(parsed.root.children);
+	}, [product.description]);
+
+	useEffect(() => {
+		sendGTMEvent({
+			event: "view_item",
+			value: {
+				currency: "USD",
+				value: product.price,
+				items: [
+					{
+						item_id: product._id,
+						item_name: product.name,
+						price: product.price,
+						quantity: 1,
+					},
+				],
+			},
+		});
+	}, [product]);
+
+	return (
+		<div className="space-y-4 lg:space-y-8">
+			<div className="space-y-4">
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink asChild>
+								<Link href={localizePath("/", locale)}>
+									{t("product.home")}
+								</Link>
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+
+						<BreadcrumbSeparator />
+
+						<BreadcrumbItem>
+							<BreadcrumbLink asChild>
+								<Link
+									href={localizePath(
+										`/products?category=${productCategoryTree?.slug}`,
+										locale,
+									)}
+								>
+									{productCategoryTree?.name}
+								</Link>
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+
+						<BreadcrumbSeparator />
+
+						<BreadcrumbItem>
+							<BreadcrumbLink asChild>
+								<Link
+									href={localizePath(
+										`/products?category=${productSubcategoryTree?.slug}`,
+										locale,
+									)}
+								>
+									{productSubcategoryTree?.name}
+								</Link>
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+
+						<BreadcrumbSeparator />
+
+						<BreadcrumbItem className="min-w-0 flex-1">
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<BreadcrumbPage className="truncate">
+										{product?.name}
+									</BreadcrumbPage>
+								</TooltipTrigger>
+								<TooltipContent>{product?.name}</TooltipContent>
+							</Tooltip>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+
+				<div className="space-y-1 lg:space-y-2">
+					<h1 className="scroll-m-20 text-4xl tracking-tight lg:text-5xl">
+						{product.name}
+					</h1>
+
+					<div className="flex items-center gap-3 overflow-hidden">
+						<div className="text-4xl">
+							{formatPrice(product.price / 100, locale)}
+						</div>
+						{product.priceCompare > product.price && (
+							<div className="text-muted-foreground line-through text-2xl">
+								{formatPrice(product.priceCompare / 100, locale)}
+							</div>
+						)}
+
+						{product.discount !== "0%" && (
+							<Badge className="border-none bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 focus-visible:outline-none dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5">
+								{product.discount} {t("product.discountOff")}
+							</Badge>
+						)}
+					</div>
+
+					<Stars value={product.avgRatings} total={product.numReviews} />
+				</div>
+			</div>
+
+			<Separator />
+
+			<div className="space-y-2 flex flex-col">
+				<div className="flex gap-2">
+					<InputWithPlusMinusButtons
+						className="w-30"
+						min={1}
+						max={10}
+						value={quantity}
+						onChange={setQuantity}
+					/>
+					<Button
+						size="xl"
+						className="flex-1"
+						onClick={() => {
+							dispatch(postCartItemAsync({ product, quantity }));
+							sendGTMEvent({
+								event: "add_to_cart",
+								value: {
+									currency: "USD",
+									value: product.price,
+									items: [
+										{
+											item_id: product._id,
+											item_name: product.name,
+											price: product.price,
+											quantity: 1,
+										},
+									],
+								},
+							});
+						}}
+					>
+						<ShoppingCart />
+						{t("product.actions.addToCart")}
+					</Button>
+
+					{isFavorite ? (
+						<Button
+							size="xl"
+							variant="outline"
+							aria-label={t("product.actions.removeFromFavorites")}
+							onClick={removeFromFavorites}
+						>
+							<Heart fill="currentColor" className="text-primary" />
+						</Button>
+					) : (
+						<Button
+							size="xl"
+							variant="outline"
+							aria-label={t("product.actions.addToFavorites")}
+							onClick={addToFavorites}
+						>
+							<Heart />
+						</Button>
+					)}
+				</div>
+
+				<Button
+					size="xl"
+					variant="secondary"
+					onClick={() => {
+						dispatch(postCartItemAsync({ product, quantity }));
+
+						sendGTMEvent({
+							event: "add_to_cart",
+							value: {
+								currency: "USD",
+								value: product.price,
+								items: [
+									{
+										item_id: product._id,
+										item_name: product.name,
+										price: product.price,
+										quantity: 1,
+									},
+								],
+							},
+						});
+
+						router.push(localizePath("/cart", locale));
+					}}
+				>
+					{t("product.actions.buyNow")}
+				</Button>
+			</div>
+
+			<Accordion
+				defaultValue="item-1"
+				type="single"
+				collapsible
+				className="w-full"
+			>
+				<AccordionItem value="item-1">
+					<AccordionTrigger>
+						{t("product.accordion.description")}
+					</AccordionTrigger>
+					<AccordionContent asChild>
+						<div
+							className="prose prose-slate text-sm [&_img]:rounded-lg"
+							dangerouslySetInnerHTML={{
+								__html: descriptionHtml,
+							}}
+						/>
+					</AccordionContent>
+				</AccordionItem>
+				<AccordionItem value="item-2">
+					<AccordionTrigger>
+						{t("product.accordion.shippingRefundPolicy")}
+					</AccordionTrigger>
+					<AccordionContent className="prose prose-slate text-sm">
+						<h4>Refund Policy</h4>
+						<p>
+							We have a 30-day return policy, which means you have 30 days after
+							receiving your item to request a return.
+							<br />
+							<br />
+							To be eligible for a return, your item must be in the same
+							condition that you received it, unworn or unused, with tags, and
+							in its original packaging. You&apos;ll also need the receipt or
+							proof of purchase.
+							<br />
+							<br />
+							To start a return, you can contact us at{" "}
+							{process.env.NEXT_PUBLIC_CONTACT}. If your return is accepted,
+							we&apos;ll send you a return shipping label, as well as
+							instructions on how and where to send your package. Items sent
+							back to us without first requesting a return will not be accepted.
+							<br />
+							<br />
+							You can always contact us for any return question at{" "}
+							{process.env.NEXT_PUBLIC_CONTACT}.
+							<br />
+							<br />
+						</p>
+
+						<h4>Shipping Policy</h4>
+						<p>
+							All orders are processed within 1 to 3 business days (excluding
+							weekends and holidays) after receiving your order confirmation
+							email. You will receive another notification when your order has
+							shipped.
+							<br />
+							<br />
+						</p>
+
+						<h4>International Shipping</h4>
+						<p>
+							We offer international shipping to the following countries: United
+							States, United Kingdom, Australia, Canada, Germany, France, Spain,
+							United Arab Emirates, Indonesia.
+							<br />
+							<br />
+							Your order may be subject to import duties and taxes (including
+							VAT), which are incurred once a shipment reaches your destination
+							country.
+						</p>
+					</AccordionContent>
+				</AccordionItem>
+
+				{product.user && (
+					<AccordionItem value="item-3">
+						<AccordionTrigger>
+							{t("product.accordion.sellerInformation")}
+						</AccordionTrigger>
+						<AccordionContent>
+							<div className="flex items-center gap-2">
+								<Avatar className="h-10 w-10">
+									<AvatarImage
+										role="button"
+										src={product.user.photoUrl}
+										alt={t("photoOf").replace("{{name}}", product.user.name)}
+										onClick={() =>
+											router.push(
+												localizePath(`/user/${product.user?._id}`, locale),
+											)
+										}
+										loading="lazy"
+									/>
+									<AvatarFallback>{initials(product.user.name)}</AvatarFallback>
+								</Avatar>
+
+								<div>
+									<Link
+										href={localizePath(`/user/${product.user._id}`, locale)}
+										className="no-underline! hover:underline!"
+									>
+										{product.user.name}
+									</Link>
+									{/* <Link href="#">test</Link> */}
+
+									<TypographyMuted>
+										{t("product.accordion.sellingSince")}{" "}
+										{stringToDate(
+											product.user.createdAt || product.user.updatedAt,
+										)}
+									</TypographyMuted>
+								</div>
+							</div>
+						</AccordionContent>
+					</AccordionItem>
+				)}
+			</Accordion>
+		</div>
+	);
+}

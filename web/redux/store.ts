@@ -10,7 +10,7 @@ import userProductsReducer, {
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "@utils/storage-utils";
+import storage from "@/utils/storage-utils";
 
 const authPersistConfig = {
 	key: "auth",

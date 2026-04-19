@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { User } from "@shared/types/user.type";
+import { User } from "@/shared/types/user.type";
 
 import {
 	getMeAsync,
@@ -8,7 +8,7 @@ import {
 	signupAsync,
 	updateMeAsync,
 	updateMyPasswordAsync,
-} from "@redux/thunks/auth-thunks";
+} from "@/redux/thunks/auth-thunks";
 import Cookies from "js-cookie";
 
 export type AuthState = {

@@ -1,0 +1,197 @@
+{
+	"photoOf": "Photo de {{name}}",
+	"layout": {
+		"banner": "Livraison gratuite pour les commandes de plus de 50 $"
+	},
+	"navigation": {
+		"searchPlaceholder": "Rechercher...",
+		"li": {
+			"home": "Accueil",
+			"shop": "Boutique",
+			"about": "A propos",
+			"contact": "Contact"
+		},
+		"actions": {
+			"language": "Langue",
+			"store": "Espace vendeur",
+			"account": "Compte",
+			"admin": "Admin",
+			"messages": "Messages",
+			"categories": "Categories",
+			"logOut": "Se deconnecter"
+		}
+	},
+	"languages": {
+		"en": "English",
+		"fr": "Francais",
+		"ar": "العربية"
+	},
+	"home": {
+		"shopNow": "Acheter maintenant",
+		"explore": "Explorer",
+		"featuredProducts": "Produits en vedette",
+		"whyChooseUs": "Pourquoi nous choisir ?",
+		"testimonials": {
+			"one": "L'un de mes meilleurs achats. C'est simple, pratique et sur.",
+			"two": "Un produit tres elegant, avec une interface magnifique dans l'application.",
+			"three": "La livraison a ete excellente. En une journee. Le paiement etait simple. Le produit est parfait et fiable.",
+			"four": "L'installation a ete rapide et tout fonctionne parfaitement. Je recommande vivement !"
+		},
+		"reasons": {
+			"shipping": {
+				"title": "Livraison gratuite",
+				"description": "Tous les achats de plus de 199 $ beneficient d'une livraison gratuite via USPS First Class Mail."
+			},
+			"payments": {
+				"title": "Paiements simples",
+				"description": "Tous les paiements sont traites instantanement via un protocole de paiement securise."
+			},
+			"refund": {
+				"title": "Garantie de remboursement",
+				"description": "Si un article arrive endommage ou si vous changez d'avis, vous pouvez le retourner pour un remboursement complet."
+			},
+			"quality": {
+				"title": "Qualite exceptionnelle",
+				"description": "Concus pour durer, chacun de nos produits est fabrique avec les meilleurs materiaux."
+			}
+		}
+	},
+	"footer": {
+		"quickLinks": "Liens rapides",
+		"aboutUs": "A propos de nous",
+		"refundPolicy": "Politique de remboursement",
+		"privacyPolicy": "Politique de confidentialite",
+		"termsOfService": "Conditions d'utilisation",
+		"shippingPolicy": "Politique de livraison",
+		"copyright": "Copyright © 2026 {{name}} tous droits reserves."
+	},
+	"product": {
+		"home": "Accueil",
+		"discountOff": "de reduction",
+		"accordion": {
+			"description": "Description",
+			"shippingRefundPolicy": "Livraison et politique de remboursement",
+			"sellerInformation": "Informationss sur le vendeur",
+			"sellingSince": "Vend depuis"
+		},
+		"dialog": {
+			"trigger": "Ecrire un avis",
+			"title": "Ecrire un avis",
+			"description": "Veuillez noter votre experience et partager des commentaires supplementaires.",
+			"rating": "Note",
+			"feedback": "Commentaire supplementaire",
+			"feedbackPlaceholder": "Decrivez votre experience...",
+			"cancel": "Annuler",
+			"submit": "Envoyer",
+			"successToast": "Votre avis a ete envoye avec succes !"
+		},
+		"actions": {
+			"addToCart": "Ajouter au panier",
+			"buyNow": "Acheter maintenant",
+			"removeFromFavorites": "Retirer des favoris",
+			"addToFavorites": "Ajouter aux favoris",
+			"previousImage": "Image precedente",
+			"nextImage": "Image suivante"
+		},
+		"similarProducts": "Produits similaires",
+		"ratingAndReviews": "Notes et avis",
+		"reviewsCount": "{{count}} avis",
+		"noReviewsTitle": "Rien ici... pour le moment.",
+		"noReviewsDescription": "Les clients ayant achete ce produit n'ont pas encore laisse d'avis."
+	},
+	"about": {
+		"title": "Qu'est-ce que {{name}} ?",
+		"communityTitle": "Une communaute qui agit pour le bien",
+		"communityText": "{{name}} est une place de marche en ligne mondiale ou les gens se reunissent pour creer, vendre, acheter et collectionner des articles uniques. Nous sommes aussi une communaute qui agit positivement pour les petites entreprises, les personnes et la planete.",
+		"creatorsTitle": "Soutenir les createurs independants",
+		"creatorsText": "Il n'y a pas d'entrepot {{name}}, seulement des millions de personnes qui vendent ce qu'elles aiment. Nous rendons tout le processus simple pour vous connecter directement aux createurs.",
+		"peaceTitle": "Tranquillite d'esprit",
+		"peaceText": "Votre confidentialite est la priorite absolue de notre equipe. Et si vous avez besoin d'aide, nous sommes toujours la pour vous accompagner.",
+		"question": "Une question ? Contactez-nous ici.",
+		"contact": "Contact"
+	},
+	"signin": {
+		"title": "Connectez-vous a votre compte",
+		"description": "Entrez votre adresse e-mail ci-dessous pour vous connecter",
+		"email": "E-mail",
+		"password": "Mot de passe",
+		"forgotPassword": "Mot de passe oublie ?",
+		"loggingIn": "Connexion en cours...",
+		"login": "Se connecter",
+		"loginWithGoogle": "Se connecter avec Google",
+		"noAccount": "Vous n'avez pas de compte ?",
+		"signUp": "S'inscrire",
+		"emailRequired": "Ce champ est obligatoire.",
+		"emailInvalid": "Veuillez entrer une adresse e-mail valide.",
+		"emailTooLong": "L'e-mail est trop long.",
+		"passwordRequired": "Ce champ est obligatoire."
+	},
+	"signup": {
+		"title": "Creer un compte",
+		"description": "Entrez vos informations ci-dessous pour creer votre compte",
+		"fullName": "Nom complet",
+		"emailHelp": "Nous utiliserons cet e-mail pour vous contacter. Nous ne le partagerons avec personne d'autre.",
+		"password": "Mot de passe",
+		"passwordHelp": "Doit contenir au moins 8 caracteres.",
+		"confirmPassword": "Confirmer le mot de passe",
+		"confirmPasswordHelp": "Veuillez confirmer votre mot de passe.",
+		"creatingAccount": "Creation du compte...",
+		"createAccount": "Creer un compte",
+		"signUpWithGoogle": "S'inscrire avec Google",
+		"alreadyHaveAccount": "Vous avez deja un compte ?",
+		"signIn": "Se connecter",
+		"nameRequired": "Ce champ est obligatoire.",
+		"nameShort": "Le nom est trop court.",
+		"nameLong": "Le nom est trop long.",
+		"emailRequired": "Ce champ est obligatoire.",
+		"emailInvalid": "Veuillez entrer une adresse e-mail valide.",
+		"emailTooLong": "L'e-mail est trop long.",
+		"passwordRequired": "Ce champ est obligatoire.",
+		"passwordShort": "Le mot de passe est trop court.",
+		"passwordLong": "Le mot de passe est trop long.",
+		"passwordsDontMatch": "Les mots de passe ne correspondent pas"
+	},
+	"productsPage": {
+		"allFilters": "Tous les filtres",
+		"search": "Recherche",
+		"category": "Categorie",
+		"above": "Au-dessus de",
+		"under": "En dessous de",
+		"rating": "Note",
+		"showingProducts": "{{count}} produits affiches",
+		"sortBy": "Trier par",
+		"sort": {
+			"relevancy": "Pertinence",
+			"mostPopular": "Les plus populaires",
+			"lowPrice": "Prix croissant",
+			"highPrice": "Prix decroissant"
+		},
+		"filters": "Filtres",
+		"selectCategory": "Selectionner une categorie",
+		"name": "Nom",
+		"namePlaceholder": "ex. carnet, mur et imprimante",
+		"priceRange": "Fourchette de prix",
+		"cancel": "Annuler",
+		"applyFilter": "Appliquer le filtre"
+	},
+	"contactPage": {
+		"title": "Contactez-nous",
+		"subtitle": "Vous avez une question ?",
+		"description": "Ecrivez-nous et nous vous repondrons sous 24 heures. Du lundi au samedi",
+		"descriptionFollowup": "Veuillez remplir le formulaire ci-dessous pour nous contacter et nous vous repondrons des que possible. Nous sommes heureux de repondre a vos questions.",
+		"name": "Nom",
+		"subject": "Sujet",
+		"message": "Message",
+		"send": "Envoyer",
+		"sending": "Envoi en cours...",
+		"success": "Message envoye avec succes. Merci !",
+		"error": "Une erreur s'est produite.",
+		"nameRequired": "Ce champ est obligatoire.",
+		"nameShort": "Le nom est trop court.",
+		"nameLong": "Le nom est trop long.",
+		"subjectRequired": "Ce champ est obligatoire.",
+		"subjectShort": "Le sujet est trop court.",
+		"subjectLong": "Le sujet est trop long.",
+		"messageRequired": "Ce champ est obligatoire."
+	}
+}

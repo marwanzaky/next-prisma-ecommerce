@@ -1,0 +1,197 @@
+{
+	"photoOf": "صورة {{name}}",
+	"layout": {
+		"banner": "شحن مجاني للطلبات التي تزيد عن 50 دولارا"
+	},
+	"navigation": {
+		"searchPlaceholder": "ابحث...",
+		"li": {
+			"home": "الرئيسية",
+			"shop": "المتجر",
+			"about": "من نحن",
+			"contact": "اتصل بنا"
+		},
+		"actions": {
+			"language": "اللغة",
+			"store": "متجر البائع",
+			"account": "الحساب",
+			"admin": "الادارة",
+			"messages": "الرسائل",
+			"categories": "الفئات",
+			"logOut": "تسجيل الخروج"
+		}
+	},
+	"languages": {
+		"en": "English",
+		"fr": "Francais",
+		"ar": "العربية"
+	},
+	"home": {
+		"shopNow": "تسوق الآن",
+		"explore": "استكشف",
+		"featuredProducts": "منتجات مميزة",
+		"whyChooseUs": "لماذا تختارنا؟",
+		"testimonials": {
+			"one": "واحد من افضل المشتريات. سهل وعملي وآمن في الاستخدام.",
+			"two": "قطعة انيقة جدا مع واجهة رائعة داخل التطبيق.",
+			"three": "التوصيل كان ممتازا خلال يوم واحد. الدفع كان بسيطا والمنتج مثالي وآمن.",
+			"four": "الاعداد كان سريعا وكل شيء يعمل بشكل ممتاز. اوصي به بشدة."
+		},
+		"reasons": {
+			"shipping": {
+				"title": "شحن مجاني",
+				"description": "جميع المشتريات التي تزيد عن 199 دولارا مؤهلة لشحن مجاني عبر USPS First Class Mail."
+			},
+			"payments": {
+				"title": "دفع سهل",
+				"description": "تتم معالجة جميع المدفوعات فورا عبر بروتوكول دفع آمن."
+			},
+			"refund": {
+				"title": "ضمان استرداد الاموال",
+				"description": "اذا وصل المنتج تالفا او غيرت رأيك، يمكنك ارجاعه واسترداد المبلغ بالكامل."
+			},
+			"quality": {
+				"title": "افضل جودة",
+				"description": "صممت منتجاتنا لتدوم طويلا وتم تصنيعها من افضل المواد."
+			}
+		}
+	},
+	"footer": {
+		"quickLinks": "روابط سريعة",
+		"aboutUs": "من نحن",
+		"refundPolicy": "سياسة الاسترجاع",
+		"privacyPolicy": "سياسة الخصوصية",
+		"termsOfService": "شروط الخدمة",
+		"shippingPolicy": "سياسة الشحن",
+		"copyright": "حقوق النشر © 2026 {{name}} جميع الحقوق محفوظة."
+	},
+	"product": {
+		"home": "الرئيسية",
+		"discountOff": "خصم",
+		"accordion": {
+			"description": "الوصف",
+			"shippingRefundPolicy": "سياسة الشحن والاسترجاع",
+			"sellerInformation": "معلومات البائع",
+			"sellingSince": "يبيع منذ"
+		},
+		"dialog": {
+			"trigger": "اكتب مراجعة",
+			"title": "اكتب مراجعة",
+			"description": "يرجى تقييم تجربتك ومشاركة اي ملاحظات اضافية.",
+			"rating": "التقييم",
+			"feedback": "ملاحظات اضافية",
+			"feedbackPlaceholder": "صف تجربتك...",
+			"cancel": "الغاء",
+			"submit": "ارسال",
+			"successToast": "تم ارسال مراجعتك بنجاح!"
+		},
+		"actions": {
+			"addToCart": "اضافة الى السلة",
+			"buyNow": "اشتره الآن",
+			"removeFromFavorites": "ازالة من المفضلة",
+			"addToFavorites": "اضافة الى المفضلة",
+			"previousImage": "الصورة السابقة",
+			"nextImage": "الصورة التالية"
+		},
+		"similarProducts": "منتجات مشابهة",
+		"ratingAndReviews": "التقييمات والمراجعات",
+		"reviewsCount": "{{count}} مراجعة",
+		"noReviewsTitle": "لا يوجد شيء هنا... حتى الآن.",
+		"noReviewsDescription": "العملاء الذين اشتروا هذا المنتج لم يرسلوا اي مراجعات بعد."
+	},
+	"about": {
+		"title": "ما هو {{name}}؟",
+		"communityTitle": "مجتمع يصنع اثرا جيدا",
+		"communityText": "{{name}} سوق عالمي عبر الانترنت يجتمع فيه الناس لصنع وبيع وشراء وجمع المنتجات الفريدة. ونحن ايضا مجتمع يدفع نحو تغيير ايجابي للشركات الصغيرة والناس والكوكب.",
+		"creatorsTitle": "دعم المبدعين المستقلين",
+		"creatorsText": "لا يوجد مستودع لـ {{name}}، بل ملايين الاشخاص الذين يبيعون ما يحبونه. نحن نجعل العملية سهلة ونساعدك على التواصل مباشرة مع المبدعين.",
+		"peaceTitle": "راحة البال",
+		"peaceText": "خصوصيتك هي الاولوية القصوى لفريقنا. واذا احتجت الى المساعدة فنحن دائما جاهزون للدعم.",
+		"question": "هل لديك سؤال؟ تواصل معنا من هنا.",
+		"contact": "اتصل بنا"
+	},
+	"signin": {
+		"title": "سجل الدخول الى حسابك",
+		"description": "ادخل بريدك الالكتروني ادناه لتسجيل الدخول الى حسابك",
+		"email": "البريد الالكتروني",
+		"password": "كلمة المرور",
+		"forgotPassword": "هل نسيت كلمة المرور؟",
+		"loggingIn": "جار تسجيل الدخول...",
+		"login": "تسجيل الدخول",
+		"loginWithGoogle": "تسجيل الدخول باستخدام Google",
+		"noAccount": "ليس لديك حساب؟",
+		"signUp": "انشاء حساب",
+		"emailRequired": "هذا الحقل مطلوب.",
+		"emailInvalid": "يرجى ادخال بريد الكتروني صالح.",
+		"emailTooLong": "البريد الالكتروني طويل جدا.",
+		"passwordRequired": "هذا الحقل مطلوب."
+	},
+	"signup": {
+		"title": "انشاء حساب",
+		"description": "ادخل معلوماتك ادناه لانشاء حسابك",
+		"fullName": "الاسم الكامل",
+		"emailHelp": "سنستخدم هذا البريد للتواصل معك. لن نشارك بريدك الالكتروني مع اي شخص آخر.",
+		"password": "كلمة المرور",
+		"passwordHelp": "يجب ان تتكون من 8 احرف على الاقل.",
+		"confirmPassword": "تأكيد كلمة المرور",
+		"confirmPasswordHelp": "يرجى تأكيد كلمة المرور.",
+		"creatingAccount": "جار انشاء الحساب...",
+		"createAccount": "انشاء حساب",
+		"signUpWithGoogle": "انشاء حساب باستخدام Google",
+		"alreadyHaveAccount": "لديك حساب بالفعل؟",
+		"signIn": "تسجيل الدخول",
+		"nameRequired": "هذا الحقل مطلوب.",
+		"nameShort": "الاسم قصير جدا.",
+		"nameLong": "الاسم طويل جدا.",
+		"emailRequired": "هذا الحقل مطلوب.",
+		"emailInvalid": "يرجى ادخال بريد الكتروني صالح.",
+		"emailTooLong": "البريد الالكتروني طويل جدا.",
+		"passwordRequired": "هذا الحقل مطلوب.",
+		"passwordShort": "كلمة المرور قصيرة جدا.",
+		"passwordLong": "كلمة المرور طويلة جدا.",
+		"passwordsDontMatch": "كلمتا المرور غير متطابقتين"
+	},
+	"productsPage": {
+		"allFilters": "كل الفلاتر",
+		"search": "بحث",
+		"category": "الفئة",
+		"above": "اكثر من",
+		"under": "اقل من",
+		"rating": "التقييم",
+		"showingProducts": "عرض {{count}} منتج",
+		"sortBy": "ترتيب حسب",
+		"sort": {
+			"relevancy": "الاكثر صلة",
+			"mostPopular": "الاكثر شعبية",
+			"lowPrice": "السعر من الاقل",
+			"highPrice": "السعر من الاعلى"
+		},
+		"filters": "الفلاتر",
+		"selectCategory": "اختر فئة",
+		"name": "الاسم",
+		"namePlaceholder": "مثال: دفتر، حائط، وطابعة",
+		"priceRange": "نطاق السعر",
+		"cancel": "الغاء",
+		"applyFilter": "تطبيق الفلتر"
+	},
+	"contactPage": {
+		"title": "اتصل بنا",
+		"subtitle": "هل لديك سؤال؟",
+		"description": "راسلنا وسنعود اليك خلال 24 ساعة. من الاثنين الى السبت",
+		"descriptionFollowup": "يرجى ملء النموذج ادناه للتواصل معنا وسنرد عليك في اقرب وقت ممكن. يسعدنا الاجابة عن اسئلتك او مساعدتك.",
+		"name": "الاسم",
+		"subject": "الموضوع",
+		"message": "الرسالة",
+		"send": "ارسال",
+		"sending": "جار الارسال...",
+		"success": "تم ارسال الرسالة بنجاح. شكرا لك!",
+		"error": "حدث خطأ ما.",
+		"nameRequired": "هذا الحقل مطلوب.",
+		"nameShort": "الاسم قصير جدا.",
+		"nameLong": "الاسم طويل جدا.",
+		"subjectRequired": "هذا الحقل مطلوب.",
+		"subjectShort": "الموضوع قصير جدا.",
+		"subjectLong": "الموضوع طويل جدا.",
+		"messageRequired": "هذا الحقل مطلوب."
+	}
+}

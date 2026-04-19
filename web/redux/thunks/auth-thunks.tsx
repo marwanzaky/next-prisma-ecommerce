@@ -1,27 +1,36 @@
-import { usersService } from "@redux/services/users-service";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { UpdateUser, UpdateUserPassword } from "@shared/types/user.type";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { toast } from "sonner";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+
+import { Locale, localizePath } from "@/lib/i18n";
+import { usersService } from "@/redux/services/users-service";
+import { UpdateUser, UpdateUserPassword } from "@/shared/types/user.type";
 
 export const loginAsync = createAsyncThunk(
 	"auth/login",
 	async (
-		credentials: {
-			email: string;
-			password: string;
+		{
+			credentials,
+			router,
+			locale,
+		}: {
+			credentials: {
+				email: string;
+				password: string;
+			};
 			router: AppRouterInstance;
+			locale: Locale;
 		},
 		{ rejectWithValue },
 	) => {
-		const { email, password, router } = credentials;
+		const { email, password } = credentials;
 
 		try {
 			const data = await usersService.login(email, password);
 
 			toast("Welcome back!", { position: "top-center" });
 
-			router.push("/");
+			router.push(localizePath("/", locale));
 			return data;
 		} catch (error: any) {
 			toast.error("Sign-in failed.", {

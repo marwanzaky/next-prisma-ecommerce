@@ -9,11 +9,11 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "@shadcn/components/ui/dialog";
+} from "@/shadcn/components/ui/dialog";
 
 import clsx from "clsx";
-import { chatService } from "@redux/services/chat-service";
-import { Input } from "@shadcn/components/ui/input";
+import { chatService } from "@/redux/services/chat-service";
+import { Input } from "@/shadcn/components/ui/input";
 
 type ChatbotMessage = {
 	type: "ai" | "user";

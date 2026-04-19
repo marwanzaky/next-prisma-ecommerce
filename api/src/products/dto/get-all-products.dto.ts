@@ -51,6 +51,12 @@ export class GetAllProductsDto {
 	@Transform(({ value }) => value === "true")
 	readonly featured?: boolean;
 
+	@ApiPropertyOptional({ type: Boolean, example: false })
+	@IsOptional()
+	@IsBoolean()
+	@Transform(({ value }) => value === "true")
+	readonly isHero?: boolean;
+
 	@ApiPropertyOptional({
 		type: Number,
 		example: 4,

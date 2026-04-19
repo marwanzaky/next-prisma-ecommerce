@@ -61,6 +61,7 @@ export class ProductsService {
 			minPrice?: number;
 			maxPrice?: number;
 			featured?: boolean;
+			isHero?: boolean;
 			limit?: number;
 			avgRatings?: number;
 			category?: string;
@@ -102,6 +103,10 @@ export class ProductsService {
 
 		if (query.featured !== undefined) {
 			filter.featured = query.featured;
+		}
+
+		if (query.isHero !== undefined) {
+			filter.isHero = query.isHero;
 		}
 
 		if (query.ids && query.ids.length > 0) {

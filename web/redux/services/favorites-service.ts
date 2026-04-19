@@ -1,6 +1,6 @@
-import { clientFetch } from "@lib/api-client";
+import { clientFetch } from "@/lib/api-client";
 
-import { IProduct } from "@shared/interfaces";
+import { IProduct } from "@/types/product.type";
 
 export const favoritesService = {
 	getMe: () => clientFetch<IProduct[]>("/favorites"),

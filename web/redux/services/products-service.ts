@@ -1,15 +1,11 @@
-import {
-	ICreateProduct,
-	IGetAllProductsDto,
-	IProduct,
-	IUpdateProduct,
-} from "@shared/interfaces";
+import { ICreateProduct, IProduct, IUpdateProduct } from "@/types/product.type";
+import { IGetAllProductsDto } from "@/types/get-all-products-dto.type";
 
 import { stringify } from "qs";
 
-import { jsonToFormData } from "@utils/helper";
+import { jsonToFormData } from "@/utils/helper";
 
-import { clientFetch } from "@lib/api-client";
+import { clientFetch } from "@/lib/api-client";
 
 export type GetAllProductsOptions = {
 	sort?: {
@@ -23,6 +19,7 @@ export type GetAllProductsOptions = {
 		minPrice?: number;
 		maxPrice?: number;
 		featured?: boolean;
+		isHero?: boolean;
 		limit?: number;
 		avgRatings?: number;
 		category?: string | null;

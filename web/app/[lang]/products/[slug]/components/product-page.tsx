@@ -1,0 +1,73 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { Heading } from "@/shadcn/components/ui/typography";
+
+import {
+	GetAllProductsOptions,
+	productsService,
+} from "@/redux/services/products-service";
+
+import { cn } from "@/lib/utils";
+
+import ProductCard from "@/shared/components/ui/product-card";
+import { Section } from "@/shared/components/ui/section";
+
+import { IProduct } from "@/types/product.type";
+
+import { useI18n } from "@/components/layout/i18n-provider";
+
+import ProductCallery from "./product-callery";
+import ProductDetails from "./product-details";
+import Feedback from "./feedback";
+
+export default function ProductPage({ product }: { product: IProduct }) {
+	const { t } = useI18n();
+	const options: GetAllProductsOptions = {
+		query: {
+			excludeIds: [product._id],
+			category: product.category,
+			limit: 4,
+		},
+	};
+
+	const { data: similarProducts } = useQuery({
+		queryKey: ["similar-products", options],
+		queryFn: () => productsService.getAllProducts(options),
+		staleTime: 1000 * 60 * 5,
+	});
+
+	return (
+		<>
+			<Section className="space-y-4 md:space-y-4">
+				<div
+					className={cn(
+						"md:relative",
+						"grid grid-cols-1 md:grid-cols-2",
+						"gap-x-10 gap-y-5",
+					)}
+				>
+					<ProductCallery product={product} />
+					<ProductDetails product={product} />
+				</div>
+
+				<Feedback product={product} />
+			</Section>
+
+			{similarProducts && similarProducts.length > 0 && (
+				<Section className="pt-0! space-y-2 lg:space-y-4">
+					<Heading as="h2" variant="h3" className="text-center">
+						{t("product.similarProducts")}
+					</Heading>
+
+					<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
+						{similarProducts.map((item) => (
+							<ProductCard key={item._id} data={item} />
+						))}
+					</div>
+				</Section>
+			)}
+		</>
+	);
+}

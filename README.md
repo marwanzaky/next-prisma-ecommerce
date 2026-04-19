@@ -34,7 +34,7 @@
 - Framework: Next.js 16
 - Styling: Tailwind CSS 4 & Shadcn UI
 - State Management: Redux Toolkit
-- Features: PWA support, Responsive Design
+- Features: PWA support, i18n (English, Arabic & French support), Responsive Design
 
 **Backend**
 - Framework: NestJS (Node.js)
