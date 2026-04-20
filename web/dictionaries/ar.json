@@ -193,5 +193,60 @@
 		"subjectShort": "الموضوع قصير جدا.",
 		"subjectLong": "الموضوع طويل جدا.",
 		"messageRequired": "هذا الحقل مطلوب."
+	},
+	"validation": {
+		"required": "هذا الحقل مطلوب.",
+		"invalidChars": "أحرف غير صالحة في الاسم.",
+		"nameShort": "الاسم قصير جداً.",
+		"nameLong": "الاسم طويل جداً.",
+		"emailShort": "البريد الإلكتروني قصير جداً.",
+		"emailInvalid": "يرجى إدخال بريد إلكتروني صالح.",
+		"invalidUrl": "يجب أن يكون رابطاً صالحاً.",
+		"imageTooLarge": "حجم الصورة يتجاوز حد 4 ميجابايت",
+		"passwordShort": "كلمة المرور قصيرة جداً.",
+		"passwordLong": "كلمة المرور طويلة جداً.",
+		"passwordsDontMatch": "كلمتا المرور غير متطابقتين",
+		"sameAsCurrent": "لا يمكن أن تكون كلمة المرور الجديدة نفس الحالية"
+	},
+	"account": {
+		"settings": "الإعدادات",
+		"personalInfo": {
+			"title": "المعلومات الشخصية",
+			"description": "أدر معلوماتك الشخصية ومظهر ملفك الشخصي. أدخل معلوماتك أدناه.",
+			"profilePhoto": "صورة الملف الشخصي",
+			"changeAvatar": "تغيير الصورة",
+			"deleteAvatar": "حذف الصورة",
+			"photoRequirements": "يجب أن تكون صورة .jpg أو .png أصغر من 4 ميجابايت.",
+			"fullName": "الاسم الكامل",
+			"fullNamePlaceholder": "محمد أحمد",
+			"email": "البريد الإلكتروني",
+			"emailPlaceholder": "m@example.com",
+			"cancel": "إلغاء",
+			"save": "حفظ",
+			"saving": "جار الحفظ..."
+		},
+		"changePassword": {
+			"title": "تغيير كلمة المرور",
+			"description": "أدخل بريدك الإلكتروني أدناه لتسجيل الدخول إلى حسابك",
+			"currentPassword": "كلمة المرور الحالية",
+			"newPassword": "كلمة المرور الجديدة",
+			"newPasswordHelp": "يجب أن تتكون من 8 أحرف على الأقل.",
+			"confirmPassword": "تأكيد كلمة المرور",
+			"confirmPasswordHelp": "يرجى تأكيد كلمة المرور.",
+			"cancel": "إلغاء",
+			"save": "حفظ",
+			"saving": "جار الحفظ..."
+		},
+		"deleteAccount": {
+			"title": "حذف الحساب",
+			"description": "لم تعد تريد استخدام خدماتنا؟ يمكنك حذف حسابك هنا. هذا الإجراء لا رجعة فيه. سيتم حذف جميع المعلومات المتعلقة بهذا الحساب بشكل دائم.",
+			"alert": {
+				"trigger": "نعم، احذف حسابي",
+				"title": "هل أنت متأكد تماماً؟",
+				"description": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف حسابك وبياناتك من خوادمنا بشكل دائم.",
+				"cancel": "إلغاء",
+				"continue": "متابعة"
+			}
+		}
 	}
 }

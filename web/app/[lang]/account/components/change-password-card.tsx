@@ -27,28 +27,32 @@ import { Button } from "@/shadcn/components/ui/button";
 import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
 
-export const ChangePasswordSchema = z
-	.object({
-		currentPassword: z.string().nonempty("This field is required."),
-		newPassword: z
-			.string()
-			.nonempty("This field is required.")
-			.min(8, "Password is too short.")
-			.max(32, "Password is too long."),
-		confirmPassword: z.string().nonempty("This field is required."),
-	})
-	.refine((data) => data.newPassword === data.confirmPassword, {
-		message: "Passwords do not match",
-		path: ["confirmPassword"],
-	})
-	.refine((data) => data.newPassword !== data.currentPassword, {
-		message: "New password cannot be the same as the current password",
-		path: ["newPassword"],
-	});
-
-type ChangePasswordInput = z.infer<typeof ChangePasswordSchema>;
+import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function ChangePasswordCard() {
+	const { t } = useI18n();
+
+	const ChangePasswordSchema = z
+		.object({
+			currentPassword: z.string().nonempty(t("validation.required")),
+			newPassword: z
+				.string()
+				.nonempty(t("validation.required"))
+				.min(8, t("validation.passwordShort"))
+				.max(32, t("validation.passwordLong")),
+			confirmPassword: z.string().nonempty(t("validation.required")),
+		})
+		.refine((data) => data.newPassword === data.confirmPassword, {
+			message: t("validation.passwordsDontMatch"),
+			path: ["confirmPassword"],
+		})
+		.refine((data) => data.newPassword !== data.currentPassword, {
+			message: t("validation.sameAsCurrent"),
+			path: ["newPassword"],
+		});
+
+	type ChangePasswordInput = z.infer<typeof ChangePasswordSchema>;
+
 	const {
 		register,
 		handleSubmit,
@@ -70,9 +74,9 @@ export default function ChangePasswordCard() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Change password</CardTitle>
+				<CardTitle>{t("account.changePassword.title")}</CardTitle>
 				<CardDescription>
-					Enter your email below to login to your account
+					{t("account.changePassword.description")}
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -80,7 +84,7 @@ export default function ChangePasswordCard() {
 					<FieldGroup>
 						<Field>
 							<FieldLabel htmlFor="current-password">
-								Current Password
+								{t("account.changePassword.currentPassword")}
 							</FieldLabel>
 							<FieldContent>
 								<Input
@@ -91,8 +95,11 @@ export default function ChangePasswordCard() {
 							</FieldContent>
 							<FieldError>{errors.currentPassword?.message}</FieldError>
 						</Field>
+
 						<Field>
-							<FieldLabel htmlFor="new-password">New Password</FieldLabel>
+							<FieldLabel htmlFor="new-password">
+								{t("account.changePassword.newPassword")}
+							</FieldLabel>
 							<FieldContent>
 								<Input
 									id="new-password"
@@ -102,12 +109,13 @@ export default function ChangePasswordCard() {
 							</FieldContent>
 							<FieldError>{errors.newPassword?.message}</FieldError>
 							<FieldDescription>
-								Must be at least 8 characters long.
+								{t("account.changePassword.newPasswordHelp")}
 							</FieldDescription>
 						</Field>
+
 						<Field>
 							<FieldLabel htmlFor="confirm-password">
-								Confirm Password
+								{t("account.changePassword.confirmPassword")}
 							</FieldLabel>
 							<FieldContent>
 								<Input
@@ -117,7 +125,9 @@ export default function ChangePasswordCard() {
 								/>
 							</FieldContent>
 							<FieldError>{errors.confirmPassword?.message}</FieldError>
-							<FieldDescription>Please confirm your password.</FieldDescription>
+							<FieldDescription>
+								{t("account.changePassword.confirmPasswordHelp")}
+							</FieldDescription>
 						</Field>
 
 						<Field orientation="horizontal">
@@ -126,7 +136,7 @@ export default function ChangePasswordCard() {
 								disabled={!formState.isDirty || isSubmitting}
 								onClick={() => reset()}
 							>
-								Cancel
+								{t("account.changePassword.cancel")}
 							</Button>
 
 							<Button
@@ -135,10 +145,10 @@ export default function ChangePasswordCard() {
 							>
 								{isSubmitting ? (
 									<>
-										<Spinner /> Saving...
+										<Spinner /> {t("account.changePassword.saving")}
 									</>
 								) : (
-									"Save"
+									t("account.changePassword.save")
 								)}
 							</Button>
 						</Field>

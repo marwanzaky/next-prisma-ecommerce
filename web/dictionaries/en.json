@@ -193,5 +193,59 @@
 		"subjectShort": "Subject is too short.",
 		"subjectLong": "Subject is too long.",
 		"messageRequired": "This field is required."
+	},
+	"validation": {
+		"required": "This field is required.",
+		"invalidChars": "Invalid characters in name.",
+		"nameShort": "Name is too short.",
+		"nameLong": "Name is too long.",
+		"emailInvalid": "Please enter a valid email address.",
+		"invalidUrl": "Must be a valid URL.",
+		"imageTooLarge": "Image size exceeds the 4MB limit",
+		"passwordShort": "Password is too short.",
+		"passwordLong": "Password is too long.",
+		"passwordsDontMatch": "Passwords do not match",
+		"sameAsCurrent": "New password cannot be the same as the current password"
+	},
+	"account": {
+		"settings": "Settings",
+		"changePassword": {
+			"title": "Change password",
+			"description": "Enter your email below to login to your account",
+			"currentPassword": "Current Password",
+			"newPassword": "New Password",
+			"newPasswordHelp": "Must be at least 8 characters long.",
+			"confirmPassword": "Confirm Password",
+			"confirmPasswordHelp": "Please confirm your password.",
+			"cancel": "Cancel",
+			"save": "Save",
+			"saving": "Saving..."
+		},
+		"deleteAccount": {
+			"title": "Delete account",
+			"description": "No longer want to use our service? You can delete your account here. This action is not reversible. All information related to this account will be deleted permanently.",
+			"alert": {
+				"trigger": "Yes, delete my account",
+				"title": "Are you absolutely sure?",
+				"description": "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
+				"cancel": "Cancel",
+				"continue": "Continue"
+			}
+		},
+		"personalInfo": {
+			"title": "Personal information",
+			"description": "Manage your personal details and how your profile appears. Enter your information below.",
+			"profilePhoto": "Profile Photo",
+			"changeAvatar": "Change avatar",
+			"deleteAvatar": "Delete avatar",
+			"photoRequirements": "Must be a .jpg, or .png file smaller than 4MB.",
+			"fullName": "Full Name",
+			"fullNamePlaceholder": "John Doe",
+			"email": "Email",
+			"emailPlaceholder": "m@example.com",
+			"cancel": "Cancel",
+			"save": "Save",
+			"saving": "Saving..."
+		}
 	}
 }

@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Controller, useForm } from "react-hook-form";
 
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import { updateMeAsync } from "@/redux/thunks/auth-thunks";
 
 import { ButtonIcon } from "@/shared/components/ui/button-icon";
-
-import { TypographyMuted } from "@/shadcn/components/ui/typography";
-import { Button } from "@/shadcn/components/ui/button";
 
 import {
 	Field,
@@ -19,8 +19,6 @@ import {
 	FieldGroup,
 	FieldLabel,
 } from "@/shadcn/components/ui/field";
-import { Input } from "@/shadcn/components/ui/input";
-import { initials } from "@/utils/string-utils";
 import {
 	Avatar,
 	AvatarFallback,
@@ -33,32 +31,36 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/shadcn/components/ui/card";
-
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { TypographyMuted } from "@/shadcn/components/ui/typography";
+import { Button } from "@/shadcn/components/ui/button";
+import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
 
-const PersonalInformationSchema = z.object({
-	name: z
-		.string()
-		.nonempty("This field is required.")
-		.regex(/^[a-zA-Z0-9\s'-]+$/, "Invalid characters in name.")
-		.min(2, "Name is too short.")
-		.max(32, "Name is too long."),
-	email: z
-		.email()
-		.nonempty("This field is required.")
-		.min(2, "Email is too short.")
-		.max(32, "Email is too short."),
-	photo: z.object({
-		url: z.url("Must be a valid URL").optional(),
-		file: z.instanceof(File).optional(),
-	}),
-});
+import { initials } from "@/utils/string-utils";
 
-type PersonalInformationInput = z.infer<typeof PersonalInformationSchema>;
+import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function PersonalInformationCard() {
+	const { t } = useI18n();
+
+	const PersonalInformationSchema = z.object({
+		name: z
+			.string()
+			.nonempty(t("validation.required"))
+			.regex(/^[a-zA-Z0-9\s'-]+$/, t("validation.invalidChars"))
+			.min(2, t("validation.nameShort"))
+			.max(32, t("validation.nameLong")),
+		email: z
+			.email(t("validation.emailInvalid"))
+			.nonempty(t("validation.required")),
+		photo: z.object({
+			url: z.url(t("validation.invalidUrl")).optional(),
+			file: z.instanceof(File).optional(),
+		}),
+	});
+
+	type PersonalInformationInput = z.infer<typeof PersonalInformationSchema>;
+
 	const {
 		register,
 		handleSubmit,
@@ -109,10 +111,9 @@ export default function PersonalInformationCard() {
 		user && (
 			<Card>
 				<CardHeader>
-					<CardTitle>Personal information</CardTitle>
+					<CardTitle>{t("account.personalInfo.title")}</CardTitle>
 					<CardDescription>
-						Manage your personal details and how your profile appears Enter your
-						information below
+						{t("account.personalInfo.description")}
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
@@ -127,7 +128,7 @@ export default function PersonalInformationCard() {
 								if (!file) return;
 
 								if (file.size > 4 * 1024 * 1024) {
-									alert("Image size exceeds the 4MB limit");
+									alert(t("validation.imageTooLarge"));
 									event.target.value = "";
 									return;
 								}
@@ -143,7 +144,9 @@ export default function PersonalInformationCard() {
 
 						<FieldGroup>
 							<Field>
-								<FieldLabel>Profile Photo</FieldLabel>
+								<FieldLabel>
+									{t("account.personalInfo.profilePhoto")}
+								</FieldLabel>
 								<div className="flex items-center gap-4">
 									<Controller
 										name="photo"
@@ -173,7 +176,7 @@ export default function PersonalInformationCard() {
 												<Avatar className="h-12 w-12">
 													<AvatarImage
 														src={previewUrl}
-														alt={`Photo of ${user.name}`}
+														alt={t("photoOf").replace("{{name}}", user.name)}
 														loading="lazy"
 													/>
 													<AvatarFallback>{initials(user.name)}</AvatarFallback>
@@ -189,14 +192,14 @@ export default function PersonalInformationCard() {
 												type="button"
 												onClick={() => inputRef.current?.click()}
 											>
-												Change avatar
+												{t("account.personalInfo.changeAvatar")}
 											</Button>
 
 											<ButtonIcon
 												size="sm"
 												type="button"
 												icon="delete"
-												aria-label="Delete avatar"
+												aria-label={t("account.personalInfo.deleteAvatar")}
 												onClick={() => {
 													setValue(
 														"photo",
@@ -208,30 +211,34 @@ export default function PersonalInformationCard() {
 										</div>
 
 										<TypographyMuted className="text-xs">
-											Must be a .jpg, or .png file smaller than 4MB.
+											{t("account.personalInfo.photoRequirements")}
 										</TypographyMuted>
 									</div>
 								</div>
 							</Field>
 							<Field>
-								<FieldLabel htmlFor="name">Full Name</FieldLabel>
+								<FieldLabel htmlFor="name">
+									{t("account.personalInfo.fullName")}
+								</FieldLabel>
 								<FieldContent>
 									<Input
 										id="name"
 										type="text"
-										placeholder="John Doe"
+										placeholder={t("account.personalInfo.fullNamePlaceholder")}
 										{...register("name")}
 									/>
 								</FieldContent>
 								<FieldError>{errors.name?.message}</FieldError>
 							</Field>
 							<Field>
-								<FieldLabel htmlFor="name">Email</FieldLabel>
+								<FieldLabel htmlFor="email">
+									{t("account.personalInfo.email")}
+								</FieldLabel>
 								<FieldContent>
 									<Input
-										id="name"
+										id="email"
 										type="email"
-										placeholder="m@example.com"
+										placeholder={t("account.personalInfo.emailPlaceholder")}
 										{...register("email")}
 									/>
 								</FieldContent>
@@ -243,7 +250,7 @@ export default function PersonalInformationCard() {
 									disabled={!formState.isDirty || isSubmitting}
 									onClick={resetForm}
 								>
-									Cancel
+									{t("account.personalInfo.cancel")}
 								</Button>
 
 								<Button
@@ -252,10 +259,10 @@ export default function PersonalInformationCard() {
 								>
 									{isSubmitting ? (
 										<>
-											<Spinner /> Saving...
+											<Spinner /> {t("account.personalInfo.saving")}
 										</>
 									) : (
-										"Save"
+										t("account.personalInfo.save")
 									)}
 								</Button>
 							</Field>

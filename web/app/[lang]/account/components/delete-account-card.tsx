@@ -24,17 +24,18 @@ import {
 } from "@/shadcn/components/ui/card";
 import { Button } from "@/shadcn/components/ui/button";
 
+import { useI18n } from "@/components/layout/i18n-provider";
+
 export default function DeleteAccountCard() {
+	const { t } = useI18n();
 	const dispatch = useDispatch<AppDispatch>();
 
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Delete account</CardTitle>
+				<CardTitle>{t("account.deleteAccount.title")}</CardTitle>
 				<CardDescription>
-					No longer want to use our service? You can delete your account here.
-					This action is not reversible. All information related to this account
-					will be deleted permanently.
+					{t("account.deleteAccount.description")}
 				</CardDescription>
 			</CardHeader>
 
@@ -42,25 +43,28 @@ export default function DeleteAccountCard() {
 				<AlertDialog>
 					<AlertDialogTrigger asChild>
 						<Button className="w-full" size="xl" variant="destructive">
-							Yes, delete my account
+							{t("account.deleteAccount.alert.trigger")}
 						</Button>
 					</AlertDialogTrigger>
 					<AlertDialogContent>
 						<AlertDialogHeader>
-							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+							<AlertDialogTitle>
+								{t("account.deleteAccount.alert.title")}
+							</AlertDialogTitle>
 							<AlertDialogDescription>
-								This action cannot be undone. This will permanently delete your
-								account and remove your data from our servers.
+								{t("account.deleteAccount.alert.description")}
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
-							<AlertDialogCancel>Cancel</AlertDialogCancel>
+							<AlertDialogCancel>
+								{t("account.deleteAccount.alert.cancel")}
+							</AlertDialogCancel>
 							<AlertDialogAction
 								onClick={() => {
 									dispatch(deleteMeAsync());
 								}}
 							>
-								Continue
+								{t("account.deleteAccount.alert.continue")}
 							</AlertDialogAction>
 						</AlertDialogFooter>
 					</AlertDialogContent>

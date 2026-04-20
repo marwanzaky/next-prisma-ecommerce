@@ -193,5 +193,60 @@
 		"subjectShort": "Le sujet est trop court.",
 		"subjectLong": "Le sujet est trop long.",
 		"messageRequired": "Ce champ est obligatoire."
+	},
+	"validation": {
+		"required": "Ce champ est obligatoire.",
+		"invalidChars": "Caracteres invalides dans le nom.",
+		"nameShort": "Le nom est trop court.",
+		"nameLong": "Le nom est trop long.",
+		"emailShort": "L'e-mail est trop court.",
+		"emailInvalid": "Veuillez entrer une adresse e-mail valide.",
+		"invalidUrl": "Doit etre une URL valide.",
+		"imageTooLarge": "La taille de l'image depasse la limite de 4 Mo",
+		"passwordShort": "Le mot de passe est trop court.",
+		"passwordLong": "Le mot de passe est trop long.",
+		"passwordsDontMatch": "Les mots de passe ne correspondent pas",
+		"sameAsCurrent": "Le nouveau mot de passe ne peut pas etre le meme que l'actuel"
+	},
+	"account": {
+		"settings": "Parametres",
+		"personalInfo": {
+			"title": "Informations personnelles",
+			"description": "Gerez vos informations personnelles et l'apparence de votre profil. Entrez vos informations ci-dessous.",
+			"profilePhoto": "Photo de profil",
+			"changeAvatar": "Changer l'avatar",
+			"deleteAvatar": "Supprimer l'avatar",
+			"photoRequirements": "Doit etre un fichier .jpg ou .png inferieur a 4 Mo.",
+			"fullName": "Nom complet",
+			"fullNamePlaceholder": "Jean Dupont",
+			"email": "E-mail",
+			"emailPlaceholder": "exemple@email.com",
+			"cancel": "Annuler",
+			"save": "Enregistrer",
+			"saving": "Enregistrement..."
+		},
+		"changePassword": {
+			"title": "Changer le mot de passe",
+			"description": "Entrez votre e-mail ci-dessous pour vous connecter a votre compte",
+			"currentPassword": "Mot de passe actuel",
+			"newPassword": "Nouveau mot de passe",
+			"newPasswordHelp": "Doit contenir au moins 8 caracteres.",
+			"confirmPassword": "Confirmer le mot de passe",
+			"confirmPasswordHelp": "Veuillez confirmer votre mot de passe.",
+			"cancel": "Annuler",
+			"save": "Enregistrer",
+			"saving": "Enregistrement..."
+		},
+		"deleteAccount": {
+			"title": "Supprimer le compte",
+			"description": "Vous ne voulez plus utiliser notre service ? Vous pouvez supprimer votre compte ici. Cette action est irreversible. Toutes les informations liees a ce compte seront definitivement supprimees.",
+			"alert": {
+				"trigger": "Oui, supprimer mon compte",
+				"title": "Etes-vous absolument sur ?",
+				"description": "Cette action ne peut pas etre annulee. Cela supprimera definitivement votre compte et donnees de nos serveurs.",
+				"cancel": "Annuler",
+				"continue": "Continuer"
+			}
+		}
 	}
 }
