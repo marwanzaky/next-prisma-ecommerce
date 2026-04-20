@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { useCart } from "./use-cart";
@@ -14,61 +13,44 @@ import {
 } from "@/shadcn/components/ui/empty";
 import { Heading } from "@/shadcn/components/ui/typography";
 import { Button } from "@/shadcn/components/ui/button";
-import { Card, CardContent } from "@/shadcn/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/shadcn/components/ui/radio-group";
-import { Label } from "@/shadcn/components/ui/label";
-import { Separator } from "@/shadcn/components/ui/separator";
-import { Field, FieldGroup, FieldLabel } from "@/shadcn/components/ui/field";
 
-import { Table } from "@/shared/components/ui/table";
 import { Section } from "@/shared/components/ui/section";
+import { DataTable } from "@/shared/components/ui/data-table/data-table";
 
-import { formatPrice } from "@/utils/format";
 import { localizePath } from "@/lib/i18n";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
+import CheckoutCard from "./components/checkout-card";
+
 export default function Page() {
 	const router = useRouter();
-	const { locale } = useI18n();
+	const { locale, t } = useI18n();
 
 	const { items, columns, tableData } = useCart();
 
 	return (
 		<Section>
 			<Heading as="h4" className="text-center mb-2 lg:mb-4">
-				Your Cart
+				{t("cartPage.title")}
 			</Heading>
 
 			{items.length > 0 ? (
 				<div className="flex gap-4 flex-col md:flex-row">
-					<Table
+					<DataTable
 						className="md:w-2/3 h-fit"
 						columns={columns}
 						data={tableData}
 					/>
 
-					<Card className="md:w-1/3 h-fit">
-						<CardContent className="space-y-4">
-							<PaymentMethodSelector />
-							<OrderSummary />
-
-							<Button
-								className="w-full"
-								onClick={() => router.push(localizePath("/signin", locale))}
-							>
-								Proceed to checkout
-							</Button>
-						</CardContent>
-					</Card>
+					<CheckoutCard />
 				</div>
 			) : (
 				<Empty className="border border-dashed">
 					<EmptyHeader>
-						<EmptyTitle>Nothing here... yet.</EmptyTitle>
+						<EmptyTitle>{t("cartPage.empty.title")}</EmptyTitle>
 						<EmptyDescription className="max-w-xs text-pretty">
-							Add items to your cart to see them here when you&apos;re ready to
-							check out.
+							{t("cartPage.empty.description")}
 						</EmptyDescription>
 					</EmptyHeader>
 					<EmptyContent>
@@ -76,93 +58,11 @@ export default function Page() {
 							variant="outline"
 							onClick={() => router.push(localizePath("/products", locale))}
 						>
-							Continue shopping
+							{t("cartPage.empty.continueShopping")}
 						</Button>
 					</EmptyContent>
 				</Empty>
 			)}
 		</Section>
-	);
-}
-
-function PaymentMethodSelector() {
-	return (
-		<FieldGroup>
-			<Field>
-				<FieldLabel>How you'll pay</FieldLabel>
-				<RadioGroup defaultValue="card" className="space-y-2">
-					<div className="flex items-center gap-3">
-						<RadioGroupItem value="card" id="card" />
-						<Label htmlFor="card" className="flex justify-center gap-2">
-							<Image
-								src="/svgs/payments/visa.svg"
-								className="border rounded"
-								alt="Visa"
-								width={36}
-								height={24}
-								loading="lazy"
-							/>
-							<Image
-								src="/svgs/payments/mastercard.svg"
-								className="border rounded"
-								alt="Mastercard"
-								width={36}
-								height={24}
-								loading="lazy"
-							/>
-							<Image
-								src="/svgs/payments/american_express.svg"
-								className="border rounded"
-								alt="American Express"
-								width={36}
-								height={24}
-								loading="lazy"
-							/>
-							<Image
-								src="/svgs/payments/discover.svg"
-								className="border rounded"
-								alt="Discover"
-								width={36}
-								height={24}
-								loading="lazy"
-							/>
-						</Label>
-					</div>
-				</RadioGroup>
-			</Field>
-		</FieldGroup>
-	);
-}
-
-function OrderSummary() {
-	const { locale } = useI18n();
-	const { items, total, subtotal, discount, discountPercent } = useCart();
-
-	return (
-		<div className="space-y-2">
-			<div className="flex justify-between">
-				<span>Subtotal</span>
-				<span>{subtotal}</span>
-			</div>
-
-			<div className="flex justify-between">
-				<span>Discount ({discountPercent})</span>
-				<span>-{discount}</span>
-			</div>
-
-			<div className="flex justify-between">
-				<span>Shipping</span>
-				<span>{formatPrice(0, locale)}</span>
-			</div>
-
-			<Separator />
-
-			<div className="flex justify-between font-semibold">
-				<span>
-					Total ({items.length} item{items.length > 1 && "s"})
-				</span>
-				<span>{total}</span>
-			</div>
-		</div>
 	);
 }

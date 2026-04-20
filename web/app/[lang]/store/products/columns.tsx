@@ -34,6 +34,8 @@ import { Locale, localizePath } from "@/lib/i18n";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
+import { DictionaryKeys } from "@/types/i18n.type";
+
 export type SellProduct = IProduct & { imgUrl: string };
 
 export const getSellColumns = ({
@@ -41,11 +43,13 @@ export const getSellColumns = ({
 	onDelete,
 	onStockChange,
 	locale,
+	t,
 }: {
 	categoryTree: PublicCategoryTree[] | undefined;
 	onDelete: (id: string) => void;
 	onStockChange: (id: string, value: number) => void;
 	locale: Locale;
+	t: (key: DictionaryKeys, fallback?: string) => string;
 }): ColumnDef<SellProduct>[] => [
 	{
 		id: "select",
@@ -56,14 +60,14 @@ export const getSellColumns = ({
 					(table.getIsSomePageRowsSelected() && "indeterminate")
 				}
 				onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-				aria-label="Select all"
+				aria-label={t("storeProductsPage.table.selectAll")}
 			/>
 		),
 		cell: ({ row }) => (
 			<Checkbox
 				checked={row.getIsSelected()}
 				onCheckedChange={(value) => row.toggleSelected(!!value)}
-				aria-label="Select row"
+				aria-label={t("storeProductsPage.table.selectRow")}
 			/>
 		),
 		enableSorting: false,
@@ -71,10 +75,10 @@ export const getSellColumns = ({
 	},
 	{
 		accessorKey: "name",
-		header: "Product",
+		header: t("storeProductsPage.table.product"),
 		cell: ({ row }) => {
 			const product = row.original;
-			const href = `${`products/${row.original._id}`}`;
+			const href = localizePath(`/products/${row.original._id}`, locale);
 			const productSubcategoryTree = categoryTree
 				?.flatMap((cat) => [...cat.children, cat])
 				.find((cat) => cat.id === product.category);
@@ -105,17 +109,15 @@ export const getSellColumns = ({
 	},
 	{
 		accessorKey: "category",
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					Category
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
+		header: ({ column }) => (
+			<Button
+				variant="ghost"
+				onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+			>
+				{t("storeProductsPage.table.category")}
+				<ArrowUpDown className="ml-2 h-4 w-4" />
+			</Button>
+		),
 		cell: ({ row }) => {
 			const productCategoryTree = categoryTree?.find((rootCat) =>
 				rootCat.children.some(
@@ -128,41 +130,37 @@ export const getSellColumns = ({
 	},
 	{
 		accessorKey: "price",
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					Price
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
+		header: ({ column }) => (
+			<Button
+				variant="ghost"
+				onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+			>
+				{t("storeProductsPage.table.price")}
+				<ArrowUpDown className="ml-2 h-4 w-4" />
+			</Button>
+		),
 		cell: ({ row }) => (
 			<div>{formatPrice(row.original.price / 100, locale)}</div>
 		),
 	},
 	{
 		accessorKey: "priceCompare",
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					Compare
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
+		header: ({ column }) => (
+			<Button
+				variant="ghost"
+				onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+			>
+				{t("storeProductsPage.table.compare")}
+				<ArrowUpDown className="ml-2 h-4 w-4" />
+			</Button>
+		),
 		cell: ({ row }) => (
 			<div>{formatPrice(row.original.priceCompare / 100, locale)}</div>
 		),
 	},
 	{
 		accessorKey: "stock",
-		header: "Stock",
+		header: t("storeProductsPage.table.stock"),
 		cell: ({ row }) => (
 			<InputWithPlusMinusButtons
 				min={0}
@@ -175,7 +173,7 @@ export const getSellColumns = ({
 	},
 	{
 		id: "actions",
-		header: "Actions",
+		header: t("storeProductsPage.table.actions"),
 		cell: ({ row }) => {
 			return <ActionsCell row={row} onDelete={onDelete} />;
 		},
@@ -190,7 +188,7 @@ const ActionsCell = ({
 	onDelete: (id: string) => void;
 }) => {
 	const router = useRouter();
-	const { locale } = useI18n();
+	const { locale, t } = useI18n();
 	const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 	const product = row.original;
 
@@ -242,16 +240,19 @@ const ActionsCell = ({
 			<AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+						<AlertDialogTitle>
+							{t("storeProductsPage.table.deleteConfirmTitle")}
+						</AlertDialogTitle>
 						<AlertDialogDescription>
-							This action cannot be undone. This will permanently delete the
-							product data from our servers.
+							{t("storeProductsPage.table.deleteConfirmDescription")}
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel>Cancel</AlertDialogCancel>
+						<AlertDialogCancel>
+							{t("storeProductsPage.table.cancel")}
+						</AlertDialogCancel>
 						<AlertDialogAction onClick={() => onDelete(product._id)}>
-							Continue
+							{t("storeProductsPage.table.continue")}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

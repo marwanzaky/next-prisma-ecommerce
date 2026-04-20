@@ -174,6 +174,76 @@
 		"cancel": "Cancel",
 		"applyFilter": "Apply filter"
 	},
+	"cartPage": {
+		"title": "Your Cart",
+		"empty": {
+			"title": "Nothing here... yet.",
+			"description": "Add items to your cart to see them here when you're ready to check out.",
+			"continueShopping": "Continue shopping"
+		},
+		"checkoutCard": {
+			"howYouPay": "How you'll pay",
+			"subtotal": "Subtotal",
+			"discountWithPercent": "Discount ({{percent}})",
+			"shipping": "Shipping",
+			"totalItem": "Total ({{count}} item)",
+			"totalItems": "Total ({{count}} items)",
+			"proceedToCheckout": "Proceed to checkout"
+		},
+		"table": {
+			"product": "Product",
+			"price": "Price",
+			"quantity": "Quantity",
+			"total": "Total",
+			"removeProduct": "Remove product"
+		}
+	},
+	"favoritesPage": {
+		"title": "Your Favorites",
+		"emptyTitle": "Nothing here... yet.",
+		"emptyDescription": "Start favoriting items to compare, shop, and keep track of things you love.",
+		"continueShopping": "Continue shopping"
+	},
+	"storeProductsPage": {
+		"title": "Your Products",
+		"emptyTitle": "Nothing here... yet.",
+		"emptyDescription": "Get started by creating your first product.",
+		"addProduct": "Add product",
+		"filterPlaceholder": "Filter products...",
+		"noResults": "No results.",
+		"table": {
+			"selectAll": "Select all",
+			"selectRow": "Select row",
+			"product": "Product",
+			"category": "Category",
+			"price": "Price",
+			"compare": "Compare",
+			"stock": "Stock",
+			"actions": "Actions",
+			"deleteConfirmTitle": "Are you absolutely sure?",
+			"deleteConfirmDescription": "This action cannot be undone. This will permanently delete the product data from our servers.",
+			"cancel": "Cancel",
+			"continue": "Continue"
+		},
+		"form": {
+			"myProducts": "My Products",
+			"product": "Product",
+			"name": "Name",
+			"namePlaceholder": "Short sleeve t-shirt",
+			"description": "Description",
+			"media": "Media",
+			"price": "Price",
+			"priceMinPlaceholder": "Price",
+			"priceMaxPlaceholder": "Compare",
+			"category": "Category",
+			"selectCategory": "Select category",
+			"tags": "Tags",
+			"tagsPlaceholder": "Enter tags",
+			"cancel": "Cancel",
+			"save": "Save",
+			"update": "Update"
+		}
+	},
 	"contactPage": {
 		"title": "Contact Us",
 		"subtitle": "Have a question?",
@@ -196,6 +266,8 @@
 	},
 	"validation": {
 		"required": "This field is required.",
+		"invalidNumber": "Please enter a valid number.",
+		"mustBePositive": "Must be greater than 0.",
 		"invalidChars": "Invalid characters in name.",
 		"nameShort": "Name is too short.",
 		"nameLong": "Name is too long.",
@@ -205,7 +277,19 @@
 		"passwordShort": "Password is too short.",
 		"passwordLong": "Password is too long.",
 		"passwordsDontMatch": "Passwords do not match",
-		"sameAsCurrent": "New password cannot be the same as the current password"
+		"sameAsCurrent": "New password cannot be the same as the current password",
+		"maxPriceGteMinPrice": "Max price must be greater than min price"
+	},
+	"dataTable": {
+		"view": "View",
+		"toggleColumns": "Toggle columns",
+		"rowsSelected": "{selected} of {total} row(s) selected.",
+		"rowsPerPage": "Rows per page",
+		"pageOf": "Page {page} of {total}",
+		"goToFirstPage": "Go to first page",
+		"goToPreviousPage": "Go to previous page",
+		"goToNextPage": "Go to next page",
+		"goToLastPage": "Go to last page"
 	},
 	"account": {
 		"settings": "Settings",

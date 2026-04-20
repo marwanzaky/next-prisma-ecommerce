@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { Avatar, AvatarImage } from "@/shadcn/components/ui/avatar";
+import { PublicCategoryTree } from "@/shared/types/category.type";
 
 export type LogoCellProps = {
 	label: string;
+	subcategory?: PublicCategoryTree | undefined;
 	imgUrl: string;
 	href: string;
 };
 
-export function LogoCell({ label, imgUrl, href }: LogoCellProps) {
+export function LogoCell({ label, subcategory, imgUrl, href }: LogoCellProps) {
 	return (
-		<div className="flex gap-5 items-center">
+		<div className="flex gap-3 items-center">
 			<Link href={href}>
-				<Avatar className="border h-12 w-12 rounded-lg overflow-hidden">
+				<Avatar className="border h-12 w-12 rounded-sm overflow-hidden">
 					<AvatarImage
 						className="rounded-none"
 						src={imgUrl}
@@ -20,12 +22,17 @@ export function LogoCell({ label, imgUrl, href }: LogoCellProps) {
 				</Avatar>
 			</Link>
 
-			<Link
-				className="hidden sm:block hover:text-primary transition-colors"
-				href={href}
-			>
-				{label}
-			</Link>
+			<div>
+				<div className="font-medium hover:text-primary transition-colors max-w-60 truncate">
+					<Link href={href}>{label}</Link>
+				</div>
+
+				{subcategory && (
+					<span className="text-muted-foreground text-xs">
+						{subcategory?.name}
+					</span>
+				)}
+			</div>
 		</div>
 	);
 }

@@ -16,7 +16,7 @@ export default function Page() {
 	const params = useParams<{ id: string }>();
 	const router = useRouter();
 
-	const { locale } = useI18n();
+	const { locale, t } = useI18n();
 	const {
 		initialConfig,
 		form,
@@ -61,7 +61,7 @@ export default function Page() {
 			onSubmit={form.handleSubmit((data) =>
 				updateProduct({ id: params.id, data }),
 			)}
-			submitButtonText="Update"
+			submitButtonText={t("storeProductsPage.form.update")}
 			cancelButtonAction={() =>
 				router.push(localizePath("/store/products", locale))
 			}

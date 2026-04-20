@@ -42,7 +42,7 @@ export const CartSchema = SchemaFactory.createForClass(Cart);
 CartSchema.pre(/^find/, function (next) {
 	(this as any).populate({
 		path: "items.product",
-		select: "name imgUrls price priceCompare",
+		select: "name imgUrls price priceCompare category",
 	});
 	next();
 });

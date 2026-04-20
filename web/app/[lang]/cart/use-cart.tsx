@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useDispatch } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 
 import {
 	deleteCartItemAsync,
@@ -10,23 +11,23 @@ import {
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import { paymentsService } from "@/redux/services/payments-service";
 
-import { IProduct } from "@/types/product.type";
-
-import { Column } from "@/shared/components/ui/table";
-import { LogoCell } from "@/shared/components/ui/table/cells/logo-cell";
-
-import { createProductSlug } from "@/utils/string-utils";
 import { formatPrice } from "@/utils/format";
 
 import { useI18n } from "@/components/layout/i18n-provider";
-
-type CartItem = IProduct & { imgUrl: string; quantity: number; total: number };
+import { getCartColumns, CartItem } from "./columns";
+import { categoriesService } from "@/redux/services/categories-service";
 
 export function useCart() {
 	const dispatch = useDispatch<AppDispatch>();
 
-	const { locale } = useI18n();
+	const { locale, t } = useI18n();
 	const { items } = useAppSelector((state) => state.cartReducer);
+
+	const { data: categoryTree } = useQuery({
+		queryKey: ["category-tree"],
+		queryFn: () => categoriesService.getCategoryTree(),
+		staleTime: 1000 * 60 * 5,
+	});
 
 	const { total, subtotal, discount, discountPercent } = useMemo(() => {
 		if (items.length === 0) {
@@ -62,60 +63,24 @@ export function useCart() {
 		};
 	}, [items]);
 
-	const columns: Column<CartItem>[] = [
-		{
-			header: "Product",
-			field: "imgUrl",
-			type: "custom",
-			className: "sm:w-[50%]",
-			render: (value, row) => (
-				<LogoCell
-					href={`products/${createProductSlug(row.name, row._id)}`}
-					label={row.name}
-					imgUrl={value}
-				/>
-			),
+	const columns = getCartColumns({
+		categoryTree,
+		t,
+		locale,
+		onQuantityChange(value, row) {
+			dispatch(
+				updateCartItemQuantityAsync({
+					productId: row._id,
+					quantity: value,
+				}),
+			);
 		},
-		{
-			header: "Price",
-			field: "price",
-			type: "usd",
-			className: "w-[10%]",
+		deleteAction(row) {
+			dispatch(deleteCartItemAsync({ product: row }));
 		},
-		{
-			header: "Quantity",
-			field: "quantity",
-			type: "number-input",
-			className: "w-[10%]",
-			onChange: (value, row) => {
-				dispatch(
-					updateCartItemQuantityAsync({
-						productId: row._id,
-						quantity: value,
-					}),
-				);
-			},
-		},
-		{
-			header: "Total",
-			field: "total",
-			type: "usd",
-			className: "hidden sm:w-[10%] sm:table-cell",
-		},
-		{
-			field: "_id",
-			header: "",
-			type: "action",
-			action: (row) => {
-				dispatch(deleteCartItemAsync({ product: row }));
-			},
-			actionIcon: "delete",
-			actionAriaLabel: "Remove product",
-			className: "w-9.5",
-		},
-	];
+	});
 
-	const tableData = items.map((item) => ({
+	const tableData: CartItem[] = items.map((item) => ({
 		...item.product,
 		imgUrl: item.product.imgUrls[0],
 		quantity: item.quantity,

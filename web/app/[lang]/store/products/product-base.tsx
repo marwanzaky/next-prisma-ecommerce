@@ -28,6 +28,7 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 
 import { cn } from "@/lib/utils";
+import { localizePath } from "@/lib/i18n";
 
 import { Button } from "@/shadcn/components/ui/button";
 import {
@@ -55,6 +56,7 @@ import { ProductForm } from "./use-sell";
 import { PublicCategoryTree } from "@/shared/types/category.type";
 import { Spinner } from "@/shadcn/components/ui/spinner";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import { useI18n } from "@/components/layout/i18n-provider";
 
 type ProductBaseProps = {
 	initialConfig: InitialConfigType;
@@ -91,20 +93,24 @@ export function ProductBase({
 	submitButtonText,
 	cancelButtonAction,
 }: ProductBaseProps) {
+	const { locale, t } = useI18n();
+
 	return (
 		<Section className="max-w-2xl mx-auto space-y-4">
 			<Breadcrumb>
 				<BreadcrumbList>
 					<BreadcrumbItem>
 						<BreadcrumbLink asChild>
-							<Link href="/store/products">My Products</Link>
+							<Link href={localizePath("/store/products", locale)}>
+								{t("storeProductsPage.form.myProducts")}
+							</Link>
 						</BreadcrumbLink>
 					</BreadcrumbItem>
 
 					<BreadcrumbSeparator />
 
 					<BreadcrumbItem>
-						<BreadcrumbPage>Product</BreadcrumbPage>
+						<BreadcrumbPage>{t("storeProductsPage.form.product")}</BreadcrumbPage>
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
@@ -115,10 +121,12 @@ export function ProductBase({
 						<CardContent>
 							<FieldGroup>
 								<Field>
-									<FieldLabel htmlFor="name">Name</FieldLabel>
+									<FieldLabel htmlFor="name">
+										{t("storeProductsPage.form.name")}
+									</FieldLabel>
 									<Input
 										id="name"
-										placeholder="Short sleeve t-shirt"
+										placeholder={t("storeProductsPage.form.namePlaceholder")}
 										{...register("name")}
 									/>
 									{errors.name && (
@@ -127,7 +135,7 @@ export function ProductBase({
 								</Field>
 
 								<Field>
-									<FieldLabel>Description</FieldLabel>
+									<FieldLabel>{t("storeProductsPage.form.description")}</FieldLabel>
 									<div
 										className={cn(
 											"relative flex flex-col w-full rounded-md border border-input bg-transparent text-sm transition-colors",
@@ -162,7 +170,7 @@ export function ProductBase({
 								</Field>
 
 								<Field>
-									<FieldLabel>Media</FieldLabel>
+									<FieldLabel>{t("storeProductsPage.form.media")}</FieldLabel>
 									<div className="grid grid-cols-5 gap-4">
 										{Array.from({ length: 10 }).map((_, index) => (
 											<Controller
@@ -190,14 +198,18 @@ export function ProductBase({
 						<Card className="h-fit">
 							<CardContent>
 								<Field>
-									<FieldLabel>Price</FieldLabel>
+									<FieldLabel>{t("storeProductsPage.form.price")}</FieldLabel>
 									<Controller
 										name="priceRangeUsd"
 										control={control}
 										render={({ field }) => (
 											<InputCurrencyRange
-												minPlaceholder="Price"
-												maxPlaceholder="Compare"
+												minPlaceholder={t(
+													"storeProductsPage.form.priceMinPlaceholder",
+												)}
+												maxPlaceholder={t(
+													"storeProductsPage.form.priceMaxPlaceholder",
+												)}
 												minValue={field.value.min}
 												maxValue={field.value.max}
 												onMinChange={(min) =>
@@ -235,7 +247,7 @@ export function ProductBase({
 						<Card className="h-fit">
 							<CardContent>
 								<Field>
-									<FieldLabel>Category</FieldLabel>
+									<FieldLabel>{t("storeProductsPage.form.category")}</FieldLabel>
 									<Controller
 										name="category"
 										control={control}
@@ -247,7 +259,11 @@ export function ProductBase({
 												}
 											>
 												<SelectTrigger>
-													<SelectValue placeholder="Select category" />
+													<SelectValue
+														placeholder={t(
+															"storeProductsPage.form.selectCategory",
+														)}
+													/>
 												</SelectTrigger>
 												<SelectContent>
 													<SelectGroup>
@@ -274,14 +290,16 @@ export function ProductBase({
 							<CardContent>
 								<Field>
 									<Field>
-										<FieldLabel>Tags</FieldLabel>
+										<FieldLabel>{t("storeProductsPage.form.tags")}</FieldLabel>
 										<Controller
 											name="tags"
 											control={control}
 											render={({ field }) => (
 												<InputTags
 													{...field}
-													placeholder="Enter Tags"
+													placeholder={t(
+														"storeProductsPage.form.tagsPlaceholder",
+													)}
 													value={field.value ?? []}
 												/>
 											)}
@@ -303,7 +321,7 @@ export function ProductBase({
 							variant="outline"
 							onClick={cancelButtonAction}
 						>
-							Cancel
+							{t("storeProductsPage.form.cancel")}
 						</Button>
 					)}
 					<Button type="submit" disabled={!formState.isDirty || loading}>

@@ -1,11 +1,12 @@
 "use client";
+
 import * as React from "react";
-import { useRouter } from "next/navigation";
 
 import {
 	ColumnDef,
 	ColumnFiltersState,
 	SortingState,
+	Table as TableType,
 	VisibilityState,
 	flexRender,
 	getCoreRowModel,
@@ -23,37 +24,35 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/shadcn/components/ui/table";
-import { Button } from "@/shadcn/components/ui/button";
-import { Input } from "@/shadcn/components/ui/input";
 
 import { DataTablePagination } from "./data-table-pagination";
-import { DataTableViewOptions } from "./data-table-view-options";
 
-import { localizePath } from "@/lib/i18n";
-
-import { useI18n } from "@/components/layout/i18n-provider";
-
-interface DataTableProps<TData, TValue> {
+export interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
+	className?: string;
+	pagination?: boolean;
+	emptyText?: string;
+	emptyContent?: React.ReactNode;
+	renderToolbar?: (table: TableType<TData>) => React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
 	columns,
 	data,
+	className,
+	pagination,
+	emptyText = "No results.",
+	emptyContent,
+	renderToolbar,
 }: DataTableProps<TData, TValue>) {
-	const router = useRouter();
-
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[],
 	);
-
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = React.useState({});
-
-	const { locale } = useI18n();
 
 	const table = useReactTable({
 		data,
@@ -75,42 +74,24 @@ export function DataTable<TData, TValue>({
 	});
 
 	return (
-		<div>
-			<div className="flex items-center gap-2 py-4">
-				<Input
-					placeholder="Filter products..."
-					value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-					onChange={(event) =>
-						table.getColumn("name")?.setFilterValue(event.target.value)
-					}
-					className="max-w-sm"
-				/>
-				<DataTableViewOptions table={table} />
-				<Button
-					onClick={() => {
-						router.push(localizePath("/store/products/new", locale));
-					}}
-				>
-					Add Product
-				</Button>
-			</div>
+		<div className={className}>
+			{renderToolbar?.(table)}
+
 			<div className="overflow-hidden rounded-md border">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
 							<TableRow key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<TableHead key={header.id}>
-											{header.isPlaceholder
-												? null
-												: flexRender(
-														header.column.columnDef.header,
-														header.getContext(),
-													)}
-										</TableHead>
-									);
-								})}
+								{headerGroup.headers.map((header) => (
+									<TableHead key={header.id}>
+										{header.isPlaceholder
+											? null
+											: flexRender(
+													header.column.columnDef.header,
+													header.getContext(),
+												)}
+									</TableHead>
+								))}
 							</TableRow>
 						))}
 					</TableHeader>
@@ -137,7 +118,7 @@ export function DataTable<TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center"
 								>
-									No results.
+									{emptyContent ?? emptyText}
 								</TableCell>
 							</TableRow>
 						)}
@@ -145,9 +126,11 @@ export function DataTable<TData, TValue>({
 				</Table>
 			</div>
 
-			<div className="py-4">
-				<DataTablePagination table={table} />
-			</div>
+			{pagination && (
+				<div className="py-4">
+					<DataTablePagination table={table} />
+				</div>
+			)}
 		</div>
 	);
 }

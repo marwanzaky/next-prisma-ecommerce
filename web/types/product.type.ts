@@ -21,6 +21,11 @@ export interface IProduct {
 	category: string | null;
 }
 
+export type CartProduct = Pick<
+	IProduct,
+	"_id" | "name" | "imgUrls" | "price" | "priceCompare" | "category"
+>;
+
 export type ICreateProduct = Pick<
 	IProduct,
 	| "name"

@@ -2,8 +2,10 @@
 
 import { ProductBase } from "../product-base";
 import { useSell } from "../use-sell";
+import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function Page() {
+	const { t } = useI18n();
 	const {
 		initialConfig,
 		form,
@@ -22,7 +24,7 @@ export default function Page() {
 			onDescriptionChange={onDescriptionChange}
 			description={description}
 			onSubmit={addProduct}
-			submitButtonText="Save"
+			submitButtonText={t("storeProductsPage.form.save")}
 			loading={loading}
 		/>
 	);

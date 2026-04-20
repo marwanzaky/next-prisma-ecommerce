@@ -174,6 +174,76 @@
 		"cancel": "الغاء",
 		"applyFilter": "تطبيق الفلتر"
 	},
+	"cartPage": {
+		"title": "سلتك",
+		"empty": {
+			"title": "لا يوجد شيء هنا... حتى الآن.",
+			"description": "اضف منتجات الى سلتك لتظهر هنا عندما تكون جاهزا للدفع.",
+			"continueShopping": "متابعة التسوق"
+		},
+		"checkoutCard": {
+			"howYouPay": "طريقة الدفع",
+			"subtotal": "المجموع الفرعي",
+			"discountWithPercent": "الخصم ({{percent}})",
+			"shipping": "الشحن",
+			"totalItem": "المجموع ({{count}} منتج)",
+			"totalItems": "المجموع ({{count}} منتجات)",
+			"proceedToCheckout": "المتابعة للدفع"
+		},
+		"table": {
+			"product": "المنتج",
+			"price": "السعر",
+			"quantity": "الكمية",
+			"total": "المجموع",
+			"removeProduct": "حذف المنتج"
+		}
+	},
+	"favoritesPage": {
+		"title": "المفضلة",
+		"emptyTitle": "لا يوجد شيء هنا... حتى الآن.",
+		"emptyDescription": "ابدأ باضافة منتجات الى المفضلة للمقارنة والتسوق والاحتفاظ بما تحب.",
+		"continueShopping": "متابعة التسوق"
+	},
+	"storeProductsPage": {
+		"title": "منتجاتك",
+		"emptyTitle": "لا يوجد شيء هنا... حتى الآن.",
+		"emptyDescription": "ابدأ بإنشاء اول منتج لك.",
+		"addProduct": "اضافة منتج",
+		"filterPlaceholder": "تصفية المنتجات...",
+		"noResults": "لا توجد نتائج.",
+		"table": {
+			"selectAll": "تحديد الكل",
+			"selectRow": "تحديد الصف",
+			"product": "المنتج",
+			"category": "الفئة",
+			"price": "السعر",
+			"compare": "المقارنة",
+			"stock": "المخزون",
+			"actions": "الاجراءات",
+			"deleteConfirmTitle": "هل انت متأكد تماما؟",
+			"deleteConfirmDescription": "لا يمكن التراجع عن هذا الاجراء. سيتم حذف بيانات المنتج نهائيا من خوادمنا.",
+			"cancel": "الغاء",
+			"continue": "متابعة"
+		},
+		"form": {
+			"myProducts": "منتجاتي",
+			"product": "منتج",
+			"name": "الاسم",
+			"namePlaceholder": "تي شيرت كم قصير",
+			"description": "الوصف",
+			"media": "الصور",
+			"price": "السعر",
+			"priceMinPlaceholder": "السعر",
+			"priceMaxPlaceholder": "المقارنة",
+			"category": "الفئة",
+			"selectCategory": "اختر فئة",
+			"tags": "الوسوم",
+			"tagsPlaceholder": "ادخل الوسوم",
+			"cancel": "الغاء",
+			"save": "حفظ",
+			"update": "تحديث"
+		}
+	},
 	"contactPage": {
 		"title": "اتصل بنا",
 		"subtitle": "هل لديك سؤال؟",
@@ -196,6 +266,8 @@
 	},
 	"validation": {
 		"required": "هذا الحقل مطلوب.",
+		"invalidNumber": "يرجى إدخال رقم صالح.",
+		"mustBePositive": "يجب أن يكون أكبر من 0.",
 		"invalidChars": "أحرف غير صالحة في الاسم.",
 		"nameShort": "الاسم قصير جداً.",
 		"nameLong": "الاسم طويل جداً.",
@@ -206,7 +278,19 @@
 		"passwordShort": "كلمة المرور قصيرة جداً.",
 		"passwordLong": "كلمة المرور طويلة جداً.",
 		"passwordsDontMatch": "كلمتا المرور غير متطابقتين",
-		"sameAsCurrent": "لا يمكن أن تكون كلمة المرور الجديدة نفس الحالية"
+		"sameAsCurrent": "لا يمكن أن تكون كلمة المرور الجديدة نفس الحالية",
+		"maxPriceGteMinPrice": "يجب أن يكون الحد الأقصى للسعر أكبر من أو يساوي الحد الأدنى"
+	},
+	"dataTable": {
+		"view": "عرض",
+		"toggleColumns": "إظهار/إخفاء الأعمدة",
+		"rowsSelected": "تم تحديد {selected} من {total} صف(وف).",
+		"rowsPerPage": "عدد الصفوف في الصفحة",
+		"pageOf": "الصفحة {page} من {total}",
+		"goToFirstPage": "الذهاب إلى الصفحة الأولى",
+		"goToPreviousPage": "الذهاب إلى الصفحة السابقة",
+		"goToNextPage": "الذهاب إلى الصفحة التالية",
+		"goToLastPage": "الذهاب إلى الصفحة الأخيرة"
 	},
 	"account": {
 		"settings": "الإعدادات",

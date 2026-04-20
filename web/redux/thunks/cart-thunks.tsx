@@ -5,7 +5,7 @@ import { RootState } from "@/redux/store";
 import { cartsService } from "@/redux/services/carts-service";
 import { guestCartService } from "@/redux/services/guest-cart-service";
 
-import { IProduct } from "@/types/product.type";
+import { CartProduct, IProduct } from "@/types/product.type";
 
 export const getCartMeAsync = createAsyncThunk(
 	"cart/getCartMe",
@@ -77,7 +77,10 @@ export const updateCartItemQuantityAsync = createAsyncThunk(
 
 export const deleteCartItemAsync = createAsyncThunk(
 	"cart/deleteCartItem",
-	async ({ product }: { product: IProduct }, { getState, rejectWithValue }) => {
+	async (
+		{ product }: { product: CartProduct },
+		{ getState, rejectWithValue },
+	) => {
 		const state = getState() as RootState;
 		const isAuthenticated = state.authReducer.isAuthenticated;
 

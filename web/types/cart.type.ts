@@ -1,10 +1,7 @@
-import { IProduct } from "@/types/product.type";
+import { CartProduct, IProduct } from "@/types/product.type";
 
 export type CartItem = {
-	product: Pick<
-		IProduct,
-		"_id" | "name" | "imgUrls" | "price" | "priceCompare"
-	>;
+	product: CartProduct;
 	quantity: number;
 };
 

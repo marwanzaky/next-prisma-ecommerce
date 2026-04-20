@@ -33,44 +33,56 @@ import { getSellColumns, SellProduct } from "./columns";
 import { useI18n } from "@/components/layout/i18n-provider";
 import { localizePath } from "@/lib/i18n";
 
-export const productSchema = z.object({
-	name: z
-		.string()
-		.nonempty("This field is required.")
-		.min(2, "Name is too short.")
-		.max(120, "Name is too long."),
-	description: z.string().nonempty("This field is required."),
-	category: z.string().nonempty("This field is required."),
-	priceRangeUsd: z
-		.object({
-			min: z.number("This field is required.").positive(),
-			max: z.number().positive(),
-		})
-		.refine((data) => !data.max || data.max >= data.min, {
-			message: "Max price must be greater than min price",
-			path: ["max"],
-		}),
-	tags: z.array(z.string()).min(1, "This field is required."),
-	images: z
-		.array(
-			z
-				.object({
-					url: z.string().optional(),
-					file: z.instanceof(File).optional(),
-				})
-				.optional(),
-		)
-		.optional(),
-});
+function createProductSchema(t: ReturnType<typeof useI18n>["t"]) {
+	const requiredPositiveNumber = z
+		.number({ error: t("validation.required") })
+		.positive(t("validation.mustBePositive"));
 
-export type ProductForm = z.infer<typeof productSchema>;
+	const optionalPositiveNumber = z
+		.number({ error: t("validation.invalidNumber") })
+		.positive(t("validation.mustBePositive"))
+		.optional();
+
+	return z.object({
+		name: z
+			.string()
+			.nonempty(t("validation.required"))
+			.min(2, t("validation.nameShort"))
+			.max(120, t("validation.nameLong")),
+		description: z.string().nonempty(t("validation.required")),
+		category: z.string().nonempty(t("validation.required")),
+		priceRangeUsd: z
+			.object({
+				min: requiredPositiveNumber,
+				max: optionalPositiveNumber,
+			})
+			.refine((data) => !data.max || data.max >= data.min, {
+				message: t("validation.maxPriceGteMinPrice"),
+				path: ["max"],
+			}),
+		tags: z.array(z.string()).min(1, t("validation.required")),
+		images: z
+			.array(
+				z
+					.object({
+						url: z.string().optional(),
+						file: z.instanceof(File).optional(),
+					})
+					.optional(),
+			)
+			.optional(),
+	});
+}
+
+export type ProductForm = z.infer<ReturnType<typeof createProductSchema>>;
 
 export function useSell() {
 	const router = useRouter();
 
 	const dispatch = useDispatch<AppDispatch>();
 
-	const { locale } = useI18n();
+	const { locale, t } = useI18n();
+	const productSchema = createProductSchema(t);
 
 	const { products, loading } = useAppSelector(
 		(state) => state.userProductsReducer,
@@ -147,6 +159,7 @@ export function useSell() {
 				);
 			},
 			locale,
+			t,
 		}),
 		tableData,
 		loading,
@@ -161,12 +174,13 @@ export function useSell() {
 
 		addProduct: form.handleSubmit(async (data) => {
 			const { priceRangeUsd, name, description, tags, category, images } = data;
+			const compare = priceRangeUsd.max ?? priceRangeUsd.min;
 
 			const createProduct: ICreateProduct = {
 				name,
 				description,
 				price: priceRangeUsd.min * 100,
-				priceCompare: priceRangeUsd.max * 100,
+				priceCompare: compare * 100,
 				imgFiles:
 					images &&
 					images
@@ -190,6 +204,7 @@ export function useSell() {
 		}),
 		updateProduct: ({ id, data }: { id: string; data: ProductForm }) => {
 			const { priceRangeUsd, name, description, tags, category, images } = data;
+			const compare = priceRangeUsd.max ?? priceRangeUsd.min;
 
 			const newImgs = images!
 				.map((img, index) => (img?.file ? { file: img.file, index } : null))
@@ -203,7 +218,7 @@ export function useSell() {
 				name,
 				description,
 				price: priceRangeUsd.min * 100,
-				priceCompare: priceRangeUsd.max! * 100,
+				priceCompare: compare * 100,
 				newImgs,
 				keptImgs,
 				tags,
