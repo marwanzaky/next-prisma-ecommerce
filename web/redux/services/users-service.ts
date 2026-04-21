@@ -1,9 +1,10 @@
+import { UpdateUser, UpdateUserPassword, User } from "@/shared/types/user.type";
+
 import { clientFetch } from "@/lib/api-client";
 
 import { jsonToFormData } from "@/utils/helper";
 
 import { IProduct } from "@/types/product.type";
-import { UpdateUser, UpdateUserPassword, User } from "@/shared/types/user.type";
 
 export const usersService = {
 	login: (email: string, password: string) =>

@@ -1,16 +1,21 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { useDispatch } from "react-redux";
-import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { AppDispatch } from "@/redux/store";
 import { signupAsync } from "@/redux/thunks/auth-thunks";
 
-import { Section } from "@/shared/components/ui/section";
+import { useI18n } from "@/components/layout/i18n-provider";
 
+import { Button } from "@/shadcn/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -18,9 +23,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/shadcn/components/ui/card";
-import { Button } from "@/shadcn/components/ui/button";
-import { Input } from "@/shadcn/components/ui/input";
-
 import {
 	Field,
 	FieldContent,
@@ -29,13 +31,13 @@ import {
 	FieldGroup,
 	FieldLabel,
 } from "@/shadcn/components/ui/field";
-
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
-import { localizePath } from "@/lib/i18n";
-import { useI18n } from "@/components/layout/i18n-provider";
+
+import { Section } from "@/shared/components/ui/section";
+
 import config from "@/lib/config";
+import { localizePath } from "@/lib/i18n";
 
 type SignUpInput = {
 	name: string;
@@ -53,26 +55,25 @@ export default function Page() {
 		.object({
 			name: z
 				.string()
-				.nonempty(t("signup.nameRequired"))
-				.min(3, t("signup.nameShort"))
-				.max(16, t("signup.nameLong")),
+				.nonempty(t("validation.required"))
+				.min(3, t("validation.nameShort"))
+				.max(16, t("validation.nameLong")),
 			email: z
-				.email(t("signup.emailInvalid"))
-				.nonempty(t("signup.emailRequired"))
-				.max(32, t("signup.emailTooLong")),
+				.email(t("validation.emailInvalid"))
+				.nonempty(t("validation.required")),
 			password: z
 				.string()
-				.nonempty(t("signup.passwordRequired"))
-				.min(8, t("signup.passwordShort"))
-				.max(32, t("signup.passwordLong")),
+				.nonempty(t("validation.required"))
+				.min(8, t("validation.passwordShort"))
+				.max(32, t("validation.passwordLong")),
 			confirmPassword: z
 				.string()
-				.nonempty(t("signup.passwordRequired"))
-				.min(8, t("signup.passwordShort"))
-				.max(32, t("signup.passwordLong")),
+				.nonempty(t("validation.required"))
+				.min(8, t("validation.passwordShort"))
+				.max(32, t("validation.passwordLong")),
 		})
 		.refine((data) => data.password === data.confirmPassword, {
-			message: t("signup.passwordsDontMatch"),
+			message: t("validation.passwordsDontMatch"),
 			path: ["confirmPassword"],
 		});
 
@@ -106,8 +107,8 @@ export default function Page() {
 		<Section>
 			<Card className="mx-auto w-full max-w-sm">
 				<CardHeader>
-					<CardTitle>{t("signup.title")}</CardTitle>
-					<CardDescription>{t("signup.description")}</CardDescription>
+					<CardTitle>{t("signupPage.title")}</CardTitle>
+					<CardDescription>{t("signupPage.description")}</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<form
@@ -116,7 +117,7 @@ export default function Page() {
 					>
 						<FieldGroup>
 							<Field>
-								<FieldLabel htmlFor="name">{t("signup.fullName")}</FieldLabel>
+								<FieldLabel htmlFor="name">{t("form.fullName")}</FieldLabel>
 								<FieldContent>
 									<Input
 										id="name"
@@ -128,7 +129,7 @@ export default function Page() {
 							</Field>
 
 							<Field>
-								<FieldLabel htmlFor="email">{t("signin.email")}</FieldLabel>
+								<FieldLabel htmlFor="email">{t("form.email")}</FieldLabel>
 								<FieldContent>
 									<Input
 										id="email"
@@ -137,13 +138,11 @@ export default function Page() {
 									/>
 								</FieldContent>
 								<FieldError>{errors.email?.message}</FieldError>
-								<FieldDescription>{t("signup.emailHelp")}</FieldDescription>
+								<FieldDescription>{t("signupPage.emailHelp")}</FieldDescription>
 							</Field>
 
 							<Field>
-								<FieldLabel htmlFor="password">
-									{t("signup.password")}
-								</FieldLabel>
+								<FieldLabel htmlFor="password">{t("form.password")}</FieldLabel>
 								<FieldContent>
 									<Input
 										id="password"
@@ -152,12 +151,14 @@ export default function Page() {
 									/>
 								</FieldContent>
 								<FieldError>{errors.password?.message}</FieldError>
-								<FieldDescription>{t("signup.passwordHelp")}</FieldDescription>
+								<FieldDescription>
+									{t("signupPage.passwordHelp")}
+								</FieldDescription>
 							</Field>
 
 							<Field>
 								<FieldLabel htmlFor="confirm-password">
-									{t("signup.confirmPassword")}
+									{t("form.confirmPassword")}
 								</FieldLabel>
 								<FieldContent>
 									<Input
@@ -168,7 +169,7 @@ export default function Page() {
 								</FieldContent>
 								<FieldError>{errors.confirmPassword?.message}</FieldError>
 								<FieldDescription>
-									{t("signup.confirmPasswordHelp")}
+									{t("signupPage.confirmPasswordHelp")}
 								</FieldDescription>
 							</Field>
 
@@ -177,10 +178,10 @@ export default function Page() {
 									<Button type="submit" disabled={isSubmitting}>
 										{isSubmitting ? (
 											<>
-												<Spinner /> {t("signup.creatingAccount")}
+												<Spinner /> {t("signupPage.creatingAccount")}
 											</>
 										) : (
-											t("signup.createAccount")
+											t("signupPage.createAccount")
 										)}
 									</Button>
 									<Button
@@ -196,12 +197,12 @@ export default function Page() {
 												fill="currentColor"
 											/>
 										</svg>
-										{t("signup.signUpWithGoogle")}
+										{t("signupPage.signUpWithGoogle")}
 									</Button>
 									<FieldDescription className="px-6 text-center">
-										{t("signup.alreadyHaveAccount")}{" "}
+										{t("signupPage.alreadyHaveAccount")}{" "}
 										<Link href={localizePath("/signin", locale)}>
-											{t("signup.signIn")}
+											{t("signupPage.signIn")}
 										</Link>
 									</FieldDescription>
 								</Field>

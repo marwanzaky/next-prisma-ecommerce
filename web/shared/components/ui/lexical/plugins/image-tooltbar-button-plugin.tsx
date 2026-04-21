@@ -1,17 +1,20 @@
-import { $createImageNode } from "@/shared/components/ui/lexical/nodes/image-node";
-
 import { $insertNodes, FORMAT_TEXT_COMMAND, TextFormatType } from "lexical";
+import { Bold, ImageIcon, Italic, List, ListOrdered } from "lucide-react";
+
+import {
+	INSERT_ORDERED_LIST_COMMAND,
+	INSERT_UNORDERED_LIST_COMMAND,
+} from "@lexical/list";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/shadcn/components/ui/button";
-import { Bold, ImageIcon, Italic, List, ListOrdered } from "lucide-react";
 import { uploadsService } from "@/redux/services/uploads-service";
+
+import { Button } from "@/shadcn/components/ui/button";
 import { Separator } from "@/shadcn/components/ui/separator";
-import {
-	INSERT_UNORDERED_LIST_COMMAND,
-	INSERT_ORDERED_LIST_COMMAND,
-} from "@lexical/list";
+
+import { $createImageNode } from "@/shared/components/ui/lexical/nodes/image-node";
+
+import { cn } from "@/lib/utils";
 
 export function ImageToolbarButtonPlugin() {
 	const [editor] = useLexicalComposerContext();

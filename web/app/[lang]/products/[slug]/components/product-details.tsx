@@ -1,14 +1,34 @@
 "use client";
 
-import { Heart, ShoppingCart } from "lucide-react";
-
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { Heart, ShoppingCart } from "lucide-react";
+
+import { sendGTMEvent } from "@next/third-parties/google";
+import { useQuery } from "@tanstack/react-query";
+
+import { categoriesService } from "@/redux/services/categories-service";
+import { AppDispatch } from "@/redux/store";
+import { postCartItemAsync } from "@/redux/thunks/cart-thunks";
+
+import { useI18n } from "@/components/layout/i18n-provider";
+
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/shadcn/components/ui/accordion";
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@/shadcn/components/ui/avatar";
+import { Badge } from "@/shadcn/components/ui/badge";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -17,48 +37,28 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/shadcn/components/ui/breadcrumb";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/shadcn/components/ui/accordion";
-import { TypographyMuted } from "@/shadcn/components/ui/typography";
+import { Button } from "@/shadcn/components/ui/button";
+import { Separator } from "@/shadcn/components/ui/separator";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
 } from "@/shadcn/components/ui/tooltip";
-import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-} from "@/shadcn/components/ui/avatar";
-import { Button } from "@/shadcn/components/ui/button";
+import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
-import { AppDispatch } from "@/redux/store";
-import { categoriesService } from "@/redux/services/categories-service";
-import { postCartItemAsync } from "@/redux/thunks/cart-thunks";
+import InputWithPlusMinusButtons from "@/shared/components/ui/input-with-plus-minus-buttons";
+import { renderLexicalJSONToHTML } from "@/shared/components/ui/lexical/renderLexicalJSONToHTML";
+import Stars from "@/shared/components/ui/stars";
+import { PublicCategoryTree } from "@/shared/types/category.type";
 
-import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
+import { localizePath } from "@/lib/i18n";
 
 import { formatPrice } from "@/utils/format";
 import { initials, stringToDate } from "@/utils/string-utils";
 
-import { sendGTMEvent } from "@next/third-parties/google";
+import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
-import { PublicCategoryTree } from "@/shared/types/category.type";
 import { IProduct } from "@/types/product.type";
-import { renderLexicalJSONToHTML } from "@/shared/components/ui/lexical/renderLexicalJSONToHTML";
-import { Separator } from "@/shadcn/components/ui/separator";
-import { Badge } from "@/shadcn/components/ui/badge";
-import Stars from "@/shared/components/ui/stars";
-import InputWithPlusMinusButtons from "@/shared/components/ui/input-with-plus-minus-buttons";
-import Icon from "@/shared/components/ui/icon";
-
-import { localizePath } from "@/lib/i18n";
-
-import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function ProductDetails({ product }: { product: IProduct }) {
 	const router = useRouter();
@@ -81,7 +81,7 @@ export default function ProductDetails({ product }: { product: IProduct }) {
 		return categoryTree
 			?.flatMap((cat) => [...cat.children, cat])
 			.find((cat) => cat.id === product.category);
-	}, [categoryTree]);
+	}, [categoryTree, product]);
 
 	const productCategoryTree = useMemo<PublicCategoryTree | undefined>(() => {
 		if (!categoryTree) {

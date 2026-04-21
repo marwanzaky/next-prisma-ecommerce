@@ -1,10 +1,14 @@
-import { toast } from "sonner";
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-import { Locale, localizePath } from "@/lib/i18n";
+import { toast } from "sonner";
+
+import { createAsyncThunk } from "@reduxjs/toolkit";
+
 import { usersService } from "@/redux/services/users-service";
+
 import { UpdateUser, UpdateUserPassword } from "@/shared/types/user.type";
+
+import { Locale, localizePath } from "@/lib/i18n";
 
 export const loginAsync = createAsyncThunk(
 	"auth/login",

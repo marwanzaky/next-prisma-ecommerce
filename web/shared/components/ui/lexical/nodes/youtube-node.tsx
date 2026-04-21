@@ -1,5 +1,6 @@
-import { DecoratorNode, NodeKey, SerializedLexicalNode } from "lexical";
 import React from "react";
+
+import { DecoratorNode, NodeKey, SerializedLexicalNode } from "lexical";
 
 export type SerializedYouTubeNode = SerializedLexicalNode & {
 	type: "youtube";

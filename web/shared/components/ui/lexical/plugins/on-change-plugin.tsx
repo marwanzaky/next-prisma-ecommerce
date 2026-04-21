@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import { $getRoot } from "lexical";
+
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
 export function OnChangePlugin({

@@ -1,5 +1,6 @@
-import { Badge } from "@/shadcn/components/ui/badge";
 import { X } from "lucide-react";
+
+import { Badge } from "@/shadcn/components/ui/badge";
 
 export type ChipProps = {
 	children?: React.ReactNode;

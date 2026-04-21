@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 
+import config from "@/lib/config";
 import {
+	generateLocaleAlternates,
 	generateOgMetadata,
 	generateTwitterMetadata,
-	generateLocaleAlternates,
 } from "@/lib/generate";
-import config from "@/lib/config";
 import { Locale, localizePath } from "@/lib/i18n";
 
 const title = "Terms of Service";

@@ -1,37 +1,40 @@
 import { useMemo } from "react";
-import { useDispatch } from "react-redux";
 import { useForm, useWatch } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
 
-import * as z from "zod";
-import { useDebouncedCallback } from "use-debounce";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 import { LineBreakNode, ParagraphNode } from "lexical";
-import { InitialConfigType } from "@lexical/react/LexicalComposer";
-import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
-import { ListItemNode, ListNode } from "@lexical/list";
+import { useDebouncedCallback } from "use-debounce";
+import * as z from "zod";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
+import { ListItemNode, ListNode } from "@lexical/list";
+import { InitialConfigType } from "@lexical/react/LexicalComposer";
+import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 
+import { categoriesService } from "@/redux/services/categories-service";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import {
 	postUserProductAsync,
 	removeUserProductAsync,
 	updateUserProductAsync,
 } from "@/redux/thunks/user-products-thunks";
-import { categoriesService } from "@/redux/services/categories-service";
 
-import { ICreateProduct, IUpdateProduct } from "@/types/product.type";
+import { useI18n } from "@/components/layout/i18n-provider";
 
 import { ImageNode } from "@/shared/components/ui/lexical/nodes/image-node";
 import { YouTubeNode } from "@/shared/components/ui/lexical/nodes/youtube-node";
 
-import { getSellColumns, SellProduct } from "./columns";
-
-import { useI18n } from "@/components/layout/i18n-provider";
 import { localizePath } from "@/lib/i18n";
+
+import { ICreateProduct, IUpdateProduct } from "@/types/product.type";
+
+import { getSellColumns, SellProduct } from "./columns";
 
 function createProductSchema(t: ReturnType<typeof useI18n>["t"]) {
 	const requiredPositiveNumber = z

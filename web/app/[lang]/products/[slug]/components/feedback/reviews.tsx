@@ -3,11 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { initials, stringToDate } from "@/utils/string-utils";
-
-import Stars from "@/shared/components/ui/stars";
-
-import { IProduct } from "@/types/product.type";
+import { useI18n } from "@/components/layout/i18n-provider";
 
 import {
 	Avatar,
@@ -22,9 +18,13 @@ import {
 } from "@/shadcn/components/ui/empty";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
+import Stars from "@/shared/components/ui/stars";
+
 import { localizePath } from "@/lib/i18n";
 
-import { useI18n } from "@/components/layout/i18n-provider";
+import { initials, stringToDate } from "@/utils/string-utils";
+
+import { IProduct } from "@/types/product.type";
 
 export default function Reviews({ product }: { product: IProduct }) {
 	const { locale, t } = useI18n();

@@ -1,5 +1,8 @@
-import { DecoratorNode, NodeKey, SerializedLexicalNode } from "lexical";
 import { JSX } from "react";
+
+import Image from "next/image";
+
+import { DecoratorNode, NodeKey, SerializedLexicalNode } from "lexical";
 
 export type SerializedImageNode = SerializedLexicalNode & {
 	type: "image";
@@ -52,7 +55,15 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 	}
 
 	decorate() {
-		return <img src={this.__src} alt={this.__alt} className="rounded-lg" />;
+		return (
+			<Image
+				src={this.__src}
+				alt={this.__alt}
+				width={512}
+				height={512}
+				className="rounded-lg w-full"
+			/>
+		);
 	}
 }
 

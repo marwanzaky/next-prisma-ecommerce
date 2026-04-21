@@ -2,17 +2,17 @@
 
 import { useRouter } from "next/navigation";
 
-import { localizePath } from "@/lib/i18n";
-import config from "@/lib/config";
+import { useI18n } from "@/components/layout/i18n-provider";
 
 import { Button } from "@/shadcn/components/ui/button";
 import { TypographyP } from "@/shadcn/components/ui/typography";
 import { Heading } from "@/shadcn/components/ui/typography";
 
-import { Section } from "@/shared/components/ui/section";
 import { Container } from "@/shared/components/ui/container";
+import { Section } from "@/shared/components/ui/section";
 
-import { useI18n } from "@/components/layout/i18n-provider";
+import config from "@/lib/config";
+import { localizePath } from "@/lib/i18n";
 
 export default function Page() {
 	const router = useRouter();

@@ -1,29 +1,24 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 
 import { z } from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import { updateMeAsync } from "@/redux/thunks/auth-thunks";
 
-import { ButtonIcon } from "@/shared/components/ui/button-icon";
+import { useI18n } from "@/components/layout/i18n-provider";
 
-import {
-	Field,
-	FieldContent,
-	FieldError,
-	FieldGroup,
-	FieldLabel,
-} from "@/shadcn/components/ui/field";
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
 } from "@/shadcn/components/ui/avatar";
+import { Button } from "@/shadcn/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -31,14 +26,21 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/shadcn/components/ui/card";
-import { TypographyMuted } from "@/shadcn/components/ui/typography";
-import { Button } from "@/shadcn/components/ui/button";
+import {
+	Field,
+	FieldContent,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@/shadcn/components/ui/field";
 import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
+import { TypographyMuted } from "@/shadcn/components/ui/typography";
+
+import { ButtonIcon } from "@/shared/components/ui/button-icon";
+import { User } from "@/shared/types/user.type";
 
 import { initials } from "@/utils/string-utils";
-
-import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function PersonalInformationCard() {
 	const { t } = useI18n();
@@ -79,7 +81,7 @@ export default function PersonalInformationCard() {
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	const resetForm = () => {
+	const resetForm = useCallback(() => {
 		if (user) {
 			reset({
 				name: user.name,
@@ -89,11 +91,11 @@ export default function PersonalInformationCard() {
 				},
 			});
 		}
-	};
+	}, [user, reset]);
 
 	useEffect(() => {
 		resetForm();
-	}, [user]);
+	}, [resetForm]);
 
 	const onSubmit = async (data: PersonalInformationInput) => {
 		await dispatch(
@@ -151,38 +153,9 @@ export default function PersonalInformationCard() {
 									<Controller
 										name="photo"
 										control={control}
-										render={({ field }) => {
-											const { value } = field;
-											const [previewUrl, setPreviewUrl] = useState(value?.url);
-
-											useEffect(() => {
-												let objectURL: string | undefined;
-
-												if (value?.file) {
-													objectURL = URL.createObjectURL(value.file);
-													setPreviewUrl(objectURL);
-												} else {
-													setPreviewUrl(value?.url);
-												}
-
-												return () => {
-													if (objectURL) {
-														URL.revokeObjectURL(objectURL);
-													}
-												};
-											}, [value?.file, value?.url]);
-
-											return (
-												<Avatar className="h-12 w-12">
-													<AvatarImage
-														src={previewUrl}
-														alt={t("photoOf").replace("{{name}}", user.name)}
-														loading="lazy"
-													/>
-													<AvatarFallback>{initials(user.name)}</AvatarFallback>
-												</Avatar>
-											);
-										}}
+										render={({ field }) => (
+											<PhotoPreview value={field.value} user={user} />
+										)}
 									/>
 
 									<div className="flex flex-col gap-2">
@@ -217,28 +190,24 @@ export default function PersonalInformationCard() {
 								</div>
 							</Field>
 							<Field>
-								<FieldLabel htmlFor="name">
-									{t("account.personalInfo.fullName")}
-								</FieldLabel>
+								<FieldLabel htmlFor="name">{t("form.fullName")}</FieldLabel>
 								<FieldContent>
 									<Input
 										id="name"
 										type="text"
-										placeholder={t("account.personalInfo.fullNamePlaceholder")}
+										placeholder="John Doe"
 										{...register("name")}
 									/>
 								</FieldContent>
 								<FieldError>{errors.name?.message}</FieldError>
 							</Field>
 							<Field>
-								<FieldLabel htmlFor="email">
-									{t("account.personalInfo.email")}
-								</FieldLabel>
+								<FieldLabel htmlFor="email">{t("form.email")}</FieldLabel>
 								<FieldContent>
 									<Input
 										id="email"
 										type="email"
-										placeholder={t("account.personalInfo.emailPlaceholder")}
+										placeholder="m@example.com"
 										{...register("email")}
 									/>
 								</FieldContent>
@@ -250,7 +219,7 @@ export default function PersonalInformationCard() {
 									disabled={!formState.isDirty || isSubmitting}
 									onClick={resetForm}
 								>
-									{t("account.personalInfo.cancel")}
+									{t("buttons.cancel")}
 								</Button>
 
 								<Button
@@ -259,10 +228,10 @@ export default function PersonalInformationCard() {
 								>
 									{isSubmitting ? (
 										<>
-											<Spinner /> {t("account.personalInfo.saving")}
+											<Spinner /> {t("buttons.saving")}
 										</>
 									) : (
-										t("account.personalInfo.save")
+										t("buttons.save")
 									)}
 								</Button>
 							</Field>
@@ -271,5 +240,48 @@ export default function PersonalInformationCard() {
 				</CardContent>
 			</Card>
 		)
+	);
+}
+
+function PhotoPreview({
+	value,
+	user,
+}: {
+	value: {
+		url?: string | undefined;
+		file?: File | undefined;
+	};
+	user: User;
+}) {
+	const { t } = useI18n();
+
+	const [previewUrl, setPreviewUrl] = useState(value?.url);
+
+	useEffect(() => {
+		let objectURL: string | undefined;
+
+		if (value?.file) {
+			objectURL = URL.createObjectURL(value.file);
+			setPreviewUrl(objectURL);
+		} else {
+			setPreviewUrl(value?.url);
+		}
+
+		return () => {
+			if (objectURL) {
+				URL.revokeObjectURL(objectURL);
+			}
+		};
+	}, [value?.file, value?.url]);
+
+	return (
+		<Avatar className="h-12 w-12">
+			<AvatarImage
+				src={previewUrl}
+				alt={t("photoOf").replace("{{name}}", user.name)}
+				loading="lazy"
+			/>
+			<AvatarFallback>{initials(user.name)}</AvatarFallback>
+		</Avatar>
 	);
 }

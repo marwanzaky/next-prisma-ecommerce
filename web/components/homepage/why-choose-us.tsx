@@ -1,14 +1,14 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-
-import Icon from "@/shared/components/ui/icon";
-import { Section } from "@/shared/components/ui/section";
+import { useI18n } from "@/components/layout/i18n-provider";
 
 import { Heading } from "@/shadcn/components/ui/typography";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
-import { useI18n } from "@/components/layout/i18n-provider";
+import Icon from "@/shared/components/ui/icon";
+import { Section } from "@/shared/components/ui/section";
+
+import { cn } from "@/lib/utils";
 
 export default function WhyChooseUs() {
 	const { t } = useI18n();

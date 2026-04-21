@@ -1,8 +1,10 @@
 import { MetadataRoute } from "next";
 
 import { productsService } from "@/redux/services/products-service";
-import { createProductSlug } from "@/utils/string-utils";
+
 import { locales, localizeUrl } from "@/lib/i18n";
+
+import { createProductSlug } from "@/utils/string-utils";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const getLocalizedEntries = ({

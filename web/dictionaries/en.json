@@ -110,46 +110,26 @@
 		"question": "Have a question? Contact us here.",
 		"contact": "Contact"
 	},
-	"signin": {
+	"signinPage": {
 		"title": "Login to your account",
 		"description": "Enter your email below to login to your account",
-		"email": "Email",
-		"password": "Password",
-		"forgotPassword": "Forgot your password?",
 		"loggingIn": "Logging in...",
 		"login": "Login",
 		"loginWithGoogle": "Login with Google",
 		"noAccount": "Don't have an account?",
-		"signUp": "Sign up",
-		"emailRequired": "This field is required.",
-		"emailInvalid": "Please enter a valid email address.",
-		"emailTooLong": "Email is too long.",
-		"passwordRequired": "This field is required."
+		"signUp": "Sign up"
 	},
-	"signup": {
+	"signupPage": {
 		"title": "Create an account",
 		"description": "Enter your information below to create your account",
-		"fullName": "Full Name",
 		"emailHelp": "We'll use this to contact you. We will not share your email with anyone else.",
-		"password": "Password",
 		"passwordHelp": "Must be at least 8 characters long.",
-		"confirmPassword": "Confirm Password",
 		"confirmPasswordHelp": "Please confirm your password.",
 		"creatingAccount": "Creating account...",
 		"createAccount": "Create account",
 		"signUpWithGoogle": "Sign up with Google",
 		"alreadyHaveAccount": "Already have an account?",
-		"signIn": "Sign in",
-		"nameRequired": "This field is required.",
-		"nameShort": "Name is too short.",
-		"nameLong": "Name is too long.",
-		"emailRequired": "This field is required.",
-		"emailInvalid": "Please enter a valid email address.",
-		"emailTooLong": "Email is too long.",
-		"passwordRequired": "This field is required.",
-		"passwordShort": "Password is too short.",
-		"passwordLong": "Password is too long.",
-		"passwordsDontMatch": "Passwords don't match"
+		"signIn": "Sign in"
 	},
 	"productsPage": {
 		"allFilters": "All filters",
@@ -171,7 +151,6 @@
 		"name": "Name",
 		"namePlaceholder": "e.g., notebook, wall, and printer",
 		"priceRange": "Price Range",
-		"cancel": "Cancel",
 		"applyFilter": "Apply filter"
 	},
 	"cartPage": {
@@ -221,9 +200,7 @@
 			"stock": "Stock",
 			"actions": "Actions",
 			"deleteConfirmTitle": "Are you absolutely sure?",
-			"deleteConfirmDescription": "This action cannot be undone. This will permanently delete the product data from our servers.",
-			"cancel": "Cancel",
-			"continue": "Continue"
+			"deleteConfirmDescription": "This action cannot be undone. This will permanently delete the product data from our servers."
 		},
 		"form": {
 			"myProducts": "My Products",
@@ -238,10 +215,7 @@
 			"category": "Category",
 			"selectCategory": "Select category",
 			"tags": "Tags",
-			"tagsPlaceholder": "Enter tags",
-			"cancel": "Cancel",
-			"save": "Save",
-			"update": "Update"
+			"tagsPlaceholder": "Enter tags"
 		}
 	},
 	"contactPage": {
@@ -256,13 +230,22 @@
 		"sending": "Sending...",
 		"success": "Message sent successfully. Thank you!",
 		"error": "Something went wrong.",
-		"nameRequired": "This field is required.",
-		"nameShort": "Name is too short.",
-		"nameLong": "Name is too long.",
-		"subjectRequired": "This field is required.",
 		"subjectShort": "Subject is too short.",
-		"subjectLong": "Subject is too long.",
-		"messageRequired": "This field is required."
+		"subjectLong": "Subject is too long."
+	},
+	"form": {
+		"fullName": "Full Name",
+		"email": "Email",
+		"password": "Password",
+		"confirmPassword": "Confirm Password",
+		"forgotPassword": "Forgot your password?"
+	},
+	"buttons": {
+		"cancel": "Cancel",
+		"save": "Save",
+		"saving": "Saving...",
+		"update": "Update",
+		"continue": "Continue"
 	},
 	"validation": {
 		"required": "This field is required.",
@@ -272,6 +255,7 @@
 		"nameShort": "Name is too short.",
 		"nameLong": "Name is too long.",
 		"emailInvalid": "Please enter a valid email address.",
+		"emailTooLong": "Email is too long.",
 		"invalidUrl": "Must be a valid URL.",
 		"imageTooLarge": "Image size exceeds the 4MB limit",
 		"passwordShort": "Password is too short.",
@@ -293,6 +277,14 @@
 	},
 	"account": {
 		"settings": "Settings",
+		"personalInfo": {
+			"title": "Personal information",
+			"description": "Manage your personal details and how your profile appears. Enter your information below.",
+			"profilePhoto": "Profile Photo",
+			"changeAvatar": "Change avatar",
+			"deleteAvatar": "Delete avatar",
+			"photoRequirements": "Must be a .jpg, or .png file smaller than 4MB."
+		},
 		"changePassword": {
 			"title": "Change password",
 			"description": "Enter your email below to login to your account",
@@ -300,10 +292,7 @@
 			"newPassword": "New Password",
 			"newPasswordHelp": "Must be at least 8 characters long.",
 			"confirmPassword": "Confirm Password",
-			"confirmPasswordHelp": "Please confirm your password.",
-			"cancel": "Cancel",
-			"save": "Save",
-			"saving": "Saving..."
+			"confirmPasswordHelp": "Please confirm your password."
 		},
 		"deleteAccount": {
 			"title": "Delete account",
@@ -311,25 +300,8 @@
 			"alert": {
 				"trigger": "Yes, delete my account",
 				"title": "Are you absolutely sure?",
-				"description": "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
-				"cancel": "Cancel",
-				"continue": "Continue"
+				"description": "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
 			}
-		},
-		"personalInfo": {
-			"title": "Personal information",
-			"description": "Manage your personal details and how your profile appears. Enter your information below.",
-			"profilePhoto": "Profile Photo",
-			"changeAvatar": "Change avatar",
-			"deleteAvatar": "Delete avatar",
-			"photoRequirements": "Must be a .jpg, or .png file smaller than 4MB.",
-			"fullName": "Full Name",
-			"fullNamePlaceholder": "John Doe",
-			"email": "Email",
-			"emailPlaceholder": "m@example.com",
-			"cancel": "Cancel",
-			"save": "Save",
-			"saving": "Saving..."
 		}
 	}
 }

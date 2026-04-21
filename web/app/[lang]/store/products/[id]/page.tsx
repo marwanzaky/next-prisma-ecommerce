@@ -1,16 +1,17 @@
 "use client";
 
-import { useAppSelector } from "@/redux/store";
-
 import { useEffect } from "react";
+
 import { useParams, useRouter } from "next/navigation";
 
-import { ProductBase } from "../product-base";
-import { useSell } from "../use-sell";
+import { useAppSelector } from "@/redux/store";
+
+import { useI18n } from "@/components/layout/i18n-provider";
 
 import { localizePath } from "@/lib/i18n";
 
-import { useI18n } from "@/components/layout/i18n-provider";
+import { ProductBase } from "../product-base";
+import { useSell } from "../use-sell";
 
 export default function Page() {
 	const params = useParams<{ id: string }>();
@@ -49,7 +50,7 @@ export default function Page() {
 				category: product.category ?? undefined,
 			});
 		}
-	}, [products, params.id, form.reset]);
+	}, [products, params.id, form]);
 
 	return (
 		<ProductBase
@@ -61,7 +62,7 @@ export default function Page() {
 			onSubmit={form.handleSubmit((data) =>
 				updateProduct({ id: params.id, data }),
 			)}
-			submitButtonText={t("storeProductsPage.form.update")}
+			submitButtonText={t("buttons.update")}
 			cancelButtonAction={() =>
 				router.push(localizePath("/store/products", locale))
 			}

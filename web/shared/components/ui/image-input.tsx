@@ -2,10 +2,13 @@
 
 import { useRef } from "react";
 
+import Image from "next/image";
+
+import { ImageIcon } from "lucide-react";
+
 import { ButtonIcon } from "@/shared/components/ui/button-icon";
 
 import { cn } from "@/lib/utils";
-import { Image } from "lucide-react";
 
 type ImageSlot = {
 	url?: string;
@@ -69,11 +72,14 @@ export default function ImageInput({
 				/>
 
 				{previewUrl ? (
-					<img
+					<Image
 						role="button"
 						className={cn("h-full w-full cursor-pointer", styleClass)}
 						src={previewUrl}
+						alt="Photo"
 						onClick={() => inputRef.current?.click()}
+						width={128}
+						height={128}
 					/>
 				) : (
 					<div
@@ -81,7 +87,7 @@ export default function ImageInput({
 						className="h-full w-full bg-secondary hover:bg-secondary/80 flex justify-center items-center cursor-pointer"
 						onClick={() => inputRef.current?.click()}
 					>
-						<Image className="filter-(--filter-placeholder)" />
+						<ImageIcon className="filter-(--filter-placeholder)" />
 					</div>
 				)}
 			</div>

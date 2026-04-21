@@ -2,10 +2,7 @@
 
 import { Controller } from "react-hook-form";
 
-import { Table } from "@/shared/components/ui/table";
-import { Section } from "@/shared/components/ui/section";
-import ImageInput from "@/shared/components/ui/image-input";
-
+import { Button } from "@/shadcn/components/ui/button";
 import {
 	Dialog,
 	DialogClose,
@@ -14,6 +11,8 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/shadcn/components/ui/dialog";
+import { Field, FieldGroup, FieldLabel } from "@/shadcn/components/ui/field";
+import { Input } from "@/shadcn/components/ui/input";
 import {
 	Select,
 	SelectContent,
@@ -23,9 +22,10 @@ import {
 	SelectValue,
 } from "@/shadcn/components/ui/select";
 import { Heading } from "@/shadcn/components/ui/typography";
-import { Button } from "@/shadcn/components/ui/button";
-import { Input } from "@/shadcn/components/ui/input";
-import { Field, FieldGroup, FieldLabel } from "@/shadcn/components/ui/field";
+
+import ImageInput from "@/shared/components/ui/image-input";
+import { Section } from "@/shared/components/ui/section";
+import { Table } from "@/shared/components/ui/table";
 
 import { useAdminCategories } from "./use-admin-categories";
 

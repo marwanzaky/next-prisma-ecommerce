@@ -1,11 +1,12 @@
 import { Metadata } from "next";
+
+import config from "@/lib/config";
 import {
+	generateLocaleAlternates,
 	generateOgMetadata,
 	generateTwitterMetadata,
-	generateLocaleAlternates,
 } from "@/lib/generate";
 import { Locale, localizePath } from "@/lib/i18n";
-import config from "@/lib/config";
 
 const title = "Browse Products";
 const description = `Browse thousands of unique products from verified sellers worldwide. Find everything you need on ${config.websiteName}.`;

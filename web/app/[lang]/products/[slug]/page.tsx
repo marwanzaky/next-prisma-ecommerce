@@ -1,24 +1,23 @@
 "use cache";
+import { Metadata } from "next";
 import { cacheLife } from "next/cache";
 
-import ProductPage from "./components/product-page";
-
 import { productsService } from "@/redux/services/products-service";
+
+import config from "@/lib/config";
+import {
+	generateLocaleAlternates,
+	generateOgMetadata,
+	generateTwitterMetadata,
+} from "@/lib/generate";
+import { Locale, localizePath } from "@/lib/i18n";
+import { generateProductStructuredData } from "@/lib/structured-data";
 
 import { createProductSlug } from "@/utils/string-utils";
 
 import { IProduct } from "@/types/product.type";
 
-import { Metadata } from "next";
-
-import {
-	generateOgMetadata,
-	generateTwitterMetadata,
-	generateLocaleAlternates,
-} from "@/lib/generate";
-import { generateProductStructuredData } from "@/lib/structured-data";
-import { Locale, localizePath } from "@/lib/i18n";
-import config from "@/lib/config";
+import ProductPage from "./components/product-page";
 
 interface Props {
 	params: Promise<{ slug: string; lang: Locale }>;

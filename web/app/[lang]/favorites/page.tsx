@@ -1,9 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-import ProductCard from "@/shared/components/ui/product-card";
-import { Section } from "@/shared/components/ui/section";
+import { useAppSelector } from "@/redux/store";
 
+import { useI18n } from "@/components/layout/i18n-provider";
+
+import { Button } from "@/shadcn/components/ui/button";
 import {
 	Empty,
 	EmptyContent,
@@ -12,13 +14,11 @@ import {
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
 import { Heading } from "@/shadcn/components/ui/typography";
-import { Button } from "@/shadcn/components/ui/button";
 
-import { useAppSelector } from "@/redux/store";
+import ProductCard from "@/shared/components/ui/product-card";
+import { Section } from "@/shared/components/ui/section";
 
 import { localizePath } from "@/lib/i18n";
-
-import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function Page() {
 	const router = useRouter();

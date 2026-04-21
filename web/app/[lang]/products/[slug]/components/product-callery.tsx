@@ -4,12 +4,8 @@ import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
-import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
+import { useI18n } from "@/components/layout/i18n-provider";
 
-import { cn } from "@/lib/utils";
-
-import { IProduct } from "@/types/product.type";
-import { ButtonIcon } from "@/shared/components/ui/button-icon";
 import {
 	Carousel,
 	CarouselApi,
@@ -17,7 +13,14 @@ import {
 	CarouselItem,
 	useCarousel,
 } from "@/shadcn/components/ui/carousel";
-import { useI18n } from "@/components/layout/i18n-provider";
+
+import { ButtonIcon } from "@/shared/components/ui/button-icon";
+
+import { cn } from "@/lib/utils";
+
+import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
+
+import { IProduct } from "@/types/product.type";
 
 export default function ProductCallery({ product }: { product: IProduct }) {
 	const { dir, t } = useI18n();

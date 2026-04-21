@@ -1,49 +1,21 @@
 "use client";
 
-import { InputCurrencyRange } from "@/shared/components/ui/input-currency-range";
-import { InputTags } from "@/shared/components/ui/input-tags";
-import { OnChangePlugin } from "@/shared/components/ui/lexical/plugins/on-change-plugin";
-import { LoadDescriptionPlugin } from "@/shared/components/ui/lexical/plugins/load-description-plugin";
-import { ImageToolbarButtonPlugin } from "@/shared/components/ui/lexical/plugins/image-tooltbar-button-plugin";
-import YouTubePastePlugin from "@/shared/components/ui/lexical/plugins/youTube-paste-plugin";
-import ImageInput from "@/shared/components/ui/image-input";
-
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/shadcn/components/ui/select";
 import { Controller, UseFormReturn } from "react-hook-form";
+
+import Link from "next/link";
 
 import {
 	InitialConfigType,
 	LexicalComposer,
 } from "@lexical/react/LexicalComposer";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 
-import { cn } from "@/lib/utils";
-import { localizePath } from "@/lib/i18n";
+import { useI18n } from "@/components/layout/i18n-provider";
 
-import { Button } from "@/shadcn/components/ui/button";
-import {
-	Field,
-	FieldError,
-	FieldGroup,
-	FieldLabel,
-} from "@/shadcn/components/ui/field";
-import { Input } from "@/shadcn/components/ui/input";
-
-import Link from "next/link";
-
-import { Section } from "@/shared/components/ui/section";
-
-import { Card, CardContent } from "@/shadcn/components/ui/card";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -52,11 +24,39 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/shadcn/components/ui/breadcrumb";
-import { ProductForm } from "./use-sell";
-import { PublicCategoryTree } from "@/shared/types/category.type";
+import { Button } from "@/shadcn/components/ui/button";
+import { Card, CardContent } from "@/shadcn/components/ui/card";
+import {
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@/shadcn/components/ui/field";
+import { Input } from "@/shadcn/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/shadcn/components/ui/select";
 import { Spinner } from "@/shadcn/components/ui/spinner";
-import { ListPlugin } from "@lexical/react/LexicalListPlugin";
-import { useI18n } from "@/components/layout/i18n-provider";
+
+import ImageInput from "@/shared/components/ui/image-input";
+import { InputCurrencyRange } from "@/shared/components/ui/input-currency-range";
+import { InputTags } from "@/shared/components/ui/input-tags";
+import { ImageToolbarButtonPlugin } from "@/shared/components/ui/lexical/plugins/image-tooltbar-button-plugin";
+import { LoadDescriptionPlugin } from "@/shared/components/ui/lexical/plugins/load-description-plugin";
+import { OnChangePlugin } from "@/shared/components/ui/lexical/plugins/on-change-plugin";
+import YouTubePastePlugin from "@/shared/components/ui/lexical/plugins/youTube-paste-plugin";
+import { Section } from "@/shared/components/ui/section";
+import { PublicCategoryTree } from "@/shared/types/category.type";
+
+import { localizePath } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
+
+import { ProductForm } from "./use-sell";
 
 type ProductBaseProps = {
 	initialConfig: InitialConfigType;
@@ -110,7 +110,9 @@ export function ProductBase({
 					<BreadcrumbSeparator />
 
 					<BreadcrumbItem>
-						<BreadcrumbPage>{t("storeProductsPage.form.product")}</BreadcrumbPage>
+						<BreadcrumbPage>
+							{t("storeProductsPage.form.product")}
+						</BreadcrumbPage>
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
@@ -135,7 +137,9 @@ export function ProductBase({
 								</Field>
 
 								<Field>
-									<FieldLabel>{t("storeProductsPage.form.description")}</FieldLabel>
+									<FieldLabel>
+										{t("storeProductsPage.form.description")}
+									</FieldLabel>
 									<div
 										className={cn(
 											"relative flex flex-col w-full rounded-md border border-input bg-transparent text-sm transition-colors",
@@ -247,7 +251,9 @@ export function ProductBase({
 						<Card className="h-fit">
 							<CardContent>
 								<Field>
-									<FieldLabel>{t("storeProductsPage.form.category")}</FieldLabel>
+									<FieldLabel>
+										{t("storeProductsPage.form.category")}
+									</FieldLabel>
 									<Controller
 										name="category"
 										control={control}
@@ -321,7 +327,7 @@ export function ProductBase({
 							variant="outline"
 							onClick={cancelButtonAction}
 						>
-							{t("storeProductsPage.form.cancel")}
+							{t("buttons.cancel")}
 						</Button>
 					)}
 					<Button type="submit" disabled={!formState.isDirty || loading}>

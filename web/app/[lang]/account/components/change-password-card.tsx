@@ -1,13 +1,24 @@
 "use client";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 
 import { z } from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useDispatch } from "react-redux";
-import { useForm } from "react-hook-form";
 import { AppDispatch } from "@/redux/store";
 import { updateMyPasswordAsync } from "@/redux/thunks/auth-thunks";
 
+import { useI18n } from "@/components/layout/i18n-provider";
+
+import { Button } from "@/shadcn/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/shadcn/components/ui/card";
 import {
 	Field,
 	FieldContent,
@@ -16,18 +27,8 @@ import {
 	FieldGroup,
 	FieldLabel,
 } from "@/shadcn/components/ui/field";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/shadcn/components/ui/card";
-import { Button } from "@/shadcn/components/ui/button";
 import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
-
-import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function ChangePasswordCard() {
 	const { t } = useI18n();
@@ -136,7 +137,7 @@ export default function ChangePasswordCard() {
 								disabled={!formState.isDirty || isSubmitting}
 								onClick={() => reset()}
 							>
-								{t("account.changePassword.cancel")}
+								{t("buttons.cancel")}
 							</Button>
 
 							<Button
@@ -145,10 +146,10 @@ export default function ChangePasswordCard() {
 							>
 								{isSubmitting ? (
 									<>
-										<Spinner /> {t("account.changePassword.saving")}
+										<Spinner /> {t("buttons.saving")}
 									</>
 								) : (
-									t("account.changePassword.save")
+									t("buttons.save")
 								)}
 							</Button>
 						</Field>

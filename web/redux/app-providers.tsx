@@ -1,12 +1,13 @@
 "use client";
 
-import { ReduxProvider } from "./provider";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { QueryClient } from "@tanstack/react-query";
 import {
 	Persister,
 	PersistQueryClientProvider,
 } from "@tanstack/react-query-persist-client";
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+
+import { ReduxProvider } from "./provider";
 
 const queryClient: QueryClient = new QueryClient({
 	defaultOptions: {

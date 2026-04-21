@@ -1,9 +1,13 @@
 "use client";
 
 import { useI18n } from "@/components/layout/i18n-provider";
-import { cn } from "@/lib/utils";
+
 import { Input } from "@/shadcn/components/ui/input";
+
 import { ButtonIcon } from "@/shared/components/ui/button-icon";
+
+import { cn } from "@/lib/utils";
+
 import { formatPrice } from "@/utils/format";
 
 export type Column<T = any> = {

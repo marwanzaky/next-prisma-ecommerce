@@ -1,4 +1,5 @@
 import { User } from "@/shared/types/user.type";
+
 import { IProduct } from "./product.type";
 
 export interface IReview {

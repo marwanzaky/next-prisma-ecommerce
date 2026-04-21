@@ -3,7 +3,7 @@
 		"dev": "next dev --turbopack",
 		"build": "next build --turbopack",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "eslint . --fix"
 	},
 	"dependencies": {
 		"@formatjs/intl-localematcher": "^0.8.2",
@@ -58,6 +58,8 @@
 		"@types/qs": "^6.9.18",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
+		"eslint": "^8.57.1",
+		"eslint-plugin-simple-import-sort": "^13.0.0",
 		"postcss": "^8.4.21",
 		"tailwindcss": "^4.2.2",
 		"typescript": "^6.0.2"

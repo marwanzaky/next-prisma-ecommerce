@@ -1,5 +1,7 @@
 import Link from "next/link";
+
 import { Avatar, AvatarImage } from "@/shadcn/components/ui/avatar";
+
 import { PublicCategoryTree } from "@/shared/types/category.type";
 
 export type LogoCellProps = {

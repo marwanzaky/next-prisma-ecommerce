@@ -1,18 +1,34 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { AppDispatch, useAppSelector } from "@/redux/store";
+import {
+	BadgeCheck,
+	LogOut,
+	Menu,
+	MessagesSquare,
+	SearchIcon,
+	ShoppingBag,
+} from "lucide-react";
+
+import { useQuery } from "@tanstack/react-query";
+
 import { categoriesService } from "@/redux/services/categories-service";
+import { logOut } from "@/redux/slices/auth-slice";
+import { AppDispatch, useAppSelector } from "@/redux/store";
 
-import { cn } from "@/lib/utils";
-import { Locale, localeLabels, localizePath } from "@/lib/i18n";
+import { useI18n } from "@/components/layout/i18n-provider";
 
-import { ButtonIcon } from "@/shared/components/ui/button-icon";
-import { ImageButton } from "@/shared/components/ui/image-button";
-
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@/shadcn/components/ui/avatar";
+import { Button } from "@/shadcn/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -27,33 +43,20 @@ import {
 	DropdownMenuTrigger,
 } from "@/shadcn/components/ui/dropdown-menu";
 import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-} from "@/shadcn/components/ui/avatar";
-import {
 	InputGroup,
 	InputGroupAddon,
 	InputGroupInput,
 } from "@/shadcn/components/ui/input-group";
 import { useIsMobile } from "@/shadcn/hooks/use-mobile";
-import { Button } from "@/shadcn/components/ui/button";
 
-import { useQuery } from "@tanstack/react-query";
+import { ButtonIcon } from "@/shared/components/ui/button-icon";
+import { ImageButton } from "@/shared/components/ui/image-button";
+
+import { Locale, localeLabels, localizePath } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 import { initials } from "@/utils/string-utils";
-import {
-	BadgeCheck,
-	LogOut,
-	Menu,
-	MessagesSquare,
-	SearchIcon,
-	ShoppingBag,
-} from "lucide-react";
-import { useDispatch } from "react-redux";
-import { logOut } from "@/redux/slices/auth-slice";
 
-import { useI18n } from "@/components/layout/i18n-provider";
 import { ProductsPageParams } from "@/types/product.type";
 
 export default function Navigation() {

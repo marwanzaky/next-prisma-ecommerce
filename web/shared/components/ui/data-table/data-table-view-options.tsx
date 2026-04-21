@@ -1,7 +1,10 @@
 "use client";
 
-import { type Table } from "@tanstack/react-table";
 import { Settings2 } from "lucide-react";
+
+import { type Table } from "@tanstack/react-table";
+
+import { useI18n } from "@/components/layout/i18n-provider";
 
 import { Button } from "@/shadcn/components/ui/button";
 import {
@@ -12,8 +15,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/shadcn/components/ui/dropdown-menu";
-
-import { useI18n } from "@/components/layout/i18n-provider";
 
 export function DataTableViewOptions<TData>({
 	table,

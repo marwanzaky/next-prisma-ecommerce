@@ -3,8 +3,9 @@ import type {
 	SerializedParagraphNode,
 	SerializedTextNode,
 } from "lexical";
-import { SerializedYouTubeNode, YouTubeNode } from "./nodes/youtube-node";
+
 import { ImageNode, SerializedImageNode } from "./nodes/image-node";
+import { SerializedYouTubeNode, YouTubeNode } from "./nodes/youtube-node";
 
 export function renderLexicalJSONToHTML(
 	nodes: SerializedLexicalNode[],

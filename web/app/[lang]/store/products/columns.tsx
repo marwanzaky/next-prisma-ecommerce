@@ -1,21 +1,16 @@
 "use client";
 
-import { ArrowUpDown, EyeIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { useState } from "react";
 
-import { IProduct } from "@/types/product.type";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { ArrowUpDown, EyeIcon, PencilIcon, Trash2Icon } from "lucide-react";
 
 import { ColumnDef, Row } from "@tanstack/react-table";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useI18n } from "@/components/layout/i18n-provider";
 
-import { formatPrice } from "@/utils/format";
-import { createProductSlug } from "@/utils/string-utils";
-
-import { Button } from "@/shadcn/components/ui/button";
-import { Checkbox } from "@/shadcn/components/ui/checkbox";
-import { Avatar, AvatarImage } from "@/shadcn/components/ui/avatar";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -26,15 +21,20 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "@/shadcn/components/ui/alert-dialog";
+import { Avatar, AvatarImage } from "@/shadcn/components/ui/avatar";
+import { Button } from "@/shadcn/components/ui/button";
+import { Checkbox } from "@/shadcn/components/ui/checkbox";
 
-import { PublicCategoryTree } from "@/shared/types/category.type";
 import InputWithPlusMinusButtons from "@/shared/components/ui/input-with-plus-minus-buttons";
+import { PublicCategoryTree } from "@/shared/types/category.type";
 
 import { Locale, localizePath } from "@/lib/i18n";
 
-import { useI18n } from "@/components/layout/i18n-provider";
+import { formatPrice } from "@/utils/format";
+import { createProductSlug } from "@/utils/string-utils";
 
 import { DictionaryKeys } from "@/types/i18n.type";
+import { IProduct } from "@/types/product.type";
 
 export type SellProduct = IProduct & { imgUrl: string };
 
@@ -77,11 +77,10 @@ export const getSellColumns = ({
 		accessorKey: "name",
 		header: t("storeProductsPage.table.product"),
 		cell: ({ row }) => {
-			const product = row.original;
-			const href = localizePath(`/products/${row.original._id}`, locale);
-			const productSubcategoryTree = categoryTree
+			const href = localizePath(`store/products/${row.original._id}`, locale);
+			const subcategory = categoryTree
 				?.flatMap((cat) => [...cat.children, cat])
-				.find((cat) => cat.id === product.category);
+				.find((cat) => cat.id === row.original.category);
 
 			return (
 				<div className="flex gap-3 items-center">
@@ -100,7 +99,7 @@ export const getSellColumns = ({
 							<Link href={href}>{row.original.name}</Link>
 						</div>
 						<span className="text-muted-foreground text-xs">
-							{productSubcategoryTree?.name}
+							{subcategory?.name}
 						</span>
 					</div>
 				</div>
@@ -248,11 +247,9 @@ const ActionsCell = ({
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel>
-							{t("storeProductsPage.table.cancel")}
-						</AlertDialogCancel>
+						<AlertDialogCancel>{t("buttons.cancel")}</AlertDialogCancel>
 						<AlertDialogAction onClick={() => onDelete(product._id)}>
-							{t("storeProductsPage.table.continue")}
+							{t("buttons.continue")}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

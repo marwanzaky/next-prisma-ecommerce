@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+
 import { type Table } from "@tanstack/react-table";
 
 import { Input } from "@/shadcn/components/ui/input";

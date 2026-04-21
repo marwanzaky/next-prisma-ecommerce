@@ -1,6 +1,7 @@
 import "server-only";
 
 import { Locale } from "@/lib/i18n";
+
 import { Dictionary } from "@/types/i18n.type";
 
 const dictionaries: Record<Locale, () => Promise<Dictionary>> = {

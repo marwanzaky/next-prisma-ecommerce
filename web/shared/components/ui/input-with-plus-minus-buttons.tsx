@@ -1,11 +1,13 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cva, VariantProps } from "class-variance-authority";
+import { MinusIcon, PlusIcon } from "lucide-react";
+
 import { Button } from "@/shadcn/components/ui/button";
 import { ButtonGroup } from "@/shadcn/components/ui/button-group";
 import { Input } from "@/shadcn/components/ui/input";
-import { cva, VariantProps } from "class-variance-authority";
-import { MinusIcon, PlusIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 const inputVariants = cva("text-center", {
 	variants: {

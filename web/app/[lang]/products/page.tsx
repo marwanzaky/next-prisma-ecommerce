@@ -2,8 +2,20 @@
 
 import { StarIcon } from "lucide-react";
 
-import { useProducts } from "./use-products";
+import { useI18n } from "@/components/layout/i18n-provider";
 
+import { Button } from "@/shadcn/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/shadcn/components/ui/dialog";
+import { Field, FieldGroup, FieldLabel } from "@/shadcn/components/ui/field";
+import { Input } from "@/shadcn/components/ui/input";
+import { Label } from "@/shadcn/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/shadcn/components/ui/radio-group";
 import {
 	Select,
 	SelectContent,
@@ -12,31 +24,19 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shadcn/components/ui/select";
-import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/shadcn/components/ui/dialog";
 import { TypographyP } from "@/shadcn/components/ui/typography";
-import { Button } from "@/shadcn/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/shadcn/components/ui/radio-group";
-import { Label } from "@/shadcn/components/ui/label";
-import { Field, FieldGroup, FieldLabel } from "@/shadcn/components/ui/field";
-import { Input } from "@/shadcn/components/ui/input";
+
+import { Chip } from "@/shared/components/ui/chip";
+import { InputCurrencyRange } from "@/shared/components/ui/input-currency-range";
+import ProductCard from "@/shared/components/ui/product-card";
+import ProductCardSkeleton from "@/shared/components/ui/product-card-skeleton";
+import { Section } from "@/shared/components/ui/section";
 
 import { formatPrice } from "@/utils/format";
 
-import { useI18n } from "@/components/layout/i18n-provider";
-
-import ProductCardSkeleton from "@/shared/components/ui/product-card-skeleton";
-import ProductCard from "@/shared/components/ui/product-card";
-import { InputCurrencyRange } from "@/shared/components/ui/input-currency-range";
-import { Chip } from "@/shared/components/ui/chip";
-import { Section } from "@/shared/components/ui/section";
-
 import { SortOption } from "@/types/product.type";
+
+import { useProducts } from "./use-products";
 
 export default function Page() {
 	const { locale, t } = useI18n();
@@ -327,7 +327,7 @@ export default function Page() {
 
 						<DialogFooter>
 							<Button variant="outline" type="button" onClick={cancelFilters}>
-								{t("productsPage.cancel")}
+								{t("buttons.cancel")}
 							</Button>
 
 							<Button type="submit">{t("productsPage.applyFilter")}</Button>

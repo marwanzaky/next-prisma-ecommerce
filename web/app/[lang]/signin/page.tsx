@@ -1,17 +1,18 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-
-import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 
-import { handleLogin } from "@/utils/auth-helpers";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-import { Section } from "@/shared/components/ui/section";
+import { z } from "zod";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useI18n } from "@/components/layout/i18n-provider";
 
 import { Button } from "@/shadcn/components/ui/button";
-
 import {
 	Card,
 	CardContent,
@@ -28,13 +29,14 @@ import {
 	FieldLabel,
 } from "@/shadcn/components/ui/field";
 import { Input } from "@/shadcn/components/ui/input";
-
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Spinner } from "@/shadcn/components/ui/spinner";
-import { useI18n } from "@/components/layout/i18n-provider";
-import { localizePath } from "@/lib/i18n";
+
+import { Section } from "@/shared/components/ui/section";
+
 import config from "@/lib/config";
+import { localizePath } from "@/lib/i18n";
+
+import { handleLogin } from "@/utils/auth-helpers";
 
 type SignUpInput = {
 	email: string;
@@ -48,10 +50,10 @@ export default function Page() {
 
 	const signInSchema = z.object({
 		email: z
-			.email(t("signin.emailInvalid"))
-			.nonempty(t("signin.emailRequired"))
-			.max(32, t("signin.emailTooLong")),
-		password: z.string().nonempty(t("signin.passwordRequired")),
+			.email(t("validation.emailInvalid"))
+			.nonempty(t("validation.required"))
+			.max(32, t("validation.emailTooLong")),
+		password: z.string().nonempty(t("validation.required")),
 	});
 
 	const {
@@ -85,15 +87,15 @@ export default function Page() {
 		<Section>
 			<Card className="mx-auto w-full max-w-sm">
 				<CardHeader>
-					<CardTitle>{t("signin.title")}</CardTitle>
-					<CardDescription>{t("signin.description")}</CardDescription>
+					<CardTitle>{t("signinPage.title")}</CardTitle>
+					<CardDescription>{t("signinPage.description")}</CardDescription>
 				</CardHeader>
 
 				<CardContent>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<FieldGroup>
 							<Field>
-								<FieldLabel htmlFor="email">{t("signin.email")}</FieldLabel>
+								<FieldLabel htmlFor="email">{t("form.email")}</FieldLabel>
 								<FieldContent>
 									<Input
 										id="email"
@@ -107,14 +109,14 @@ export default function Page() {
 							<Field>
 								<div className="flex items-center">
 									<FieldLabel htmlFor="password">
-										{t("signin.password")}
+										{t("form.password")}
 									</FieldLabel>
 
 									<Link
 										href={localizePath("/forgot-password", locale)}
 										className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
 									>
-										{t("signin.forgotPassword")}
+										{t("form.forgotPassword")}
 									</Link>
 								</div>
 								<FieldContent>
@@ -131,10 +133,10 @@ export default function Page() {
 								<Button type="submit" disabled={isSubmitting}>
 									{isSubmitting ? (
 										<>
-											<Spinner /> {t("signin.loggingIn")}
+											<Spinner /> {t("signinPage.loggingIn")}
 										</>
 									) : (
-										t("signin.login")
+										t("signinPage.login")
 									)}
 								</Button>
 								<Button
@@ -150,12 +152,12 @@ export default function Page() {
 											fill="currentColor"
 										/>
 									</svg>
-									{t("signin.loginWithGoogle")}
+									{t("signinPage.loginWithGoogle")}
 								</Button>
 								<FieldDescription className="text-center">
-									{t("signin.noAccount")}{" "}
+									{t("signinPage.noAccount")}{" "}
 									<Link href={localizePath("/signup", locale)}>
-										{t("signin.signUp")}
+										{t("signinPage.signUp")}
 									</Link>
 								</FieldDescription>
 							</Field>

@@ -1,7 +1,9 @@
+import { cn } from "@/lib/utils";
+
+import { IProduct } from "@/types/product.type";
+
 import Overview from "./overview";
 import Reviews from "./reviews";
-import { IProduct } from "@/types/product.type";
-import { cn } from "@/lib/utils";
 
 export default function ProductFeedback({ product }: { product: IProduct }) {
 	return (

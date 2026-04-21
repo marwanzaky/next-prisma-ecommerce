@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 
-import { useCart } from "./use-cart";
+import { useI18n } from "@/components/layout/i18n-provider";
 
+import { Button } from "@/shadcn/components/ui/button";
 import {
 	Empty,
 	EmptyContent,
@@ -12,16 +13,14 @@ import {
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
 import { Heading } from "@/shadcn/components/ui/typography";
-import { Button } from "@/shadcn/components/ui/button";
 
-import { Section } from "@/shared/components/ui/section";
 import { DataTable } from "@/shared/components/ui/data-table/data-table";
+import { Section } from "@/shared/components/ui/section";
 
 import { localizePath } from "@/lib/i18n";
 
-import { useI18n } from "@/components/layout/i18n-provider";
-
 import CheckoutCard from "./components/checkout-card";
+import { useCart } from "./use-cart";
 
 export default function Page() {
 	const router = useRouter();

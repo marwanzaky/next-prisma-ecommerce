@@ -1,30 +1,31 @@
 import "./globals.css";
 
-import { Toaster } from "sonner";
-
-import { generateOgMetadata, generateTwitterMetadata } from "@/lib/generate";
-import { cn } from "@/lib/utils";
-
 import { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import { notFound } from "next/navigation";
-import { GoogleAnalytics } from "@next/third-parties/google";
 
+import { Organization, WebPage,WebSite, WithContext } from "schema-dts";
+import { Toaster } from "sonner";
+
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-import Footer from "@/components/layout/footer";
-import Navigation from "@/components/layout/navigation";
-import AppStateInit from "@/components/layout/app-state-init";
-import { I18nProvider } from "@/components/layout/i18n-provider";
+import AppProviders from "@/redux/app-providers";
 
-import { Container } from "@/shared/components/ui/container";
+import AppStateInit from "@/components/layout/app-state-init";
+import Footer from "@/components/layout/footer";
+import { I18nProvider } from "@/components/layout/i18n-provider";
+import Navigation from "@/components/layout/navigation";
+
+import { DirectionProvider } from "@/shadcn/components/ui/direction";
 import { TooltipProvider } from "@/shadcn/components/ui/tooltip";
 
-import AppProviders from "@/redux/app-providers";
+import { Container } from "@/shared/components/ui/container";
 
 import config from "@/lib/config";
 import { getDictionary } from "@/lib/dictionaries";
+import { generateOgMetadata, generateTwitterMetadata } from "@/lib/generate";
 import {
 	getDirection,
 	hasLocale,
@@ -32,10 +33,8 @@ import {
 	locales,
 	localizePath,
 } from "@/lib/i18n";
-import { DirectionProvider } from "@/shadcn/components/ui/direction";
 import { localizeUrl } from "@/lib/i18n";
-
-import { Organization, WebSite, WithContext, WebPage } from "schema-dts";
+import { cn } from "@/lib/utils";
 
 const poppins = Poppins({
 	subsets: ["latin"],

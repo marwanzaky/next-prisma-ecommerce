@@ -1,7 +1,7 @@
 import { TypographyP } from "@/shadcn/components/ui/typography";
+import { Heading } from "@/shadcn/components/ui/typography";
 
 import { Section } from "@/shared/components/ui/section";
-import { Heading } from "@/shadcn/components/ui/typography";
 
 import config from "@/lib/config";
 

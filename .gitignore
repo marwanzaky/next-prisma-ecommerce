@@ -48,6 +48,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.vscode/
 
 # local env files
 .env

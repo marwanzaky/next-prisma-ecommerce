@@ -1,8 +1,9 @@
 import { Metadata } from "next";
+
 import {
+	generateLocaleAlternates,
 	generateOgMetadata,
 	generateTwitterMetadata,
-	generateLocaleAlternates,
 } from "@/lib/generate";
 import { Locale, localizePath } from "@/lib/i18n";
 

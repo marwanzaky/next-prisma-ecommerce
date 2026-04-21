@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+
 import {
 	$createImageNode,
 	ImageNode,
 } from "@/shared/components/ui/lexical/nodes/image-node";
-
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
 export function LoadDescriptionPlugin({ json }: { json?: string }) {
 	const [editor] = useLexicalComposerContext();

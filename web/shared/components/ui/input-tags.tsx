@@ -2,8 +2,8 @@
 
 import { forwardRef, useEffect, useState } from "react";
 
-import clsx from "clsx";
 import { cva } from "class-variance-authority";
+import clsx from "clsx";
 
 import { Chip } from "./chip";
 

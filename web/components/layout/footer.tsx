@@ -1,12 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+
+import { useI18n } from "@/components/layout/i18n-provider";
+
+import { Separator } from "@/shadcn/components/ui/separator";
+import { Heading } from "@/shadcn/components/ui/typography";
 
 import { Container } from "@/shared/components/ui/container";
-import { Heading } from "@/shadcn/components/ui/typography";
-import { Separator } from "@/shadcn/components/ui/separator";
-import { useI18n } from "@/components/layout/i18n-provider";
+
 import { localizePath } from "@/lib/i18n";
 
 export default function Footer() {

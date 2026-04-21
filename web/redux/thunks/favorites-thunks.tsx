@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { favoritesService } from "@/redux/services/favorites-service";

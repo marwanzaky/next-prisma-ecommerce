@@ -1,13 +1,12 @@
 import { Metadata } from "next";
 
+import config from "@/lib/config";
 import {
+	generateLocaleAlternates,
 	generateOgMetadata,
 	generateTwitterMetadata,
-	generateLocaleAlternates,
 } from "@/lib/generate";
-
 import { Locale, localizePath } from "@/lib/i18n";
-import config from "@/lib/config";
 
 const title = "Contact Us - Get in Touch";
 const description = `Have questions or need support? Contact ${config.websiteName} customer service. We're here to help!`;

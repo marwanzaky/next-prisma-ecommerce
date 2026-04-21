@@ -1,6 +1,7 @@
+import { Product, WithContext } from "schema-dts";
+
 import { IProduct } from "@/types/product.type";
 
-import { Product, WithContext } from "schema-dts";
 import config from "./config";
 
 export function generateProductStructuredData(

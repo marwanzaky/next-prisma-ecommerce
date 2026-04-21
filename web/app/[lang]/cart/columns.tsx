@@ -2,19 +2,19 @@ import { Trash2Icon } from "lucide-react";
 
 import { ColumnDef } from "@tanstack/react-table";
 
+import { Button } from "@/shadcn/components/ui/button";
+
+import InputWithPlusMinusButtons from "@/shared/components/ui/input-with-plus-minus-buttons";
 import { LogoCell } from "@/shared/components/ui/table/cells/logo-cell";
 import { PublicCategoryTree } from "@/shared/types/category.type";
-import InputWithPlusMinusButtons from "@/shared/components/ui/input-with-plus-minus-buttons";
-
-import { CartProduct } from "@/types/product.type";
-import { DictionaryKeys } from "@/types/i18n.type";
 
 import { Locale, localizePath } from "@/lib/i18n";
 
-import { createProductSlug } from "@/utils/string-utils";
 import { formatPrice } from "@/utils/format";
+import { createProductSlug } from "@/utils/string-utils";
 
-import { Button } from "@/shadcn/components/ui/button";
+import { DictionaryKeys } from "@/types/i18n.type";
+import { CartProduct } from "@/types/product.type";
 
 export type CartItem = CartProduct & {
 	imgUrl: string;

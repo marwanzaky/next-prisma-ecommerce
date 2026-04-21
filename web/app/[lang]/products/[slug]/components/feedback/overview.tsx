@@ -1,16 +1,18 @@
 "use client";
 
 import { useState } from "react";
+
 import { useRouter } from "next/navigation";
 
-import Stars from "@/shared/components/ui/stars";
+import { StarIcon } from "lucide-react";
+import { toast } from "sonner";
 
-import { IProduct } from "@/types/product.type";
-
-import { useAppSelector } from "@/redux/store";
 import { productsService } from "@/redux/services/products-service";
+import { useAppSelector } from "@/redux/store";
 
-import { Heading } from "@/shadcn/components/ui/typography";
+import { useI18n } from "@/components/layout/i18n-provider";
+
+import { Button } from "@/shadcn/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -20,15 +22,17 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/shadcn/components/ui/dialog";
-import { Button } from "@/shadcn/components/ui/button";
-import { TypographyMuted } from "@/shadcn/components/ui/typography";
-import { toast } from "sonner";
 import { Field, FieldGroup, FieldLabel } from "@/shadcn/components/ui/field";
 import { Textarea } from "@/shadcn/components/ui/textarea";
-import { StarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Heading } from "@/shadcn/components/ui/typography";
+import { TypographyMuted } from "@/shadcn/components/ui/typography";
+
+import Stars from "@/shared/components/ui/stars";
+
 import { localizePath } from "@/lib/i18n";
-import { useI18n } from "@/components/layout/i18n-provider";
+import { cn } from "@/lib/utils";
+
+import { IProduct } from "@/types/product.type";
 
 export default function Overview({ product }: { product: IProduct }) {
 	const router = useRouter();

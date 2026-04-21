@@ -1,9 +1,10 @@
 "use client";
 
-import { stringify } from "qs";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+
+import { stringify } from "qs";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -13,11 +14,11 @@ import {
 	productsService,
 } from "@/redux/services/products-service";
 
-import { IProduct, ProductsPageParams, SortOption } from "@/types/product.type";
-
 import { useI18n } from "@/components/layout/i18n-provider";
 
 import { localizePath } from "@/lib/i18n";
+
+import { IProduct, ProductsPageParams, SortOption } from "@/types/product.type";
 
 export function useProducts() {
 	const router = useRouter();
@@ -111,7 +112,7 @@ export function useProducts() {
 
 	const [visible, setVisible] = useState(false);
 
-	const updateParams = () => {
+	const updateParams = useCallback(() => {
 		const params: ProductsPageParams = {
 			name,
 			sort,
@@ -127,7 +128,7 @@ export function useProducts() {
 				locale,
 			),
 		);
-	};
+	}, [name, sort, category, minPrice, maxPrice, rating, locale, router]);
 
 	const openFilterDialog = () => {
 		setVisible(true);
@@ -171,7 +172,7 @@ export function useProducts() {
 
 	useEffect(() => {
 		updateParams();
-	}, [name, sort, minPrice, maxPrice, rating, category]);
+	}, [updateParams]);
 
 	useEffect(() => {
 		const params = Object.fromEntries(

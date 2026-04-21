@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 
 import type { LexicalCommand } from "lexical";
-import { COMMAND_PRIORITY_LOW, PASTE_COMMAND, $insertNodes } from "lexical";
+import { $insertNodes,COMMAND_PRIORITY_LOW, PASTE_COMMAND } from "lexical";
+
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+
 import { $createYouTubeNode } from "../nodes/youtube-node";
 
 export default function YouTubePastePlugin(): null {

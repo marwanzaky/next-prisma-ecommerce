@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-
 import { Skeleton } from "@/shadcn/components/ui/skeleton";
+
+import { cn } from "@/lib/utils";
 
 export default function ProductCardSkeleton() {
 	return (

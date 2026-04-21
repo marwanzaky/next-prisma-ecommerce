@@ -5,15 +5,15 @@ import * as React from "react";
 import {
 	ColumnDef,
 	ColumnFiltersState,
-	SortingState,
-	Table as TableType,
-	VisibilityState,
 	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
+	SortingState,
+	Table as TableType,
 	useReactTable,
+	VisibilityState,
 } from "@tanstack/react-table";
 
 import {

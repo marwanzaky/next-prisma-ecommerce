@@ -1,29 +1,14 @@
 "use client";
 
 import { useState } from "react";
+
+import { useQuery } from "@tanstack/react-query";
+
 import {
 	contactMessagesService,
 	IContactMessage,
 } from "@/redux/services/contact-messages-service";
 
-import { Column } from "@/shared/components/ui/table";
-import { ButtonIcon } from "@/shared/components/ui/button-icon";
-import { useQuery } from "@tanstack/react-query";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from "@/shadcn/components/ui/select";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/shadcn/components/ui/dialog";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -35,9 +20,27 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/shadcn/components/ui/alert-dialog";
-import { Input } from "@/shadcn/components/ui/input";
-import { Textarea } from "@/shadcn/components/ui/textarea";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from "@/shadcn/components/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@/shadcn/components/ui/field";
+import { Input } from "@/shadcn/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "@/shadcn/components/ui/select";
+import { Textarea } from "@/shadcn/components/ui/textarea";
+
+import { ButtonIcon } from "@/shared/components/ui/button-icon";
+import { Column } from "@/shared/components/ui/table";
 
 export function useAdminMessages() {
 	const { data, isLoading, refetch } = useQuery({

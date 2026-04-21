@@ -1,9 +1,10 @@
 import { toast } from "sonner";
+
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { RootState } from "@/redux/store";
 import { cartsService } from "@/redux/services/carts-service";
 import { guestCartService } from "@/redux/services/guest-cart-service";
+import { RootState } from "@/redux/store";
 
 import { CartProduct, IProduct } from "@/types/product.type";
 

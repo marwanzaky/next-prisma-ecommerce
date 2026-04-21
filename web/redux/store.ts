@@ -1,4 +1,10 @@
+import { TypedUseSelectorHook, useSelector } from "react-redux";
+
+import { persistReducer,persistStore } from "redux-persist";
+
 import { configureStore } from "@reduxjs/toolkit";
+
+import storage from "@/utils/storage-utils";
 
 import authReducer, { AuthState } from "./slices/auth-slice";
 import cartReducer, { CartState } from "./slices/cart-slice";
@@ -6,11 +12,6 @@ import favoritesReducer, { FavoritesState } from "./slices/favorites-slice";
 import userProductsReducer, {
 	UserProductsState,
 } from "./slices/user-products-slice";
-
-import { TypedUseSelectorHook, useSelector } from "react-redux";
-
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "@/utils/storage-utils";
 
 const authPersistConfig = {
 	key: "auth",

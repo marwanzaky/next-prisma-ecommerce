@@ -1,12 +1,15 @@
 "use client";
 
-import { type Table } from "@tanstack/react-table";
 import {
 	ChevronLeft,
 	ChevronRight,
 	ChevronsLeft,
 	ChevronsRight,
 } from "lucide-react";
+
+import { type Table } from "@tanstack/react-table";
+
+import { useI18n } from "@/components/layout/i18n-provider";
 
 import { Button } from "@/shadcn/components/ui/button";
 import {
@@ -16,8 +19,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shadcn/components/ui/select";
-
-import { useI18n } from "@/components/layout/i18n-provider";
 
 interface DataTablePaginationProps<TData> {
 	table: Table<TData>;

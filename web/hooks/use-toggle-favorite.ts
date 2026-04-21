@@ -1,10 +1,13 @@
-import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
+
+import { useRouter } from "next/navigation";
+
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import {
 	postFavoritesAsync,
 	removeFavoritesAsync,
 } from "@/redux/thunks/favorites-thunks";
+
 import { IProduct } from "@/types/product.type";
 
 export function useToggleFavorite(product: IProduct) {

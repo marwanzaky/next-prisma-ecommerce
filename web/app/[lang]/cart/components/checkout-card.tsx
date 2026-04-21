@@ -3,18 +3,18 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { useI18n } from "@/components/layout/i18n-provider";
+
 import { Button } from "@/shadcn/components/ui/button";
 import { Card, CardContent } from "@/shadcn/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/shadcn/components/ui/radio-group";
-import { Label } from "@/shadcn/components/ui/label";
-import { Separator } from "@/shadcn/components/ui/separator";
 import { Field, FieldGroup, FieldLabel } from "@/shadcn/components/ui/field";
-
-import { formatPrice } from "@/utils/format";
+import { Label } from "@/shadcn/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/shadcn/components/ui/radio-group";
+import { Separator } from "@/shadcn/components/ui/separator";
 
 import { localizePath } from "@/lib/i18n";
 
-import { useI18n } from "@/components/layout/i18n-provider";
+import { formatPrice } from "@/utils/format";
 
 import { useCart } from "../use-cart";
 

@@ -1,13 +1,14 @@
-import { toast } from "sonner";
-
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
+import { toast } from "sonner";
+
+import { setToken } from "@/redux/slices/auth-slice";
 import { AppDispatch } from "@/redux/store";
-import { getUserProductsAsync } from "@/redux/thunks/user-products-thunks";
 import { getMeAsync, loginAsync } from "@/redux/thunks/auth-thunks";
 import { getCartMeAsync } from "@/redux/thunks/cart-thunks";
 import { getFavoritesAsync } from "@/redux/thunks/favorites-thunks";
-import { setToken } from "@/redux/slices/auth-slice";
+import { getUserProductsAsync } from "@/redux/thunks/user-products-thunks";
+
 import { Locale, localizePath } from "@/lib/i18n";
 
 export const handleLogin = async ({

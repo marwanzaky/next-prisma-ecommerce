@@ -1,19 +1,22 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
-import Image from "next/image";
 
-import { createProductSlug } from "@/utils/string-utils";
-import { Button } from "@/shadcn/components/ui/button";
-import { Heading } from "@/shadcn/components/ui/typography";
+import Image from "next/image";
+import Link from "next/link";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
+import { Button } from "@/shadcn/components/ui/button";
+import { Heading } from "@/shadcn/components/ui/typography";
+
+import { renderLexicalJSONToHTML } from "@/shared/components/ui/lexical/renderLexicalJSONToHTML";
+
 import { localizePath } from "@/lib/i18n";
 
+import { createProductSlug } from "@/utils/string-utils";
+
 import { IProduct } from "@/types/product.type";
-import { renderLexicalJSONToHTML } from "@/shared/components/ui/lexical/renderLexicalJSONToHTML";
 
 export default function Header({ heroProduct }: { heroProduct: IProduct }) {
 	const { locale, t } = useI18n();

@@ -1,23 +1,19 @@
 "use client";
 
-import { toast } from "sonner";
-
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
+import { useRouter } from "next/navigation";
+
+import { toast } from "sonner";
 import * as z from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { contactMessagesService } from "@/redux/services/contact-messages-service";
 
-import { Section } from "@/shared/components/ui/section";
+import { useI18n } from "@/components/layout/i18n-provider";
 
-import { Heading } from "@/shadcn/components/ui/typography";
-import { TypographyP } from "@/shadcn/components/ui/typography";
 import { Button } from "@/shadcn/components/ui/button";
-import { Input } from "@/shadcn/components/ui/input";
-import { Textarea } from "@/shadcn/components/ui/textarea";
-import { Spinner } from "@/shadcn/components/ui/spinner";
 import {
 	Field,
 	FieldContent,
@@ -25,8 +21,13 @@ import {
 	FieldGroup,
 	FieldLabel,
 } from "@/shadcn/components/ui/field";
+import { Input } from "@/shadcn/components/ui/input";
+import { Spinner } from "@/shadcn/components/ui/spinner";
+import { Textarea } from "@/shadcn/components/ui/textarea";
+import { Heading } from "@/shadcn/components/ui/typography";
+import { TypographyP } from "@/shadcn/components/ui/typography";
 
-import { useI18n } from "@/components/layout/i18n-provider";
+import { Section } from "@/shared/components/ui/section";
 
 import { localizePath } from "@/lib/i18n";
 
@@ -43,20 +44,19 @@ export default function Page() {
 	const contactSchema = z.object({
 		name: z
 			.string()
-			.nonempty(t("contactPage.nameRequired"))
-			.min(2, t("contactPage.nameShort"))
-			.max(16, t("contactPage.nameLong")),
+			.nonempty(t("validation.required"))
+			.min(2, t("validation.nameShort"))
+			.max(16, t("validation.nameLong")),
 		email: z
-			.string()
-			.nonempty(t("signin.emailRequired"))
-			.email(t("signin.emailInvalid"))
-			.max(32, t("signin.emailTooLong")),
+			.email(t("validation.emailInvalid"))
+			.nonempty(t("validation.required"))
+			.max(32, t("validation.emailTooLong")),
 		subject: z
 			.string()
-			.nonempty(t("contactPage.subjectRequired"))
+			.nonempty(t("validation.required"))
 			.min(4, t("contactPage.subjectShort"))
 			.max(64, t("contactPage.subjectLong")),
-		message: z.string().nonempty(t("contactPage.messageRequired")),
+		message: z.string().nonempty(t("validation.required")),
 	});
 
 	const {
@@ -121,7 +121,7 @@ export default function Page() {
 						<FieldError>{errors.name?.message}</FieldError>
 					</Field>
 					<Field data-invalid={!!errors.email}>
-						<FieldLabel htmlFor="email">{t("signin.email")}</FieldLabel>
+						<FieldLabel htmlFor="email">{t("form.email")}</FieldLabel>
 						<FieldContent>
 							<Input
 								id="email"

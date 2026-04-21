@@ -2,25 +2,25 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { Heading } from "@/shadcn/components/ui/typography";
-
 import {
 	GetAllProductsOptions,
 	productsService,
 } from "@/redux/services/products-service";
 
-import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/layout/i18n-provider";
+
+import { Heading } from "@/shadcn/components/ui/typography";
 
 import ProductCard from "@/shared/components/ui/product-card";
 import { Section } from "@/shared/components/ui/section";
 
+import { cn } from "@/lib/utils";
+
 import { IProduct } from "@/types/product.type";
 
-import { useI18n } from "@/components/layout/i18n-provider";
-
+import Feedback from "./feedback";
 import ProductCallery from "./product-callery";
 import ProductDetails from "./product-details";
-import Feedback from "./feedback";
 
 export default function ProductPage({ product }: { product: IProduct }) {
 	const { t } = useI18n();

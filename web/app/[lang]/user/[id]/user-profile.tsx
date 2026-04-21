@@ -1,21 +1,23 @@
 "use client";
 
+import { useI18n } from "@/components/layout/i18n-provider";
+
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@/shadcn/components/ui/avatar";
 import {
 	Empty,
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
-import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-} from "@/shadcn/components/ui/avatar";
 
 import { Section } from "@/shared/components/ui/section";
 import { User } from "@/shared/types/user.type";
+
 import { initials } from "@/utils/string-utils";
-import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function UserProfile({ user }: { user: User }) {
 	const { t } = useI18n();

@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { DollarSign } from "lucide-react";
+
 import { Input } from "@/shadcn/components/ui/input";
 
 type InputCurrencyProps = {

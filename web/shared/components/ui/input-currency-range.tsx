@@ -1,4 +1,5 @@
 import clsx from "clsx";
+
 import { InputCurrency } from "./Input-currency";
 
 type InputCurrencyRangeProps = {

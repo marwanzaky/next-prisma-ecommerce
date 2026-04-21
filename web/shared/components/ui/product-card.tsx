@@ -1,28 +1,29 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-
 import { useDispatch } from "react-redux";
 
-import { postCartItemAsync } from "@/redux/thunks/cart-thunks";
+import Image from "next/image";
+import Link from "next/link";
+
 import { AppDispatch } from "@/redux/store";
+import { postCartItemAsync } from "@/redux/thunks/cart-thunks";
 
-import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
+import { useI18n } from "@/components/layout/i18n-provider";
 
-import { cn } from "@/lib/utils";
-import { localizePath } from "@/lib/i18n";
+import { useIsMobile } from "@/shadcn/hooks/use-mobile";
 
-import Stars from "@/shared/components/ui/stars";
-import { IProduct } from "@/types/product.type";
 import { ButtonIcon } from "@/shared/components/ui/button-icon";
+import Stars from "@/shared/components/ui/stars";
+
+import { localizePath } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 import { formatPrice } from "@/utils/format";
 import { createProductSlug } from "@/utils/string-utils";
 
-import { useIsMobile } from "@/shadcn/hooks/use-mobile";
+import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
-import { useI18n } from "@/components/layout/i18n-provider";
+import { IProduct } from "@/types/product.type";
 
 type ProductCardProps = {
 	data: IProduct;

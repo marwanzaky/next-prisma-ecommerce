@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import Negotiator from "negotiator";
+
+import { match } from "@formatjs/intl-localematcher";
+
 import {
 	defaultLocale,
 	hasLocale,
@@ -7,8 +11,6 @@ import {
 	locales,
 	localizePath,
 } from "@/lib/i18n";
-import Negotiator from "negotiator";
-import { match } from "@formatjs/intl-localematcher";
 
 function getPreferredLocale(request: NextRequest): Locale {
 	const negotiatorHeaders: Record<string, string> = {};

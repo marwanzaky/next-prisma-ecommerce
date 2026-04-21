@@ -1,8 +1,11 @@
 "use client";
 
 import { useDispatch } from "react-redux";
+
 import { AppDispatch } from "@/redux/store";
 import { deleteMeAsync } from "@/redux/thunks/auth-thunks";
+
+import { useI18n } from "@/components/layout/i18n-provider";
 
 import {
 	AlertDialog,
@@ -15,6 +18,7 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/shadcn/components/ui/alert-dialog";
+import { Button } from "@/shadcn/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -22,9 +26,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/shadcn/components/ui/card";
-import { Button } from "@/shadcn/components/ui/button";
-
-import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function DeleteAccountCard() {
 	const { t } = useI18n();
@@ -56,15 +57,13 @@ export default function DeleteAccountCard() {
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
-							<AlertDialogCancel>
-								{t("account.deleteAccount.alert.cancel")}
-							</AlertDialogCancel>
+							<AlertDialogCancel>{t("buttons.cancel")}</AlertDialogCancel>
 							<AlertDialogAction
 								onClick={() => {
 									dispatch(deleteMeAsync());
 								}}
 							>
-								{t("account.deleteAccount.alert.continue")}
+								{t("buttons.continue")}
 							</AlertDialogAction>
 						</AlertDialogFooter>
 					</AlertDialogContent>

@@ -1,16 +1,17 @@
 "use client";
 
-import { useAdminMessages } from "./use-admin-message";
-
-import { Table } from "@/shared/components/ui/table";
-import { Section } from "@/shared/components/ui/section";
-import { Heading } from "@/shadcn/components/ui/typography";
 import {
 	Empty,
 	EmptyDescription,
 	EmptyHeader,
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
+import { Heading } from "@/shadcn/components/ui/typography";
+
+import { Section } from "@/shared/components/ui/section";
+import { Table } from "@/shared/components/ui/table";
+
+import { useAdminMessages } from "./use-admin-message";
 
 export default function Page() {
 	const { columns, isLoading, data, ViewMessageDialog } = useAdminMessages();

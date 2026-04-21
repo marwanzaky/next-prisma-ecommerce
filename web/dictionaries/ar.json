@@ -110,46 +110,26 @@
 		"question": "هل لديك سؤال؟ تواصل معنا من هنا.",
 		"contact": "اتصل بنا"
 	},
-	"signin": {
+	"signinPage": {
 		"title": "سجل الدخول الى حسابك",
 		"description": "ادخل بريدك الالكتروني ادناه لتسجيل الدخول الى حسابك",
-		"email": "البريد الالكتروني",
-		"password": "كلمة المرور",
-		"forgotPassword": "هل نسيت كلمة المرور؟",
 		"loggingIn": "جار تسجيل الدخول...",
 		"login": "تسجيل الدخول",
 		"loginWithGoogle": "تسجيل الدخول باستخدام Google",
 		"noAccount": "ليس لديك حساب؟",
-		"signUp": "انشاء حساب",
-		"emailRequired": "هذا الحقل مطلوب.",
-		"emailInvalid": "يرجى ادخال بريد الكتروني صالح.",
-		"emailTooLong": "البريد الالكتروني طويل جدا.",
-		"passwordRequired": "هذا الحقل مطلوب."
+		"signUp": "انشاء حساب"
 	},
-	"signup": {
+	"signupPage": {
 		"title": "انشاء حساب",
 		"description": "ادخل معلوماتك ادناه لانشاء حسابك",
-		"fullName": "الاسم الكامل",
 		"emailHelp": "سنستخدم هذا البريد للتواصل معك. لن نشارك بريدك الالكتروني مع اي شخص آخر.",
-		"password": "كلمة المرور",
 		"passwordHelp": "يجب ان تتكون من 8 احرف على الاقل.",
-		"confirmPassword": "تأكيد كلمة المرور",
 		"confirmPasswordHelp": "يرجى تأكيد كلمة المرور.",
 		"creatingAccount": "جار انشاء الحساب...",
 		"createAccount": "انشاء حساب",
 		"signUpWithGoogle": "انشاء حساب باستخدام Google",
 		"alreadyHaveAccount": "لديك حساب بالفعل؟",
-		"signIn": "تسجيل الدخول",
-		"nameRequired": "هذا الحقل مطلوب.",
-		"nameShort": "الاسم قصير جدا.",
-		"nameLong": "الاسم طويل جدا.",
-		"emailRequired": "هذا الحقل مطلوب.",
-		"emailInvalid": "يرجى ادخال بريد الكتروني صالح.",
-		"emailTooLong": "البريد الالكتروني طويل جدا.",
-		"passwordRequired": "هذا الحقل مطلوب.",
-		"passwordShort": "كلمة المرور قصيرة جدا.",
-		"passwordLong": "كلمة المرور طويلة جدا.",
-		"passwordsDontMatch": "كلمتا المرور غير متطابقتين"
+		"signIn": "تسجيل الدخول"
 	},
 	"productsPage": {
 		"allFilters": "كل الفلاتر",
@@ -171,7 +151,6 @@
 		"name": "الاسم",
 		"namePlaceholder": "مثال: دفتر، حائط، وطابعة",
 		"priceRange": "نطاق السعر",
-		"cancel": "الغاء",
 		"applyFilter": "تطبيق الفلتر"
 	},
 	"cartPage": {
@@ -221,9 +200,7 @@
 			"stock": "المخزون",
 			"actions": "الاجراءات",
 			"deleteConfirmTitle": "هل انت متأكد تماما؟",
-			"deleteConfirmDescription": "لا يمكن التراجع عن هذا الاجراء. سيتم حذف بيانات المنتج نهائيا من خوادمنا.",
-			"cancel": "الغاء",
-			"continue": "متابعة"
+			"deleteConfirmDescription": "لا يمكن التراجع عن هذا الاجراء. سيتم حذف بيانات المنتج نهائيا من خوادمنا."
 		},
 		"form": {
 			"myProducts": "منتجاتي",
@@ -238,10 +215,7 @@
 			"category": "الفئة",
 			"selectCategory": "اختر فئة",
 			"tags": "الوسوم",
-			"tagsPlaceholder": "ادخل الوسوم",
-			"cancel": "الغاء",
-			"save": "حفظ",
-			"update": "تحديث"
+			"tagsPlaceholder": "ادخل الوسوم"
 		}
 	},
 	"contactPage": {
@@ -256,13 +230,22 @@
 		"sending": "جار الارسال...",
 		"success": "تم ارسال الرسالة بنجاح. شكرا لك!",
 		"error": "حدث خطأ ما.",
-		"nameRequired": "هذا الحقل مطلوب.",
-		"nameShort": "الاسم قصير جدا.",
-		"nameLong": "الاسم طويل جدا.",
-		"subjectRequired": "هذا الحقل مطلوب.",
 		"subjectShort": "الموضوع قصير جدا.",
-		"subjectLong": "الموضوع طويل جدا.",
-		"messageRequired": "هذا الحقل مطلوب."
+		"subjectLong": "الموضوع طويل جدا."
+	},
+	"form": {
+		"fullName": "الاسم الكامل",
+		"email": "البريد الإلكتروني",
+		"password": "كلمة المرور",
+		"confirmPassword": "تأكيد كلمة المرور",
+		"forgotPassword": "هل نسيت كلمة المرور؟"
+	},
+	"buttons": {
+		"cancel": "الغاء",
+		"save": "حفظ",
+		"saving": "جار الحفظ...",
+		"update": "تحديث",
+		"continue": "متابعة"
 	},
 	"validation": {
 		"required": "هذا الحقل مطلوب.",
@@ -271,8 +254,8 @@
 		"invalidChars": "أحرف غير صالحة في الاسم.",
 		"nameShort": "الاسم قصير جداً.",
 		"nameLong": "الاسم طويل جداً.",
-		"emailShort": "البريد الإلكتروني قصير جداً.",
 		"emailInvalid": "يرجى إدخال بريد إلكتروني صالح.",
+		"emailTooLong": "البريد الإلكتروني طويلة جداً.",
 		"invalidUrl": "يجب أن يكون رابطاً صالحاً.",
 		"imageTooLarge": "حجم الصورة يتجاوز حد 4 ميجابايت",
 		"passwordShort": "كلمة المرور قصيرة جداً.",
@@ -300,14 +283,7 @@
 			"profilePhoto": "صورة الملف الشخصي",
 			"changeAvatar": "تغيير الصورة",
 			"deleteAvatar": "حذف الصورة",
-			"photoRequirements": "يجب أن تكون صورة .jpg أو .png أصغر من 4 ميجابايت.",
-			"fullName": "الاسم الكامل",
-			"fullNamePlaceholder": "محمد أحمد",
-			"email": "البريد الإلكتروني",
-			"emailPlaceholder": "m@example.com",
-			"cancel": "إلغاء",
-			"save": "حفظ",
-			"saving": "جار الحفظ..."
+			"photoRequirements": "يجب أن تكون صورة .jpg أو .png أصغر من 4 ميجابايت."
 		},
 		"changePassword": {
 			"title": "تغيير كلمة المرور",
@@ -316,10 +292,7 @@
 			"newPassword": "كلمة المرور الجديدة",
 			"newPasswordHelp": "يجب أن تتكون من 8 أحرف على الأقل.",
 			"confirmPassword": "تأكيد كلمة المرور",
-			"confirmPasswordHelp": "يرجى تأكيد كلمة المرور.",
-			"cancel": "إلغاء",
-			"save": "حفظ",
-			"saving": "جار الحفظ..."
+			"confirmPasswordHelp": "يرجى تأكيد كلمة المرور."
 		},
 		"deleteAccount": {
 			"title": "حذف الحساب",
@@ -327,9 +300,7 @@
 			"alert": {
 				"trigger": "نعم، احذف حسابي",
 				"title": "هل أنت متأكد تماماً؟",
-				"description": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف حسابك وبياناتك من خوادمنا بشكل دائم.",
-				"cancel": "إلغاء",
-				"continue": "متابعة"
+				"description": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف حسابك وبياناتك من خوادمنا بشكل دائم."
 			}
 		}
 	}

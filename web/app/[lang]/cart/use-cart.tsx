@@ -2,20 +2,22 @@
 
 import { useMemo } from "react";
 import { useDispatch } from "react-redux";
+
 import { useQuery } from "@tanstack/react-query";
 
+import { categoriesService } from "@/redux/services/categories-service";
+import { paymentsService } from "@/redux/services/payments-service";
+import { AppDispatch, useAppSelector } from "@/redux/store";
 import {
 	deleteCartItemAsync,
 	updateCartItemQuantityAsync,
 } from "@/redux/thunks/cart-thunks";
-import { AppDispatch, useAppSelector } from "@/redux/store";
-import { paymentsService } from "@/redux/services/payments-service";
+
+import { useI18n } from "@/components/layout/i18n-provider";
 
 import { formatPrice } from "@/utils/format";
 
-import { useI18n } from "@/components/layout/i18n-provider";
-import { getCartColumns, CartItem } from "./columns";
-import { categoriesService } from "@/redux/services/categories-service";
+import { CartItem, getCartColumns } from "./columns";
 
 export function useCart() {
 	const dispatch = useDispatch<AppDispatch>();
@@ -61,7 +63,7 @@ export function useCart() {
 			discountPercent: `${discountPercentValue.toFixed(0)}%`,
 			total: formatPrice(totalValue + shippingValue, locale),
 		};
-	}, [items]);
+	}, [items, locale]);
 
 	const columns = getCartColumns({
 		categoryTree,

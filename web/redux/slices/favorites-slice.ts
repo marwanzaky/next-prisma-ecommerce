@@ -5,6 +5,7 @@ import {
 	postFavoritesAsync,
 	removeFavoritesAsync,
 } from "@/redux/thunks/favorites-thunks";
+
 import { IProduct } from "@/types/product.type";
 
 export type FavoritesState = {

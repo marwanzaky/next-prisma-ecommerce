@@ -1,25 +1,25 @@
 "use cache";
-import { cacheLife } from "next/cache";
 import { Metadata } from "next";
+import { cacheLife } from "next/cache";
 
-import Header from "@/components/homepage/header";
-import WhyChooseUs from "@/components/homepage/why-choose-us";
-import Testimonials from "@/components/homepage/testimonials";
+import { categoriesService } from "@/redux/services/categories-service";
+import { productsService } from "@/redux/services/products-service";
+
 import Categories from "@/components/homepage/categories";
+import Header from "@/components/homepage/header";
+import Testimonials from "@/components/homepage/testimonials";
+import WhyChooseUs from "@/components/homepage/why-choose-us";
 
 import { Heading } from "@/shadcn/components/ui/typography";
 
-import { IProduct } from "@/types/product.type";
-
-import { Section } from "@/shared/components/ui/section";
 import ProductCard from "@/shared/components/ui/product-card";
+import { Section } from "@/shared/components/ui/section";
 
-import { productsService } from "@/redux/services/products-service";
-import { categoriesService } from "@/redux/services/categories-service";
-
-import { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/dictionaries";
 import { generateLocaleAlternates } from "@/lib/generate";
+import { Locale } from "@/lib/i18n";
+
+import { IProduct } from "@/types/product.type";
 
 export async function generateMetadata({
 	params,
