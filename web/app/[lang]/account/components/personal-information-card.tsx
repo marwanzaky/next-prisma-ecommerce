@@ -12,6 +12,7 @@ import { AppDispatch, useAppSelector } from "@/redux/store";
 import { updateMeAsync } from "@/redux/thunks/auth-thunks";
 
 import { useI18n } from "@/components/layout/i18n-provider";
+import { ButtonIcon } from "@/components/ui/button-icon";
 
 import {
 	Avatar,
@@ -37,7 +38,6 @@ import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
-import { ButtonIcon } from "@/shared/components/ui/button-icon";
 import { User } from "@/shared/types/user.type";
 
 import { initials } from "@/utils/string-utils";

@@ -1,12 +1,11 @@
 "use client";
 
+import { Container } from "@/components/common/container";
+import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
+import Icon from "@/components/ui/icon";
 
 import { useIsMobile } from "@/shadcn/hooks/use-mobile";
-
-import { Container } from "@/shared/components/ui/container";
-import Icon from "@/shared/components/ui/icon";
-import { Section } from "@/shared/components/ui/section";
 
 export default function Testimonials() {
 	const isMobile = useIsMobile({ mobileBreakpoint: 1024 });

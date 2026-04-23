@@ -2,10 +2,11 @@ import { Trash2Icon } from "lucide-react";
 
 import { ColumnDef } from "@tanstack/react-table";
 
+import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
+import { LogoCell } from "@/components/ui/table/cells/logo-cell";
+
 import { Button } from "@/shadcn/components/ui/button";
 
-import InputWithPlusMinusButtons from "@/shared/components/ui/input-with-plus-minus-buttons";
-import { LogoCell } from "@/shared/components/ui/table/cells/logo-cell";
 import { PublicCategoryTree } from "@/shared/types/category.type";
 
 import { Locale, localizePath } from "@/lib/i18n";

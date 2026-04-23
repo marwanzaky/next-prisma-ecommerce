@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { Slot } from "@radix-ui/react-slot";
 
-import Icon from "@/shared/components/ui/icon";
+import Icon from "@/components/ui/icon";
 
 import { cn } from "@/lib/utils";
 

@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import { ImageIcon } from "lucide-react";
 
-import { ButtonIcon } from "@/shared/components/ui/button-icon";
+import { ButtonIcon } from "@/components/ui/button-icon";
 
 import { cn } from "@/lib/utils";
 

@@ -7,12 +7,11 @@ import {
 	productsService,
 } from "@/redux/services/products-service";
 
+import ProductCard from "@/components/common/product-card";
+import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 
 import { Heading } from "@/shadcn/components/ui/typography";
-
-import ProductCard from "@/shared/components/ui/product-card";
-import { Section } from "@/shared/components/ui/section";
 
 import { cn } from "@/lib/utils";
 

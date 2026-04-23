@@ -1,7 +1,8 @@
+import { Column } from "@/components/ui/table";
+import { LogoCell } from "@/components/ui/table/cells/logo-cell";
+
 import { Checkbox } from "@/shadcn/components/ui/checkbox";
 
-import { Column } from "@/shared/components/ui/table";
-import { LogoCell } from "@/shared/components/ui/table/cells/logo-cell";
 import { Category } from "@/shared/types/category.type";
 
 export const getCategoriesColumns = ({

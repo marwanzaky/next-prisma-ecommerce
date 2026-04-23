@@ -5,7 +5,7 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import {
 	$createImageNode,
 	ImageNode,
-} from "@/shared/components/ui/lexical/nodes/image-node";
+} from "@/components/ui/lexical/nodes/image-node";
 
 export function LoadDescriptionPlugin({ json }: { json?: string }) {
 	const [editor] = useLexicalComposerContext();

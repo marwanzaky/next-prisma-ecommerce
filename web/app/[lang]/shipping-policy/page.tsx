@@ -1,7 +1,7 @@
+import { Section } from "@/components/common/section";
+
 import { TypographyP } from "@/shadcn/components/ui/typography";
 import { Heading } from "@/shadcn/components/ui/typography";
-
-import { Section } from "@/shared/components/ui/section";
 
 export default function Page() {
 	return (

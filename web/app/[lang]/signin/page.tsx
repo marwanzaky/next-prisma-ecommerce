@@ -10,6 +10,7 @@ import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 
 import { Button } from "@/shadcn/components/ui/button";
@@ -30,8 +31,6 @@ import {
 } from "@/shadcn/components/ui/field";
 import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
-
-import { Section } from "@/shared/components/ui/section";
 
 import config from "@/lib/config";
 import { localizePath } from "@/lib/i18n";

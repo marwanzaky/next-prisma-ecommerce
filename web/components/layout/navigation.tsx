@@ -22,6 +22,8 @@ import { logOut } from "@/redux/slices/auth-slice";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 
 import { useI18n } from "@/components/layout/i18n-provider";
+import { ButtonIcon } from "@/components/ui/button-icon";
+import { ImageButton } from "@/components/ui/image-button";
 
 import {
 	Avatar,
@@ -48,9 +50,6 @@ import {
 	InputGroupInput,
 } from "@/shadcn/components/ui/input-group";
 import { useIsMobile } from "@/shadcn/hooks/use-mobile";
-
-import { ButtonIcon } from "@/shared/components/ui/button-icon";
-import { ImageButton } from "@/shared/components/ui/image-button";
 
 import { Locale, localeLabels, localizePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";

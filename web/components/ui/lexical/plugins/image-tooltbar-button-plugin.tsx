@@ -9,10 +9,10 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 
 import { uploadsService } from "@/redux/services/uploads-service";
 
+import { $createImageNode } from "@/components/ui/lexical/nodes/image-node";
+
 import { Button } from "@/shadcn/components/ui/button";
 import { Separator } from "@/shadcn/components/ui/separator";
-
-import { $createImageNode } from "@/shared/components/ui/lexical/nodes/image-node";
 
 import { cn } from "@/lib/utils";
 

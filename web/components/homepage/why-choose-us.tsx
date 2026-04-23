@@ -1,12 +1,11 @@
 "use client";
 
+import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
+import Icon from "@/components/ui/icon";
 
 import { Heading } from "@/shadcn/components/ui/typography";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
-
-import Icon from "@/shared/components/ui/icon";
-import { Section } from "@/shared/components/ui/section";
 
 import { cn } from "@/lib/utils";
 

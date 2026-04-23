@@ -9,6 +9,9 @@ import {
 	IContactMessage,
 } from "@/redux/services/contact-messages-service";
 
+import { ButtonIcon } from "@/components/ui/button-icon";
+import { Column } from "@/components/ui/table";
+
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -38,9 +41,6 @@ import {
 	SelectValue,
 } from "@/shadcn/components/ui/select";
 import { Textarea } from "@/shadcn/components/ui/textarea";
-
-import { ButtonIcon } from "@/shared/components/ui/button-icon";
-import { Column } from "@/shared/components/ui/table";
 
 export function useAdminMessages() {
 	const { data, isLoading, refetch } = useQuery({

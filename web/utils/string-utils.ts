@@ -1,4 +1,4 @@
-export function initials(fullname: string) {
+export function initials(fullname: string): string {
 	return fullname
 		.split(" ")
 		.map((word) => word[0])
@@ -6,7 +6,7 @@ export function initials(fullname: string) {
 		.toUpperCase();
 }
 
-export function stringToDate(str: string) {
+export function stringToDate(str: string): string {
 	const date = new Date(str);
 	return date.toLocaleDateString("en-us", {
 		year: "numeric",
@@ -15,7 +15,7 @@ export function stringToDate(str: string) {
 	});
 }
 
-export function createProductSlug(name: string, id: string) {
+export function createProductSlug(name: string, id: string): string {
 	const slug = name
 		.toLowerCase()
 		.replace(/[^a-z0-9]+/g, "-")

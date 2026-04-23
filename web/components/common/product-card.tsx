@@ -9,11 +9,10 @@ import { AppDispatch } from "@/redux/store";
 import { postCartItemAsync } from "@/redux/thunks/cart-thunks";
 
 import { useI18n } from "@/components/layout/i18n-provider";
+import { ButtonIcon } from "@/components/ui/button-icon";
+import Stars from "@/components/ui/stars";
 
 import { useIsMobile } from "@/shadcn/hooks/use-mobile";
-
-import { ButtonIcon } from "@/shared/components/ui/button-icon";
-import Stars from "@/shared/components/ui/stars";
 
 import { localizePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";

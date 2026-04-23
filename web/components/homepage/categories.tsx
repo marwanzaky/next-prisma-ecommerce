@@ -3,10 +3,10 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { Container } from "@/components/common/container";
+import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 
-import { Container } from "@/shared/components/ui/container";
-import { Section } from "@/shared/components/ui/section";
 import { PublicCategoryTree } from "@/shared/types/category.type";
 
 import { localizePath } from "@/lib/i18n";

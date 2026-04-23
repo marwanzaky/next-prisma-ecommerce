@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { useI18n } from "@/components/layout/i18n-provider";
+import Stars from "@/components/ui/stars";
 
 import {
 	Avatar,
@@ -17,8 +18,6 @@ import {
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
-
-import Stars from "@/shared/components/ui/stars";
 
 import { localizePath } from "@/lib/i18n";
 

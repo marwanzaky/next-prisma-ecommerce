@@ -2,7 +2,9 @@
 
 import { useRouter } from "next/navigation";
 
+import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
+import { DataTable } from "@/components/ui/data-table/data-table";
 
 import { Button } from "@/shadcn/components/ui/button";
 import {
@@ -13,9 +15,6 @@ import {
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
 import { Heading } from "@/shadcn/components/ui/typography";
-
-import { DataTable } from "@/shared/components/ui/data-table/data-table";
-import { Section } from "@/shared/components/ui/section";
 
 import { localizePath } from "@/lib/i18n";
 

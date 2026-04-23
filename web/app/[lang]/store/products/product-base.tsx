@@ -14,7 +14,15 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 
+import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
+import ImageInput from "@/components/ui/image-input";
+import { InputCurrencyRange } from "@/components/ui/input-currency-range";
+import { InputTags } from "@/components/ui/input-tags";
+import { ImageToolbarButtonPlugin } from "@/components/ui/lexical/plugins/image-tooltbar-button-plugin";
+import { LoadDescriptionPlugin } from "@/components/ui/lexical/plugins/load-description-plugin";
+import { OnChangePlugin } from "@/components/ui/lexical/plugins/on-change-plugin";
+import YouTubePastePlugin from "@/components/ui/lexical/plugins/youTube-paste-plugin";
 
 import {
 	Breadcrumb,
@@ -43,14 +51,6 @@ import {
 } from "@/shadcn/components/ui/select";
 import { Spinner } from "@/shadcn/components/ui/spinner";
 
-import ImageInput from "@/shared/components/ui/image-input";
-import { InputCurrencyRange } from "@/shared/components/ui/input-currency-range";
-import { InputTags } from "@/shared/components/ui/input-tags";
-import { ImageToolbarButtonPlugin } from "@/shared/components/ui/lexical/plugins/image-tooltbar-button-plugin";
-import { LoadDescriptionPlugin } from "@/shared/components/ui/lexical/plugins/load-description-plugin";
-import { OnChangePlugin } from "@/shared/components/ui/lexical/plugins/on-change-plugin";
-import YouTubePastePlugin from "@/shared/components/ui/lexical/plugins/youTube-paste-plugin";
-import { Section } from "@/shared/components/ui/section";
 import { PublicCategoryTree } from "@/shared/types/category.type";
 
 import { localizePath } from "@/lib/i18n";

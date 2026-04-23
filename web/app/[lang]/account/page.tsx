@@ -2,11 +2,10 @@
 
 import { useAppSelector } from "@/redux/store";
 
+import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 
 import { Heading } from "@/shadcn/components/ui/typography";
-
-import { Section } from "@/shared/components/ui/section";
 
 import ChangePasswordCard from "./components/change-password-card";
 import DeleteAccountCard from "./components/delete-account-card";

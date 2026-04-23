@@ -1,7 +1,8 @@
 {
 	"photoOf": "Photo of {{name}}",
 	"layout": {
-		"banner": "Free shipping on orders over $50"
+		"banner": "Sign up and get 20% off to your first order.",
+		"signup": "Sign Up Now"
 	},
 	"navigation": {
 		"searchPlaceholder": "Search...",

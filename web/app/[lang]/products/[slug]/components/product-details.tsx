@@ -9,13 +9,14 @@ import { useRouter } from "next/navigation";
 import { Heart, ShoppingCart } from "lucide-react";
 
 import { sendGTMEvent } from "@next/third-parties/google";
-import { useQuery } from "@tanstack/react-query";
 
-import { categoriesService } from "@/redux/services/categories-service";
 import { AppDispatch } from "@/redux/store";
 import { postCartItemAsync } from "@/redux/thunks/cart-thunks";
 
 import { useI18n } from "@/components/layout/i18n-provider";
+import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
+import { renderLexicalJSONToHTML } from "@/components/ui/lexical/render-lexical-json-to-html";
+import Stars from "@/components/ui/stars";
 
 import {
 	Accordion,
@@ -29,27 +30,9 @@ import {
 	AvatarImage,
 } from "@/shadcn/components/ui/avatar";
 import { Badge } from "@/shadcn/components/ui/badge";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "@/shadcn/components/ui/breadcrumb";
 import { Button } from "@/shadcn/components/ui/button";
 import { Separator } from "@/shadcn/components/ui/separator";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/shadcn/components/ui/tooltip";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
-
-import InputWithPlusMinusButtons from "@/shared/components/ui/input-with-plus-minus-buttons";
-import { renderLexicalJSONToHTML } from "@/shared/components/ui/lexical/renderLexicalJSONToHTML";
-import Stars from "@/shared/components/ui/stars";
-import { PublicCategoryTree } from "@/shared/types/category.type";
 
 import { localizePath } from "@/lib/i18n";
 
@@ -60,6 +43,8 @@ import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
 import { IProduct } from "@/types/product.type";
 
+import ProductBreadcrumb from "./product-breadcrumb";
+
 export default function ProductDetails({ product }: { product: IProduct }) {
 	const router = useRouter();
 	const { locale, t } = useI18n();
@@ -69,29 +54,7 @@ export default function ProductDetails({ product }: { product: IProduct }) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =
 		useToggleFavorite(product);
 
-	const { data: categoryTree } = useQuery({
-		queryKey: ["category-tree"],
-		queryFn: () => categoriesService.getCategoryTree(),
-		staleTime: 1000 * 60 * 5,
-	});
-
 	const [quantity, setQuantity] = useState(1);
-
-	const productSubcategoryTree = useMemo(() => {
-		return categoryTree
-			?.flatMap((cat) => [...cat.children, cat])
-			.find((cat) => cat.id === product.category);
-	}, [categoryTree, product]);
-
-	const productCategoryTree = useMemo<PublicCategoryTree | undefined>(() => {
-		if (!categoryTree) {
-			return undefined;
-		}
-
-		return categoryTree.find((rootCat) =>
-			rootCat.children.some((childCat) => childCat.id === product.category),
-		);
-	}, [categoryTree, product.category]);
 
 	const descriptionHtml = useMemo(() => {
 		const parsed = JSON.parse(product.description);
@@ -119,60 +82,7 @@ export default function ProductDetails({ product }: { product: IProduct }) {
 	return (
 		<div className="space-y-4 lg:space-y-8">
 			<div className="space-y-4">
-				<Breadcrumb>
-					<BreadcrumbList>
-						<BreadcrumbItem>
-							<BreadcrumbLink asChild>
-								<Link href={localizePath("/", locale)}>
-									{t("product.home")}
-								</Link>
-							</BreadcrumbLink>
-						</BreadcrumbItem>
-
-						<BreadcrumbSeparator />
-
-						<BreadcrumbItem>
-							<BreadcrumbLink asChild>
-								<Link
-									href={localizePath(
-										`/products?category=${productCategoryTree?.slug}`,
-										locale,
-									)}
-								>
-									{productCategoryTree?.name}
-								</Link>
-							</BreadcrumbLink>
-						</BreadcrumbItem>
-
-						<BreadcrumbSeparator />
-
-						<BreadcrumbItem>
-							<BreadcrumbLink asChild>
-								<Link
-									href={localizePath(
-										`/products?category=${productSubcategoryTree?.slug}`,
-										locale,
-									)}
-								>
-									{productSubcategoryTree?.name}
-								</Link>
-							</BreadcrumbLink>
-						</BreadcrumbItem>
-
-						<BreadcrumbSeparator />
-
-						<BreadcrumbItem className="min-w-0 flex-1">
-							<Tooltip>
-								<TooltipTrigger asChild>
-									<BreadcrumbPage className="truncate">
-										{product?.name}
-									</BreadcrumbPage>
-								</TooltipTrigger>
-								<TooltipContent>{product?.name}</TooltipContent>
-							</Tooltip>
-						</BreadcrumbItem>
-					</BreadcrumbList>
-				</Breadcrumb>
+				<ProductBreadcrumb product={product} />
 
 				<div className="space-y-1 lg:space-y-2">
 					<h1 className="scroll-m-20 text-4xl tracking-tight lg:text-5xl">

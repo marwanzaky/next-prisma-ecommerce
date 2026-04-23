@@ -1,5 +1,6 @@
 "use client";
 
+import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 
 import {
@@ -14,7 +15,6 @@ import {
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
 
-import { Section } from "@/shared/components/ui/section";
 import { User } from "@/shared/types/user.type";
 
 import { initials } from "@/utils/string-utils";

@@ -1,5 +1,8 @@
 "use client";
 
+import { Section } from "@/components/common/section";
+import { Table } from "@/components/ui/table";
+
 import {
 	Empty,
 	EmptyDescription,
@@ -7,9 +10,6 @@ import {
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
 import { Heading } from "@/shadcn/components/ui/typography";
-
-import { Section } from "@/shared/components/ui/section";
-import { Table } from "@/shared/components/ui/table";
 
 import { useAdminMessages } from "./use-admin-message";
 

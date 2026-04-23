@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { useI18n } from "@/components/layout/i18n-provider";
+import { ButtonIcon } from "@/components/ui/button-icon";
 
 import {
 	Carousel,
@@ -13,8 +14,6 @@ import {
 	CarouselItem,
 	useCarousel,
 } from "@/shadcn/components/ui/carousel";
-
-import { ButtonIcon } from "@/shared/components/ui/button-icon";
 
 import { cn } from "@/lib/utils";
 

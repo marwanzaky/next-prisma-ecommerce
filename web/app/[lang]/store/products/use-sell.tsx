@@ -26,9 +26,8 @@ import {
 } from "@/redux/thunks/user-products-thunks";
 
 import { useI18n } from "@/components/layout/i18n-provider";
-
-import { ImageNode } from "@/shared/components/ui/lexical/nodes/image-node";
-import { YouTubeNode } from "@/shared/components/ui/lexical/nodes/youtube-node";
+import { ImageNode } from "@/components/ui/lexical/nodes/image-node";
+import { YouTubeNode } from "@/components/ui/lexical/nodes/youtube-node";
 
 import { localizePath } from "@/lib/i18n";
 

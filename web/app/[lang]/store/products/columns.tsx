@@ -10,6 +10,7 @@ import { ArrowUpDown, EyeIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { ColumnDef, Row } from "@tanstack/react-table";
 
 import { useI18n } from "@/components/layout/i18n-provider";
+import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
 
 import {
 	AlertDialog,
@@ -25,7 +26,6 @@ import { Avatar, AvatarImage } from "@/shadcn/components/ui/avatar";
 import { Button } from "@/shadcn/components/ui/button";
 import { Checkbox } from "@/shadcn/components/ui/checkbox";
 
-import InputWithPlusMinusButtons from "@/shared/components/ui/input-with-plus-minus-buttons";
 import { PublicCategoryTree } from "@/shared/types/category.type";
 
 import { Locale, localizePath } from "@/lib/i18n";

@@ -4,7 +4,7 @@ import { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import { notFound } from "next/navigation";
 
-import { Organization, WebPage,WebSite, WithContext } from "schema-dts";
+import { Organization, WebPage, WebSite, WithContext } from "schema-dts";
 import { Toaster } from "sonner";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -13,15 +13,15 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import AppProviders from "@/redux/app-providers";
 
+import { Container } from "@/components/common/container";
 import AppStateInit from "@/components/layout/app-state-init";
+import Banner from "@/components/layout/banner";
 import Footer from "@/components/layout/footer";
 import { I18nProvider } from "@/components/layout/i18n-provider";
 import Navigation from "@/components/layout/navigation";
 
 import { DirectionProvider } from "@/shadcn/components/ui/direction";
 import { TooltipProvider } from "@/shadcn/components/ui/tooltip";
-
-import { Container } from "@/shared/components/ui/container";
 
 import config from "@/lib/config";
 import { getDictionary } from "@/lib/dictionaries";
@@ -145,10 +145,7 @@ export default async function RootLayout({
 							<Toaster />
 							{/* <Chatbot /> */}
 
-							{/* Banner */}
-							<div className="h-10.5 flex justify-center items-center text-center text-white bg-primary leading-none">
-								{dictionary.layout.banner}
-							</div>
+							<Banner />
 
 							{/* Navigation */}
 							<div className="border-b-2 sticky top-0 bg-white z-50">
@@ -164,7 +161,6 @@ export default async function RootLayout({
 								</TooltipProvider>
 							</Container>
 
-							{/* Footer */}
 							<Footer />
 						</I18nProvider>
 					</DirectionProvider>

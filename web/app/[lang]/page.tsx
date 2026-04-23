@@ -5,15 +5,14 @@ import { cacheLife } from "next/cache";
 import { categoriesService } from "@/redux/services/categories-service";
 import { productsService } from "@/redux/services/products-service";
 
+import ProductCard from "@/components/common/product-card";
+import { Section } from "@/components/common/section";
 import Categories from "@/components/homepage/categories";
 import Header from "@/components/homepage/header";
 import Testimonials from "@/components/homepage/testimonials";
 import WhyChooseUs from "@/components/homepage/why-choose-us";
 
 import { Heading } from "@/shadcn/components/ui/typography";
-
-import ProductCard from "@/shared/components/ui/product-card";
-import { Section } from "@/shared/components/ui/section";
 
 import { getDictionary } from "@/lib/dictionaries";
 import { generateLocaleAlternates } from "@/lib/generate";

@@ -2,6 +2,10 @@
 
 import { Controller } from "react-hook-form";
 
+import { Section } from "@/components/common/section";
+import ImageInput from "@/components/ui/image-input";
+import { Table } from "@/components/ui/table";
+
 import { Button } from "@/shadcn/components/ui/button";
 import {
 	Dialog,
@@ -22,10 +26,6 @@ import {
 	SelectValue,
 } from "@/shadcn/components/ui/select";
 import { Heading } from "@/shadcn/components/ui/typography";
-
-import ImageInput from "@/shared/components/ui/image-input";
-import { Section } from "@/shared/components/ui/section";
-import { Table } from "@/shared/components/ui/table";
 
 import { useAdminCategories } from "./use-admin-categories";
 

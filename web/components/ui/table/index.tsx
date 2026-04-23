@@ -1,10 +1,9 @@
 "use client";
 
 import { useI18n } from "@/components/layout/i18n-provider";
+import { ButtonIcon } from "@/components/ui/button-icon";
 
 import { Input } from "@/shadcn/components/ui/input";
-
-import { ButtonIcon } from "@/shared/components/ui/button-icon";
 
 import { cn } from "@/lib/utils";
 
