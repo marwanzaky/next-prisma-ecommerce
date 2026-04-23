@@ -6,10 +6,10 @@ import {
 	removeFavoritesAsync,
 } from "@/redux/thunks/favorites-thunks";
 
-import { IProduct } from "@/types/product.type";
+import { ProductEntity } from "@/shared/types/product.types";
 
 export type FavoritesState = {
-	items: IProduct[];
+	items: ProductEntity[];
 
 	loading: boolean;
 	error: string | null;

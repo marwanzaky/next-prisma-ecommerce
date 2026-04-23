@@ -4,7 +4,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { favoritesService } from "@/redux/services/favorites-service";
 
-import { IProduct } from "@/types/product.type";
+import { ProductEntity } from "@/shared/types/product.types";
 
 export const getFavoritesAsync = createAsyncThunk(
 	"favorites/getFavorites",
@@ -19,7 +19,7 @@ export const getFavoritesAsync = createAsyncThunk(
 
 export const postFavoritesAsync = createAsyncThunk(
 	"favorites/postFavorites",
-	async ({ product }: { product: IProduct }, { rejectWithValue }) => {
+	async ({ product }: { product: ProductEntity }, { rejectWithValue }) => {
 		try {
 			const response = await favoritesService.post(product._id);
 
@@ -34,7 +34,7 @@ export const postFavoritesAsync = createAsyncThunk(
 
 export const removeFavoritesAsync = createAsyncThunk(
 	"favorites/removeFavorites",
-	async ({ product }: { product: IProduct }, { rejectWithValue }) => {
+	async ({ product }: { product: ProductEntity }, { rejectWithValue }) => {
 		try {
 			const response = await favoritesService.remove(product._id);
 

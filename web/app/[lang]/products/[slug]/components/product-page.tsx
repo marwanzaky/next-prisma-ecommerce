@@ -13,15 +13,19 @@ import { useI18n } from "@/components/layout/i18n-provider";
 
 import { Heading } from "@/shadcn/components/ui/typography";
 
-import { cn } from "@/lib/utils";
+import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
-import { IProduct } from "@/types/product.type";
+import { cn } from "@/lib/utils";
 
 import Feedback from "./feedback";
 import ProductCallery from "./product-callery";
 import ProductDetails from "./product-details";
 
-export default function ProductPage({ product }: { product: IProduct }) {
+export default function ProductPage({
+	product,
+}: {
+	product: ProductWithReviewsEntity;
+}) {
 	const { t } = useI18n();
 	const options: GetAllProductsOptions = {
 		query: {

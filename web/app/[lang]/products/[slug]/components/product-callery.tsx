@@ -15,13 +15,17 @@ import {
 	useCarousel,
 } from "@/shadcn/components/ui/carousel";
 
+import { ProductWithReviewsEntity } from "@/shared/types/product.types";
+
 import { cn } from "@/lib/utils";
 
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
-import { IProduct } from "@/types/product.type";
-
-export default function ProductCallery({ product }: { product: IProduct }) {
+export default function ProductCallery({
+	product,
+}: {
+	product: ProductWithReviewsEntity;
+}) {
 	const { dir, t } = useI18n();
 	const { isFavorite, addToFavorites, removeFromFavorites } =
 		useToggleFavorite(product);

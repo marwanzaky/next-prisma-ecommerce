@@ -4,13 +4,18 @@ import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 
 import {
-	CreateProduct,
-	IProduct,
-	UpdateProduct,
+	CreateProductEntity,
+	UpdateProductEntity,
 } from "@interfaces/product.interface";
 import { Product } from "./entities/product.entity";
 import { Review } from "@reviews/entities/review.entity";
 import { CategoriesService } from "@modules/categories/categories.service";
+import {
+	ProductEntity,
+	ProductWithReviewsEntity,
+	Rating,
+	RatingDistribution,
+} from "@shared/product.types";
 
 @Injectable()
 export class ProductsService {
@@ -31,7 +36,7 @@ export class ProductsService {
 			tags,
 			stock,
 			category,
-		}: CreateProduct,
+		}: CreateProductEntity,
 	): Promise<Product> {
 		const product = await this.productModel.create({
 			user,
@@ -48,9 +53,12 @@ export class ProductsService {
 		return product.save();
 	}
 
+	/**
+	 * Returns ProductEntity document
+	 */
 	async find(options?: {
 		sort?: {
-			property?: keyof IProduct;
+			property?: keyof ProductEntity;
 			order?: "asc" | "desc";
 		};
 		query?: {
@@ -135,7 +143,7 @@ export class ProductsService {
 		return filteredProducts;
 	}
 
-	async findById(id: string): Promise<Product> {
+	async findById(id: string): Promise<ProductWithReviewsEntity> {
 		const product = await this.productModel
 			.findById(id)
 			.populate("reviews")
@@ -148,12 +156,12 @@ export class ProductsService {
 			throw new NotFoundException("Could not find the product");
 		}
 
-		return product;
+		return product as unknown as ProductWithReviewsEntity;
 	}
 
 	findByIdAndUpdate(
 		id: string,
-		updateProductDto: UpdateProduct,
+		updateProductDto: UpdateProductEntity,
 	): Promise<Product | null> {
 		return this.productModel.findByIdAndUpdate(id, updateProductDto, {
 			new: true,
@@ -161,29 +169,66 @@ export class ProductsService {
 		});
 	}
 
-	findByIdAndDelete(id: string): Promise<Product | null> {
+	async findByIdAndDelete(id: string): Promise<Product | null> {
+		await this.reviewModel.deleteMany({
+			product: new mongoose.Types.ObjectId(id),
+		});
 		return this.productModel.findByIdAndDelete(id);
 	}
 
 	async calcAvgRatings(productId: string) {
-		const stats = await this.reviewModel.aggregate([
-			{
-				$match: {
-					product: new mongoose.Types.ObjectId(productId),
+		const stats: { _id: string; numRating: number; avgRating: number }[] =
+			await this.reviewModel.aggregate([
+				{
+					$match: {
+						product: new mongoose.Types.ObjectId(productId),
+					},
 				},
-			},
-			{
-				$group: {
-					_id: "$product",
-					numRating: { $sum: 1 },
-					avgRating: { $avg: "$rating" },
+				{
+					$group: {
+						_id: "$product",
+						numRating: { $sum: 1 },
+						avgRating: { $avg: "$rating" },
+					},
 				},
-			},
-		]);
+			]);
 
 		await this.productModel.findByIdAndUpdate(productId, {
 			numReviews: stats.length > 0 ? stats[0].numRating : 0,
 			avgRatings: stats.length > 0 ? stats[0].avgRating : 0,
+		});
+	}
+
+	async calcRatingDistribution(productId: string) {
+		const distribution: { _id: Rating; count: number }[] =
+			await this.reviewModel.aggregate([
+				{
+					$match: {
+						product: new mongoose.Types.ObjectId(productId),
+					},
+				},
+				{
+					$group: {
+						_id: { $round: ["$rating", 0] },
+						count: { $sum: 1 },
+					},
+				},
+			]);
+
+		const ratingDistribution: RatingDistribution = {
+			1: 0,
+			2: 0,
+			3: 0,
+			4: 0,
+			5: 0,
+		};
+
+		distribution.forEach((item) => {
+			ratingDistribution[item._id] = item.count;
+		});
+
+		await this.productModel.findByIdAndUpdate(productId, {
+			ratingDistribution,
 		});
 	}
 }

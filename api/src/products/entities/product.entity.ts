@@ -1,15 +1,22 @@
 import { Prop, Schema, SchemaFactory, Virtual } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
-import { IProduct } from "@interfaces/product.interface";
 import { Category } from "@modules/categories/entities/category.entity";
 import { User } from "@users/entities/user.entity";
+import { ProductEntity, RatingDistribution } from "@shared/product.types";
+
+type ProductDocumentType = Omit<
+	ProductEntity,
+	"_id" | "category" | "createdAt" | "updatedAt"
+> & {
+	category: mongoose.Types.ObjectId | null;
+};
 
 @Schema({
 	toJSON: { virtuals: true },
 	toObject: { virtuals: true },
 	timestamps: true,
 })
-export class Product extends Document implements Omit<IProduct, "_id"> {
+export class Product extends Document implements ProductDocumentType {
 	@Prop({
 		type: String,
 		required: [true, "A product must have a name"],
@@ -52,6 +59,24 @@ export class Product extends Document implements Omit<IProduct, "_id"> {
 		default: 0,
 	})
 	numReviews!: number;
+
+	@Prop({
+		type: {
+			1: { type: Number, default: 0 },
+			2: { type: Number, default: 0 },
+			3: { type: Number, default: 0 },
+			4: { type: Number, default: 0 },
+			5: { type: Number, default: 0 },
+		},
+		default: {
+			1: 0,
+			2: 0,
+			3: 0,
+			4: 0,
+			5: 0,
+		},
+	})
+	ratingDistribution!: RatingDistribution;
 
 	@Prop({
 		type: [String],

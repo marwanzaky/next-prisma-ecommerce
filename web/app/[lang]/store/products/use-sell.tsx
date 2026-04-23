@@ -31,9 +31,8 @@ import { YouTubeNode } from "@/components/ui/lexical/nodes/youtube-node";
 
 import { localizePath } from "@/lib/i18n";
 
-import { ICreateProduct, IUpdateProduct } from "@/types/product.type";
-
 import { getSellColumns, SellProduct } from "./columns";
+import { CreateProduct, UpdateProduct } from "@/shared/types/product.types";
 
 function createProductSchema(t: ReturnType<typeof useI18n>["t"]) {
 	const requiredPositiveNumber = z
@@ -178,7 +177,7 @@ export function useSell() {
 			const { priceRangeUsd, name, description, tags, category, images } = data;
 			const compare = priceRangeUsd.max ?? priceRangeUsd.min;
 
-			const createProduct: ICreateProduct = {
+			const createProduct: CreateProduct = {
 				name,
 				description,
 				price: priceRangeUsd.min * 100,
@@ -216,7 +215,7 @@ export function useSell() {
 				.map((img, index) => (img?.url ? { url: img.url, index } : null))
 				.filter((el) => el !== null);
 
-			const updatedProduct: IUpdateProduct = {
+			const updatedProduct: UpdateProduct = {
 				name,
 				description,
 				price: priceRangeUsd.min * 100,

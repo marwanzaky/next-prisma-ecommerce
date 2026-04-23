@@ -1,10 +1,9 @@
+import { ProductEntity } from "@/shared/types/product.types";
 import { UpdateUser, UpdateUserPassword, User } from "@/shared/types/user.type";
 
 import { clientFetch } from "@/lib/api-client";
 
 import { jsonToFormData } from "@/utils/helper";
-
-import { IProduct } from "@/types/product.type";
 
 export const usersService = {
 	login: (email: string, password: string) =>
@@ -20,7 +19,7 @@ export const usersService = {
 
 	// My account
 	getMe: () => clientFetch<User>("/users/me"),
-	getMeProducts: () => clientFetch<IProduct[]>("/users/me/products"),
+	getMeProducts: () => clientFetch<ProductEntity[]>("/users/me/products"),
 	updateMe: (updatedUser: UpdateUser & { photoFile?: File }) =>
 		clientFetch<User>("/users/updateMe", {
 			method: "PATCH",

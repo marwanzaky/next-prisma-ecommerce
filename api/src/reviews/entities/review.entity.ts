@@ -2,21 +2,22 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
 import { Product } from "@products/entities/product.entity";
 import { User } from "@users/entities/user.entity";
+import { ReviewEntity } from "@shared/review.type";
 
-interface IReview {
-	_id: string;
-	rating: number;
-	description?: string;
+type ReviewDocumentType = Omit<
+	ReviewEntity,
+	"_id" | "createdAt" | "updatedAt" | "product" | "user"
+> & {
 	product: mongoose.Schema.Types.ObjectId;
 	user: mongoose.Schema.Types.ObjectId;
-	createdAt: Date;
-}
+};
 
 @Schema({
 	toJSON: { virtuals: true },
 	toObject: { virtuals: true },
+	timestamps: true,
 })
-export class Review extends Document implements Omit<IReview, "_id"> {
+export class Review extends Document implements ReviewDocumentType {
 	@Prop({
 		type: Number,
 		min: 1,
@@ -44,12 +45,6 @@ export class Review extends Document implements Omit<IReview, "_id"> {
 		required: [true, "A review must belong to a user"],
 	})
 	user!: mongoose.Schema.Types.ObjectId;
-
-	@Prop({
-		type: Date,
-		default: Date.now(),
-	})
-	createdAt!: Date;
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);

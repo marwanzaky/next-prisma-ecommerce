@@ -25,6 +25,7 @@ export class ReviewsService {
 		await review.save();
 
 		await this.productService.calcAvgRatings(product);
+		await this.productService.calcRatingDistribution(product);
 
 		return review;
 	}

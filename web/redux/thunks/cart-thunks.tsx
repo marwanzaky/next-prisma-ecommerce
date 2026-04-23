@@ -6,7 +6,8 @@ import { cartsService } from "@/redux/services/carts-service";
 import { guestCartService } from "@/redux/services/guest-cart-service";
 import { RootState } from "@/redux/store";
 
-import { CartProduct, IProduct } from "@/types/product.type";
+import { ProductEntity } from "@/shared/types/product.types";
+import { CartProductEntity } from "@/shared/types/cart.type";
 
 export const getCartMeAsync = createAsyncThunk(
 	"cart/getCartMe",
@@ -29,7 +30,7 @@ export const getCartMeAsync = createAsyncThunk(
 export const postCartItemAsync = createAsyncThunk(
 	"cart/postCartItem",
 	async (
-		{ product, quantity = 1 }: { product: IProduct; quantity?: number },
+		{ product, quantity = 1 }: { product: ProductEntity; quantity?: number },
 		{ getState, rejectWithValue },
 	) => {
 		const state = getState() as RootState;
@@ -79,7 +80,7 @@ export const updateCartItemQuantityAsync = createAsyncThunk(
 export const deleteCartItemAsync = createAsyncThunk(
 	"cart/deleteCartItem",
 	async (
-		{ product }: { product: CartProduct },
+		{ product }: { product: CartProductEntity },
 		{ getState, rejectWithValue },
 	) => {
 		const state = getState() as RootState;

@@ -1,11 +1,10 @@
 import { clientFetch } from "@/lib/api-client";
-
-import { ICart } from "@/types/cart.type";
+import { CartEntity } from "@/shared/types/cart.type";
 
 export const cartsService = {
-	getMe: () => clientFetch<ICart>("/carts"),
+	getMe: () => clientFetch<CartEntity>("/carts"),
 	postItem: (productId: string, quantity: number) =>
-		clientFetch<ICart>(`/carts/items/${productId}`, {
+		clientFetch<CartEntity>(`/carts/items/${productId}`, {
 			method: "POST",
 			body: JSON.stringify({
 				quantity,
@@ -16,7 +15,7 @@ export const cartsService = {
 			quantity = 1;
 		}
 
-		return clientFetch<ICart>(`/carts/items/${productId}/quantity`, {
+		return clientFetch<CartEntity>(`/carts/items/${productId}/quantity`, {
 			method: "PATCH",
 			body: JSON.stringify({
 				quantity,
@@ -24,7 +23,7 @@ export const cartsService = {
 		});
 	},
 	deleteItem: (productId: string) =>
-		clientFetch<ICart>(`/carts/items/${productId}`, {
+		clientFetch<CartEntity>(`/carts/items/${productId}`, {
 			method: "DELETE",
 		}),
 };

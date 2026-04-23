@@ -7,10 +7,10 @@ import {
 	updateUserProductAsync,
 } from "@/redux/thunks/user-products-thunks";
 
-import { IProduct } from "@/types/product.type";
+import { ProductEntity } from "@/shared/types/product.types";
 
 export type UserProductsState = {
-	products: IProduct[];
+	products: ProductEntity[];
 	loading: boolean;
 	error: string | null;
 };

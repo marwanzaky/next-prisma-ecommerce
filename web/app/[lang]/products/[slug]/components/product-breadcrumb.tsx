@@ -25,12 +25,15 @@ import {
 } from "@/shadcn/components/ui/tooltip";
 
 import { PublicCategoryTree } from "@/shared/types/category.type";
+import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
 import { localizePath } from "@/lib/i18n";
 
-import { IProduct } from "@/types/product.type";
-
-export default function ProductBreadcrumb({ product }: { product: IProduct }) {
+export default function ProductBreadcrumb({
+	product,
+}: {
+	product: ProductWithReviewsEntity;
+}) {
 	const { locale, t } = useI18n();
 
 	const { data: categoryTree } = useQuery({
@@ -100,10 +103,10 @@ export default function ProductBreadcrumb({ product }: { product: IProduct }) {
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<BreadcrumbPage className="truncate">
-								{product?.name}
+								{product.name}
 							</BreadcrumbPage>
 						</TooltipTrigger>
-						<TooltipContent>{product?.name}</TooltipContent>
+						<TooltipContent>{product.name}</TooltipContent>
 					</Tooltip>
 				</BreadcrumbItem>
 			</BreadcrumbList>

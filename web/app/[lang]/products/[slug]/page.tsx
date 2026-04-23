@@ -15,8 +15,6 @@ import { generateProductStructuredData } from "@/lib/structured-data";
 
 import { createProductSlug } from "@/utils/string-utils";
 
-import { IProduct } from "@/types/product.type";
-
 import ProductPage from "./components/product-page";
 
 interface Props {
@@ -49,7 +47,7 @@ export default async function Page({ params }: Props) {
 	);
 }
 
-async function getProduct(id: string): Promise<IProduct> {
+async function getProduct(id: string) {
 	return await productsService.getProduct(id);
 }
 

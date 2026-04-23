@@ -27,6 +27,7 @@ import { Button } from "@/shadcn/components/ui/button";
 import { Checkbox } from "@/shadcn/components/ui/checkbox";
 
 import { PublicCategoryTree } from "@/shared/types/category.type";
+import { ProductEntity } from "@/shared/types/product.types";
 
 import { Locale, localizePath } from "@/lib/i18n";
 
@@ -34,9 +35,8 @@ import { formatPrice } from "@/utils/format";
 import { createProductSlug } from "@/utils/string-utils";
 
 import { DictionaryKeys } from "@/types/i18n.type";
-import { IProduct } from "@/types/product.type";
 
-export type SellProduct = IProduct & { imgUrl: string };
+export type SellProduct = ProductEntity & { imgUrl: string };
 
 export const getSellColumns = ({
 	categoryTree,

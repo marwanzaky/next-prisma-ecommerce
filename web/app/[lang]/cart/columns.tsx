@@ -15,9 +15,9 @@ import { formatPrice } from "@/utils/format";
 import { createProductSlug } from "@/utils/string-utils";
 
 import { DictionaryKeys } from "@/types/i18n.type";
-import { CartProduct } from "@/types/product.type";
+import { CartProductEntity } from "@/shared/types/cart.type";
 
-export type CartItem = CartProduct & {
+export type CartItem = CartProductEntity & {
 	imgUrl: string;
 	quantity: number;
 	total: number;

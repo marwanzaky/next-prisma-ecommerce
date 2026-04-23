@@ -16,9 +16,11 @@ import {
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
+import { ProductEntity } from "@/shared/types/product.types";
+
 import { localizePath } from "@/lib/i18n";
 
-import { IProduct, ProductsPageParams, SortOption } from "@/types/product.type";
+import { ProductsPageParams, SortOption } from "@/types/product.type";
 
 export function useProducts() {
 	const router = useRouter();
@@ -65,7 +67,7 @@ export function useProducts() {
 
 	const sortMap: Record<
 		SortOption,
-		{ property: keyof IProduct; order: "asc" | "desc" }
+		{ property: keyof ProductEntity; order: "asc" | "desc" }
 	> = {
 		relevancy: { property: "createdAt", order: "asc" },
 		"most-popular": { property: "numReviews", order: "desc" },

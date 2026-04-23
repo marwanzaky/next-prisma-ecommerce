@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -19,20 +21,29 @@ import {
 } from "@/shadcn/components/ui/empty";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
+import { ProductWithReviewsEntity } from "@/shared/types/product.types";
+
 import { localizePath } from "@/lib/i18n";
 
 import { initials, stringToDate } from "@/utils/string-utils";
 
-import { IProduct } from "@/types/product.type";
-
-export default function Reviews({ product }: { product: IProduct }) {
+export default function Reviews({
+	product,
+}: {
+	product: ProductWithReviewsEntity;
+}) {
 	const { locale, t } = useI18n();
 	const router = useRouter();
 
+	const reviews = useMemo(
+		() => product.reviews?.filter((review) => !!review.description),
+		[product],
+	);
+
 	return (
 		<div>
-			{product.reviews?.length > 0 ? (
-				product.reviews?.map((review, i) => (
+			{reviews?.length > 0 ? (
+				reviews?.map((review, i) => (
 					<div key={`review ${i}`} className="mb-8 last:mb-0 flex">
 						<Avatar className="me-2 h-8 w-8">
 							<AvatarImage

@@ -6,11 +6,10 @@ import {
 	postCartItemAsync,
 	updateCartItemQuantityAsync,
 } from "@/redux/thunks/cart-thunks";
-
-import { CartItem } from "@/types/cart.type";
+import { CartItemEntity } from "@/shared/types/cart.type";
 
 export type CartState = {
-	items: CartItem[];
+	items: CartItemEntity[];
 
 	loading: boolean;
 	error: string | null;

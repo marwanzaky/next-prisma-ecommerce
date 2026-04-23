@@ -18,8 +18,6 @@ import { getDictionary } from "@/lib/dictionaries";
 import { generateLocaleAlternates } from "@/lib/generate";
 import { Locale } from "@/lib/i18n";
 
-import { IProduct } from "@/types/product.type";
-
 export async function generateMetadata({
 	params,
 }: {
@@ -69,7 +67,7 @@ export default async function Page({
 	);
 }
 
-async function getFeaturedCategories(): Promise<IProduct[]> {
+async function getFeaturedCategories() {
 	return await productsService.getAllProducts({
 		query: {
 			featured: true,
@@ -78,7 +76,7 @@ async function getFeaturedCategories(): Promise<IProduct[]> {
 	});
 }
 
-async function getHeroProduct(): Promise<IProduct[]> {
+async function getHeroProduct() {
 	return await productsService.getAllProducts({
 		query: {
 			isHero: true,

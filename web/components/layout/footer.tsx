@@ -20,7 +20,7 @@ const quicklinks: { label: DictionaryKeys; href: string }[] = [
 	},
 	{
 		label: "footer.refundPolicy",
-		href: "/refundPolicy",
+		href: "/refund-policy",
 	},
 	{
 		label: "footer.privacyPolicy",

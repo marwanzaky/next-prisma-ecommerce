@@ -11,13 +11,17 @@ import { renderLexicalJSONToHTML } from "@/components/ui/lexical/render-lexical-
 import { Button } from "@/shadcn/components/ui/button";
 import { Heading } from "@/shadcn/components/ui/typography";
 
+import { ProductEntity } from "@/shared/types/product.types";
+
 import { localizePath } from "@/lib/i18n";
 
 import { createProductSlug } from "@/utils/string-utils";
 
-import { IProduct } from "@/types/product.type";
-
-export default function Header({ heroProduct }: { heroProduct: IProduct }) {
+export default function Header({
+	heroProduct,
+}: {
+	heroProduct: ProductEntity;
+}) {
 	const { locale, t } = useI18n();
 
 	const shortDescriptionHtml = useMemo(() => {

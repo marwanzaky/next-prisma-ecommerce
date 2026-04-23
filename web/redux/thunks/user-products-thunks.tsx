@@ -4,8 +4,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { productsService } from "@/redux/services/products-service";
 import { usersService } from "@/redux/services/users-service";
-
-import { ICreateProduct, IUpdateProduct } from "@/types/product.type";
+import { CreateProduct, UpdateProduct } from "@/shared/types/product.types";
 
 export const getUserProductsAsync = createAsyncThunk(
 	"userProducts/getUserProducts",
@@ -20,7 +19,7 @@ export const getUserProductsAsync = createAsyncThunk(
 
 export const postUserProductAsync = createAsyncThunk(
 	"cart/postUserProduct",
-	async ({ data }: { data: ICreateProduct }, { rejectWithValue }) => {
+	async ({ data }: { data: CreateProduct }, { rejectWithValue }) => {
 		try {
 			const updatedCart = await productsService.post(data);
 
@@ -36,7 +35,7 @@ export const postUserProductAsync = createAsyncThunk(
 export const updateUserProductAsync = createAsyncThunk(
 	"userProducts/updateUserProduct",
 	async (
-		{ id, data }: { id: string; data: IUpdateProduct },
+		{ id, data }: { id: string; data: UpdateProduct },
 		{ rejectWithValue },
 	) => {
 		try {

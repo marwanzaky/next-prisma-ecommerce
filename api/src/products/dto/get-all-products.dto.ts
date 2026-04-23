@@ -1,4 +1,5 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
+import { ProductEntity } from "@shared/product.types";
 import { Transform, Type } from "class-transformer";
 import {
 	IsArray,
@@ -10,12 +11,11 @@ import {
 	Max,
 	Min,
 } from "class-validator";
-import { IProduct } from "@interfaces/product.interface";
 
 export class GetAllProductsDto {
 	@ApiPropertyOptional({ type: String, example: "price" })
 	@IsOptional()
-	readonly sortProperty?: keyof IProduct;
+	readonly sortProperty?: keyof ProductEntity;
 
 	@ApiPropertyOptional({ type: String, example: "price" })
 	@IsOptional()

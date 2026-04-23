@@ -1,7 +1,7 @@
-import { IProduct } from "./product.type";
+import { ProductEntity } from "@/shared/types/product.types";
 
 export interface IGetAllProductsDto {
-	sortProperty?: keyof IProduct;
+	sortProperty?: keyof ProductEntity;
 	sortOrder?: "asc" | "desc";
 	searchTerm?: string;
 

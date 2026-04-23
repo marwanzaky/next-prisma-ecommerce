@@ -1,11 +1,11 @@
 import { Product, WithContext } from "schema-dts";
 
-import { IProduct } from "@/types/product.type";
+import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
 import config from "./config";
 
 export function generateProductStructuredData(
-	product: IProduct,
+	product: ProductWithReviewsEntity,
 ): WithContext<Product> {
 	const productUrl = `${config.clientUrl}/products/${product._id}`;
 	const offerId = `${productUrl}#offer`;
@@ -29,7 +29,7 @@ export function generateProductStructuredData(
 					: "https://schema.org/OutOfStock",
 			seller: {
 				"@type": "Organization",
-				name: product.user?.name,
+				name: product.user.name,
 				url: config.clientUrl,
 			},
 			inventoryLevel: {

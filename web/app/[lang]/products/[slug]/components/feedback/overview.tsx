@@ -28,12 +28,16 @@ import { Textarea } from "@/shadcn/components/ui/textarea";
 import { Heading } from "@/shadcn/components/ui/typography";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
+import { ProductWithReviewsEntity, Rating } from "@/shared/types/product.types";
+
 import { localizePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-import { IProduct } from "@/types/product.type";
-
-export default function Overview({ product }: { product: IProduct }) {
+export default function Overview({
+	product,
+}: {
+	product: ProductWithReviewsEntity;
+}) {
 	const router = useRouter();
 
 	const { locale, t } = useI18n();
@@ -43,6 +47,16 @@ export default function Overview({ product }: { product: IProduct }) {
 	const [rating, setRating] = useState(0);
 	const [hoverRating, setHoverRating] = useState(0);
 	const [description, setDescription] = useState("");
+
+	const calculatePercentage = (starRating: Rating): string => {
+		if (!product.ratingDistribution || product.numReviews === 0) {
+			return "0%";
+		}
+
+		const count = product.ratingDistribution[starRating] || 0;
+		const percentage = (count / product.numReviews) * 100;
+		return `${Math.round(percentage)}%`;
+	};
 
 	return (
 		<div className="flex flex-col justify-center">
@@ -65,11 +79,11 @@ export default function Overview({ product }: { product: IProduct }) {
 				</div>
 
 				<ul className="flex flex-col justify-center space-y-2">
-					<OverviewRatesLi stars={1} percent="10%" />
-					<OverviewRatesLi stars={2} percent="20%" />
-					<OverviewRatesLi stars={3} percent="30%" />
-					<OverviewRatesLi stars={4} percent="40%" />
-					<OverviewRatesLi stars={5} percent="50%" />
+					<OverviewRatesLi stars={1} percent={calculatePercentage(1)} />
+					<OverviewRatesLi stars={2} percent={calculatePercentage(2)} />
+					<OverviewRatesLi stars={3} percent={calculatePercentage(3)} />
+					<OverviewRatesLi stars={4} percent={calculatePercentage(4)} />
+					<OverviewRatesLi stars={5} percent={calculatePercentage(5)} />
 				</ul>
 			</div>
 

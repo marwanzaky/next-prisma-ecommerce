@@ -1,11 +1,15 @@
-import { cn } from "@/lib/utils";
+import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
-import { IProduct } from "@/types/product.type";
+import { cn } from "@/lib/utils";
 
 import Overview from "./overview";
 import Reviews from "./reviews";
 
-export default function ProductFeedback({ product }: { product: IProduct }) {
+export default function ProductFeedback({
+	product,
+}: {
+	product: ProductWithReviewsEntity;
+}) {
 	return (
 		<div
 			className={cn(

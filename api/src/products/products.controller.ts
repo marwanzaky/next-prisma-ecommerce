@@ -22,7 +22,7 @@ import { IRequest } from "@interfaces/request.interface";
 import { ApiBearerAuth, ApiConsumes, ApiOperation } from "@nestjs/swagger";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { CloudinaryService } from "@modules/cloudinary/cloudinary.service";
-import { UpdateProduct } from "@interfaces/product.interface";
+import { UpdateProductEntity } from "@interfaces/product.interface";
 import { Types } from "mongoose";
 
 @Controller("products")
@@ -32,6 +32,25 @@ export class ProductsController {
 		private readonly productsService: ProductsService,
 		private readonly cloudinaryService: CloudinaryService,
 	) {}
+
+	@Post("admin/recalculate-ratings")
+	@Public()
+	@ApiOperation({
+		summary: "Recalculate all product avgRatings and ratingDistribution",
+	})
+	async recalculateAllRatings() {
+		const products = await this.productsService.find({});
+
+		for (const product of products) {
+			await this.productsService.calcAvgRatings(product.id);
+			await this.productsService.calcRatingDistribution(product.id);
+		}
+
+		return {
+			success: true,
+			message: `Successfully recalculate all product "avgRatings" and "ratingDistribution" (${products.length})`,
+		};
+	}
 
 	@Get()
 	@Public()
@@ -151,7 +170,7 @@ export class ProductsController {
 			}
 		}
 
-		const updatedProduct: UpdateProduct = {};
+		const updatedProduct: UpdateProductEntity = {};
 
 		if (dto.name !== undefined) {
 			updatedProduct.name = dto.name;

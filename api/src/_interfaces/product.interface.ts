@@ -1,26 +1,8 @@
-import { Types } from "mongoose";
+import { ProductEntity } from "@shared/product.types";
 
-export interface IProduct {
-	_id: string;
-	name: string;
-	price: number;
-	priceCompare: number;
-	isHero: boolean;
-	stock: number;
-	discount: string;
-	avgRatings: number;
-	numReviews: number;
-	imgUrls: string[];
-	description: string;
-	shortDescription?: string;
-	tags: string[];
-	featured: boolean;
-	category: Types.ObjectId | null;
-}
-
-export type CreateProduct = Partial<
+export type CreateProductEntity = Partial<
 	Pick<
-		IProduct,
+		ProductEntity,
 		| "name"
 		| "price"
 		| "priceCompare"
@@ -28,9 +10,8 @@ export type CreateProduct = Partial<
 		| "description"
 		| "tags"
 		| "stock"
+		| "category"
 	>
-> & {
-	category?: string | null;
-};
+>;
 
-export type UpdateProduct = Partial<CreateProduct>;
+export type UpdateProductEntity = Partial<CreateProductEntity>;

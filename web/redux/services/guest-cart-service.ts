@@ -1,26 +1,26 @@
-import { CartItem } from "@/types/cart.type";
-import { IProduct } from "@/types/product.type";
+import { CartItemEntity } from "@/shared/types/cart.type";
+import { ProductEntity } from "@/shared/types/product.types";
 
 const STORAGE_KEY = "guest_cart";
 
-const getItems = (): CartItem[] => {
+const getItems = (): CartItemEntity[] => {
 	const raw = localStorage.getItem(STORAGE_KEY);
 	return raw ? JSON.parse(raw) : [];
 };
 
-const saveItems = (items: CartItem[]) => {
+const saveItems = (items: CartItemEntity[]) => {
 	localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 };
 
 export const guestCartService = {
-	getMe: async (): Promise<{ items: CartItem[] }> => {
+	getMe: async (): Promise<{ items: CartItemEntity[] }> => {
 		return { items: getItems() };
 	},
 
 	postItem: async (
-		product: IProduct,
+		product: ProductEntity,
 		quantity: number,
-	): Promise<{ items: CartItem[] }> => {
+	): Promise<{ items: CartItemEntity[] }> => {
 		const cartItems = getItems();
 		const index = cartItems.findIndex(
 			(item) => item.product._id === product._id,
@@ -39,7 +39,7 @@ export const guestCartService = {
 	updateItemQuantity: async (
 		productId: string,
 		quantity: number,
-	): Promise<{ items: CartItem[] }> => {
+	): Promise<{ items: CartItemEntity[] }> => {
 		const cartItems = getItems();
 		const index = cartItems.findIndex((item) => item.product._id === productId);
 
@@ -55,7 +55,9 @@ export const guestCartService = {
 		return { items: cartItems };
 	},
 
-	deleteItem: async (productId: string): Promise<{ items: CartItem[] }> => {
+	deleteItem: async (
+		productId: string,
+	): Promise<{ items: CartItemEntity[] }> => {
 		const cartItems = getItems().filter(
 			(item) => item.product._id !== productId,
 		);

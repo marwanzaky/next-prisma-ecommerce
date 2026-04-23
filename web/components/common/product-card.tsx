@@ -14,6 +14,8 @@ import Stars from "@/components/ui/stars";
 
 import { useIsMobile } from "@/shadcn/hooks/use-mobile";
 
+import { ProductEntity } from "@/shared/types/product.types";
+
 import { localizePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -22,10 +24,8 @@ import { createProductSlug } from "@/utils/string-utils";
 
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
-import { IProduct } from "@/types/product.type";
-
 type ProductCardProps = {
-	data: IProduct;
+	data: ProductEntity;
 };
 
 export default function ProductCard({ data }: ProductCardProps) {

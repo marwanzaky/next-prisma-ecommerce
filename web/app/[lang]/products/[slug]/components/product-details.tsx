@@ -34,6 +34,8 @@ import { Button } from "@/shadcn/components/ui/button";
 import { Separator } from "@/shadcn/components/ui/separator";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
+import { ProductWithReviewsEntity } from "@/shared/types/product.types";
+
 import { localizePath } from "@/lib/i18n";
 
 import { formatPrice } from "@/utils/format";
@@ -41,11 +43,13 @@ import { initials, stringToDate } from "@/utils/string-utils";
 
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
-import { IProduct } from "@/types/product.type";
-
 import ProductBreadcrumb from "./product-breadcrumb";
 
-export default function ProductDetails({ product }: { product: IProduct }) {
+export default function ProductDetails({
+	product,
+}: {
+	product: ProductWithReviewsEntity;
+}) {
 	const router = useRouter();
 	const { locale, t } = useI18n();
 
