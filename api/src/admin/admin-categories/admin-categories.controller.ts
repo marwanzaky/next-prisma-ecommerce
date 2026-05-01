@@ -9,13 +9,17 @@ import {
 	UploadedFile,
 	UseInterceptors,
 } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+
+import { Public } from "@/auth/auth.guard";
+import { delay } from "@/common/helper";
+import { CategoriesService } from "@/modules/categories/categories.service";
+import { CloudinaryService } from "@/modules/cloudinary/cloudinary.service";
+import { Locale } from "@/modules/translation/translation.service";
 
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
-import { CategoriesService } from "@modules/categories/categories.service";
-import { CloudinaryService } from "@modules/cloudinary/cloudinary.service";
-import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("admin/categories")
 @ApiTags("Admin Categories")
@@ -24,6 +28,29 @@ export class AdminCategoriesController {
 		private cloudinaryService: CloudinaryService,
 		private categoriesService: CategoriesService,
 	) {}
+
+	@Get("admin/retranslate")
+	@ApiOperation({
+		summary: "Get all categories (admin)",
+	})
+	@Public()
+	async translate() {
+		const defaultLocale = process.env.DEFAULT_LOCALE as Locale;
+		const categories = await this.categoriesService.find();
+
+		for (const category of categories) {
+			await this.categoriesService.findByIdAndUpdate(category._id as string, {
+				name: category.name[defaultLocale],
+			});
+
+			await delay(2000);
+		}
+
+		return {
+			success: true,
+			message: `Successfully translated all categories (${categories.length})`,
+		};
+	}
 
 	@Get()
 	@ApiOperation({
@@ -75,7 +102,7 @@ export class AdminCategoriesController {
 			imgUrl = "";
 		}
 
-		return this.categoriesService.findOneAndUpdate(id, {
+		return this.categoriesService.findByIdAndUpdate(id, {
 			name,
 			parent,
 			slug,
@@ -90,6 +117,6 @@ export class AdminCategoriesController {
 		summary: "Deactivate an existing category (admin)",
 	})
 	async delete(@Param("id") id: string) {
-		return this.categoriesService.findOneAndUpdate(id, { isActive: false });
+		return this.categoriesService.findByIdAndUpdate(id, { isActive: false });
 	}
 }

@@ -36,10 +36,9 @@ import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
+import { formatPrice } from "@/lib/format";
 import { localizePath } from "@/lib/i18n";
-
-import { formatPrice } from "@/utils/format";
-import { initials, stringToDate } from "@/utils/string-utils";
+import { initials, stringToDate } from "@/lib/string-utils";
 
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
@@ -61,9 +60,9 @@ export default function ProductDetails({
 	const [quantity, setQuantity] = useState(1);
 
 	const descriptionHtml = useMemo(() => {
-		const parsed = JSON.parse(product.description);
+		const parsed = JSON.parse(product.description[locale]);
 		return renderLexicalJSONToHTML(parsed.root.children);
-	}, [product.description]);
+	}, [product.description, locale]);
 
 	useEffect(() => {
 		sendGTMEvent({
@@ -90,7 +89,7 @@ export default function ProductDetails({
 
 				<div className="space-y-1 lg:space-y-2">
 					<h1 className="scroll-m-20 text-4xl tracking-tight lg:text-5xl">
-						{product.name}
+						{product.name[locale]}
 					</h1>
 
 					<div className="flex items-center gap-3 overflow-hidden">
@@ -246,8 +245,6 @@ export default function ProductDetails({
 							<br />
 							You can always contact us for any return question at{" "}
 							{process.env.NEXT_PUBLIC_CONTACT}.
-							<br />
-							<br />
 						</p>
 
 						<h4>Shipping Policy</h4>
@@ -256,8 +253,6 @@ export default function ProductDetails({
 							weekends and holidays) after receiving your order confirmation
 							email. You will receive another notification when your order has
 							shipped.
-							<br />
-							<br />
 						</p>
 
 						<h4>International Shipping</h4>
@@ -285,6 +280,7 @@ export default function ProductDetails({
 									<AvatarImage
 										role="button"
 										src={product.user.photoUrl}
+										className="cursor-pointer"
 										alt={t("photoOf").replace("{{name}}", product.user.name)}
 										onClick={() =>
 											router.push(
@@ -303,8 +299,6 @@ export default function ProductDetails({
 									>
 										{product.user.name}
 									</Link>
-									{/* <Link href="#">test</Link> */}
-
 									<TypographyMuted>
 										{t("product.accordion.sellingSince")}{" "}
 										{stringToDate(

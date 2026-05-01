@@ -16,7 +16,7 @@ import {
 } from "@/shadcn/components/ui/select";
 import { TypographyP } from "@/shadcn/components/ui/typography";
 
-import { formatPrice } from "@/utils/format";
+import { formatPrice } from "@/lib/format";
 
 import { SortOption } from "@/types/product.type";
 
@@ -63,7 +63,7 @@ function ProductsContent() {
 				<div className="flex items-center gap-4 flex-1 min-w-0">
 					<ProductsFiltersDialog />
 
-					<div className="flex flex-1 items-center gap-2 scrollbar-hide overflow-auto">
+					<div className="flex flex-1 items-center gap-2 no-scrollbar overflow-auto">
 						{name && name !== undefined && (
 							<Chip onClick={clearName}>
 								{t("productsPage.search")} &quot;{name}&quot;

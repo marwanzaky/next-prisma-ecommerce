@@ -275,10 +275,10 @@ export function ProductBase({
 													<SelectGroup>
 														{options.map((item) => (
 															<SelectItem
-																key={`select-item-${item.id}`}
-																value={item.id}
+																key={`select-item-${item._id}`}
+																value={item._id}
 															>
-																{item.name}
+																{item.name[locale]}
 															</SelectItem>
 														))}
 													</SelectGroup>

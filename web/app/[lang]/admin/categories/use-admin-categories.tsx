@@ -10,9 +10,12 @@ import { useQuery } from "@tanstack/react-query";
 import { adminCategoriesService } from "@/redux/services/admin-categories-service";
 import { categoriesService } from "@/redux/services/categories-service";
 
+import { useI18n } from "@/components/layout/i18n-provider";
+
 import { getCategoriesColumns } from "./columns";
 
 export function useAdminCategories() {
+	const { locale } = useI18n();
 	const { register, handleSubmit, formState, control, reset } = useForm<{
 		name: string;
 		slug: string;
@@ -45,10 +48,10 @@ export function useAdminCategories() {
 		if (!data) return [];
 
 		return data.map((category) => ({
-			label: category.name,
-			value: category.id,
+			label: category.name[locale],
+			value: category._id,
 		}));
-	}, [data]);
+	}, [data, locale]);
 
 	const resetForm = () => {
 		reset({
@@ -65,9 +68,10 @@ export function useAdminCategories() {
 
 	return {
 		columns: getCategoriesColumns({
+			locale,
 			categories: data ?? [],
 			async onSortChange(value, row) {
-				await adminCategoriesService.updateCategory(row.id, {
+				await adminCategoriesService.updateCategory(row._id, {
 					sortOrder: value,
 				});
 
@@ -76,7 +80,7 @@ export function useAdminCategories() {
 				refetch();
 			},
 			async onActiveChange(value, row) {
-				await adminCategoriesService.updateCategory(row.id, {
+				await adminCategoriesService.updateCategory(row._id, {
 					isActive: value,
 				});
 
@@ -87,6 +91,7 @@ export function useAdminCategories() {
 			editAction(row) {
 				reset({
 					...row,
+					name: row.name[locale],
 					image: {
 						url: row.imgUrl,
 					},
@@ -125,7 +130,7 @@ export function useAdminCategories() {
 			refetch();
 		}),
 		editCategorySubmit: handleSubmit(async (formData) => {
-			const id = data?.find((cat) => cat.slug === formData.slug)?.id || "";
+			const id = data?.find((cat) => cat.slug === formData.slug)?._id || "";
 
 			await adminCategoriesService.updateCategory(id, {
 				name: formData.name,

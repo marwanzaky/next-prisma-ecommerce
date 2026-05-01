@@ -2,8 +2,7 @@ import { ProductEntity } from "@/shared/types/product.types";
 import { UpdateUser, UpdateUserPassword, User } from "@/shared/types/user.type";
 
 import { clientFetch } from "@/lib/api-client";
-
-import { jsonToFormData } from "@/utils/helper";
+import { jsonToFormData } from "@/lib/helper";
 
 export const usersService = {
 	login: (email: string, password: string) =>

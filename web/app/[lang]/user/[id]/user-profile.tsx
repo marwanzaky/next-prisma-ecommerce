@@ -17,7 +17,7 @@ import {
 
 import { User } from "@/shared/types/user.type";
 
-import { initials } from "@/utils/string-utils";
+import { initials } from "@/lib/string-utils";
 
 export default function UserProfile({ user }: { user: User }) {
 	const { t } = useI18n();

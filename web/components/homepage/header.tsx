@@ -14,8 +14,7 @@ import { Heading } from "@/shadcn/components/ui/typography";
 import { ProductEntity } from "@/shared/types/product.types";
 
 import { localizePath } from "@/lib/i18n";
-
-import { createProductSlug } from "@/utils/string-utils";
+import { createProductSlug } from "@/lib/string-utils";
 
 export default function Header({
 	heroProduct,
@@ -29,10 +28,10 @@ export default function Header({
 			return "";
 		}
 
-		const parsed = JSON.parse(heroProduct.shortDescription);
+		const parsed = JSON.parse(heroProduct.shortDescription[locale] || "");
 
 		return renderLexicalJSONToHTML(parsed.root.children);
-	}, [heroProduct.shortDescription]);
+	}, [heroProduct.shortDescription, locale]);
 
 	return (
 		<header className="full-bleed relative px-4 py-16 md:py-16">
@@ -51,7 +50,7 @@ export default function Header({
 						as="h1"
 						className="text-center text-white text-4xl md:text-5xl"
 					>
-						{heroProduct.name}.
+						{heroProduct.name[locale]}.
 					</Heading>
 					<div
 						className="mx-auto max-w-sm text-white text-center"
@@ -64,7 +63,7 @@ export default function Header({
 				<div className="flex justify-center gap-2">
 					<Link
 						href={localizePath(
-							`/products/${createProductSlug(heroProduct.name, heroProduct._id)}`,
+							`/products/${createProductSlug(heroProduct.name.en, heroProduct._id)}`,
 							locale,
 						)}
 					>

@@ -46,14 +46,14 @@ export default function ProductBreadcrumb({
 		() =>
 			categoryTree
 				?.flatMap((cat) => [...cat.children, cat])
-				.find((cat) => cat.id === product.category),
+				.find((cat) => cat._id === product.category),
 		[categoryTree, product],
 	);
 
 	const productCategoryTree = useMemo<PublicCategoryTree | undefined>(
 		() =>
 			categoryTree?.find((rootCat) =>
-				rootCat.children.some((childCat) => childCat.id === product.category),
+				rootCat.children.some((childCat) => childCat._id === product.category),
 			),
 		[categoryTree, product],
 	);
@@ -77,7 +77,7 @@ export default function ProductBreadcrumb({
 								locale,
 							)}
 						>
-							{productCategoryTree?.name}
+							{productCategoryTree?.name[locale]}
 						</Link>
 					</BreadcrumbLink>
 				</BreadcrumbItem>
@@ -92,7 +92,7 @@ export default function ProductBreadcrumb({
 								locale,
 							)}
 						>
-							{productSubcategoryTree?.name}
+							{productSubcategoryTree?.name[locale]}
 						</Link>
 					</BreadcrumbLink>
 				</BreadcrumbItem>
@@ -103,10 +103,10 @@ export default function ProductBreadcrumb({
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<BreadcrumbPage className="truncate">
-								{product.name}
+								{product.name[locale]}
 							</BreadcrumbPage>
 						</TooltipTrigger>
-						<TooltipContent>{product.name}</TooltipContent>
+						<TooltipContent>{product.name[locale]}</TooltipContent>
 					</Tooltip>
 				</BreadcrumbItem>
 			</BreadcrumbList>

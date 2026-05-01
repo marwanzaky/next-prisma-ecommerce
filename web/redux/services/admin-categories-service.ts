@@ -1,18 +1,17 @@
 import {
-	Category,
+	CategoryEntity,
 	CreateCategory,
 	UpdateCategory,
 } from "@/shared/types/category.type";
 
 import { clientFetch } from "@/lib/api-client";
-
-import { jsonToFormData } from "@/utils/helper";
+import { jsonToFormData } from "@/lib/helper";
 
 export const adminCategoriesService = {
-	getAllCategories: () => clientFetch<Category[]>("/admin/categories"),
+	getAllCategories: () => clientFetch<CategoryEntity[]>("/admin/categories"),
 	addCategory: (category: CreateCategory & { imgFile?: File }) => {
 		const formData = jsonToFormData(category);
-		return clientFetch<Category[]>("/admin/categories", {
+		return clientFetch<CategoryEntity[]>("/admin/categories", {
 			method: "POST",
 			body: formData,
 		});
@@ -22,7 +21,7 @@ export const adminCategoriesService = {
 		category: UpdateCategory & { imgFile?: File | null },
 	) => {
 		const formData = jsonToFormData(category);
-		return clientFetch<Category>(`/admin/categories/${id}`, {
+		return clientFetch<CategoryEntity>(`/admin/categories/${id}`, {
 			method: "PATCH",
 			body: formData,
 		});

@@ -9,8 +9,7 @@ import {
 import { ReviewEntity } from "@/shared/types/review.type";
 
 import { clientFetch } from "@/lib/api-client";
-
-import { jsonToFormData } from "@/utils/helper";
+import { jsonToFormData } from "@/lib/helper";
 
 import { IGetAllProductsDto } from "@/types/get-all-products-dto.type";
 

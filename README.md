@@ -29,18 +29,18 @@
   <img src="https://img.shields.io/badge/-Docker-2c3e50.svg?logo=docker&style=flat">
 </div>
 
-## 🛠 Tech Stack
-**Frontend**
-- Framework: Next.js 16
-- Styling: Tailwind CSS 4 & Shadcn UI
-- State Management: Redux Toolkit
-- Features: PWA support, i18n (English, Arabic & French support), Responsive Design
-
-**Backend**
-- Framework: NestJS (Node.js)
-- Database: MongoDB with Mongoose
-- Auth: JWT & Google OAuth 2.0
-- API Docs: Swagger UI
+## 🛠 stack
+- **core**: [nextjs 16.2](https://nextjs.org) + [react 19.2](https://react.dev) + [ts 6.0](https://typescriptlang.org)
+- **ui**: [tailwind 4.2](https://tailwindcss.com) + [shadcn/ui](https://ui.shadcn.com)
+- **redux**: [redux-toolkit](https://redux-toolkit.js.org)
+- **auth**: [jwt](https://www.jwt.io) + [google-oauth-2.0](https://developers.google.com/identity/protocols/oauth2)
+- **storage**: [cloudinary](https://cloudinary.com)
+- **analytics**: [vercel](https://vercel.com/docs/analytics) + [google-analytics-4](https://developers.google.com/analytics)
+- **db**: [mongodb](https://www.mongodb.com/) + [mongoose](https://mongoosejs.com)
+- **forms**: [react-hook-form](https://react-hook-form.com/) + [zod](https://zod.dev)
+- **tables**: [tanstack-table](https://tanstack.com/table)
+- **payments**: [stripe](https://stripe.com)
+- **api**: [nestjs](https://nestjs.com) + [swagger](https://swagger.io)
 
 ## Features
 - SEO friendly

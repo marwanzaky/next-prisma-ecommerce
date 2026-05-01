@@ -15,7 +15,7 @@ import {
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
-import { formatPrice } from "@/utils/format";
+import { formatPrice } from "@/lib/format";
 
 import { CartItem, getCartColumns } from "./columns";
 

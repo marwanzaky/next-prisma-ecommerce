@@ -24,8 +24,7 @@ import { TypographyMuted } from "@/shadcn/components/ui/typography";
 import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
 import { localizePath } from "@/lib/i18n";
-
-import { initials, stringToDate } from "@/utils/string-utils";
+import { initials, stringToDate } from "@/lib/string-utils";
 
 export default function Reviews({
 	product,
@@ -81,7 +80,7 @@ export default function Reviews({
 								displayTotal={false}
 							/>
 							<TypographyMuted className="text-sm">
-								{review.description}
+								{review.description?.[locale]}
 							</TypographyMuted>
 						</div>
 					</div>

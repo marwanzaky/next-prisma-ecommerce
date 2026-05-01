@@ -32,10 +32,9 @@ import {
 import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
 
+import { handleLogin } from "@/lib/auth-helpers";
 import config from "@/lib/config";
 import { localizePath } from "@/lib/i18n";
-
-import { handleLogin } from "@/utils/auth-helpers";
 
 type SignUpInput = {
 	email: string;

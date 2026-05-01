@@ -30,7 +30,7 @@ import {
 import { useProductsContext } from "./products-context";
 
 export default function ProductsFiltersDialog() {
-	const { t } = useI18n();
+	const { locale, t } = useI18n();
 
 	const {
 		categories,
@@ -94,7 +94,7 @@ export default function ProductsFiltersDialog() {
 												key={`select-item-${cat.slug}`}
 												value={cat.slug}
 											>
-												{cat.name}
+												{cat.name[locale]}
 											</SelectItem>
 										))}
 									</SelectGroup>

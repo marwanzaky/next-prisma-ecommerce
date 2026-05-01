@@ -97,7 +97,7 @@ export default function Chatbot() {
 				</DialogHeader>
 
 				<div
-					className="flex flex-col gap-4 h-96 overflow-auto scrollbar-hide"
+					className="flex flex-col gap-4 h-96 overflow-auto no-scrollbar"
 					ref={ref}
 				>
 					{messages.map((item, i) => (

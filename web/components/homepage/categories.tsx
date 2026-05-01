@@ -40,12 +40,12 @@ export default function Categories({
 								src={item.imgUrl || ""}
 								width={512}
 								height={512}
-								alt={`Photo of ${item.name}`}
+								alt={`Photo of ${item.name[locale]}`}
 								loading="lazy"
 							/>
 
 							<div className="bg-white font-light text-lg h-12 w-32 flex items-center justify-center shadow-sm rounded z-10">
-								{item.name}
+								{item.name[locale]}
 							</div>
 						</button>
 					))}

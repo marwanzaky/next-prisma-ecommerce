@@ -1,10 +1,10 @@
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 
-import { persistReducer,persistStore } from "redux-persist";
+import { persistReducer, persistStore } from "redux-persist";
 
 import { configureStore } from "@reduxjs/toolkit";
 
-import storage from "@/utils/storage-utils";
+import storage from "@/lib/storage-utils";
 
 import authReducer, { AuthState } from "./slices/auth-slice";
 import cartReducer, { CartState } from "./slices/cart-slice";

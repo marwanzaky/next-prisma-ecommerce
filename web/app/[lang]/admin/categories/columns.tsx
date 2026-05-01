@@ -3,19 +3,23 @@ import { LogoCell } from "@/components/ui/table/cells/logo-cell";
 
 import { Checkbox } from "@/shadcn/components/ui/checkbox";
 
-import { Category } from "@/shared/types/category.type";
+import { CategoryEntity } from "@/shared/types/category.type";
+
+import { Locale } from "@/lib/i18n";
 
 export const getCategoriesColumns = ({
+	locale,
 	categories,
 	onActiveChange,
 	onSortChange,
 	editAction,
 }: {
-	categories: Category[];
-	onActiveChange: (value: boolean, row: Category) => void;
-	onSortChange: (value: number, row: Category) => void;
-	editAction: (row: Category) => void;
-}): Column<Category>[] => [
+	locale: Locale;
+	categories: CategoryEntity[];
+	onActiveChange: (value: boolean, row: CategoryEntity) => void;
+	onSortChange: (value: number, row: CategoryEntity) => void;
+	editAction: (row: CategoryEntity) => void;
+}): Column<CategoryEntity>[] => [
 	{
 		header: "Active",
 		field: "isActive",
@@ -46,7 +50,7 @@ export const getCategoriesColumns = ({
 			return (
 				<LogoCell
 					href={`/products?${params.toString()}`}
-					label={row.name}
+					label={row.name[locale]}
 					imgUrl={value}
 				/>
 			);
@@ -58,8 +62,8 @@ export const getCategoriesColumns = ({
 		type: "custom",
 		className: "w-[15%]",
 		render(value) {
-			const parentCat = categories?.find((cat) => cat.id === value);
-			return <div>{parentCat?.name}</div>;
+			const parentCat = categories?.find((cat) => cat._id === value);
+			return <div>{parentCat?.name[locale]}</div>;
 		},
 	},
 	{
@@ -77,7 +81,7 @@ export const getCategoriesColumns = ({
 	},
 	{
 		header: "",
-		field: "id",
+		field: "_id",
 		type: "action",
 		className: "w-9.5",
 		actionIcon: "edit",

@@ -12,9 +12,8 @@ import { Label } from "@/shadcn/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/shadcn/components/ui/radio-group";
 import { Separator } from "@/shadcn/components/ui/separator";
 
+import { formatPrice } from "@/lib/format";
 import { localizePath } from "@/lib/i18n";
-
-import { formatPrice } from "@/utils/format";
 
 import { useCart } from "../use-cart";
 

@@ -1,9 +1,21 @@
-export type CreateCategory = Omit<Category, "id" | "isActive">;
-export type UpdateCategory = Partial<Omit<Category, "id">>;
+import { EntityBase } from "./entity.type";
+import { WithoutMongoMeta } from "./mongoose.type";
+import { TranslatedText } from "./product.types";
 
-export type Category = {
-	id: string;
+export type CreateCategory = Omit<
+	WithoutMongoMeta<CategoryEntity>,
+	"name" | "isActive"
+> & {
 	name: string;
+};
+export type UpdateCategory = Partial<
+	Omit<WithoutMongoMeta<CategoryEntity>, "name">
+> & {
+	name?: string;
+};
+
+export type CategoryEntity = EntityBase & {
+	name: TranslatedText;
 	slug: string;
 	sortOrder: number;
 	isActive: boolean;
@@ -12,8 +24,8 @@ export type Category = {
 };
 
 export type PublicCategory = Pick<
-	Category,
-	"id" | "name" | "slug" | "parent" | "imgUrl"
+	CategoryEntity,
+	"_id" | "name" | "slug" | "parent" | "imgUrl"
 >;
 
 export type PublicCategoryTree = Omit<PublicCategory, "parent"> & {

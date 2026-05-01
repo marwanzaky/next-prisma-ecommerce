@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
-import { handleGoogleAuth } from "@/utils/auth-helpers";
+import { handleGoogleAuth } from "@/lib/auth-helpers";
 
 export default function Page() {
 	const router = useRouter();

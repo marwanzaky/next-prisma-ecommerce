@@ -1,29 +1,34 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import mongoose, { Model } from "mongoose";
+import { Model } from "mongoose";
 
-import { Category as CategoryEntity } from "./entities/category.entity";
 import {
-	Category as CategoryType,
+	CategoryEntity as CategoryEntityType,
 	CreateCategory,
 	PublicCategory,
 	PublicCategoryTree,
 	UpdateCategory,
-} from "@shared/category.type";
+} from "@/shared/types/category.type";
+
+import { TranslationService } from "../translation/translation.service";
+import { Category as CategoryEntity } from "./entities/category.entity";
 
 @Injectable()
 export class CategoriesService {
 	constructor(
 		@InjectModel(CategoryEntity.name)
 		private categoryModel: Model<CategoryEntity>,
+		private translationService: TranslationService,
 	) {}
 
 	async create(params: CreateCategory): Promise<CategoryEntity> {
 		const { name, parent, slug, sortOrder, imgUrl } = params;
 
+		const translatedName = await this.translationService.translateText(name);
+
 		const category = await this.categoryModel.create({
-			name,
+			name: translatedName,
 			parent,
 			slug,
 			sortOrder,
@@ -33,17 +38,19 @@ export class CategoriesService {
 		return category.save();
 	}
 
-	async find(filter?: Partial<CategoryType>): Promise<CategoryEntity[]> {
+	async find(filter?: Partial<CategoryEntityType>): Promise<CategoryEntity[]> {
 		return this.categoryModel.find(filter ? filter : {});
 	}
 
 	async findOne(
-		filter?: Partial<CategoryType>,
+		filter?: Partial<CategoryEntityType>,
 	): Promise<CategoryEntity | null> {
 		return this.categoryModel.findOne(filter);
 	}
 
-	async findPublic(filter?: Partial<CategoryType>): Promise<PublicCategory[]> {
+	async findPublic(
+		filter?: Partial<CategoryEntityType>,
+	): Promise<PublicCategory[]> {
 		return this.categoryModel
 			.find(filter ? filter : {})
 			.select("name slug parent imgUrl");
@@ -58,7 +65,7 @@ export class CategoriesService {
 
 		categories.forEach((cat) => {
 			categoryMap.set(cat.id, {
-				id: cat.id,
+				_id: cat.id,
 				name: cat.name,
 				slug: cat.slug,
 				imgUrl: cat.imgUrl,
@@ -85,20 +92,25 @@ export class CategoriesService {
 		return tree;
 	}
 
-	findOneAndUpdate(
+	async findByIdAndUpdate(
 		id: string,
-		update: UpdateCategory,
+		updateCategory: UpdateCategory,
 	): Promise<CategoryEntity | null> {
-		return this.categoryModel.findOneAndUpdate(
-			{
-				_id: new mongoose.Types.ObjectId(id),
-			},
-			update,
-			{
-				new: true,
-				runValidators: true,
-			},
-		);
+		const data: Partial<CategoryEntityType> = {
+			...updateCategory,
+			name: undefined,
+		};
+
+		if (updateCategory.name) {
+			data.name = await this.translationService.translateText(
+				updateCategory.name,
+			);
+		}
+
+		return this.categoryModel.findByIdAndUpdate(id, data, {
+			new: true,
+			runValidators: true,
+		});
 	}
 
 	async getAllDescendantCategoryIds(category: string): Promise<string[]> {

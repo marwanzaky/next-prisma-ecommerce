@@ -16,11 +16,10 @@ import { useIsMobile } from "@/shadcn/hooks/use-mobile";
 
 import { ProductEntity } from "@/shared/types/product.types";
 
+import { formatPrice } from "@/lib/format";
 import { localizePath } from "@/lib/i18n";
+import { createProductSlug } from "@/lib/string-utils";
 import { cn } from "@/lib/utils";
-
-import { formatPrice } from "@/utils/format";
-import { createProductSlug } from "@/utils/string-utils";
 
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
@@ -64,14 +63,14 @@ export default function ProductCard({ data }: ProductCardProps) {
 
 			<Link
 				href={localizePath(
-					`/products/${createProductSlug(data.name, data._id)}`,
+					`/products/${createProductSlug(data.name.en, data._id)}`,
 					locale,
 				)}
 			>
 				<Image
 					className="aspect-square object-cover w-full h-full"
 					src={data.imgUrls[0]}
-					alt={data.name}
+					alt={data.name[locale]}
 					width={512}
 					height={512}
 					loading="lazy"
@@ -80,7 +79,7 @@ export default function ProductCard({ data }: ProductCardProps) {
 
 			<div className="relative p-2 md:p-4">
 				<h3 className="truncate leading-none! mb-1 text-base md:text-lg">
-					{data.name}
+					{data.name[locale]}
 				</h3>
 
 				<Stars

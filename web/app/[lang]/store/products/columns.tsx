@@ -29,10 +29,9 @@ import { Checkbox } from "@/shadcn/components/ui/checkbox";
 import { PublicCategoryTree } from "@/shared/types/category.type";
 import { ProductEntity } from "@/shared/types/product.types";
 
+import { formatPrice } from "@/lib/format";
 import { Locale, localizePath } from "@/lib/i18n";
-
-import { formatPrice } from "@/utils/format";
-import { createProductSlug } from "@/utils/string-utils";
+import { createProductSlug } from "@/lib/string-utils";
 
 import { DictionaryKeys } from "@/types/i18n.type";
 
@@ -80,7 +79,7 @@ export const getSellColumns = ({
 			const href = localizePath(`store/products/${row.original._id}`, locale);
 			const subcategory = categoryTree
 				?.flatMap((cat) => [...cat.children, cat])
-				.find((cat) => cat.id === row.original.category);
+				.find((cat) => cat._id === row.original.category);
 
 			return (
 				<div className="flex gap-3 items-center">
@@ -89,17 +88,17 @@ export const getSellColumns = ({
 							<AvatarImage
 								className="rounded-none"
 								src={row.original.imgUrl}
-								alt={`Photo of "${row.original.name}"`}
+								alt={`${t("photoOf").replace("{{name}}", row.original.name[locale])}`}
 							/>
 						</Avatar>
 					</Link>
 
 					<div>
 						<div className="font-medium hover:text-primary transition-colors max-w-60 truncate">
-							<Link href={href}>{row.original.name}</Link>
+							<Link href={href}>{row.original.name[locale]}</Link>
 						</div>
 						<span className="text-muted-foreground text-xs">
-							{subcategory?.name}
+							{subcategory?.name[locale]}
 						</span>
 					</div>
 				</div>
@@ -120,11 +119,11 @@ export const getSellColumns = ({
 		cell: ({ row }) => {
 			const productCategoryTree = categoryTree?.find((rootCat) =>
 				rootCat.children.some(
-					(childCat) => childCat.id === row.original.category,
+					(childCat) => childCat._id === row.original.category,
 				),
 			);
 
-			return <div>{productCategoryTree?.name}</div>;
+			return <div>{productCategoryTree?.name[locale]}</div>;
 		},
 	},
 	{
@@ -202,7 +201,7 @@ const ActionsCell = ({
 					onClick={() => {
 						router.push(
 							localizePath(
-								`/products/${createProductSlug(row.original.name, row.original._id)}`,
+								`/products/${createProductSlug(row.original.name.en, row.original._id)}`,
 								locale,
 							),
 						);

@@ -52,9 +52,8 @@ import {
 import { useIsMobile } from "@/shadcn/hooks/use-mobile";
 
 import { Locale, localeLabels, localizePath } from "@/lib/i18n";
+import { initials } from "@/lib/string-utils";
 import { cn } from "@/lib/utils";
-
-import { initials } from "@/utils/string-utils";
 
 import { ProductsPageParams } from "@/types/product.type";
 
@@ -323,7 +322,7 @@ function NavigationMenu() {
 
 				{data?.map((cat) => (
 					<DropdownMenuSub key={`menu-sub-${cat.slug}`}>
-						<DropdownMenuSubTrigger>{cat.name}</DropdownMenuSubTrigger>
+						<DropdownMenuSubTrigger>{cat.name[locale]}</DropdownMenuSubTrigger>
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent>
 								{cat.children.map((subcat) => (
@@ -337,7 +336,7 @@ function NavigationMenu() {
 											);
 										}}
 									>
-										{subcat.name}
+										{subcat.name[locale]}
 									</DropdownMenuItem>
 								))}
 							</DropdownMenuSubContent>

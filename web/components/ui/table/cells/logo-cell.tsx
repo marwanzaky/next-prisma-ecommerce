@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { useI18n } from "@/components/layout/i18n-provider";
+
 import { Avatar, AvatarImage } from "@/shadcn/components/ui/avatar";
 
 import { PublicCategoryTree } from "@/shared/types/category.type";
@@ -12,6 +14,7 @@ export type LogoCellProps = {
 };
 
 export function LogoCell({ label, subcategory, imgUrl, href }: LogoCellProps) {
+	const { locale } = useI18n();
 	return (
 		<div className="flex gap-3 items-center">
 			<Link href={href}>
@@ -31,7 +34,7 @@ export function LogoCell({ label, subcategory, imgUrl, href }: LogoCellProps) {
 
 				{subcategory && (
 					<span className="text-muted-foreground text-xs">
-						{subcategory?.name}
+						{subcategory?.name[locale]}
 					</span>
 				)}
 			</div>

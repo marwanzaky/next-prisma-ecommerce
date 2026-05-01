@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
+import { Trash2Icon } from "lucide-react";
 import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +13,6 @@ import { AppDispatch, useAppSelector } from "@/redux/store";
 import { updateMeAsync } from "@/redux/thunks/auth-thunks";
 
 import { useI18n } from "@/components/layout/i18n-provider";
-import { ButtonIcon } from "@/components/ui/button-icon";
 
 import {
 	Avatar,
@@ -40,7 +40,7 @@ import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { User } from "@/shared/types/user.type";
 
-import { initials } from "@/utils/string-utils";
+import { initials } from "@/lib/string-utils";
 
 export default function PersonalInformationCard() {
 	const { t } = useI18n();
@@ -168,10 +168,10 @@ export default function PersonalInformationCard() {
 												{t("account.personalInfo.changeAvatar")}
 											</Button>
 
-											<ButtonIcon
-												size="sm"
+											<Button
+												size="icon"
 												type="button"
-												icon="delete"
+												variant="ghost"
 												aria-label={t("account.personalInfo.deleteAvatar")}
 												onClick={() => {
 													setValue(
@@ -180,7 +180,9 @@ export default function PersonalInformationCard() {
 														{ shouldDirty: !!user.photoUrl },
 													);
 												}}
-											/>
+											>
+												<Trash2Icon />
+											</Button>
 										</div>
 
 										<TypographyMuted className="text-xs">
