@@ -31,10 +31,14 @@ import { ProductsService } from "./products.service";
 @Controller("products")
 @ApiBearerAuth("Authorization")
 export class ProductsController {
+	private defaultLocale: Locale;
+
 	constructor(
 		private readonly productsService: ProductsService,
 		private readonly cloudinaryService: CloudinaryService,
-	) {}
+	) {
+		this.defaultLocale = process.env.DEFAULT_LOCALE as Locale;
+	}
 
 	@Post("admin/recalculate-ratings")
 	@Public()
@@ -200,13 +204,22 @@ export class ProductsController {
 
 		const updatedProduct: UpdateProductEntity = {};
 
-		if (dto.name !== undefined) {
+		if (
+			dto.name !== undefined &&
+			dto.name !== product.name[this.defaultLocale]
+		) {
 			updatedProduct.name = dto.name;
 		}
-		if (dto.description !== undefined) {
+		if (
+			dto.description !== undefined &&
+			dto.description !== product.description[this.defaultLocale]
+		) {
 			updatedProduct.description = dto.description;
 		}
-		if (dto.shortDescription !== undefined) {
+		if (
+			dto.shortDescription !== undefined &&
+			dto.shortDescription !== product.shortDescription?.[this.defaultLocale]
+		) {
 			updatedProduct.shortDescription = dto.shortDescription;
 		}
 		if (dto.price !== undefined) {

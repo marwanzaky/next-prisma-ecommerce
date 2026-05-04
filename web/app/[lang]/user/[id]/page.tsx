@@ -1,4 +1,4 @@
-import { usersService } from "@/redux/services/users-service";
+import { usersService } from "@/services/users-service";
 
 import { User } from "@/shared/types/user.type";
 

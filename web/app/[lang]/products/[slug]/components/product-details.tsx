@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,8 +9,7 @@ import { Heart, ShoppingCart } from "lucide-react";
 
 import { sendGTMEvent } from "@next/third-parties/google";
 
-import { AppDispatch } from "@/redux/store";
-import { postCartItemAsync } from "@/redux/thunks/cart-thunks";
+import { useAppDispatch } from "@/redux/store";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
@@ -36,10 +34,10 @@ import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
-import { formatPrice } from "@/lib/format";
 import { localizePath } from "@/lib/i18n";
-import { initials, stringToDate } from "@/lib/string-utils";
+import { formatPrice, initials, stringToDate } from "@/lib/string-utils";
 
+import { useCart } from "@/hooks/use-cart";
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
 import ProductBreadcrumb from "./product-breadcrumb";
@@ -52,10 +50,12 @@ export default function ProductDetails({
 	const router = useRouter();
 	const { locale, t } = useI18n();
 
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	const { isFavorite, addToFavorites, removeFromFavorites } =
 		useToggleFavorite(product);
+
+	const { addToCart } = useCart();
 
 	const [quantity, setQuantity] = useState(1);
 
@@ -128,7 +128,8 @@ export default function ProductDetails({
 						size="xl"
 						className="flex-1"
 						onClick={() => {
-							dispatch(postCartItemAsync({ product, quantity }));
+							addToCart(product, quantity);
+
 							sendGTMEvent({
 								event: "add_to_cart",
 								value: {
@@ -175,7 +176,7 @@ export default function ProductDetails({
 					size="xl"
 					variant="secondary"
 					onClick={() => {
-						dispatch(postCartItemAsync({ product, quantity }));
+						addToCart(product, quantity);
 
 						sendGTMEvent({
 							event: "add_to_cart",

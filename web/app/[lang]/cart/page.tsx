@@ -19,13 +19,13 @@ import { Heading } from "@/shadcn/components/ui/typography";
 import { localizePath } from "@/lib/i18n";
 
 import CheckoutCard from "./components/checkout-card";
-import { useCart } from "./use-cart";
+import { useCartPage } from "./use-cart";
 
 export default function Page() {
 	const router = useRouter();
 	const { locale, t } = useI18n();
 
-	const { items, columns, tableData } = useCart();
+	const { items, columns, tableData } = useCartPage();
 
 	return (
 		<Section>

@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { useDispatch } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
 import { LineBreakNode, ParagraphNode } from "lexical";
+import { toast } from "sonner";
 import { useDebouncedCallback } from "use-debounce";
 import * as z from "zod";
 
@@ -17,13 +17,14 @@ import { ListItemNode, ListNode } from "@lexical/list";
 import { InitialConfigType } from "@lexical/react/LexicalComposer";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 
-import { categoriesService } from "@/redux/services/categories-service";
-import { AppDispatch, useAppSelector } from "@/redux/store";
 import {
 	postUserProductAsync,
 	removeUserProductAsync,
 	updateUserProductAsync,
-} from "@/redux/thunks/user-products-thunks";
+} from "@/redux/slices/user-products-slice";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+
+import { categoriesService } from "@/services/categories-service";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ImageNode } from "@/components/ui/lexical/nodes/image-node";
@@ -81,14 +82,12 @@ export type ProductForm = z.infer<ReturnType<typeof createProductSchema>>;
 export function useSell() {
 	const router = useRouter();
 
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	const { locale, t } = useI18n();
 	const productSchema = createProductSchema(t);
 
-	const { products, loading } = useAppSelector(
-		(state) => state.userProductsReducer,
-	);
+	const { products, loading } = useAppSelector((state) => state.userProducts);
 
 	const initialConfig: InitialConfigType = {
 		namespace: "MyEditor",
@@ -140,8 +139,10 @@ export function useSell() {
 	return {
 		columns: getSellColumns({
 			categoryTree,
-			onDelete: (id) => {
-				dispatch(removeUserProductAsync({ id }));
+			onDelete: async (id) => {
+				await dispatch(removeUserProductAsync(id)).unwrap();
+
+				toast("Product deleted.", { position: "top-center" });
 			},
 			onStockChange: (id, value) => {
 				const product = products.find((p) => p._id === id);
@@ -149,7 +150,7 @@ export function useSell() {
 				dispatch(
 					updateUserProductAsync({
 						id,
-						data: {
+						update: {
 							stock: value,
 							keptImgs: product
 								?.imgUrls!.map((imgUrl, index) =>
@@ -194,17 +195,15 @@ export function useSell() {
 				stock: 1,
 			};
 
-			await dispatch(
-				postUserProductAsync({
-					data: createProduct,
-				}),
-			);
+			await dispatch(postUserProductAsync(createProduct)).unwrap();
+
+			toast("Product created.", { position: "top-center" });
 
 			form.reset();
 
 			router.push(localizePath("/store/products", locale));
 		}),
-		updateProduct: ({ id, data }: { id: string; data: ProductForm }) => {
+		updateProduct: async ({ id, data }: { id: string; data: ProductForm }) => {
 			const { priceRangeUsd, name, description, tags, category, images } = data;
 			const compare = priceRangeUsd.max ?? priceRangeUsd.min;
 
@@ -227,7 +226,11 @@ export function useSell() {
 				category,
 			};
 
-			dispatch(updateUserProductAsync({ id, data: updatedProduct }));
+			await dispatch(
+				updateUserProductAsync({ id, update: updatedProduct }),
+			).unwrap();
+
+			toast("Product updated.", { position: "top-center" });
 		},
 		onDescriptionChange: useDebouncedCallback(
 			(editorState: string, isEmpty: boolean) => {

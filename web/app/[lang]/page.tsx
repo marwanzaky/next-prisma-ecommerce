@@ -2,8 +2,8 @@
 import { Metadata } from "next";
 import { cacheLife } from "next/cache";
 
-import { categoriesService } from "@/redux/services/categories-service";
-import { productsService } from "@/redux/services/products-service";
+import { categoriesService } from "@/services/categories-service";
+import { productsService } from "@/services/products-service";
 
 import ProductCard from "@/components/common/product-card";
 import { Section } from "@/components/common/section";

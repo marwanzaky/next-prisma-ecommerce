@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
 	GetAllProductsOptions,
 	productsService,
-} from "@/redux/services/products-service";
+} from "@/services/products-service";
 
 import ProductCard from "@/components/common/product-card";
 import { Section } from "@/components/common/section";
@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import Feedback from "./feedback";
 import ProductCallery from "./product-callery";
 import ProductDetails from "./product-details";
+import ProductCardSkeleton from "@/components/common/product-card-skeleton";
 
 export default function ProductPage({
 	product,
@@ -35,7 +36,7 @@ export default function ProductPage({
 		},
 	};
 
-	const { data: similarProducts } = useQuery({
+	const { data: similarProducts, isLoading } = useQuery({
 		queryKey: ["similar-products", options],
 		queryFn: () => productsService.getAllProducts(options),
 		staleTime: 1000 * 60 * 5,
@@ -58,19 +59,26 @@ export default function ProductPage({
 				<Feedback product={product} />
 			</Section>
 
-			{similarProducts && similarProducts.length > 0 && (
-				<Section className="pt-0! space-y-2 lg:space-y-4">
-					<Heading as="h2" variant="h3" className="text-center">
-						{t("product.similarProducts")}
-					</Heading>
+			<Section className="pt-0! space-y-2 lg:space-y-4">
+				<Heading as="h2" variant="h3" className="text-center">
+					{t("product.similarProducts")}
+				</Heading>
 
-					<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
-						{similarProducts.map((item) => (
+				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
+					{!isLoading ? (
+						similarProducts?.map((item) => (
 							<ProductCard key={item._id} data={item} />
-						))}
-					</div>
-				</Section>
-			)}
+						))
+					) : (
+						<>
+							<ProductCardSkeleton />
+							<ProductCardSkeleton />
+							<ProductCardSkeleton />
+							<ProductCardSkeleton />
+						</>
+					)}
+				</div>
+			</Section>
 		</>
 	);
 }

@@ -1,25 +1,45 @@
-import { createSlice } from "@reduxjs/toolkit";
-
 import {
-	getUserProductsAsync,
-	postUserProductAsync,
-	removeUserProductAsync,
-	updateUserProductAsync,
-} from "@/redux/thunks/user-products-thunks";
+	createAsyncThunk,
+	createSlice,
+	SerializedError,
+} from "@reduxjs/toolkit";
+
+import { productsService } from "@/services/products-service";
+import { usersService } from "@/services/users-service";
 
 import { ProductEntity } from "@/shared/types/product.types";
 
 export type UserProductsState = {
 	products: ProductEntity[];
 	loading: boolean;
-	error: string | null;
+	error?: SerializedError;
 };
 
 const initialState: UserProductsState = {
 	products: [],
 	loading: false,
-	error: null,
+	error: undefined,
 };
+
+const getUserProductsAsync = createAsyncThunk(
+	"userProducts/getUserProducts",
+	usersService.getMeProducts,
+);
+
+const postUserProductAsync = createAsyncThunk(
+	"userProducts/postUserProduct",
+	productsService.post,
+);
+
+const updateUserProductAsync = createAsyncThunk(
+	"userProducts/updateUserProduct",
+	productsService.update,
+);
+
+const removeUserProductAsync = createAsyncThunk(
+	"userProducts/removeUserProduct",
+	productsService.remove,
+);
 
 const userProductsSlice = createSlice({
 	name: "userProducts",
@@ -30,7 +50,6 @@ const userProductsSlice = createSlice({
 		builder
 			.addCase(getUserProductsAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(getUserProductsAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -38,14 +57,13 @@ const userProductsSlice = createSlice({
 			})
 			.addCase(getUserProductsAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 
 		// postUserProductAsync
 		builder
 			.addCase(postUserProductAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(postUserProductAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -53,14 +71,13 @@ const userProductsSlice = createSlice({
 			})
 			.addCase(postUserProductAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 
 		// updateUserProductAsync
 		builder
 			.addCase(updateUserProductAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(updateUserProductAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -70,26 +87,32 @@ const userProductsSlice = createSlice({
 			})
 			.addCase(updateUserProductAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 
 		// removeUserProductAsync
 		builder
 			.addCase(removeUserProductAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(removeUserProductAsync.fulfilled, (state, action) => {
 				state.loading = false;
-				state.products = [...state.products].filter(
-					(item) => item._id !== action.meta.arg.id,
+				state.products = state.products.filter(
+					(item) => item._id !== action.meta.arg,
 				);
 			})
 			.addCase(removeUserProductAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 	},
 });
+
+export {
+	getUserProductsAsync,
+	postUserProductAsync,
+	removeUserProductAsync,
+	updateUserProductAsync,
+};
 
 export default userProductsSlice.reducer;

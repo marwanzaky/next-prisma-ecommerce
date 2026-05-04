@@ -10,9 +10,8 @@ import { Button } from "@/shadcn/components/ui/button";
 import { CartProductEntity } from "@/shared/types/cart.type";
 import { PublicCategoryTree } from "@/shared/types/category.type";
 
-import { formatPrice } from "@/lib/format";
 import { Locale, localizePath } from "@/lib/i18n";
-import { createProductSlug } from "@/lib/string-utils";
+import { createProductSlug, formatPrice } from "@/lib/string-utils";
 
 import { DictionaryKeys } from "@/types/i18n.type";
 

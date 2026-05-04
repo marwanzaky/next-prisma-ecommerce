@@ -14,7 +14,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
 
 	const { locale } = useI18n();
-	const { isAuthenticated } = useAppSelector((state) => state.authReducer);
+	const { isAuthenticated } = useAppSelector((state) => state.auth);
 
 	useEffect(() => {
 		if (!isAuthenticated) {

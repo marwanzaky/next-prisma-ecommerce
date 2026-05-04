@@ -22,7 +22,7 @@ import { localizePath } from "@/lib/i18n";
 export default function Page() {
 	const router = useRouter();
 	const { locale, t } = useI18n();
-	const { items } = useAppSelector((state) => state.favoritesReducer);
+	const { items } = useAppSelector((state) => state.favorites);
 
 	return (
 		<Section className="space-y-2 lg:space-y-4">

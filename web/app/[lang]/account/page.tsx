@@ -14,7 +14,7 @@ import PersonalInformationCard from "./components/personal-information-card";
 export default function Page() {
 	const { t } = useI18n();
 
-	const { user } = useAppSelector((state) => state.authReducer);
+	const { user } = useAppSelector((state) => state.auth);
 
 	return (
 		<Section className="m-auto max-w-sm space-y-2 lg:space-y-4">

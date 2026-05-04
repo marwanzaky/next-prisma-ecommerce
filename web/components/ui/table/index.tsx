@@ -5,7 +5,7 @@ import { ButtonIcon } from "@/components/ui/button-icon";
 
 import { Input } from "@/shadcn/components/ui/input";
 
-import { formatPrice } from "@/lib/format";
+import { formatPrice } from "@/lib/string-utils";
 import { cn } from "@/lib/utils";
 
 export type Column<T = any> = {

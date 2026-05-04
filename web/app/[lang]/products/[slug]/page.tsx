@@ -2,7 +2,7 @@
 import { Metadata } from "next";
 import { cacheLife } from "next/cache";
 
-import { productsService } from "@/redux/services/products-service";
+import { productsService } from "@/services/products-service";
 
 import config from "@/lib/config";
 import {

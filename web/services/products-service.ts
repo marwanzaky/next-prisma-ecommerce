@@ -11,7 +11,7 @@ import { ReviewEntity } from "@/shared/types/review.type";
 import { clientFetch } from "@/lib/api-client";
 import { jsonToFormData } from "@/lib/helper";
 
-import { IGetAllProductsDto } from "@/types/get-all-products-dto.type";
+import { GetAllProductsDto } from "@/types/get-all-products-dto.type";
 
 export type GetAllProductsOptions = {
 	sort?: {
@@ -36,7 +36,7 @@ export const productsService = {
 	getAllProducts: (options?: GetAllProductsOptions) => {
 		const { sort = {}, query = {} } = options || {};
 
-		const paramsObj: IGetAllProductsDto = {
+		const paramsObj: GetAllProductsDto = {
 			...query,
 			sortProperty: sort.property,
 			sortOrder: sort.order,
@@ -65,19 +65,19 @@ export const productsService = {
 			body: formData,
 		});
 	},
-	update: (id: string, product: UpdateProduct) => {
+	update: ({ id, update }: { id: string; update: UpdateProduct }) => {
 		const formData = jsonToFormData({
-			...product,
+			...update,
 			newImgs: undefined,
 			keptImgs: undefined,
 		} satisfies UpdateProduct);
 
-		product.newImgs?.forEach((img) => {
+		update.newImgs?.forEach((img) => {
 			formData.append("newImgs", img.file);
 			formData.append("newImgsIndex", String(img.index));
 		});
 
-		product.keptImgs?.forEach((img) => {
+		update.keptImgs?.forEach((img) => {
 			formData.append("keptImgsUrl", img.url);
 			formData.append("keptImgsIndex", String(img.index));
 		});

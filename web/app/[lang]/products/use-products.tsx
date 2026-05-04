@@ -8,11 +8,11 @@ import { stringify } from "qs";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { categoriesService } from "@/redux/services/categories-service";
+import { categoriesService } from "@/services/categories-service";
 import {
 	GetAllProductsOptions,
 	productsService,
-} from "@/redux/services/products-service";
+} from "@/services/products-service";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 

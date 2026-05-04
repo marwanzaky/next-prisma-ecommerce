@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,8 +9,8 @@ import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { AppDispatch } from "@/redux/store";
-import { signupAsync } from "@/redux/thunks/auth-thunks";
+import { signupAsync } from "@/redux/slices/auth-slice";
+import { useAppDispatch } from "@/redux/store";
 
 import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
@@ -91,7 +90,7 @@ export default function Page() {
 		},
 	});
 
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	async function onSubmit(values: SignUpInput) {
 		const { name, email, password } = values;

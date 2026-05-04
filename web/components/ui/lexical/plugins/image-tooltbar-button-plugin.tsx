@@ -7,7 +7,7 @@ import {
 } from "@lexical/list";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
-import { uploadsService } from "@/redux/services/uploads-service";
+import { uploadsService } from "@/services/uploads-service";
 
 import { $createImageNode } from "@/components/ui/lexical/nodes/image-node";
 

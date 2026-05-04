@@ -1,28 +1,23 @@
 "use client";
 
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
-import { useI18n } from "@/components/layout/i18n-provider";
-
-import { handleGoogleAuth } from "@/lib/auth-helpers";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Page() {
-	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	const { locale } = useI18n();
-	const dispatch = useDispatch();
+	const { googleAuth } = useAuth();
 
 	useEffect(() => {
 		const token = searchParams.get("token");
 
 		if (token) {
-			handleGoogleAuth({ token, dispatch, router, locale });
+			googleAuth(token);
 		}
-	}, [searchParams, router, dispatch, locale]);
+	}, [searchParams]);
 
 	return <p>Logging you in...</p>;
 }

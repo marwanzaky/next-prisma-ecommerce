@@ -29,9 +29,8 @@ import { Checkbox } from "@/shadcn/components/ui/checkbox";
 import { PublicCategoryTree } from "@/shared/types/category.type";
 import { ProductEntity } from "@/shared/types/product.types";
 
-import { formatPrice } from "@/lib/format";
 import { Locale, localizePath } from "@/lib/i18n";
-import { createProductSlug } from "@/lib/string-utils";
+import { createProductSlug, formatPrice } from "@/lib/string-utils";
 
 import { DictionaryKeys } from "@/types/i18n.type";
 

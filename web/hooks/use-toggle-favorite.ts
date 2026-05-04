@@ -1,22 +1,22 @@
-import { useDispatch } from "react-redux";
-
 import { useRouter } from "next/navigation";
 
-import { AppDispatch, useAppSelector } from "@/redux/store";
+import { toast } from "sonner";
+
 import {
 	postFavoritesAsync,
 	removeFavoritesAsync,
-} from "@/redux/thunks/favorites-thunks";
+} from "@/redux/slices/favorites-slice";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 
 import { ProductEntity } from "@/shared/types/product.types";
 
 export function useToggleFavorite(product: ProductEntity) {
 	const router = useRouter();
 
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
-	const { isAuthenticated } = useAppSelector((state) => state.authReducer);
-	const { items } = useAppSelector((state) => state.favoritesReducer);
+	const { isAuthenticated } = useAppSelector((state) => state.auth);
+	const { items } = useAppSelector((state) => state.favorites);
 
 	const isFavorite = items.some((item) => item._id === product._id);
 
@@ -24,19 +24,23 @@ export function useToggleFavorite(product: ProductEntity) {
 		router.push("/signin");
 	};
 
-	const addToFavorites = () => {
+	const addToFavorites = async () => {
 		if (isAuthenticated === false) {
 			signin();
 		} else {
-			dispatch(postFavoritesAsync({ product }));
+			await dispatch(postFavoritesAsync(product._id)).unwrap();
+
+			toast("Added to favorites.", { position: "top-center" });
 		}
 	};
 
-	const removeFromFavorites = () => {
+	const removeFromFavorites = async () => {
 		if (isAuthenticated === false) {
 			signin();
 		} else {
-			dispatch(removeFavoritesAsync({ product }));
+			await dispatch(removeFavoritesAsync(product._id)).unwrap();
+
+			toast("Removed to favorites.", { position: "top-center" });
 		}
 	};
 

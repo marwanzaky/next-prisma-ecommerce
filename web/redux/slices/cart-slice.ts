@@ -1,27 +1,72 @@
-import { createSlice } from "@reduxjs/toolkit";
-
 import {
-	deleteCartItemAsync,
-	getCartMeAsync,
-	postCartItemAsync,
-	updateCartItemQuantityAsync,
-} from "@/redux/thunks/cart-thunks";
+	createAsyncThunk,
+	createSlice,
+	SerializedError,
+} from "@reduxjs/toolkit";
+
+import { cartsService } from "@/services/carts-service";
+import { guestCartService } from "@/services/guest-cart-service";
 
 import { CartItemEntity } from "@/shared/types/cart.type";
+import { ProductEntity } from "@/shared/types/product.types";
+
+import { RootState } from "../store";
+
+export const createAppAsyncThunk = createAsyncThunk.withTypes<{
+	state: RootState;
+}>();
 
 export type CartState = {
 	items: CartItemEntity[];
 
 	loading: boolean;
-	error: string | null;
+	error?: SerializedError;
 };
 
 const initialState: CartState = {
 	items: [],
 
 	loading: false,
-	error: null,
+	error: undefined,
 };
+
+const getCartMeAsync = createAppAsyncThunk(
+	"cart/getCartMe",
+	(_, { getState }) =>
+		getState().auth.isAuthenticated
+			? cartsService.getMe()
+			: guestCartService.getMe(),
+);
+
+const postCartItemAsync = createAppAsyncThunk(
+	"cart/postCartItem",
+	(
+		{ product, quantity }: { product: ProductEntity; quantity: number },
+		{ getState },
+	) =>
+		getState().auth.isAuthenticated
+			? cartsService.postItem(product._id, quantity)
+			: guestCartService.postItem(product, quantity),
+);
+
+const updateCartItemQuantityAsync = createAppAsyncThunk(
+	"cart/updateCartItemQuantity",
+	(
+		{ productId, quantity }: { productId: string; quantity: number },
+		{ getState },
+	) =>
+		getState().auth.isAuthenticated
+			? cartsService.updateItemQuantity(productId, quantity)
+			: guestCartService.updateItemQuantity(productId, quantity),
+);
+
+const deleteCartItemAsync = createAppAsyncThunk(
+	"cart/deleteCartItem",
+	(productId: string, { getState }) =>
+		getState().auth.isAuthenticated
+			? cartsService.deleteItem(productId)
+			: guestCartService.deleteItem(productId),
+);
 
 export const cartSlice = createSlice({
 	name: "cart",
@@ -32,7 +77,6 @@ export const cartSlice = createSlice({
 		builder
 			.addCase(getCartMeAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(getCartMeAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -40,14 +84,13 @@ export const cartSlice = createSlice({
 			})
 			.addCase(getCartMeAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 
 		// postCartItemAsync
 		builder
 			.addCase(postCartItemAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(postCartItemAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -55,14 +98,13 @@ export const cartSlice = createSlice({
 			})
 			.addCase(postCartItemAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 
 		// updateCartItemQuantityAsync
 		builder
 			.addCase(updateCartItemQuantityAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(updateCartItemQuantityAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -70,14 +112,13 @@ export const cartSlice = createSlice({
 			})
 			.addCase(updateCartItemQuantityAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 
 		// deleteCartItemAsync
 		builder
 			.addCase(deleteCartItemAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(deleteCartItemAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -85,9 +126,16 @@ export const cartSlice = createSlice({
 			})
 			.addCase(deleteCartItemAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 	},
 });
+
+export {
+	deleteCartItemAsync,
+	getCartMeAsync,
+	postCartItemAsync,
+	updateCartItemQuantityAsync,
+};
 
 export default cartSlice.reducer;

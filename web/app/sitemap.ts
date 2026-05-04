@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-import { productsService } from "@/redux/services/products-service";
+import { productsService } from "@/services/products-service";
 
 import { locales, localizeUrl } from "@/lib/i18n";
 import { createProductSlug } from "@/lib/string-utils";

@@ -21,7 +21,6 @@
 		],
 		"paths": {
 			"@/*": ["./*"],
-			"@/services/*": ["./redux/services/*"],
 			"@/shared/types/*": ["../shared/src/*"]
 		}
 	},

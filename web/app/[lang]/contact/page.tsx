@@ -9,7 +9,7 @@ import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { contactMessagesService } from "@/redux/services/contact-messages-service";
+import { contactMessagesService } from "@/services/contact-messages-service";
 
 import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";

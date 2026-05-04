@@ -1,13 +1,12 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 
 import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { AppDispatch } from "@/redux/store";
-import { updateMyPasswordAsync } from "@/redux/thunks/auth-thunks";
+import { updateMyPasswordAsync } from "@/redux/slices/auth-slice";
+import { useAppDispatch } from "@/redux/store";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
@@ -64,7 +63,7 @@ export default function ChangePasswordCard() {
 		resolver: zodResolver(ChangePasswordSchema),
 		mode: "onSubmit",
 	});
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	const onSubmit = async (data: ChangePasswordInput) => {
 		const { currentPassword, newPassword } = data;

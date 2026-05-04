@@ -1,6 +1,6 @@
 import { ProductEntity } from "@/shared/types/product.types";
 
-export interface IGetAllProductsDto {
+export type GetAllProductsDto = {
 	sortProperty?: keyof ProductEntity;
 	sortOrder?: "asc" | "desc";
 	searchTerm?: string;
@@ -16,4 +16,4 @@ export interface IGetAllProductsDto {
 	 * Max price in cents
 	 */
 	maxPrice?: number;
-}
+};

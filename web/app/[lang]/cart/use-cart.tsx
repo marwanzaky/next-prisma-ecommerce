@@ -1,29 +1,30 @@
 "use client";
 
 import { useMemo } from "react";
-import { useDispatch } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { categoriesService } from "@/redux/services/categories-service";
-import { paymentsService } from "@/redux/services/payments-service";
-import { AppDispatch, useAppSelector } from "@/redux/store";
-import {
-	deleteCartItemAsync,
-	updateCartItemQuantityAsync,
-} from "@/redux/thunks/cart-thunks";
+import { updateCartItemQuantityAsync } from "@/redux/slices/cart-slice";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+
+import { categoriesService } from "@/services/categories-service";
+import { paymentsService } from "@/services/payments-service";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
-import { formatPrice } from "@/lib/format";
+import { formatPrice } from "@/lib/string-utils";
+
+import { useCart } from "@/hooks/use-cart";
 
 import { CartItem, getCartColumns } from "./columns";
 
-export function useCart() {
-	const dispatch = useDispatch<AppDispatch>();
+export function useCartPage() {
+	const dispatch = useAppDispatch();
 
 	const { locale, t } = useI18n();
-	const { items } = useAppSelector((state) => state.cartReducer);
+	const { items } = useAppSelector((state) => state.cart);
+
+	const { removeFromCart } = useCart();
 
 	const { data: categoryTree } = useQuery({
 		queryKey: ["category-tree"],
@@ -71,14 +72,11 @@ export function useCart() {
 		locale,
 		onQuantityChange(value, row) {
 			dispatch(
-				updateCartItemQuantityAsync({
-					productId: row._id,
-					quantity: value,
-				}),
+				updateCartItemQuantityAsync({ productId: row._id, quantity: value }),
 			);
 		},
 		deleteAction(row) {
-			dispatch(deleteCartItemAsync({ product: row }));
+			removeFromCart(row._id);
 		},
 	});
 

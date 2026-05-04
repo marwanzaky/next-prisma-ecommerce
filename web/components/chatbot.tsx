@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import clsx from "clsx";
 
-import { chatService } from "@/redux/services/chat-service";
+import { chatService } from "@/services/chat-service";
 
 import {
 	Dialog,

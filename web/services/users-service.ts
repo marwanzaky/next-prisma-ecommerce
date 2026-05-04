@@ -5,15 +5,15 @@ import { clientFetch } from "@/lib/api-client";
 import { jsonToFormData } from "@/lib/helper";
 
 export const usersService = {
-	login: (email: string, password: string) =>
+	login: (body: { email: string; password: string }) =>
 		clientFetch<{ token: string }>("/auth/login", {
 			method: "POST",
-			body: JSON.stringify({ email, password }),
+			body: JSON.stringify(body),
 		}),
-	signup: (name: string, email: string, password: string) =>
+	signup: (body: { name: string; email: string; password: string }) =>
 		clientFetch<{ token: string }>("/auth/signup", {
 			method: "POST",
-			body: JSON.stringify({ name, email, password }),
+			body: JSON.stringify(body),
 		}),
 
 	// My account

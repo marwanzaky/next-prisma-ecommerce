@@ -1,10 +1,8 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { z } from "zod";
 
@@ -32,9 +30,10 @@ import {
 import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
 
-import { handleLogin } from "@/lib/auth-helpers";
 import config from "@/lib/config";
 import { localizePath } from "@/lib/i18n";
+
+import { useAuth } from "@/hooks/use-auth";
 
 type SignUpInput = {
 	email: string;
@@ -42,9 +41,9 @@ type SignUpInput = {
 };
 
 export default function Page() {
-	const router = useRouter();
-
 	const { locale, t } = useI18n();
+
+	const { login } = useAuth();
 
 	const signInSchema = z.object({
 		email: z
@@ -67,18 +66,8 @@ export default function Page() {
 		},
 	});
 
-	const dispatch = useDispatch();
-
 	const onSubmit = async (data: SignUpInput) => {
-		await handleLogin({
-			credentials: {
-				email: data.email,
-				password: data.password,
-			},
-			dispatch,
-			router,
-			locale,
-		});
+		await login(data.email, data.password);
 	};
 
 	return (

@@ -2,7 +2,10 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import { Document } from "mongoose";
 
-import { ContactMessage as ContactMessageType } from "@/shared/types/contact-message.type";
+import {
+	ContactMessageStatus,
+	ContactMessage as ContactMessageType,
+} from "@/shared/types/contact-message.type";
 import { WithoutMongoMeta } from "@/shared/types/mongoose.type";
 
 @Schema({
@@ -47,7 +50,7 @@ export class ContactMessage
 		enum: ["new", "read", "replied"],
 		default: "new",
 	})
-	status!: "new" | "read" | "replied";
+	status!: ContactMessageStatus;
 }
 
 export const ContactMessageSchema =

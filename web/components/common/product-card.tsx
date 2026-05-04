@@ -1,12 +1,7 @@
 "use client";
 
-import { useDispatch } from "react-redux";
-
 import Image from "next/image";
 import Link from "next/link";
-
-import { AppDispatch } from "@/redux/store";
-import { postCartItemAsync } from "@/redux/thunks/cart-thunks";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ButtonIcon } from "@/components/ui/button-icon";
@@ -16,11 +11,11 @@ import { useIsMobile } from "@/shadcn/hooks/use-mobile";
 
 import { ProductEntity } from "@/shared/types/product.types";
 
-import { formatPrice } from "@/lib/format";
 import { localizePath } from "@/lib/i18n";
-import { createProductSlug } from "@/lib/string-utils";
+import { createProductSlug, formatPrice } from "@/lib/string-utils";
 import { cn } from "@/lib/utils";
 
+import { useCart } from "@/hooks/use-cart";
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
 type ProductCardProps = {
@@ -28,12 +23,12 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ data }: ProductCardProps) {
-	const dispatch = useDispatch<AppDispatch>();
 	const { locale, t } = useI18n();
 
 	const isMobile = useIsMobile({});
 	const { isFavorite, addToFavorites, removeFromFavorites } =
 		useToggleFavorite(data);
+	const { addToCart } = useCart();
 
 	return (
 		<div
@@ -106,7 +101,7 @@ export default function ProductCard({ data }: ProductCardProps) {
 					aria-label={t("product.actions.addToCart")}
 					variant="primary"
 					onClick={() => {
-						dispatch(postCartItemAsync({ product: data }));
+						addToCart(data);
 					}}
 				/>
 			</div>

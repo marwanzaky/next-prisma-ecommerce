@@ -28,7 +28,7 @@ export default function Page() {
 		loading,
 	} = useSell();
 
-	const { products } = useAppSelector((state) => state.userProductsReducer);
+	const { products } = useAppSelector((state) => state.userProducts);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);

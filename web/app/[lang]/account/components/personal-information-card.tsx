@@ -2,15 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 
 import { Trash2Icon } from "lucide-react";
 import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { AppDispatch, useAppSelector } from "@/redux/store";
-import { updateMeAsync } from "@/redux/thunks/auth-thunks";
+import { updateMeAsync } from "@/redux/slices/auth-slice";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
@@ -76,8 +75,8 @@ export default function PersonalInformationCard() {
 		mode: "onSubmit",
 	});
 
-	const dispatch = useDispatch<AppDispatch>();
-	const { user } = useAppSelector((state) => state.authReducer);
+	const dispatch = useAppDispatch();
+	const { user } = useAppSelector((state) => state.auth);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 

@@ -1,9 +1,7 @@
 "use client";
 
-import { useDispatch } from "react-redux";
-
-import { AppDispatch } from "@/redux/store";
-import { deleteMeAsync } from "@/redux/thunks/auth-thunks";
+import { deleteMeAsync } from "@/redux/slices/auth-slice";
+import { useAppDispatch } from "@/redux/store";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
@@ -29,7 +27,7 @@ import {
 
 export default function DeleteAccountCard() {
 	const { t } = useI18n();
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	return (
 		<Card>

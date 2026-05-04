@@ -16,7 +16,7 @@ import {
 } from "@/shadcn/components/ui/select";
 import { TypographyP } from "@/shadcn/components/ui/typography";
 
-import { formatPrice } from "@/lib/format";
+import { formatPrice } from "@/lib/string-utils";
 
 import { SortOption } from "@/types/product.type";
 

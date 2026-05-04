@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { categoriesService } from "@/redux/services/categories-service";
+import { categoriesService } from "@/services/categories-service";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -17,9 +16,10 @@ import {
 
 import { useQuery } from "@tanstack/react-query";
 
-import { categoriesService } from "@/redux/services/categories-service";
 import { logOut } from "@/redux/slices/auth-slice";
-import { AppDispatch, useAppSelector } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+
+import { categoriesService } from "@/services/categories-service";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ButtonIcon } from "@/components/ui/button-icon";
@@ -65,12 +65,10 @@ export default function Navigation() {
 
 	const { locale, t } = useI18n();
 
-	const { isAuthenticated, user } = useAppSelector(
-		(state) => state.authReducer,
-	);
+	const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+	const { items } = useAppSelector((state) => state.cart);
 
-	const { items } = useAppSelector((state) => state.cartReducer);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	const [search, setSearch] = useState<string>("");
 

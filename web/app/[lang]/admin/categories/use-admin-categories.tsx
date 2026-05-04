@@ -7,8 +7,8 @@ import { toast } from "sonner";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { adminCategoriesService } from "@/redux/services/admin-categories-service";
-import { categoriesService } from "@/redux/services/categories-service";
+import { adminCategoriesService } from "@/services/admin-categories-service";
+import { categoriesService } from "@/services/categories-service";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 

@@ -1,14 +1,12 @@
 import Cookies from "js-cookie";
 
-import { createSlice } from "@reduxjs/toolkit";
-
 import {
-	getMeAsync,
-	loginAsync,
-	signupAsync,
-	updateMeAsync,
-	updateMyPasswordAsync,
-} from "@/redux/thunks/auth-thunks";
+	createAsyncThunk,
+	createSlice,
+	SerializedError,
+} from "@reduxjs/toolkit";
+
+import { usersService } from "@/services/users-service";
 
 import { User } from "@/shared/types/user.type";
 
@@ -17,7 +15,7 @@ export type AuthState = {
 	isAuthenticated: boolean;
 
 	loading: boolean;
-	error: string | null;
+	error?: SerializedError;
 };
 
 const initialState: AuthState = {
@@ -25,8 +23,23 @@ const initialState: AuthState = {
 	isAuthenticated: false,
 
 	loading: false,
-	error: null,
+	error: undefined,
 };
+
+const loginAsync = createAsyncThunk("auth/login", usersService.login);
+
+const signupAsync = createAsyncThunk("auth/signup", usersService.signup);
+
+const getMeAsync = createAsyncThunk("auth/getMe", usersService.getMe);
+
+const updateMeAsync = createAsyncThunk("auth/updateMe", usersService.updateMe);
+
+const updateMyPasswordAsync = createAsyncThunk(
+	"auth/updateMyPassword",
+	usersService.updateMyPassword,
+);
+
+const deleteMeAsync = createAsyncThunk("auth/deleteMe", usersService.deleteMe);
 
 export const authSlice = createSlice({
 	name: "auth",
@@ -51,7 +64,6 @@ export const authSlice = createSlice({
 		builder
 			.addCase(loginAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(loginAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -65,13 +77,12 @@ export const authSlice = createSlice({
 			})
 			.addCase(loginAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 		// signupAsync
 		builder
 			.addCase(signupAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(signupAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -85,13 +96,12 @@ export const authSlice = createSlice({
 			})
 			.addCase(signupAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 		// getMeAsync
 		builder
 			.addCase(getMeAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(getMeAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -99,13 +109,12 @@ export const authSlice = createSlice({
 			})
 			.addCase(getMeAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 		// updateMeAsync
 		builder
 			.addCase(updateMeAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(updateMeAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -113,24 +122,44 @@ export const authSlice = createSlice({
 			})
 			.addCase(updateMeAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 		// updateMyPasswordAsync
 		builder
 			.addCase(updateMyPasswordAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(updateMyPasswordAsync.fulfilled, (state, action) => {
 				state.loading = false;
 			})
 			.addCase(updateMyPasswordAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
+			});
+		// deleteMeAsync
+		builder
+			.addCase(deleteMeAsync.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(deleteMeAsync.fulfilled, (state, action) => {
+				state.loading = false;
+			})
+			.addCase(deleteMeAsync.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error;
 			});
 	},
 });
 
 export const { setToken, logOut } = authSlice.actions;
+
+export {
+	deleteMeAsync,
+	getMeAsync,
+	loginAsync,
+	signupAsync,
+	updateMeAsync,
+	updateMyPasswordAsync,
+};
 
 export default authSlice.reducer;

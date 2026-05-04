@@ -1,10 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
-
 import {
-	getFavoritesAsync,
-	postFavoritesAsync,
-	removeFavoritesAsync,
-} from "@/redux/thunks/favorites-thunks";
+	createAsyncThunk,
+	createSlice,
+	SerializedError,
+} from "@reduxjs/toolkit";
+
+import { favoritesService } from "@/services/favorites-service";
 
 import { ProductEntity } from "@/shared/types/product.types";
 
@@ -12,15 +12,30 @@ export type FavoritesState = {
 	items: ProductEntity[];
 
 	loading: boolean;
-	error: string | null;
+	error?: SerializedError;
 };
 
 const initialState: FavoritesState = {
 	items: [],
 
 	loading: false,
-	error: null,
+	error: undefined,
 };
+
+const getFavoritesAsync = createAsyncThunk(
+	"favorites/getFavorites",
+	favoritesService.getMe,
+);
+
+const postFavoritesAsync = createAsyncThunk(
+	"favorites/postFavorites",
+	favoritesService.post,
+);
+
+const removeFavoritesAsync = createAsyncThunk(
+	"favorites/removeFavorites",
+	favoritesService.remove,
+);
 
 export const favoritesSlice = createSlice({
 	name: "favorites",
@@ -31,7 +46,6 @@ export const favoritesSlice = createSlice({
 		builder
 			.addCase(getFavoritesAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(getFavoritesAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -39,14 +53,13 @@ export const favoritesSlice = createSlice({
 			})
 			.addCase(getFavoritesAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 
 		// postFavoritesAsync
 		builder
 			.addCase(postFavoritesAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(postFavoritesAsync.fulfilled, (state, action) => {
 				state.loading = false;
@@ -54,26 +67,27 @@ export const favoritesSlice = createSlice({
 			})
 			.addCase(postFavoritesAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 
 		// removeFavoritesAsync
 		builder
 			.addCase(removeFavoritesAsync.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(removeFavoritesAsync.fulfilled, (state, action) => {
 				state.loading = false;
-				state.items = [...state.items].filter(
-					(item) => item._id !== action.meta.arg.product._id,
+				state.items = state.items.filter(
+					(item) => item._id !== action.meta.arg,
 				);
 			})
 			.addCase(removeFavoritesAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload as string;
+				state.error = action.error;
 			});
 	},
 });
+
+export { getFavoritesAsync, postFavoritesAsync, removeFavoritesAsync };
 
 export default favoritesSlice.reducer;

@@ -7,8 +7,9 @@ import { useRouter } from "next/navigation";
 import { StarIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import { productsService } from "@/redux/services/products-service";
 import { useAppSelector } from "@/redux/store";
+
+import { productsService } from "@/services/products-service";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import Stars from "@/components/ui/stars";
@@ -41,7 +42,7 @@ export default function Overview({
 	const router = useRouter();
 
 	const { locale, t } = useI18n();
-	const { isAuthenticated } = useAppSelector((state) => state.authReducer);
+	const { isAuthenticated } = useAppSelector((state) => state.auth);
 
 	const [displayDialog, setDisplayDialog] = useState(false);
 	const [rating, setRating] = useState(0);
