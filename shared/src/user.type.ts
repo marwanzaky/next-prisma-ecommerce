@@ -9,6 +9,8 @@ export type User = EntityBase & {
 	email: string;
 
 	photoUrl?: string;
+
+	isVerified: boolean;
 };
 
 export type CreateUser = {

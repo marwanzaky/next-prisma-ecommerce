@@ -5,18 +5,6 @@ import { clientFetch } from "@/lib/api-client";
 import { jsonToFormData } from "@/lib/helper";
 
 export const usersService = {
-	login: (body: { email: string; password: string }) =>
-		clientFetch<{ token: string }>("/auth/login", {
-			method: "POST",
-			body: JSON.stringify(body),
-		}),
-	signup: (body: { name: string; email: string; password: string }) =>
-		clientFetch<{ token: string }>("/auth/signup", {
-			method: "POST",
-			body: JSON.stringify(body),
-		}),
-
-	// My account
 	getMe: () => clientFetch<User>("/users/me"),
 	getMeProducts: () => clientFetch<ProductEntity[]>("/users/me/products"),
 	updateMe: (updatedUser: UpdateUser & { photoFile?: File }) =>

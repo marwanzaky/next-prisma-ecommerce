@@ -9,6 +9,7 @@ import {
 import { usersService } from "@/services/users-service";
 
 import { User } from "@/shared/types/user.type";
+import { authService } from "@/services/auth-service";
 
 export type AuthState = {
 	user: User | null;
@@ -26,9 +27,9 @@ const initialState: AuthState = {
 	error: undefined,
 };
 
-const loginAsync = createAsyncThunk("auth/login", usersService.login);
+const loginAsync = createAsyncThunk("auth/login", authService.login);
 
-const signupAsync = createAsyncThunk("auth/signup", usersService.signup);
+const signupAsync = createAsyncThunk("auth/signup", authService.signup);
 
 const getMeAsync = createAsyncThunk("auth/getMe", usersService.getMe);
 

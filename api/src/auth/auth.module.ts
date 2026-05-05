@@ -11,6 +11,7 @@ import { UsersModule } from "@/users/users.module";
 
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
+import { ResendModule } from "@/modules/resend/resend.module";
 
 @Module({
 	imports: [
@@ -29,6 +30,7 @@ import { AuthService } from "./auth.service";
 		}),
 		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
 		CartsModule,
+		ResendModule,
 		forwardRef(() => UsersModule),
 	],
 	controllers: [AuthController],

@@ -12,11 +12,7 @@ import { compare } from "bcrypt";
 import { Model } from "mongoose";
 
 import { AuthService } from "@/auth/auth.service";
-import {
-	CreateUser,
-	UpdateUser,
-	UpdateUserPassword,
-} from "@/shared/types/user.type";
+import { UpdateUser, UpdateUserPassword } from "@/shared/types/user.type";
 
 import { User } from "./entities/user.entity";
 
@@ -54,12 +50,29 @@ export class UsersService {
 		};
 	}
 
-	async create({ name, email, password }: CreateUser): Promise<User> {
+	async create({
+		name,
+		email,
+		password,
+		isVerified,
+		emailVerificationTokenHash,
+		emailVerificationTokenExpiresAt,
+	}: {
+		name: string;
+		email: string;
+		password: string;
+		isVerified?: boolean;
+		emailVerificationTokenHash?: string;
+		emailVerificationTokenExpiresAt?: Date;
+	}): Promise<User> {
 		try {
 			const user = await this.userModel.create({
 				name,
 				email,
 				password,
+				isVerified,
+				emailVerificationTokenHash,
+				emailVerificationTokenExpiresAt,
 			});
 
 			return user.save();

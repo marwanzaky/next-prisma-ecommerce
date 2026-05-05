@@ -14,6 +14,15 @@ export class User extends Document implements WithoutMongoMeta<UserType> {
 	@Prop({ required: true, enum: ["user", "admin"], default: "user" })
 	role!: UserRole;
 
+	@Prop({ type: Boolean, default: false })
+	isVerified!: boolean;
+
+	@Prop({ type: String, select: false })
+	emailVerificationTokenHash?: string;
+
+	@Prop({ type: Date, select: false })
+	emailVerificationTokenExpiresAt?: Date;
+
 	@Prop({
 		type: String,
 		default: "",

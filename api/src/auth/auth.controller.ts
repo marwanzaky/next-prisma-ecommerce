@@ -3,6 +3,7 @@ import {
 	Controller,
 	Get,
 	Post,
+	Query,
 	Req,
 	Res,
 	UseGuards,
@@ -18,6 +19,7 @@ import { Public } from "./auth.guard";
 import { AuthService } from "./auth.service";
 import { LoginDto } from "./dto/login.dto";
 import { SignUpDto } from "./dto/signup.dto";
+import { VerifyEmailDto } from "./dto/verify-email.dto";
 
 @Public()
 @Controller("auth")
@@ -52,5 +54,13 @@ export class AuthController {
 	})
 	signin(@Body() loginDto: LoginDto) {
 		return this.authService.login(loginDto);
+	}
+
+	@Get("verify")
+	@ApiOperation({
+		summary: "Verify email using token",
+	})
+	verifyEmail(@Query() query: VerifyEmailDto) {
+		return this.authService.verifyEmail(query.token);
 	}
 }
