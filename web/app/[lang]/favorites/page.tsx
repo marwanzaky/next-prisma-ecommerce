@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 
 import { useAppSelector } from "@/redux/store";
 
+import { Container } from "@/components/common/container";
 import ProductCard from "@/components/common/product-card";
 import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
@@ -25,34 +26,36 @@ export default function Page() {
 	const { items } = useAppSelector((state) => state.favorites);
 
 	return (
-		<Section className="space-y-2 lg:space-y-4">
-			<Heading as="h4" className="text-center">
-				{t("favoritesPage.title")}
-			</Heading>
-			{items.length > 0 ? (
-				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
-					{items.map((item) => (
-						<ProductCard data={item} key={item._id} />
-					))}
-				</div>
-			) : (
-				<Empty className="border border-dashed">
-					<EmptyHeader>
-						<EmptyTitle>{t("favoritesPage.emptyTitle")}</EmptyTitle>
-						<EmptyDescription className="max-w-xs text-pretty">
-							{t("favoritesPage.emptyDescription")}
-						</EmptyDescription>
-					</EmptyHeader>
-					<EmptyContent>
-						<Button
-							variant="outline"
-							onClick={() => router.push(localizePath("/products", locale))}
-						>
-							{t("favoritesPage.continueShopping")}
-						</Button>
-					</EmptyContent>
-				</Empty>
-			)}
-		</Section>
+		<Container>
+			<Section className="space-y-2 lg:space-y-4">
+				<Heading as="h4" className="text-center">
+					{t("favoritesPage.title")}
+				</Heading>
+				{items.length > 0 ? (
+					<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
+						{items.map((item) => (
+							<ProductCard data={item} key={item._id} />
+						))}
+					</div>
+				) : (
+					<Empty className="border border-dashed">
+						<EmptyHeader>
+							<EmptyTitle>{t("favoritesPage.emptyTitle")}</EmptyTitle>
+							<EmptyDescription className="max-w-xs text-pretty">
+								{t("favoritesPage.emptyDescription")}
+							</EmptyDescription>
+						</EmptyHeader>
+						<EmptyContent>
+							<Button
+								variant="outline"
+								onClick={() => router.push(localizePath("/products", locale))}
+							>
+								{t("favoritesPage.continueShopping")}
+							</Button>
+						</EmptyContent>
+					</Empty>
+				)}
+			</Section>
+		</Container>
 	);
 }

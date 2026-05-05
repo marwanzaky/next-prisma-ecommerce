@@ -2,6 +2,7 @@
 
 import { useAppSelector } from "@/redux/store";
 
+import { Container } from "@/components/common/container";
 import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 
@@ -17,16 +18,18 @@ export default function Page() {
 	const { user } = useAppSelector((state) => state.auth);
 
 	return (
-		<Section className="m-auto max-w-sm space-y-2 lg:space-y-4">
-			<Heading as="h4" className="text-center">
-				{t("account.settings")}
-			</Heading>
+		<Container>
+			<Section className="m-auto max-w-sm space-y-2 lg:space-y-4">
+				<Heading as="h4" className="text-center">
+					{t("account.settings")}
+				</Heading>
 
-			<div className="flex flex-col gap-4">
-				<PersonalInformationCard />
-				<ChangePasswordCard />
-				{user && user.role === "admin" && <DeleteAccountCard />}
-			</div>
-		</Section>
+				<div className="flex flex-col gap-4">
+					<PersonalInformationCard />
+					<ChangePasswordCard />
+					{user && user.role === "admin" && <DeleteAccountCard />}
+				</div>
+			</Section>
+		</Container>
 	);
 }

@@ -80,9 +80,7 @@ export default function Footer() {
 					</ul>
 				</div>
 
-				<div className="full-bleed">
-					<Separator className="bg-[#525f63]" />
-				</div>
+				<Separator className="bg-[#525f63]" />
 
 				<div className="space-y-4">
 					<div className="flex justify-center gap-2 h-6">

@@ -34,11 +34,11 @@ export default function Header({
 	}, [heroProduct.shortDescription, locale]);
 
 	return (
-		<header className="full-bleed relative px-4 py-16 md:py-16">
+		<header className="relative px-4 py-16 md:py-16">
 			<Image
 				fill
 				priority
-				className="object-center object-cover pointer-events-none z-[-1]"
+				className="object-center object-cover pointer-events-none z-[-1] rounded-md"
 				src="/img/background.jpg"
 				alt="background"
 				fetchPriority="high"

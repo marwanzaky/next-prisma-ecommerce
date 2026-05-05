@@ -147,19 +147,12 @@ export default async function RootLayout({
 
 							<Banner />
 
-							{/* Navigation */}
-							<div className="border-b-2 sticky top-0 bg-white z-50">
-								<Container>
-									<Navigation />
-								</Container>
-							</div>
+							<Navigation />
 
 							{/* Page */}
-							<Container>
-								<TooltipProvider>
-									<main>{children}</main>
-								</TooltipProvider>
-							</Container>
+							<TooltipProvider>
+								<main>{children}</main>
+							</TooltipProvider>
 
 							<Footer />
 						</I18nProvider>

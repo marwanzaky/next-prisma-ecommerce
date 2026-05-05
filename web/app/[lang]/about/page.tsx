@@ -18,7 +18,7 @@ export default function Page() {
 	const { locale, t } = useI18n();
 
 	return (
-		<Section className="full-bleed bg-[#b2bec3]">
+		<Section className="bg-[#b2bec3]">
 			<Container>
 				<Heading
 					as="h1"

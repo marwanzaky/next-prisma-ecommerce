@@ -20,7 +20,7 @@ export default function Categories({
 	const { locale } = useI18n();
 
 	return (
-		<Section className="full-bleed bg-custom-background pb-0! space-y-2 lg:space-y-4">
+		<Section className="bg-custom-background pb-0! space-y-2 lg:space-y-4">
 			<Container>
 				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
 					{categoryTree.map((item, i) => (

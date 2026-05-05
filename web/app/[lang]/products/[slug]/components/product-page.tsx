@@ -7,7 +7,9 @@ import {
 	productsService,
 } from "@/services/products-service";
 
+import { Container } from "@/components/common/container";
 import ProductCard from "@/components/common/product-card";
+import ProductCardSkeleton from "@/components/common/product-card-skeleton";
 import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 
@@ -20,7 +22,6 @@ import { cn } from "@/lib/utils";
 import Feedback from "./feedback";
 import ProductCallery from "./product-callery";
 import ProductDetails from "./product-details";
-import ProductCardSkeleton from "@/components/common/product-card-skeleton";
 
 export default function ProductPage({
 	product,
@@ -43,7 +44,7 @@ export default function ProductPage({
 	});
 
 	return (
-		<>
+		<Container>
 			<Section className="space-y-4 md:space-y-4">
 				<div
 					className={cn(
@@ -79,6 +80,6 @@ export default function ProductPage({
 					)}
 				</div>
 			</Section>
-		</>
+		</Container>
 	);
 }

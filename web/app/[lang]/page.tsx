@@ -5,6 +5,7 @@ import { cacheLife } from "next/cache";
 import { categoriesService } from "@/services/categories-service";
 import { productsService } from "@/services/products-service";
 
+import { Container } from "@/components/common/container";
 import ProductCard from "@/components/common/product-card";
 import { Section } from "@/components/common/section";
 import Categories from "@/components/homepage/categories";
@@ -46,22 +47,26 @@ export default async function Page({
 
 	return (
 		<>
-			<Header heroProduct={heroProduct[0]} />
+			<Container>
+				<Header heroProduct={heroProduct[0]} />
 
-			<Section className="space-y-2 lg:space-y-4">
-				<Heading as="h2" variant="h3" className="text-center">
-					{dictionary.home.featuredProducts}
-				</Heading>
+				<Section className="space-y-2 lg:space-y-4">
+					<Heading as="h2" variant="h3" className="text-center">
+						{dictionary.home.featuredProducts}
+					</Heading>
 
-				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
-					{featuredCategories.map((item) => (
-						<ProductCard key={item._id} data={item} />
-					))}
-				</div>
-			</Section>
+					<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
+						{featuredCategories.map((item) => (
+							<ProductCard key={item._id} data={item} />
+						))}
+					</div>
+				</Section>
 
-			<WhyChooseUs />
+				<WhyChooseUs />
+			</Container>
+
 			<Testimonials />
+
 			<Categories categoryTree={categoryTree} />
 		</>
 	);

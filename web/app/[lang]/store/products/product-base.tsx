@@ -14,6 +14,7 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 
+import { Container } from "@/components/common/container";
 import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 import ImageInput from "@/components/ui/image-input";
@@ -96,246 +97,251 @@ export function ProductBase({
 	const { locale, t } = useI18n();
 
 	return (
-		<Section className="max-w-2xl mx-auto space-y-4">
-			<Breadcrumb>
-				<BreadcrumbList>
-					<BreadcrumbItem>
-						<BreadcrumbLink asChild>
-							<Link href={localizePath("/store/products", locale)}>
-								{t("storeProductsPage.form.myProducts")}
-							</Link>
-						</BreadcrumbLink>
-					</BreadcrumbItem>
+		<Container>
+			<Section className="max-w-2xl mx-auto space-y-4">
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink asChild>
+								<Link href={localizePath("/store/products", locale)}>
+									{t("storeProductsPage.form.myProducts")}
+								</Link>
+							</BreadcrumbLink>
+						</BreadcrumbItem>
 
-					<BreadcrumbSeparator />
+						<BreadcrumbSeparator />
 
-					<BreadcrumbItem>
-						<BreadcrumbPage>
-							{t("storeProductsPage.form.product")}
-						</BreadcrumbPage>
-					</BreadcrumbItem>
-				</BreadcrumbList>
-			</Breadcrumb>
+						<BreadcrumbItem>
+							<BreadcrumbPage>
+								{t("storeProductsPage.form.product")}
+							</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
 
-			<form className="space-y-4" onSubmit={onSubmit}>
-				<div className="flex flex-col sm:flex-row gap-4">
-					<Card className="sm:w-1/2">
-						<CardContent>
-							<FieldGroup>
-								<Field>
-									<FieldLabel htmlFor="name">
-										{t("storeProductsPage.form.name")}
-									</FieldLabel>
-									<Input
-										id="name"
-										placeholder={t("storeProductsPage.form.namePlaceholder")}
-										{...register("name")}
-									/>
-									{errors.name && (
-										<FieldError>{errors.name.message}</FieldError>
-									)}
-								</Field>
-
-								<Field>
-									<FieldLabel>
-										{t("storeProductsPage.form.description")}
-									</FieldLabel>
-									<div
-										className={cn(
-											"relative flex flex-col w-full rounded-md border border-input bg-transparent text-sm transition-colors",
-											"focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
-										)}
-									>
-										<LexicalComposer initialConfig={initialConfig}>
-											<ImageToolbarButtonPlugin />
-											<RichTextPlugin
-												contentEditable={
-													<ContentEditable
-														className={cn(
-															"prose prose-slate text-sm min-h-40 max-h-100 overflow-y-scroll w-full px-2.5 py-2 focus:outline-none",
-														)}
-													/>
-												}
-												ErrorBoundary={LexicalErrorBoundary}
-											/>
-											<HistoryPlugin />
-											<OnChangePlugin onChange={onDescriptionChange} />
-											{injectLoadDescriptionPlugin && (
-												<LoadDescriptionPlugin json={description} />
-											)}
-
-											<YouTubePastePlugin />
-											<ListPlugin />
-										</LexicalComposer>
-									</div>
-									{errors.description && (
-										<FieldError>{errors.description.message}</FieldError>
-									)}
-								</Field>
-
-								<Field>
-									<FieldLabel>{t("storeProductsPage.form.media")}</FieldLabel>
-									<div className="grid grid-cols-5 gap-4">
-										{Array.from({ length: 10 }).map((_, index) => (
-											<Controller
-												key={index}
-												name={`images.${index}`}
-												control={control}
-												render={({ field }) => (
-													<ImageInput
-														value={field.value}
-														onChange={field.onChange}
-													/>
-												)}
-											/>
-										))}
-									</div>
-									{errors.images && (
-										<FieldError>{errors.images.message}</FieldError>
-									)}
-								</Field>
-							</FieldGroup>
-						</CardContent>
-					</Card>
-
-					<div className="sm:w-1/2 space-y-4">
-						<Card className="h-fit">
+				<form className="space-y-4" onSubmit={onSubmit}>
+					<div className="flex flex-col sm:flex-row gap-4">
+						<Card className="sm:w-1/2">
 							<CardContent>
-								<Field>
-									<FieldLabel>{t("storeProductsPage.form.price")}</FieldLabel>
-									<Controller
-										name="priceRangeUsd"
-										control={control}
-										render={({ field }) => (
-											<InputCurrencyRange
-												minPlaceholder={t(
-													"storeProductsPage.form.priceMinPlaceholder",
-												)}
-												maxPlaceholder={t(
-													"storeProductsPage.form.priceMaxPlaceholder",
-												)}
-												minValue={field.value.min}
-												maxValue={field.value.max}
-												onMinChange={(min) =>
-													field.onChange({
-														min,
-														max:
-															field.value.max == null
-																? min
-																: Math.max(min || 0, field.value.max),
-													})
-												}
-												onMaxChange={(max) =>
-													field.onChange({
-														min:
-															field.value.min == null
-																? max
-																: Math.min(field.value.min, max || 0),
-														max,
-													})
-												}
-											/>
-										)}
-									/>
-
-									{(errors.priceRangeUsd?.min || errors.priceRangeUsd?.max) && (
-										<FieldError>
-											{errors.priceRangeUsd.min?.message ||
-												errors.priceRangeUsd.max?.message}
-										</FieldError>
-									)}
-								</Field>
-							</CardContent>
-						</Card>
-
-						<Card className="h-fit">
-							<CardContent>
-								<Field>
-									<FieldLabel>
-										{t("storeProductsPage.form.category")}
-									</FieldLabel>
-									<Controller
-										name="category"
-										control={control}
-										render={({ field }) => (
-											<Select
-												value={field.value}
-												onValueChange={(value) =>
-													value && field.onChange(value)
-												}
-											>
-												<SelectTrigger>
-													<SelectValue
-														placeholder={t(
-															"storeProductsPage.form.selectCategory",
-														)}
-													/>
-												</SelectTrigger>
-												<SelectContent>
-													<SelectGroup>
-														{options.map((item) => (
-															<SelectItem
-																key={`select-item-${item._id}`}
-																value={item._id}
-															>
-																{item.name[locale]}
-															</SelectItem>
-														))}
-													</SelectGroup>
-												</SelectContent>
-											</Select>
-										)}
-									/>
-									{errors.category && (
-										<FieldError>{errors.category.message}</FieldError>
-									)}
-								</Field>
-							</CardContent>
-						</Card>
-						<Card className="h-fit">
-							<CardContent>
-								<Field>
+								<FieldGroup>
 									<Field>
-										<FieldLabel>{t("storeProductsPage.form.tags")}</FieldLabel>
+										<FieldLabel htmlFor="name">
+											{t("storeProductsPage.form.name")}
+										</FieldLabel>
+										<Input
+											id="name"
+											placeholder={t("storeProductsPage.form.namePlaceholder")}
+											{...register("name")}
+										/>
+										{errors.name && (
+											<FieldError>{errors.name.message}</FieldError>
+										)}
+									</Field>
+
+									<Field>
+										<FieldLabel>
+											{t("storeProductsPage.form.description")}
+										</FieldLabel>
+										<div
+											className={cn(
+												"relative flex flex-col w-full rounded-md border border-input bg-transparent text-sm transition-colors",
+												"focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
+											)}
+										>
+											<LexicalComposer initialConfig={initialConfig}>
+												<ImageToolbarButtonPlugin />
+												<RichTextPlugin
+													contentEditable={
+														<ContentEditable
+															className={cn(
+																"prose prose-slate text-sm min-h-40 max-h-100 overflow-y-scroll w-full px-2.5 py-2 focus:outline-none",
+															)}
+														/>
+													}
+													ErrorBoundary={LexicalErrorBoundary}
+												/>
+												<HistoryPlugin />
+												<OnChangePlugin onChange={onDescriptionChange} />
+												{injectLoadDescriptionPlugin && (
+													<LoadDescriptionPlugin json={description} />
+												)}
+
+												<YouTubePastePlugin />
+												<ListPlugin />
+											</LexicalComposer>
+										</div>
+										{errors.description && (
+											<FieldError>{errors.description.message}</FieldError>
+										)}
+									</Field>
+
+									<Field>
+										<FieldLabel>{t("storeProductsPage.form.media")}</FieldLabel>
+										<div className="grid grid-cols-5 gap-4">
+											{Array.from({ length: 10 }).map((_, index) => (
+												<Controller
+													key={index}
+													name={`images.${index}`}
+													control={control}
+													render={({ field }) => (
+														<ImageInput
+															value={field.value}
+															onChange={field.onChange}
+														/>
+													)}
+												/>
+											))}
+										</div>
+										{errors.images && (
+											<FieldError>{errors.images.message}</FieldError>
+										)}
+									</Field>
+								</FieldGroup>
+							</CardContent>
+						</Card>
+
+						<div className="sm:w-1/2 space-y-4">
+							<Card className="h-fit">
+								<CardContent>
+									<Field>
+										<FieldLabel>{t("storeProductsPage.form.price")}</FieldLabel>
 										<Controller
-											name="tags"
+											name="priceRangeUsd"
 											control={control}
 											render={({ field }) => (
-												<InputTags
-													{...field}
-													placeholder={t(
-														"storeProductsPage.form.tagsPlaceholder",
+												<InputCurrencyRange
+													minPlaceholder={t(
+														"storeProductsPage.form.priceMinPlaceholder",
 													)}
-													value={field.value ?? []}
+													maxPlaceholder={t(
+														"storeProductsPage.form.priceMaxPlaceholder",
+													)}
+													minValue={field.value.min}
+													maxValue={field.value.max}
+													onMinChange={(min) =>
+														field.onChange({
+															min,
+															max:
+																field.value.max == null
+																	? min
+																	: Math.max(min || 0, field.value.max),
+														})
+													}
+													onMaxChange={(max) =>
+														field.onChange({
+															min:
+																field.value.min == null
+																	? max
+																	: Math.min(field.value.min, max || 0),
+															max,
+														})
+													}
 												/>
 											)}
 										/>
-										{errors.tags && (
-											<FieldError>{errors.tags.message}</FieldError>
+
+										{(errors.priceRangeUsd?.min ||
+											errors.priceRangeUsd?.max) && (
+											<FieldError>
+												{errors.priceRangeUsd.min?.message ||
+													errors.priceRangeUsd.max?.message}
+											</FieldError>
 										)}
 									</Field>
-								</Field>
-							</CardContent>
-						</Card>
-					</div>
-				</div>
+								</CardContent>
+							</Card>
 
-				<div className="flex justify-end gap-2">
-					{cancelButtonAction && (
-						<Button
-							type="button"
-							variant="outline"
-							onClick={cancelButtonAction}
-						>
-							{t("buttons.cancel")}
+							<Card className="h-fit">
+								<CardContent>
+									<Field>
+										<FieldLabel>
+											{t("storeProductsPage.form.category")}
+										</FieldLabel>
+										<Controller
+											name="category"
+											control={control}
+											render={({ field }) => (
+												<Select
+													value={field.value}
+													onValueChange={(value) =>
+														value && field.onChange(value)
+													}
+												>
+													<SelectTrigger>
+														<SelectValue
+															placeholder={t(
+																"storeProductsPage.form.selectCategory",
+															)}
+														/>
+													</SelectTrigger>
+													<SelectContent>
+														<SelectGroup>
+															{options.map((item) => (
+																<SelectItem
+																	key={`select-item-${item._id}`}
+																	value={item._id}
+																>
+																	{item.name[locale]}
+																</SelectItem>
+															))}
+														</SelectGroup>
+													</SelectContent>
+												</Select>
+											)}
+										/>
+										{errors.category && (
+											<FieldError>{errors.category.message}</FieldError>
+										)}
+									</Field>
+								</CardContent>
+							</Card>
+							<Card className="h-fit">
+								<CardContent>
+									<Field>
+										<Field>
+											<FieldLabel>
+												{t("storeProductsPage.form.tags")}
+											</FieldLabel>
+											<Controller
+												name="tags"
+												control={control}
+												render={({ field }) => (
+													<InputTags
+														{...field}
+														placeholder={t(
+															"storeProductsPage.form.tagsPlaceholder",
+														)}
+														value={field.value ?? []}
+													/>
+												)}
+											/>
+											{errors.tags && (
+												<FieldError>{errors.tags.message}</FieldError>
+											)}
+										</Field>
+									</Field>
+								</CardContent>
+							</Card>
+						</div>
+					</div>
+
+					<div className="flex justify-end gap-2">
+						{cancelButtonAction && (
+							<Button
+								type="button"
+								variant="outline"
+								onClick={cancelButtonAction}
+							>
+								{t("buttons.cancel")}
+							</Button>
+						)}
+						<Button type="submit" disabled={!formState.isDirty || loading}>
+							{loading && <Spinner />}
+							{submitButtonText}
 						</Button>
-					)}
-					<Button type="submit" disabled={!formState.isDirty || loading}>
-						{loading && <Spinner />}
-						{submitButtonText}
-					</Button>
-				</div>
-			</form>
-		</Section>
+					</div>
+				</form>
+			</Section>
+		</Container>
 	);
 }

@@ -57,6 +57,8 @@ import { cn } from "@/lib/utils";
 
 import { ProductsPageParams } from "@/types/product.type";
 
+import { Container } from "../common/container";
+
 export default function Navigation() {
 	const router = useRouter();
 	const pathname = usePathname();
@@ -80,220 +82,226 @@ export default function Navigation() {
 	}, [searchParams]);
 
 	return (
-		<nav className="flex items-center justify-between gap-4 h-16 md:h-20">
-			<div className="flex-1 flex items-center gap-0 md:gap-4">
-				<div>
-					<NavigationMenu />
+		<Container>
+			<nav className="flex items-center justify-between gap-4 box-content border-b-2 sticky top-0 bg-white z-50 h-16 md:h-20">
+				<div className="flex-1 flex items-center gap-0 md:gap-4">
+					<div>
+						<NavigationMenu />
+					</div>
+
+					<Logo className="hidden lg:block" />
+
+					<form
+						className="max-w-32 sm:w-32"
+						onSubmit={(event) => {
+							event.preventDefault();
+							const params = new URLSearchParams();
+							params.set("name", search ? search : "");
+							router.push(
+								localizePath(`/products?${params.toString()}`, locale),
+							);
+						}}
+					>
+						<InputGroup>
+							<InputGroupInput
+								placeholder={t("navigation.searchPlaceholder")}
+								value={search}
+								onChange={(event) => setSearch(event.target.value)}
+							/>
+							<InputGroupAddon align="inline-start">
+								<SearchIcon />
+							</InputGroupAddon>
+						</InputGroup>
+					</form>
 				</div>
 
-				<Logo className="hidden lg:block" />
-
-				<form
-					className="max-w-32 sm:w-32"
-					onSubmit={(event) => {
-						event.preventDefault();
-						const params = new URLSearchParams();
-						params.set("name", search ? search : "");
-						router.push(localizePath(`/products?${params.toString()}`, locale));
-					}}
-				>
-					<InputGroup>
-						<InputGroupInput
-							placeholder={t("navigation.searchPlaceholder")}
-							value={search}
-							onChange={(event) => setSearch(event.target.value)}
-						/>
-						<InputGroupAddon align="inline-start">
-							<SearchIcon />
-						</InputGroupAddon>
-					</InputGroup>
-				</form>
-			</div>
-
-			<ul className="flex-2 hidden sm:flex items-center justify-center gap-10">
-				<NavLi
-					href={localizePath("/", locale)}
-					name={t("navigation.li.home")}
-				/>
-				<NavLi
-					href={localizePath("/products", locale)}
-					name={t("navigation.li.shop")}
-				/>
-				{!isMobile && (
+				<ul className="flex-2 hidden sm:flex items-center justify-center gap-10">
 					<NavLi
-						href={localizePath("/about", locale)}
-						name={t("navigation.li.about")}
+						href={localizePath("/", locale)}
+						name={t("navigation.li.home")}
 					/>
-				)}
-				<NavLi
-					href={localizePath("/contact", locale)}
-					name={t("navigation.li.contact")}
-				/>
-			</ul>
+					<NavLi
+						href={localizePath("/products", locale)}
+						name={t("navigation.li.shop")}
+					/>
+					{!isMobile && (
+						<NavLi
+							href={localizePath("/about", locale)}
+							name={t("navigation.li.about")}
+						/>
+					)}
+					<NavLi
+						href={localizePath("/contact", locale)}
+						name={t("navigation.li.contact")}
+					/>
+				</ul>
 
-			<Logo className="block sm:hidden" />
+				<Logo className="block sm:hidden" />
 
-			<div className="flex-1 flex items-center justify-end">
-				<ButtonIcon
-					className="hidden sm:inline-flex"
-					icon="storefront"
-					aria-label="Go to Sell page"
-					onClick={() => router.push(localizePath("/store/products", locale))}
-				/>
-				<ButtonIcon
-					icon="favorite"
-					aria-label="Go to Favorites page"
-					onClick={() => router.push(localizePath("/favorites", locale))}
-				/>
-				<ButtonIcon
-					className="relative"
-					icon="shopping_cart"
-					aria-label="Go to Cart page"
-					onClick={() => router.push(localizePath("/cart", locale))}
-				>
-					{items.length > 0 && <Badge>{items.length}</Badge>}
-				</ButtonIcon>
+				<div className="flex-1 flex items-center justify-end">
+					<ButtonIcon
+						className="hidden sm:inline-flex"
+						icon="storefront"
+						aria-label="Go to Sell page"
+						onClick={() => router.push(localizePath("/store/products", locale))}
+					/>
+					<ButtonIcon
+						icon="favorite"
+						aria-label="Go to Favorites page"
+						onClick={() => router.push(localizePath("/favorites", locale))}
+					/>
+					<ButtonIcon
+						className="relative"
+						icon="shopping_cart"
+						aria-label="Go to Cart page"
+						onClick={() => router.push(localizePath("/cart", locale))}
+					>
+						{items.length > 0 && <Badge>{items.length}</Badge>}
+					</ButtonIcon>
 
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button
-							variant="outline"
-							size="sm"
-							className="hidden md:inline-flex uppercase"
-							aria-label={t("navigation.actions.language")}
-						>
-							{locale}
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end" sideOffset={4}>
-						<DropdownMenuLabel>
-							{t("navigation.actions.language")}
-						</DropdownMenuLabel>
-						{(Object.keys(localeLabels) as Locale[]).map((lang) => (
-							<DropdownMenuItem
-								key={lang}
-								onClick={() => {
-									const query = searchParams.toString();
-									router.push(`${localizePath(pathname, lang)}?${query}`);
-								}}
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button
+								variant="outline"
+								size="sm"
+								className="hidden md:inline-flex uppercase"
+								aria-label={t("navigation.actions.language")}
 							>
-								{localeLabels[lang]}
-							</DropdownMenuItem>
-						))}
-					</DropdownMenuContent>
-				</DropdownMenu>
-
-				{isAuthenticated && user ? (
-					<div>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<ImageButton
-									imgUrl={user.photoUrl}
-									fallback={initials(user.name)}
-									alt={t("photoOf").replace("{{name}}", user.name)}
-								/>
-							</DropdownMenuTrigger>
-
-							<DropdownMenuContent
-								className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-								side={"bottom"}
-								align="end"
-								sideOffset={4}
-							>
-								<DropdownMenuLabel className="p-0 font-normal">
-									<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-										<Avatar className="h-8 w-8">
-											<AvatarImage src={user.photoUrl} alt={user.name} />
-											<AvatarFallback>{initials(user.name)}</AvatarFallback>
-										</Avatar>
-										<div className="grid flex-1 text-start text-sm leading-tight">
-											<span className="text-foreground truncate font-medium">
-												{user.name}
-											</span>
-											<span className="truncate text-xs">{user.email}</span>
-										</div>
-									</div>
-								</DropdownMenuLabel>
-
-								<DropdownMenuSeparator />
-
-								<DropdownMenuGroup>
-									{isMobile && (
-										<DropdownMenuItem
-											onClick={() => {
-												router.push(localizePath("/store/products", locale));
-											}}
-										>
-											<ShoppingBag />
-											{t("navigation.actions.store")}
-										</DropdownMenuItem>
-									)}
-									<DropdownMenuItem
-										onClick={() => {
-											router.push(localizePath("/account", locale));
-										}}
-									>
-										<BadgeCheck />
-										{t("navigation.actions.account")}
-									</DropdownMenuItem>
-								</DropdownMenuGroup>
-
-								<DropdownMenuSeparator />
-
-								{user.role === "admin" && (
-									<>
-										<DropdownMenuLabel>
-											{t("navigation.actions.admin")}
-										</DropdownMenuLabel>
-
-										<DropdownMenuGroup>
-											<DropdownMenuItem
-												onClick={() => {
-													router.push(localizePath("/admin/messages", locale));
-												}}
-											>
-												<MessagesSquare />
-												{t("navigation.actions.messages")}
-											</DropdownMenuItem>
-
-											<DropdownMenuItem
-												onClick={() => {
-													router.push(
-														localizePath("/admin/categories", locale),
-													);
-												}}
-											>
-												<Menu />
-												{t("navigation.actions.categories")}
-											</DropdownMenuItem>
-										</DropdownMenuGroup>
-
-										<DropdownMenuSeparator />
-									</>
-								)}
-
+								{locale}
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end" sideOffset={4}>
+							<DropdownMenuLabel>
+								{t("navigation.actions.language")}
+							</DropdownMenuLabel>
+							{(Object.keys(localeLabels) as Locale[]).map((lang) => (
 								<DropdownMenuItem
-									onClick={async () => {
-										await dispatch(logOut());
-										window.localStorage.clear();
-										location.reload();
+									key={lang}
+									onClick={() => {
+										const query = searchParams.toString();
+										router.push(`${localizePath(pathname, lang)}?${query}`);
 									}}
 								>
-									<LogOut />
-									{t("navigation.actions.logOut")}
+									{localeLabels[lang]}
 								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
-				) : (
-					<ButtonIcon
-						icon="person"
-						aria-label="Go to Sign In page"
-						onClick={() => router.push(localizePath("/signin", locale))}
-					/>
-				)}
-			</div>
-		</nav>
+							))}
+						</DropdownMenuContent>
+					</DropdownMenu>
+
+					{isAuthenticated && user ? (
+						<div>
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<ImageButton
+										imgUrl={user.photoUrl}
+										fallback={initials(user.name)}
+										alt={t("photoOf").replace("{{name}}", user.name)}
+									/>
+								</DropdownMenuTrigger>
+
+								<DropdownMenuContent
+									className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+									side={"bottom"}
+									align="end"
+									sideOffset={4}
+								>
+									<DropdownMenuLabel className="p-0 font-normal">
+										<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+											<Avatar className="h-8 w-8">
+												<AvatarImage src={user.photoUrl} alt={user.name} />
+												<AvatarFallback>{initials(user.name)}</AvatarFallback>
+											</Avatar>
+											<div className="grid flex-1 text-start text-sm leading-tight">
+												<span className="text-foreground truncate font-medium">
+													{user.name}
+												</span>
+												<span className="truncate text-xs">{user.email}</span>
+											</div>
+										</div>
+									</DropdownMenuLabel>
+
+									<DropdownMenuSeparator />
+
+									<DropdownMenuGroup>
+										{isMobile && (
+											<DropdownMenuItem
+												onClick={() => {
+													router.push(localizePath("/store/products", locale));
+												}}
+											>
+												<ShoppingBag />
+												{t("navigation.actions.store")}
+											</DropdownMenuItem>
+										)}
+										<DropdownMenuItem
+											onClick={() => {
+												router.push(localizePath("/account", locale));
+											}}
+										>
+											<BadgeCheck />
+											{t("navigation.actions.account")}
+										</DropdownMenuItem>
+									</DropdownMenuGroup>
+
+									<DropdownMenuSeparator />
+
+									{user.role === "admin" && (
+										<>
+											<DropdownMenuLabel>
+												{t("navigation.actions.admin")}
+											</DropdownMenuLabel>
+
+											<DropdownMenuGroup>
+												<DropdownMenuItem
+													onClick={() => {
+														router.push(
+															localizePath("/admin/messages", locale),
+														);
+													}}
+												>
+													<MessagesSquare />
+													{t("navigation.actions.messages")}
+												</DropdownMenuItem>
+
+												<DropdownMenuItem
+													onClick={() => {
+														router.push(
+															localizePath("/admin/categories", locale),
+														);
+													}}
+												>
+													<Menu />
+													{t("navigation.actions.categories")}
+												</DropdownMenuItem>
+											</DropdownMenuGroup>
+
+											<DropdownMenuSeparator />
+										</>
+									)}
+
+									<DropdownMenuItem
+										onClick={async () => {
+											await dispatch(logOut());
+											window.localStorage.clear();
+											location.reload();
+										}}
+									>
+										<LogOut />
+										{t("navigation.actions.logOut")}
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+						</div>
+					) : (
+						<ButtonIcon
+							icon="person"
+							aria-label="Go to Sign In page"
+							onClick={() => router.push(localizePath("/signin", locale))}
+						/>
+					)}
+				</div>
+			</nav>
+		</Container>
 	);
 }
 

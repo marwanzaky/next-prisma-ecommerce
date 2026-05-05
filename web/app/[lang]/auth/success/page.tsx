@@ -4,6 +4,8 @@ import { useEffect } from "react";
 
 import { useSearchParams } from "next/navigation";
 
+import { Container } from "@/components/common/container";
+
 import { useAuth } from "@/hooks/use-auth";
 
 export default function Page() {
@@ -19,5 +21,9 @@ export default function Page() {
 		}
 	}, [searchParams]);
 
-	return <p>Logging you in...</p>;
+	return (
+		<Container>
+			<p>Logging you in...</p>
+		</Container>
+	);
 }

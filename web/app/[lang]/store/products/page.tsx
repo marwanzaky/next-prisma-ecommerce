@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
+import { Container } from "@/components/common/container";
 import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 import { DataTable } from "@/components/ui/data-table/data-table";
@@ -27,55 +28,57 @@ export default function Page() {
 	const { columns, tableData } = useSell();
 
 	return (
-		<Section className="">
-			<Heading as="h4" className="text-center">
-				{t("storeProductsPage.title")}
-			</Heading>
+		<Container>
+			<Section className="">
+				<Heading as="h4" className="text-center">
+					{t("storeProductsPage.title")}
+				</Heading>
 
-			{tableData.length > 0 ? (
-				<DataTable
-					columns={columns}
-					data={tableData}
-					pagination
-					emptyText={t("storeProductsPage.noResults")}
-					renderToolbar={(table) => (
-						<DataTableToolbar
-							table={table}
-							search={{
-								columnId: "name",
-								placeholder: t("storeProductsPage.filterPlaceholder"),
-							}}
-						>
+				{tableData.length > 0 ? (
+					<DataTable
+						columns={columns}
+						data={tableData}
+						pagination
+						emptyText={t("storeProductsPage.noResults")}
+						renderToolbar={(table) => (
+							<DataTableToolbar
+								table={table}
+								search={{
+									columnId: "name",
+									placeholder: t("storeProductsPage.filterPlaceholder"),
+								}}
+							>
+								<Button
+									onClick={() => {
+										router.push(localizePath("/store/products/new", locale));
+									}}
+								>
+									{t("storeProductsPage.addProduct")}
+								</Button>
+							</DataTableToolbar>
+						)}
+					/>
+				) : (
+					<Empty className="border border-dashed">
+						<EmptyHeader>
+							<EmptyTitle>{t("storeProductsPage.emptyTitle")}</EmptyTitle>
+							<EmptyDescription className="max-w-xs text-pretty">
+								{t("storeProductsPage.emptyDescription")}
+							</EmptyDescription>
+						</EmptyHeader>
+						<EmptyContent>
 							<Button
+								variant="outline"
 								onClick={() => {
 									router.push(localizePath("/store/products/new", locale));
 								}}
 							>
 								{t("storeProductsPage.addProduct")}
 							</Button>
-						</DataTableToolbar>
-					)}
-				/>
-			) : (
-				<Empty className="border border-dashed">
-					<EmptyHeader>
-						<EmptyTitle>{t("storeProductsPage.emptyTitle")}</EmptyTitle>
-						<EmptyDescription className="max-w-xs text-pretty">
-							{t("storeProductsPage.emptyDescription")}
-						</EmptyDescription>
-					</EmptyHeader>
-					<EmptyContent>
-						<Button
-							variant="outline"
-							onClick={() => {
-								router.push(localizePath("/store/products/new", locale));
-							}}
-						>
-							{t("storeProductsPage.addProduct")}
-						</Button>
-					</EmptyContent>
-				</Empty>
-			)}
-		</Section>
+						</EmptyContent>
+					</Empty>
+				)}
+			</Section>
+		</Container>
 	);
 }
