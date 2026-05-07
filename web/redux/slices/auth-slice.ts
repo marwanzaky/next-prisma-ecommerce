@@ -5,11 +5,10 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
+import { User } from "@repo/types";
 
-import { usersService } from "@/services/users-service";
-
-import { User } from "@/shared/types/user.type";
 import { authService } from "@/services/auth-service";
+import { usersService } from "@/services/users-service";
 
 export type AuthState = {
 	user: User | null;

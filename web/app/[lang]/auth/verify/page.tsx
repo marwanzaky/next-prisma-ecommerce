@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-import { Container } from "@/components/common/container";
-
 import { authService } from "@/services/auth-service";
+
+import { Container } from "@/components/common/container";
 
 export default function Page() {
 	const searchParams = useSearchParams();

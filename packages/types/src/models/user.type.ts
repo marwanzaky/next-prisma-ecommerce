@@ -1,4 +1,4 @@
-import { EntityBase } from "./entity.type";
+import { EntityBase } from "./entity.type.js";
 
 export type UserRole = "user" | "admin";
 

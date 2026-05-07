@@ -1,7 +1,4 @@
-import {
-	PublicCategory,
-	PublicCategoryTree,
-} from "@/shared/types/category.type";
+import { PublicCategory, PublicCategoryTree } from "@repo/types";
 
 import { clientFetch } from "@/lib/api-client";
 

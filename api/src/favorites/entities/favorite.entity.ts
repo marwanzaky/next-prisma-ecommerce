@@ -6,8 +6,8 @@ import { Product } from "@/products/entities/product.entity";
 import { User } from "@/users/entities/user.entity";
 
 type FavoriteDocumentType = {
-	user: mongoose.Schema.Types.ObjectId;
-	product: mongoose.Schema.Types.ObjectId;
+	user: mongoose.Types.ObjectId;
+	product: mongoose.Types.ObjectId;
 };
 
 @Schema({
@@ -21,14 +21,14 @@ export class Favorite extends Document implements FavoriteDocumentType {
 		ref: User.name,
 		required: [true, "A review must belong to a user"],
 	})
-	user!: mongoose.Schema.Types.ObjectId;
+	user!: mongoose.Types.ObjectId;
 
 	@Prop({
 		type: mongoose.Schema.ObjectId,
 		ref: Product.name,
 		required: [true, "A review must belong to a user"],
 	})
-	product!: mongoose.Schema.Types.ObjectId;
+	product!: mongoose.Types.ObjectId;
 }
 
 export const FavoriteSchema = SchemaFactory.createForClass(Favorite);

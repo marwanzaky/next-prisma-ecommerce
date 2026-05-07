@@ -3,10 +3,9 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
+import { ProductEntity } from "@repo/types";
 
 import { favoritesService } from "@/services/favorites-service";
-
-import { ProductEntity } from "@/shared/types/product.types";
 
 export type FavoritesState = {
 	items: ProductEntity[];

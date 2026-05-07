@@ -12,7 +12,7 @@ import {
 	Min,
 } from "class-validator";
 
-import { ProductEntity } from "@/shared/types/product.types";
+import { ProductEntity } from "@repo/types";
 
 export class GetAllProductsDto {
 	@ApiPropertyOptional({ type: String, example: "price" })

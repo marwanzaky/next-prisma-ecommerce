@@ -7,6 +7,7 @@ import { Trash2Icon } from "lucide-react";
 import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { User } from "@repo/types";
 
 import { updateMeAsync } from "@/redux/slices/auth-slice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
@@ -36,8 +37,6 @@ import {
 import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
-
-import { User } from "@/shared/types/user.type";
 
 import { initials } from "@/lib/string-utils";
 

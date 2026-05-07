@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 
+import { TranslatedText } from "@repo/types";
+
 import { GeminiService } from "@/modules/gemini/gemini.service";
-import { TranslatedText } from "@/shared/types/product.types";
 
 type TextNodeRef = {
 	node: any;

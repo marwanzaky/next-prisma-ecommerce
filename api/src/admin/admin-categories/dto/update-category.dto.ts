@@ -9,7 +9,7 @@ import {
 	IsString,
 } from "class-validator";
 
-import { UpdateCategory } from "@/shared/types/category.type";
+import { UpdateCategory } from "@repo/types";
 
 export class UpdateCategoryDto implements UpdateCategory {
 	@ApiPropertyOptional()

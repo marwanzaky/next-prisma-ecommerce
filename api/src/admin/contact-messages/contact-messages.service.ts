@@ -3,10 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 
 import mongoose, { Model } from "mongoose";
 
-import {
-	ContactMessageStatus,
-	CreateContactMessage,
-} from "@/shared/types/contact-message.type";
+import { ContactMessageStatus, CreateContactMessage } from "@repo/types";
 
 import { ContactMessage } from "./entities/contact-message.entity";
 

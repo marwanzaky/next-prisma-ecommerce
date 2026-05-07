@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import mongoose, { Model } from "mongoose";
+import { Model } from "mongoose";
 
 import { Favorite } from "./entities/favorite.entity";
 
@@ -26,7 +26,7 @@ export class FavoritesService {
 
 	findByIdAndDelete(productId: string): Promise<Favorite | null> {
 		return this.favoriteModel.findOneAndDelete({
-			product: new mongoose.Types.ObjectId(productId),
+			product: productId,
 		});
 	}
 }

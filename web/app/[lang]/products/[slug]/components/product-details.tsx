@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { Heart, ShoppingCart } from "lucide-react";
 
 import { sendGTMEvent } from "@next/third-parties/google";
+import { ProductWithReviewsEntity } from "@repo/types";
 
 import { useAppDispatch } from "@/redux/store";
 
@@ -31,8 +32,6 @@ import { Badge } from "@/shadcn/components/ui/badge";
 import { Button } from "@/shadcn/components/ui/button";
 import { Separator } from "@/shadcn/components/ui/separator";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
-
-import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
 import { localizePath } from "@/lib/i18n";
 import { formatPrice, initials, stringToDate } from "@/lib/string-utils";

@@ -3,7 +3,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
-import { CreateCategory } from "@/shared/types/category.type";
+import { CreateCategory } from "@repo/types";
 
 export class CreateCategoryDto implements CreateCategory {
 	@ApiProperty()

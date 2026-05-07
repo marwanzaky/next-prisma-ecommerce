@@ -1,4 +1,4 @@
-import { CartEntity } from "@/shared/types/cart.type";
+import { CartEntity } from "@repo/types";
 
 import { clientFetch } from "@/lib/api-client";
 

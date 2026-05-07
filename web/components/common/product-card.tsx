@@ -3,13 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { ProductEntity } from "@repo/types";
+
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ButtonIcon } from "@/components/ui/button-icon";
 import Stars from "@/components/ui/stars";
 
 import { useIsMobile } from "@/shadcn/hooks/use-mobile";
-
-import { ProductEntity } from "@/shared/types/product.types";
 
 import { localizePath } from "@/lib/i18n";
 import { createProductSlug, formatPrice } from "@/lib/string-utils";

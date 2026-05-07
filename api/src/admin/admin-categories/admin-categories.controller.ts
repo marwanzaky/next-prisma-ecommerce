@@ -39,7 +39,7 @@ export class AdminCategoriesController {
 		const categories = await this.categoriesService.find();
 
 		for (const category of categories) {
-			await this.categoriesService.findByIdAndUpdate(category._id as string, {
+			await this.categoriesService.findByIdAndUpdate(category._id.toString(), {
 				name: category.name[defaultLocale],
 			});
 

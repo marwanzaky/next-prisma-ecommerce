@@ -10,6 +10,12 @@ node_modules
 .next/
 out/
 
+# turbo
+.turbo
+
+# pnpm
+.pnpm-store
+
 # pwa
 /web/public/sw.js
 /web/public/workbox-*.js
@@ -24,6 +30,9 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+
+# lockfiles (pnpm is canonical)
+package-lock.json
 
 # misc
 .DS_Store

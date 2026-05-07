@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { StarIcon } from "lucide-react";
 import { toast } from "sonner";
 
+import { ProductWithReviewsEntity, Rating } from "@repo/types";
+
 import { useAppSelector } from "@/redux/store";
 
 import { productsService } from "@/services/products-service";
@@ -28,8 +30,6 @@ import { Field, FieldGroup, FieldLabel } from "@/shadcn/components/ui/field";
 import { Textarea } from "@/shadcn/components/ui/textarea";
 import { Heading } from "@/shadcn/components/ui/typography";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
-
-import { ProductWithReviewsEntity, Rating } from "@/shared/types/product.types";
 
 import { localizePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
+import { ProductWithReviewsEntity } from "@repo/types";
+
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ButtonIcon } from "@/components/ui/button-icon";
 
@@ -14,8 +16,6 @@ import {
 	CarouselItem,
 	useCarousel,
 } from "@/shadcn/components/ui/carousel";
-
-import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
 import { cn } from "@/lib/utils";
 

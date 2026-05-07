@@ -2,13 +2,14 @@ import { Prop, Schema, SchemaFactory, Virtual } from "@nestjs/mongoose";
 
 import mongoose, { Document } from "mongoose";
 
-import { Category } from "@/modules/categories/entities/category.entity";
-import { WithoutMongoMeta } from "@/shared/types/mongoose.type";
 import {
 	ProductEntity,
 	RatingDistribution,
 	TranslatedText,
-} from "@/shared/types/product.types";
+	WithoutMongoMeta,
+} from "@repo/types";
+
+import { Category } from "@/modules/categories/entities/category.entity";
 import { User } from "@/users/entities/user.entity";
 
 type ProductDocumentType = Omit<WithoutMongoMeta<ProductEntity>, "category"> & {
@@ -122,7 +123,7 @@ export class Product extends Document implements ProductDocumentType {
 		ref: User.name,
 		required: [true, "A product must belong to a user"],
 	})
-	user!: mongoose.Schema.Types.ObjectId;
+	user!: mongoose.Types.ObjectId;
 
 	@Prop({
 		type: Boolean,

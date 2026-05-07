@@ -1,6 +1,6 @@
-import { EntityBase } from "./entity.type";
-import { ReviewEntity } from "./review.type";
-import { User } from "./user.type";
+import { EntityBase } from "./entity.type.js";
+import { ReviewEntity } from "./review.type.js";
+import { User } from "./user.type.js";
 
 export type Rating = 1 | 2 | 3 | 4 | 5;
 export type RatingDistribution = Record<Rating, number>;
@@ -17,9 +17,12 @@ export type OptionalTranslatedText = {
 	ar?: string;
 };
 
-/**
- * Mongodb product document entity
- */
+export type BrowserFileLike = {
+	name: string;
+	type: string;
+	size: number;
+};
+
 export type ProductEntity = EntityBase & {
 	name: TranslatedText;
 	price: number;
@@ -58,7 +61,7 @@ export type CreateProduct = {
 	tags?: string[];
 	stock?: number;
 	category?: string | null;
-	imgFiles?: File[];
+	imgFiles?: BrowserFileLike[];
 };
 
 export type UpdateProduct = {
@@ -71,7 +74,7 @@ export type UpdateProduct = {
 	stock?: number;
 	category?: string | null;
 	newImgs?: {
-		file: File;
+		file: BrowserFileLike;
 		index: number;
 	}[];
 	keptImgs?: {

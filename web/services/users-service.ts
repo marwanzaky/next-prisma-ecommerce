@@ -1,5 +1,9 @@
-import { ProductEntity } from "@/shared/types/product.types";
-import { UpdateUser, UpdateUserPassword, User } from "@/shared/types/user.type";
+import type {
+	ProductEntity,
+	UpdateUser,
+	UpdateUserPassword,
+	User,
+} from "@repo/types";
 
 import { clientFetch } from "@/lib/api-client";
 import { jsonToFormData } from "@/lib/helper";

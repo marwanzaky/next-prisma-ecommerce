@@ -1,6 +1,6 @@
-import { EntityBase } from "./entity.type";
-import { WithoutMongoMeta } from "./mongoose.type";
-import { TranslatedText } from "./product.types";
+import { EntityBase } from "./entity.type.js";
+import { WithoutMongoMeta } from "./mongoose.type.js";
+import { TranslatedText } from "./product.types.js";
 
 export type CreateCategory = Omit<
 	WithoutMongoMeta<CategoryEntity>,

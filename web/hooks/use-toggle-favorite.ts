@@ -2,13 +2,13 @@ import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
 
+import { ProductEntity } from "@repo/types";
+
 import {
 	postFavoritesAsync,
 	removeFavoritesAsync,
 } from "@/redux/slices/favorites-slice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-
-import { ProductEntity } from "@/shared/types/product.types";
 
 export function useToggleFavorite(product: ProductEntity) {
 	const router = useRouter();

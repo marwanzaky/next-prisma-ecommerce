@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { ContactMessage, ContactMessageStatus } from "@repo/types";
 import { useQuery } from "@tanstack/react-query";
 
 import { contactMessagesService } from "@/services/contact-messages-service";
@@ -38,11 +39,6 @@ import {
 	SelectValue,
 } from "@/shadcn/components/ui/select";
 import { Textarea } from "@/shadcn/components/ui/textarea";
-
-import {
-	ContactMessage,
-	ContactMessageStatus,
-} from "@/shared/types/contact-message.type";
 
 export function useAdminMessages() {
 	const { data, isLoading, refetch } = useQuery({

@@ -1,8 +1,4 @@
-import {
-	CategoryEntity,
-	CreateCategory,
-	UpdateCategory,
-} from "@/shared/types/category.type";
+import { CategoryEntity, CreateCategory, UpdateCategory } from "@repo/types";
 
 import { clientFetch } from "@/lib/api-client";
 import { jsonToFormData } from "@/lib/helper";

@@ -5,6 +5,8 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { ProductWithReviewsEntity } from "@repo/types";
+
 import { useI18n } from "@/components/layout/i18n-provider";
 import Stars from "@/components/ui/stars";
 
@@ -20,8 +22,6 @@ import {
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
-
-import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
 import { localizePath } from "@/lib/i18n";
 import { initials, stringToDate } from "@/lib/string-utils";

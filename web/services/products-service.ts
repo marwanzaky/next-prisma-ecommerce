@@ -5,8 +5,8 @@ import {
 	ProductEntity,
 	ProductWithReviewsEntity,
 	UpdateProduct,
-} from "@/shared/types/product.types";
-import { ReviewEntity } from "@/shared/types/review.type";
+} from "@repo/types";
+import { ReviewEntity } from "@repo/types";
 
 import { clientFetch } from "@/lib/api-client";
 import { jsonToFormData } from "@/lib/helper";
@@ -57,7 +57,7 @@ export const productsService = {
 		} satisfies CreateProduct);
 
 		product.imgFiles?.forEach((file) => {
-			formData.append("imgFiles", file);
+			formData.append("imgFiles", file as any);
 		});
 
 		return clientFetch<ProductEntity>("/products", {
@@ -73,7 +73,7 @@ export const productsService = {
 		} satisfies UpdateProduct);
 
 		update.newImgs?.forEach((img) => {
-			formData.append("newImgs", img.file);
+			formData.append("newImgs", img.file as any);
 			formData.append("newImgsIndex", String(img.index));
 		});
 

@@ -25,7 +25,7 @@ export class CartsController {
 	@ApiOperation({
 		summary: "Get the current user's cart",
 	})
-	async get(@Req() request: IRequest) {
+	get(@Req() request: IRequest) {
 		return this.cartsService.findOne({ user: request.user.id });
 	}
 

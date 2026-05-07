@@ -1,9 +1,9 @@
+import { CategoryEntity } from "@repo/types";
+
 import { Column } from "@/components/ui/table";
 import { LogoCell } from "@/components/ui/table/cells/logo-cell";
 
 import { Checkbox } from "@/shadcn/components/ui/checkbox";
-
-import { CategoryEntity } from "@/shared/types/category.type";
 
 import { Locale } from "@/lib/i18n";
 

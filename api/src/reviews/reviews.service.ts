@@ -3,10 +3,10 @@ import { InjectModel } from "@nestjs/mongoose";
 
 import { Model } from "mongoose";
 
+import { ReviewEntity, TranslatedText } from "@repo/types";
+
 import { TranslationService } from "@/modules/translation/translation.service";
 import { ProductsService } from "@/products/products.service";
-import { TranslatedText } from "@/shared/types/product.types";
-import { ReviewEntity } from "@/shared/types/review.type";
 
 import { CreateProductReviewDto } from "./dto/create-product-review.dto";
 import { Review } from "./entities/review.entity";

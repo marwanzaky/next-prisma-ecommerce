@@ -1,5 +1,6 @@
 "use client";
 
+import { ProductWithReviewsEntity } from "@repo/types";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -14,8 +15,6 @@ import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 
 import { Heading } from "@/shadcn/components/ui/typography";
-
-import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
 import { cn } from "@/lib/utils";
 

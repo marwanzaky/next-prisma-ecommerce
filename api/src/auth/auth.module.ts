@@ -4,14 +4,16 @@ import { JwtModule } from "@nestjs/jwt";
 import { MongooseModule } from "@nestjs/mongoose";
 import { PassportModule } from "@nestjs/passport";
 
+import { StringValue } from "ms";
+
 import { CartsModule } from "@/carts/carts.module";
 import { GoogleStrategy } from "@/google.strategy";
+import { ResendModule } from "@/modules/resend/resend.module";
 import { User, UserSchema } from "@/users/entities/user.entity";
 import { UsersModule } from "@/users/users.module";
 
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
-import { ResendModule } from "@/modules/resend/resend.module";
 
 @Module({
 	imports: [
@@ -23,7 +25,7 @@ import { ResendModule } from "@/modules/resend/resend.module";
 				return {
 					secret: config.get<string>("JWT_SECRET"),
 					signOptions: {
-						expiresIn: config.get<string>("JWT_EXPIRES"),
+						expiresIn: config.get<StringValue>("JWT_EXPIRES"),
 					},
 				};
 			},

@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import Link from "next/link";
 
+import { ProductWithReviewsEntity, PublicCategoryTree } from "@repo/types";
 import { useQuery } from "@tanstack/react-query";
 
 import { categoriesService } from "@/services/categories-service";
@@ -23,9 +24,6 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/shadcn/components/ui/tooltip";
-
-import { PublicCategoryTree } from "@/shared/types/category.type";
-import { ProductWithReviewsEntity } from "@/shared/types/product.types";
 
 import { localizePath } from "@/lib/i18n";
 

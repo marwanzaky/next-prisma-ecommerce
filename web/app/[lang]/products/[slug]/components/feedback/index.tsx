@@ -1,4 +1,4 @@
-import { ProductWithReviewsEntity } from "@/shared/types/product.types";
+import { ProductWithReviewsEntity } from "@repo/types";
 
 import { cn } from "@/lib/utils";
 

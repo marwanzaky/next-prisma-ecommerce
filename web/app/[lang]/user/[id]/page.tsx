@@ -1,6 +1,6 @@
-import { usersService } from "@/services/users-service";
+import { User } from "@repo/types";
 
-import { User } from "@/shared/types/user.type";
+import { usersService } from "@/services/users-service";
 
 import UserProfile from "./user-profile";
 

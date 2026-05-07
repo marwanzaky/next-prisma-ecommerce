@@ -3,17 +3,18 @@ import { InjectModel } from "@nestjs/mongoose";
 
 import mongoose, { Model } from "mongoose";
 
-import { delay } from "@/common/helper";
-import { CategoriesService } from "@/modules/categories/categories.service";
-import { TranslationService } from "@/modules/translation/translation.service";
-import { Review } from "@/reviews/entities/review.entity";
 import {
 	ProductEntity,
 	ProductWithReviewsEntity,
 	Rating,
 	RatingDistribution,
 	TranslatedText,
-} from "@/shared/types/product.types";
+} from "@repo/types";
+
+import { delay } from "@/common/helper";
+import { CategoriesService } from "@/modules/categories/categories.service";
+import { TranslationService } from "@/modules/translation/translation.service";
+import { Review } from "@/reviews/entities/review.entity";
 import { CreateProductEntity, UpdateProductEntity } from "@/types/product.type";
 
 import { Product } from "./entities/product.entity";
@@ -72,7 +73,7 @@ export class ProductsService {
 	 */
 	async find(options?: {
 		sort?: {
-			property?: keyof ProductEntity;
+			property?: Extract<keyof ProductEntity, string>;
 			order?: "asc" | "desc";
 		};
 		query?: {
@@ -221,7 +222,7 @@ export class ProductsService {
 	 */
 	async findByIdAndDelete(id: string): Promise<Product | null> {
 		await this.reviewModel.deleteMany({
-			product: new mongoose.Types.ObjectId(id),
+			product: id,
 		});
 		return this.productModel.findByIdAndDelete(id);
 	}

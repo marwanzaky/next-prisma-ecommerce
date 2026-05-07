@@ -6,7 +6,7 @@
 </div>
 
 
-## About
+## about
 
 [Website](https://mamolio.store) project is a modern ecommerce store built from the ground up to deliver speed, security, and scalability. Designed with Next.js 16, Tailwind CSS 4, NestJS, and MongoDB.
 

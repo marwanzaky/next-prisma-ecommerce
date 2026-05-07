@@ -3,12 +3,10 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
+import { CartItemEntity, ProductEntity } from "@repo/types";
 
 import { cartsService } from "@/services/carts-service";
 import { guestCartService } from "@/services/guest-cart-service";
-
-import { CartItemEntity } from "@/shared/types/cart.type";
-import { ProductEntity } from "@/shared/types/product.types";
 
 import { RootState } from "../store";
 

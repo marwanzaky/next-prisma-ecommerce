@@ -1,4 +1,4 @@
-import { ProductEntity } from "@/shared/types/product.types";
+import { ProductEntity } from "@repo/types";
 
 export type GetAllProductsDto = {
 	sortProperty?: keyof ProductEntity;

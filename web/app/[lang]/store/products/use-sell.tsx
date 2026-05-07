@@ -9,6 +9,7 @@ import { useDebouncedCallback } from "use-debounce";
 import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CreateProduct, UpdateProduct } from "@repo/types";
 import { useQuery } from "@tanstack/react-query";
 
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
@@ -29,8 +30,6 @@ import { categoriesService } from "@/services/categories-service";
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ImageNode } from "@/components/ui/lexical/nodes/image-node";
 import { YouTubeNode } from "@/components/ui/lexical/nodes/youtube-node";
-
-import { CreateProduct, UpdateProduct } from "@/shared/types/product.types";
 
 import { localizePath } from "@/lib/i18n";
 

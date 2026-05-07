@@ -1,10 +1,10 @@
 import Link from "next/link";
 
+import { PublicCategoryTree } from "@repo/types";
+
 import { useI18n } from "@/components/layout/i18n-provider";
 
 import { Avatar, AvatarImage } from "@/shadcn/components/ui/avatar";
-
-import { PublicCategoryTree } from "@/shared/types/category.type";
 
 export type LogoCellProps = {
 	label: string;

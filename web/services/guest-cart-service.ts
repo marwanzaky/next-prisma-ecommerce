@@ -1,5 +1,4 @@
-import { CartItemEntity } from "@/shared/types/cart.type";
-import { ProductEntity } from "@/shared/types/product.types";
+import { CartItemEntity, ProductEntity } from "@repo/types";
 
 const STORAGE_KEY = "guest_cart";
 

@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 import { IsNotEmpty, IsString } from "class-validator";
 
-import { ContactMessageStatus } from "@/shared/types/contact-message.type";
+import { ContactMessageStatus } from "@repo/types";
 
 export class UpdateContactMessageStatusDto {
 	@ApiProperty()

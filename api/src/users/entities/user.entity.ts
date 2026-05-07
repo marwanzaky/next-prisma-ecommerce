@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 import { isEmail } from "class-validator";
 import { Document } from "mongoose";
 
-import { WithoutMongoMeta } from "@/shared/types/mongoose.type";
-import { User as UserType, UserRole } from "@/shared/types/user.type";
+import { User as UserType, UserRole, WithoutMongoMeta } from "@repo/types";
 
 @Schema({
 	timestamps: true,
@@ -50,10 +49,10 @@ export class User extends Document implements WithoutMongoMeta<UserType> {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-UserSchema.pre("save", async function (next) {
-	if (!this.isModified("password")) return next();
+UserSchema.pre<User>("save", async function () {
+	if (!this.isModified("password")) {
+		return;
+	}
 
 	this.password = await hash(this.password, 12);
-
-	next();
 });

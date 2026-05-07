@@ -8,11 +8,12 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 import { Model } from "mongoose";
 
+import { UpdateUser, UpdateUserPassword } from "@repo/types";
+
 import { AuthService } from "@/auth/auth.service";
-import { UpdateUser, UpdateUserPassword } from "@/shared/types/user.type";
 
 import { User } from "./entities/user.entity";
 

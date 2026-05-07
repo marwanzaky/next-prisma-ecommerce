@@ -6,9 +6,9 @@ import { Product } from "@/products/entities/product.entity";
 import { User } from "@/users/entities/user.entity";
 
 export type CartDocumentType = {
-	user: mongoose.Schema.Types.ObjectId;
+	user: mongoose.Types.ObjectId;
 	items: {
-		product: mongoose.Schema.Types.ObjectId;
+		product: mongoose.Types.ObjectId;
 		quantity: number;
 	}[];
 };
@@ -24,7 +24,7 @@ export class Cart extends Document implements CartDocumentType {
 		ref: User.name,
 		required: [true, "A review must belong to a user"],
 	})
-	user!: mongoose.Schema.Types.ObjectId;
+	user!: mongoose.Types.ObjectId;
 
 	@Prop([
 		{
@@ -41,17 +41,16 @@ export class Cart extends Document implements CartDocumentType {
 		},
 	])
 	items!: {
-		product: mongoose.Schema.Types.ObjectId;
+		product: mongoose.Types.ObjectId;
 		quantity: number;
 	}[];
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);
 
-CartSchema.pre(/^find/, function (next) {
-	(this as any).populate({
+CartSchema.pre<Cart>(/^find/, function () {
+	this.populate({
 		path: "items.product",
 		select: "name imgUrls price priceCompare category",
 	});
-	next();
 });

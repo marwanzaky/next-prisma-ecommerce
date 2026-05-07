@@ -3,11 +3,10 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
+import { ProductEntity } from "@repo/types";
 
 import { productsService } from "@/services/products-service";
 import { usersService } from "@/services/users-service";
-
-import { ProductEntity } from "@/shared/types/product.types";
 
 export type UserProductsState = {
 	products: ProductEntity[];

@@ -1,5 +1,7 @@
 "use client";
 
+import { User } from "@repo/types";
+
 import { Container } from "@/components/common/container";
 import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
@@ -15,8 +17,6 @@ import {
 	EmptyHeader,
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
-
-import { User } from "@/shared/types/user.type";
 
 import { initials } from "@/lib/string-utils";
 

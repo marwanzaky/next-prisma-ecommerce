@@ -2,9 +2,11 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import { Document, Types } from "mongoose";
 
-import { CategoryEntity as CategoryEntityType } from "@/shared/types/category.type";
-import { WithoutMongoMeta } from "@/shared/types/mongoose.type";
-import { TranslatedText } from "@/shared/types/product.types";
+import {
+	CategoryEntity as CategoryEntityType,
+	TranslatedText,
+	WithoutMongoMeta,
+} from "@repo/types";
 
 type CategoryDocumentType = Omit<
 	WithoutMongoMeta<CategoryEntityType>,

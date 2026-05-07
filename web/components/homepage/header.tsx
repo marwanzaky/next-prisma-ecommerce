@@ -5,13 +5,13 @@ import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { ProductEntity } from "@repo/types";
+
 import { useI18n } from "@/components/layout/i18n-provider";
 import { renderLexicalJSONToHTML } from "@/components/ui/lexical/render-lexical-json-to-html";
 
 import { Button } from "@/shadcn/components/ui/button";
 import { Heading } from "@/shadcn/components/ui/typography";
-
-import { ProductEntity } from "@/shared/types/product.types";
 
 import { localizePath } from "@/lib/i18n";
 import { createProductSlug } from "@/lib/string-utils";

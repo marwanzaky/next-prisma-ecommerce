@@ -1,9 +1,6 @@
-import { EntityBase } from "./entity.type";
-import { ProductEntity } from "./product.types";
+import { EntityBase } from "./entity.type.js";
+import { ProductEntity } from "./product.types.js";
 
-/**
- * Mongodb cart product item document entity
- */
 export type CartProductEntity = Pick<
 	ProductEntity,
 	"_id" | "name" | "imgUrls" | "price" | "priceCompare" | "category"
@@ -11,9 +8,6 @@ export type CartProductEntity = Pick<
 
 export type CartItemEntity = { product: CartProductEntity; quantity: number };
 
-/**
- * Mongodb cart document entity
- */
 export type CartEntity = EntityBase & {
 	user: string;
 	items: CartItemEntity[];

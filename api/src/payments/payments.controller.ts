@@ -30,7 +30,7 @@ export class PaymentsController {
 
 		const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = body.items
 			.map((item) => {
-				const matchProduct = products.find((product) => product.id === item.id);
+				const matchProduct = products.find((product) => product._id.toString() === item.id);
 
 				if (matchProduct) {
 					return {

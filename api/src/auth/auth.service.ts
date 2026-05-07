@@ -1,28 +1,29 @@
 import {
+	BadRequestException,
 	forwardRef,
 	Inject,
 	Injectable,
-	BadRequestException,
 	UnauthorizedException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 import { createHash, randomBytes } from "crypto";
 import { Model } from "mongoose";
 
+import { UserRole } from "@repo/types";
+
 import { CartsService } from "@/carts/carts.service";
-import { UserRole } from "@/shared/types/user.type";
+import { generatePassword } from "@/common/helper";
+import { ResendService } from "@/modules/resend/resend.service";
 import { IRequest } from "@/types/request.type";
 import { User } from "@/users/entities/user.entity";
 import { UsersService } from "@/users/users.service";
-import { ResendService } from "@/modules/resend/resend.service";
 
 import { LoginDto } from "./dto/login.dto";
 import { SignUpDto } from "./dto/signup.dto";
-import { generatePassword } from "@/common/helper";
 
 @Injectable()
 export class AuthService {
@@ -68,15 +69,21 @@ export class AuthService {
 				isVerified: true,
 			});
 
-			await this.cartsService.create(createdUser.id, []);
+			await this.cartsService.create(createdUser._id.toString(), []);
 
 			return {
-				token: await this.createAccessToken(createdUser.id, createdUser.role),
+				token: await this.createAccessToken(
+					createdUser._id.toString(),
+					createdUser.role,
+				),
 			};
 		}
 
 		return {
-			token: await this.createAccessToken(existingUser.id, existingUser.role),
+			token: await this.createAccessToken(
+				existingUser._id.toString(),
+				existingUser.role,
+			),
 		};
 	}
 
@@ -96,12 +103,14 @@ export class AuthService {
 			emailVerificationTokenExpiresAt,
 		});
 
-		await this.cartsService.create(user.id, []);
+		await this.cartsService.create(user._id.toString(), []);
 
 		const verifyUrl = `${process.env.CLIENT_URL}/auth/verify?token=${verificationToken}`;
 		await this.resendService.sendEmailVerification(user.email, verifyUrl);
 
-		return { token: await this.createAccessToken(user.id, user.role) };
+		return {
+			token: await this.createAccessToken(user._id.toString(), user.role),
+		};
 	}
 
 	async login(loginDto: LoginDto) {
@@ -123,7 +132,9 @@ export class AuthService {
 			throw new UnauthorizedException("Invalid email or password");
 		}
 
-		return { token: await this.createAccessToken(user.id, user.role) };
+		return {
+			token: await this.createAccessToken(user._id.toString(), user.role),
+		};
 	}
 
 	async verifyEmail(token: string) {

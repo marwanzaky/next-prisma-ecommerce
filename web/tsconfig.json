@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "esnext",
-		"module": "esnext",
+		"module": "nodenext",
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"strict": true,
@@ -10,7 +10,7 @@
 		"allowJs": true,
 		"noEmit": true,
 		"incremental": true,
-		"moduleResolution": "bundler",
+		"moduleResolution": "nodenext",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"jsx": "react-jsx",
@@ -20,8 +20,7 @@
 			}
 		],
 		"paths": {
-			"@/*": ["./*"],
-			"@/shared/types/*": ["../shared/src/*"]
+			"@/*": ["./*"]
 		}
 	},
 	"include": [
@@ -29,8 +28,7 @@
 		".next/types/**/*.ts",
 		"**/*.ts",
 		"**/*.tsx",
-		".next/dev/types/**/*.ts",
-		"../shared/src/**/*"
+		".next/dev/types/**/*.ts"
 	],
 	"exclude": ["node_modules"]
 }

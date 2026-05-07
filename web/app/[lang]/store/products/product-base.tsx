@@ -4,6 +4,8 @@ import { Controller, UseFormReturn } from "react-hook-form";
 
 import Link from "next/link";
 
+import { PublicCategoryTree } from "@repo/types";
+
 import {
 	InitialConfigType,
 	LexicalComposer,
@@ -51,8 +53,6 @@ import {
 	SelectValue,
 } from "@/shadcn/components/ui/select";
 import { Spinner } from "@/shadcn/components/ui/spinner";
-
-import { PublicCategoryTree } from "@/shared/types/category.type";
 
 import { localizePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";

@@ -21,9 +21,8 @@
 		"noFallthroughCasesInSwitch": false,
 		"types": ["node", "express", "multer"],
 		"paths": {
-			"@/*": ["./src/*"],
-			"@/shared/types/*": ["../shared/src/*"]
+			"@/*": ["./src/*"]
 		}
 	},
-	"include": ["src/**/*", "../shared/src/**/*"]
+	"include": ["src/**/*"]
 }

@@ -3,10 +3,10 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
 import {
-	ContactMessageStatus,
 	ContactMessage as ContactMessageType,
-} from "@/shared/types/contact-message.type";
-import { WithoutMongoMeta } from "@/shared/types/mongoose.type";
+	ContactMessageStatus,
+	WithoutMongoMeta,
+} from "@repo/types";
 
 @Schema({
 	toJSON: { virtuals: true },

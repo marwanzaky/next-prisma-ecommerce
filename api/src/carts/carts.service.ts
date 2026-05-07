@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import mongoose, { Model } from "mongoose";
+import { Model } from "mongoose";
 
 import { Cart } from "@/carts/entities/cart.entity";
 
@@ -31,8 +31,8 @@ export class CartsService {
 
 		const cart = await this.cartModel.findOneAndUpdate(
 			{
-				user: new mongoose.Types.ObjectId(userId),
-				"items.product": new mongoose.Types.ObjectId(productId),
+				user: userId,
+				"items.product": productId,
 			},
 			{
 				$inc: {
@@ -59,12 +59,12 @@ export class CartsService {
 	): Promise<Cart | null> {
 		return this.cartModel.findOneAndUpdate(
 			{
-				user: new mongoose.Types.ObjectId(userId),
+				user: userId,
 			},
 			{
 				$push: {
 					items: {
-						product: new mongoose.Types.ObjectId(productId),
+						product: productId,
 						quantity,
 					},
 				},
@@ -83,8 +83,8 @@ export class CartsService {
 	): Promise<Cart | null> {
 		return this.cartModel.findOneAndUpdate(
 			{
-				user: new mongoose.Types.ObjectId(userId),
-				"items.product": new mongoose.Types.ObjectId(productId),
+				user: userId,
+				"items.product": productId,
 			},
 			{
 				$set: { "items.$.quantity": quantity },
@@ -93,7 +93,7 @@ export class CartsService {
 		);
 	}
 
-	async findOne({ user }: { user: string }): Promise<Cart | null> {
+	findOne({ user }: { user: string }): Promise<Cart | null> {
 		return this.cartModel.findOne({ user });
 	}
 
@@ -103,8 +103,8 @@ export class CartsService {
 
 	remove(userId: string, productId: string): Promise<Cart | null> {
 		return this.cartModel.findOneAndUpdate(
-			{ user: new mongoose.Types.ObjectId(userId) },
-			{ $pull: { items: { product: new mongoose.Types.ObjectId(productId) } } },
+			{ user: userId },
+			{ $pull: { items: { product: productId } } },
 			{ new: true, runValidators: true },
 		);
 	}

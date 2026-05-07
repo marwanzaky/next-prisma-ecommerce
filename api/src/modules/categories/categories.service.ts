@@ -9,7 +9,7 @@ import {
 	PublicCategory,
 	PublicCategoryTree,
 	UpdateCategory,
-} from "@/shared/types/category.type";
+} from "@repo/types";
 
 import { TranslationService } from "../translation/translation.service";
 import { Category as CategoryEntity } from "./entities/category.entity";
@@ -123,7 +123,7 @@ export class CategoriesService {
 					map.set(cat.parent.toString(), []);
 				}
 
-				map.get(cat.parent.toString())?.push(cat.id.toString());
+				map.get(cat.parent.toString())?.push(cat._id.toString());
 			}
 		});
 

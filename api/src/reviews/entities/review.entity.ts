@@ -2,18 +2,17 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import mongoose, { Document } from "mongoose";
 
+import { ReviewEntity, TranslatedText, WithoutMongoMeta } from "@repo/types";
+
 import { Product } from "@/products/entities/product.entity";
-import { WithoutMongoMeta } from "@/shared/types/mongoose.type";
-import { TranslatedText } from "@/shared/types/product.types";
-import { ReviewEntity } from "@/shared/types/review.type";
 import { User } from "@/users/entities/user.entity";
 
 type ReviewDocumentType = Omit<
 	WithoutMongoMeta<ReviewEntity>,
 	"product" | "user"
 > & {
-	product: mongoose.Schema.Types.ObjectId;
-	user: mongoose.Schema.Types.ObjectId;
+	product: mongoose.Types.ObjectId;
+	user: mongoose.Types.ObjectId;
 };
 
 @Schema({
@@ -44,28 +43,25 @@ export class Review extends Document implements ReviewDocumentType {
 		ref: Product.name,
 		required: [true, "A review must belong to a product"],
 	})
-	product!: mongoose.Schema.Types.ObjectId;
+	product!: mongoose.Types.ObjectId;
 
 	@Prop({
 		type: mongoose.Schema.ObjectId,
 		ref: User.name,
 		required: [true, "A review must belong to a user"],
 	})
-	user!: mongoose.Schema.Types.ObjectId;
+	user!: mongoose.Types.ObjectId;
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);
 
-ReviewSchema.pre(/^find/, function (next) {
-	(this as any)
-		.populate({
-			path: "product",
-			select: "name",
-		})
-		.populate({
-			path: "user",
-			select: "name photoUrl",
-		});
-
-	next();
+ReviewSchema.pre<Review>(/^find/, function () {
+	this.populate({
+		path: "product",
+		select: "name",
+	});
+	this.populate({
+		path: "user",
+		select: "name photoUrl",
+	});
 });

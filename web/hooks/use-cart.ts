@@ -1,12 +1,12 @@
 import { toast } from "sonner";
 
+import { ProductEntity } from "@repo/types";
+
 import {
 	deleteCartItemAsync,
 	postCartItemAsync,
 } from "@/redux/slices/cart-slice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-
-import { ProductEntity } from "@/shared/types/product.types";
 
 export function useCart() {
 	const dispatch = useAppDispatch();

@@ -1,6 +1,6 @@
 import { Product, WithContext } from "schema-dts";
 
-import { ProductWithReviewsEntity } from "@/shared/types/product.types";
+import { ProductWithReviewsEntity } from "@repo/types";
 
 import config from "./config";
 import { Locale } from "./i18n";

@@ -49,8 +49,8 @@ export class ProductsController {
 		const products = await this.productsService.find({});
 
 		for (const product of products) {
-			await this.productsService.calcAvgRatings(product.id);
-			await this.productsService.calcRatingDistribution(product.id);
+			await this.productsService.calcAvgRatings(product._id.toString());
+			await this.productsService.calcRatingDistribution(product._id.toString());
 		}
 
 		return {
@@ -73,7 +73,7 @@ export class ProductsController {
 			};
 
 			await this.productsService.findByIdAndUpdate(
-				product._id as string,
+				product._id.toString(),
 				updatedProduct,
 			);
 		}

@@ -1,14 +1,12 @@
 import { Trash2Icon } from "lucide-react";
 
+import { CartProductEntity, PublicCategoryTree } from "@repo/types";
 import { ColumnDef } from "@tanstack/react-table";
 
 import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
 import { LogoCell } from "@/components/ui/table/cells/logo-cell";
 
 import { Button } from "@/shadcn/components/ui/button";
-
-import { CartProductEntity } from "@/shared/types/cart.type";
-import { PublicCategoryTree } from "@/shared/types/category.type";
 
 import { Locale, localizePath } from "@/lib/i18n";
 import { createProductSlug, formatPrice } from "@/lib/string-utils";
