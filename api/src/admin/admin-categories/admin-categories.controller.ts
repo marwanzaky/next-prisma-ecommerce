@@ -12,11 +12,12 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
+import { Locale } from "@repo/types";
+
 import { Public } from "@/auth/auth.guard";
 import { delay } from "@/common/helper";
 import { CategoriesService } from "@/modules/categories/categories.service";
 import { CloudinaryService } from "@/modules/cloudinary/cloudinary.service";
-import { Locale } from "@/modules/translation/translation.service";
 
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";

@@ -5,6 +5,7 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
+
 import { User } from "@repo/types";
 
 import { authService } from "@/services/auth-service";

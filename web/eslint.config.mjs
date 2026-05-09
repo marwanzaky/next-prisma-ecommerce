@@ -27,6 +27,8 @@ const eslintConfig = defineConfig([
 
 						["^@lexical"],
 
+						["^@repo/types"],
+
 						["^@/redux"],
 
 						["^@/services"],

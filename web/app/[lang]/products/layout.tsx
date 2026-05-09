@@ -1,12 +1,14 @@
 import { Metadata } from "next";
 
+import { Locale } from "@repo/types";
+
 import config from "@/lib/config";
 import {
 	generateLocaleAlternates,
 	generateOgMetadata,
 	generateTwitterMetadata,
 } from "@/lib/generate";
-import { Locale, localizePath } from "@/lib/i18n";
+import { localizePath } from "@/lib/i18n";
 
 const title = "Browse Products";
 const description = `Browse thousands of unique products from verified sellers worldwide. Find everything you need on ${config.websiteName}.`;

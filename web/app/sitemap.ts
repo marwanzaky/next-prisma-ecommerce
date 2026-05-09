@@ -1,8 +1,10 @@
 import { MetadataRoute } from "next";
 
+import { locales } from "@repo/types";
+
 import { productsService } from "@/services/products-service";
 
-import { locales, localizeUrl } from "@/lib/i18n";
+import { localizeUrl } from "@/lib/i18n";
 import { createProductSlug } from "@/lib/string-utils";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

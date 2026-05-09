@@ -1,12 +1,14 @@
 import { Metadata } from "next";
 
+import { Locale } from "@repo/types";
+
 import config from "@/lib/config";
 import {
 	generateLocaleAlternates,
 	generateOgMetadata,
 	generateTwitterMetadata,
 } from "@/lib/generate";
-import { Locale, localizePath } from "@/lib/i18n";
+import { localizePath } from "@/lib/i18n";
 
 const title = "Terms of Service";
 const description = `Read ${config.websiteName}'s terms of service and policies.`;

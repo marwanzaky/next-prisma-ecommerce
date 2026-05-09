@@ -1,7 +1,8 @@
 "use client";
 
-import { ProductWithReviewsEntity } from "@repo/types";
 import { useQuery } from "@tanstack/react-query";
+
+import { ProductWithReviewsEntity } from "@repo/types";
 
 import {
 	GetAllProductsOptions,

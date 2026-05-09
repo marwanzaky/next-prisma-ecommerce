@@ -3,6 +3,7 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
+
 import { ProductEntity } from "@repo/types";
 
 import { productsService } from "@/services/products-service";

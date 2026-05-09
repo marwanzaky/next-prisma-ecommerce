@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 
-import { ContactMessage, ContactMessageStatus } from "@repo/types";
 import { useQuery } from "@tanstack/react-query";
+
+import { ContactMessage, ContactMessageStatus } from "@repo/types";
 
 import { contactMessagesService } from "@/services/contact-messages-service";
 

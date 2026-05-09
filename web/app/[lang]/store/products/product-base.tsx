@@ -1,10 +1,9 @@
 "use client";
 
+import * as React from "react";
 import { Controller, UseFormReturn } from "react-hook-form";
 
 import Link from "next/link";
-
-import { PublicCategoryTree } from "@repo/types";
 
 import {
 	InitialConfigType,
@@ -15,6 +14,8 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+
+import { PublicCategoryTree } from "@repo/types";
 
 import { Container } from "@/components/common/container";
 import { Section } from "@/components/common/section";

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { Heart, ShoppingCart } from "lucide-react";
 
 import { sendGTMEvent } from "@next/third-parties/google";
+
 import { ProductWithReviewsEntity } from "@repo/types";
 
 import { useAppDispatch } from "@/redux/store";

@@ -1,9 +1,8 @@
 import { Product, WithContext } from "schema-dts";
 
-import { ProductWithReviewsEntity } from "@repo/types";
+import { Locale, ProductWithReviewsEntity } from "@repo/types";
 
 import config from "./config";
-import { Locale } from "./i18n";
 
 export function generateProductStructuredData(
 	product: ProductWithReviewsEntity,

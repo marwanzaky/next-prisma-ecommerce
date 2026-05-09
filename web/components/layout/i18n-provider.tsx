@@ -2,7 +2,9 @@
 
 import { createContext, useContext, useMemo } from "react";
 
-import { getDirection, Locale } from "@/lib/i18n";
+import { Locale } from "@repo/types";
+
+import { getDirection } from "@/lib/i18n";
 
 import { Dictionary, DictionaryKeys, DictionaryValue } from "@/types/i18n.type";
 

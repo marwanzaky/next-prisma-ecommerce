@@ -1,5 +1,5 @@
-import { EntityBase } from "./entity.type.js";
-import { TranslatedText } from "./product.types.js";
+import { EntityBase } from "./entity.type";
+import { TranslatedText } from "./product.types";
 
 export type ReviewEntity = EntityBase & {
 	rating: number;

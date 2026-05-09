@@ -11,6 +11,8 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+import { Locale, locales } from "@repo/types";
+
 import AppProviders from "@/redux/app-providers";
 
 import { Container } from "@/components/common/container";
@@ -26,13 +28,7 @@ import { TooltipProvider } from "@/shadcn/components/ui/tooltip";
 import config from "@/lib/config";
 import { getDictionary } from "@/lib/dictionaries";
 import { generateOgMetadata, generateTwitterMetadata } from "@/lib/generate";
-import {
-	getDirection,
-	hasLocale,
-	Locale,
-	locales,
-	localizePath,
-} from "@/lib/i18n";
+import { getDirection, hasLocale, localizePath } from "@/lib/i18n";
 import { localizeUrl } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 

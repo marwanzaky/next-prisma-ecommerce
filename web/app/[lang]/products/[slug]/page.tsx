@@ -2,6 +2,8 @@
 import { Metadata } from "next";
 import { cacheLife } from "next/cache";
 
+import { Locale } from "@repo/types";
+
 import { productsService } from "@/services/products-service";
 
 import config from "@/lib/config";
@@ -10,7 +12,7 @@ import {
 	generateOgMetadata,
 	generateTwitterMetadata,
 } from "@/lib/generate";
-import { Locale, localizePath } from "@/lib/i18n";
+import { localizePath } from "@/lib/i18n";
 import { createProductSlug } from "@/lib/string-utils";
 import { generateProductStructuredData } from "@/lib/structured-data";
 

@@ -1,5 +1,5 @@
-import { EntityBase } from "./entity.type.js";
-import { WithoutMongoMeta } from "./mongoose.type.js";
+import { EntityBase } from "./entity.type";
+import { WithoutMongoMeta } from "./mongoose.type";
 
 export type ContactMessageStatus = "new" | "read" | "replied";
 

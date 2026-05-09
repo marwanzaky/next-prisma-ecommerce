@@ -9,7 +9,6 @@ import { useDebouncedCallback } from "use-debounce";
 import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateProduct, UpdateProduct } from "@repo/types";
 import { useQuery } from "@tanstack/react-query";
 
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
@@ -17,6 +16,8 @@ import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { InitialConfigType } from "@lexical/react/LexicalComposer";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
+
+import { CreateProduct, UpdateProduct } from "@repo/types";
 
 import {
 	postUserProductAsync,

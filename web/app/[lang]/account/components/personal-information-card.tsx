@@ -7,6 +7,7 @@ import { Trash2Icon } from "lucide-react";
 import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import { User } from "@repo/types";
 
 import { updateMeAsync } from "@/redux/slices/auth-slice";

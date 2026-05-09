@@ -1,11 +1,13 @@
 import { Metadata } from "next";
 
+import { Locale } from "@repo/types";
+
 import {
 	generateLocaleAlternates,
 	generateOgMetadata,
 	generateTwitterMetadata,
 } from "@/lib/generate";
-import { Locale, localizePath } from "@/lib/i18n";
+import { localizePath } from "@/lib/i18n";
 
 const title = "Privacy Policy";
 const description = "Learn how we protect your privacy and use your data.";

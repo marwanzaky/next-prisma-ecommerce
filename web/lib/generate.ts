@@ -1,8 +1,10 @@
 import { OpenGraph } from "next/dist/lib/metadata/types/opengraph-types";
 import { Twitter } from "next/dist/lib/metadata/types/twitter-types";
 
+import { Locale, locales } from "@repo/types";
+
 import config from "./config";
-import { Locale, locales,localizePath } from "./i18n";
+import { localizePath } from "./i18n";
 
 export function generateOgMetadata({
 	title,

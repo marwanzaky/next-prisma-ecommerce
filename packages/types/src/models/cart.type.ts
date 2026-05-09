@@ -1,5 +1,5 @@
-import { EntityBase } from "./entity.type.js";
-import { ProductEntity } from "./product.types.js";
+import { EntityBase } from "./entity.type";
+import { ProductEntity } from "./product.types";
 
 export type CartProductEntity = Pick<
 	ProductEntity,

@@ -1,6 +1,6 @@
-import { EntityBase } from "./entity.type.js";
-import { ReviewEntity } from "./review.type.js";
-import { User } from "./user.type.js";
+import { EntityBase } from "./entity.type";
+import { ReviewEntity } from "./review.type";
+import { User } from "./user.type";
 
 export type Rating = 1 | 2 | 3 | 4 | 5;
 export type RatingDistribution = Record<Rating, number>;
@@ -9,12 +9,6 @@ export type TranslatedText = {
 	en: string;
 	fr: string;
 	ar: string;
-};
-
-export type OptionalTranslatedText = {
-	en?: string;
-	fr?: string;
-	ar?: string;
 };
 
 export type BrowserFileLike = {
@@ -35,7 +29,7 @@ export type ProductEntity = EntityBase & {
 	ratingDistribution: RatingDistribution;
 	imgUrls: string[];
 	description: TranslatedText;
-	shortDescription?: OptionalTranslatedText;
+	shortDescription?: TranslatedText;
 	tags: string[];
 	featured: boolean;
 	category: string | null;

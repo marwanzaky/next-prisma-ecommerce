@@ -1,8 +1,6 @@
+import { Locale, locales } from "@repo/types";
+
 import config from "./config";
-
-export const locales = ["en", "fr", "ar"] as const;
-
-export type Locale = (typeof locales)[number];
 
 export const defaultLocale: Locale = "en";
 

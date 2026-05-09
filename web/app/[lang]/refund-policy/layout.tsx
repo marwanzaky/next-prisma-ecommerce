@@ -1,11 +1,13 @@
 import { Metadata } from "next";
 
+import { Locale } from "@repo/types";
+
 import {
 	generateLocaleAlternates,
 	generateOgMetadata,
 	generateTwitterMetadata,
 } from "@/lib/generate";
-import { Locale, localizePath } from "@/lib/i18n";
+import { localizePath } from "@/lib/i18n";
 
 const title = "Refund Policy";
 const description = "Learn about we refund and return policies.";

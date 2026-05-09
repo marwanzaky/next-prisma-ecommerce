@@ -3,6 +3,7 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
+
 import { CartItemEntity, ProductEntity } from "@repo/types";
 
 import { cartsService } from "@/services/carts-service";

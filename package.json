@@ -1,12 +1,14 @@
 {
-	"packageManager": "pnpm@10.7.0",
+	"packageManager": "pnpm@11.0.8",
 	"scripts": {
 		"build": "turbo run build",
 		"dev": "turbo run dev",
 		"lint": "turbo run lint",
+		"format": "prettier --write \"**/*.{ts,tsx}\"",
 		"check-types": "turbo run check-types"
 	},
 	"devDependencies": {
+		"@repo/eslint-config": "workspace:*",
 		"turbo": "^2.9.9"
 	}
 }

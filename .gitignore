@@ -1,6 +1,7 @@
 # compiled output
 /api/dist
 /api/build
+/packages/*/dist
 node_modules
 
 # TypeScript cache

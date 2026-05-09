@@ -17,9 +17,10 @@ import { ApiBearerAuth, ApiConsumes, ApiOperation } from "@nestjs/swagger";
 
 import { Types } from "mongoose";
 
+import { Locale } from "@repo/types";
+
 import { Public } from "@/auth/auth.guard";
 import { CloudinaryService } from "@/modules/cloudinary/cloudinary.service";
-import { Locale } from "@/modules/translation/translation.service";
 import { UpdateProductEntity } from "@/types/product.type";
 import { IRequest } from "@/types/request.type";
 

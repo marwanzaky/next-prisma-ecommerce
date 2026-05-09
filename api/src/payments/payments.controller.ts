@@ -3,6 +3,8 @@ import { ApiOperation } from "@nestjs/swagger";
 
 import Stripe from "stripe";
 
+import { Locale, locales } from "@repo/types";
+
 import { Public } from "@/auth/auth.guard";
 import { ProductsService } from "@/products/products.service";
 
@@ -22,6 +24,9 @@ export class PaymentsController {
 		summary: "Create a checkout session",
 	})
 	async create(@Body() body: CreateCheckoutSessionDto) {
+		const a: Locale = "ar";
+		const b = locales.map((l) => l);
+
 		const products = await this.productsService.find({
 			query: {
 				ids: body.items.map((item) => item.id),
@@ -30,7 +35,9 @@ export class PaymentsController {
 
 		const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = body.items
 			.map((item) => {
-				const matchProduct = products.find((product) => product._id.toString() === item.id);
+				const matchProduct = products.find(
+					(product) => product._id.toString() === item.id,
+				);
 
 				if (matchProduct) {
 					return {

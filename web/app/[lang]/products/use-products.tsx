@@ -6,8 +6,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { stringify } from "qs";
 
-import { ProductEntity } from "@repo/types";
 import { useQuery } from "@tanstack/react-query";
+
+import { ProductEntity } from "@repo/types";
 
 import { categoriesService } from "@/services/categories-service";
 import {

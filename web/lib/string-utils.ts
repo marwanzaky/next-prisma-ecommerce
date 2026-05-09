@@ -1,4 +1,6 @@
-import { intlLocales, Locale } from "@/lib/i18n";
+import { Locale } from "@repo/types";
+
+import { intlLocales } from "@/lib/i18n";
 
 const currency = process.env.NEXT_PUBLIC_CURRENCY || "USD";
 

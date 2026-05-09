@@ -4,8 +4,9 @@ import { useMemo } from "react";
 
 import Link from "next/link";
 
-import { ProductWithReviewsEntity, PublicCategoryTree } from "@repo/types";
 import { useQuery } from "@tanstack/react-query";
+
+import { ProductWithReviewsEntity, PublicCategoryTree } from "@repo/types";
 
 import { categoriesService } from "@/services/categories-service";
 

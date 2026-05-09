@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@repo/types": "workspace:*",
+		"@repo/ui": "workspace:*",
 		"@formatjs/intl-localematcher": "^0.8.2",
 		"@hookform/resolvers": "^5.2.2",
 		"@lexical/code": "^0.39.0",
@@ -55,6 +56,8 @@
 		"zod": "^4.1.9"
 	},
 	"devDependencies": {
+		"@repo/eslint-config": "workspace:*",
+		"@repo/typescript-config": "workspace:*",
 		"@tailwindcss/postcss": "^4.2.2",
 		"@tailwindcss/typography": "^0.5.19",
 		"@types/negotiator": "^0.6.4",

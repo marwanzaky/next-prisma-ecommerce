@@ -1,6 +1,6 @@
 import "server-only";
 
-import { Locale } from "@/lib/i18n";
+import { Locale } from "@repo/types";
 
 import { Dictionary } from "@/types/i18n.type";
 

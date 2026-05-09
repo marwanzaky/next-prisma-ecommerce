@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { TranslatedText } from "@repo/types";
+import { Locale, locales, TranslatedText } from "@repo/types";
 
 import { GeminiService } from "@/modules/gemini/gemini.service";
 
@@ -8,10 +8,6 @@ type TextNodeRef = {
 	node: any;
 	path: number[];
 };
-
-const locales = ["en", "fr", "ar"] as const;
-
-export type Locale = (typeof locales)[number];
 
 const labledLocale = {
 	en: "English",

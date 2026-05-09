@@ -2,6 +2,8 @@
 import { Metadata } from "next";
 import { cacheLife } from "next/cache";
 
+import { Locale } from "@repo/types";
+
 import { categoriesService } from "@/services/categories-service";
 import { productsService } from "@/services/products-service";
 
@@ -17,7 +19,6 @@ import { Heading } from "@/shadcn/components/ui/typography";
 
 import { getDictionary } from "@/lib/dictionaries";
 import { generateLocaleAlternates } from "@/lib/generate";
-import { Locale } from "@/lib/i18n";
 
 export async function generateMetadata({
 	params,

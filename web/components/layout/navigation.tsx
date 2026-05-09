@@ -16,6 +16,8 @@ import {
 
 import { useQuery } from "@tanstack/react-query";
 
+import { Locale } from "@repo/types";
+
 import { logOut } from "@/redux/slices/auth-slice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 
@@ -51,7 +53,7 @@ import {
 } from "@/shadcn/components/ui/input-group";
 import { useIsMobile } from "@/shadcn/hooks/use-mobile";
 
-import { Locale, localeLabels, localizePath } from "@/lib/i18n";
+import { localeLabels, localizePath } from "@/lib/i18n";
 import { initials } from "@/lib/string-utils";
 import { cn } from "@/lib/utils";
 

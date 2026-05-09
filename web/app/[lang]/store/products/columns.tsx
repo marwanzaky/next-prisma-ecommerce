@@ -7,8 +7,9 @@ import { useRouter } from "next/navigation";
 
 import { ArrowUpDown, EyeIcon, PencilIcon, Trash2Icon } from "lucide-react";
 
-import { ProductEntity, PublicCategoryTree } from "@repo/types";
 import { ColumnDef, Row } from "@tanstack/react-table";
+
+import { Locale, ProductEntity, PublicCategoryTree } from "@repo/types";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
@@ -27,7 +28,7 @@ import { Avatar, AvatarImage } from "@/shadcn/components/ui/avatar";
 import { Button } from "@/shadcn/components/ui/button";
 import { Checkbox } from "@/shadcn/components/ui/checkbox";
 
-import { Locale, localizePath } from "@/lib/i18n";
+import { localizePath } from "@/lib/i18n";
 import { createProductSlug, formatPrice } from "@/lib/string-utils";
 
 import { DictionaryKeys } from "@/types/i18n.type";
