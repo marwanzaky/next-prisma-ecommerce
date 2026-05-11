@@ -1,10 +1,12 @@
 import js from "@eslint/js";
+import { globalIgnores } from "eslint/config";
 import eslintConfigPrettier from "eslint-config-prettier";
 import tseslint from "typescript-eslint";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginReact from "eslint-plugin-react";
 import globals from "globals";
 import pluginNext from "@next/eslint-plugin-next";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 import { config as baseConfig } from "./base.js";
 
 /**
@@ -37,6 +39,54 @@ export const nextJsConfig = [
 	},
 	{
 		plugins: {
+			"simple-import-sort": simpleImportSort,
+		},
+		rules: {
+			"simple-import-sort/imports": [
+				"warn",
+				{
+					groups: [
+						["^\\u0000"],
+
+						["^react$", "^react"],
+
+						["^next"],
+
+						["^[^@./]"],
+
+						["^@"],
+
+						["^@lexical"],
+
+						["^@repo/types"],
+
+						["^@/redux"],
+
+						["^@/services"],
+
+						["^@/components"],
+
+						["^@/shadcn"],
+
+						["^@/shared"],
+
+						["^@/lib"],
+
+						["^@/hooks"],
+
+						["^@/types"],
+
+						["^@/"],
+
+						["^\\."],
+					],
+				},
+			],
+			"simple-import-sort/exports": "warn",
+		},
+	},
+	{
+		plugins: {
 			"react-hooks": pluginReactHooks,
 		},
 		settings: { react: { version: "detect" } },
@@ -46,4 +96,5 @@ export const nextJsConfig = [
 			"react/react-in-jsx-scope": "off",
 		},
 	},
+	globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
 ];

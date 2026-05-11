@@ -5,7 +5,7 @@ import { Locale, locales, TranslatedText } from "@repo/types";
 import { GeminiService } from "@/modules/gemini/gemini.service";
 
 type TextNodeRef = {
-	node: any;
+	node: { text: string };
 	path: number[];
 };
 

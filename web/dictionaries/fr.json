@@ -28,43 +28,71 @@
 		"ar": "العربية"
 	},
 	"home": {
-		"shopNow": "Acheter maintenant",
-		"explore": "Explorer",
+		"hero": {
+			"titlePrefix": "Votre boutique unique pour",
+			"titleHighlight": "tout",
+			"description": "Decouvrez des produits premium a des prix competitifs, avec une livraison rapide et un service client exceptionnel.",
+			"shopNow": "Acheter maintenant",
+			"freeShipping": "Livraison gratuite des 50$ d'achat",
+			"support": "Service client 24h/24 et 7j/7"
+		},
+		"categories": {
+			"title": "Acheter par categorie",
+			"description": "Trouvez l'appareil parfait pour vos besoins dans nos collections selectionnees"
+		},
 		"featuredProducts": "Produits en vedette",
-		"whyChooseUs": "Pourquoi nous choisir ?",
+		"featuredProductsDescription": "Nous offrons la meilleure experience d'achat avec des fonctionnalites premium",
+		"viewAllProducts": "Voir tous les produits",
+		"whyChooseUs": {
+			"title": "Pourquoi nous choisir",
+			"description": "Nous offrons la meilleure experience d'achat avec des fonctionnalites premium",
+			"cards": {
+				"freeShipping": {
+					"title": "Livraison gratuite",
+					"description": "Livraison gratuite sur toutes les commandes de plus de 50$. Livraison rapide et fiable jusqu'a votre porte."
+				},
+				"secureCheckout": {
+					"title": "Paiement securise",
+					"description": "Vos informations de paiement sont toujours protegees chez nous. Nous utilisons un chiffrement de niveau industriel."
+				},
+				"support": {
+					"title": "Support 24h/24 et 7j/7",
+					"description": "Notre equipe de support client est toujours disponible pour repondre a vos questions et inquietudes."
+				},
+				"qualityGuarantee": {
+					"title": "Garantie qualite",
+					"description": "Nous garantissons la qualite de chaque produit que nous vendons. Garantie de remboursement sous 30 jours."
+				}
+			}
+		},
 		"testimonials": {
 			"one": "L'un de mes meilleurs achats. C'est simple, pratique et sur.",
 			"two": "Un produit tres elegant, avec une interface magnifique dans l'application.",
 			"three": "La livraison a ete excellente. En une journee. Le paiement etait simple. Le produit est parfait et fiable.",
 			"four": "L'installation a ete rapide et tout fonctionne parfaitement. Je recommande vivement !"
-		},
-		"reasons": {
-			"shipping": {
-				"title": "Livraison gratuite",
-				"description": "Tous les achats de plus de 199 $ beneficient d'une livraison gratuite via USPS First Class Mail."
-			},
-			"payments": {
-				"title": "Paiements simples",
-				"description": "Tous les paiements sont traites instantanement via un protocole de paiement securise."
-			},
-			"refund": {
-				"title": "Garantie de remboursement",
-				"description": "Si un article arrive endommage ou si vous changez d'avis, vous pouvez le retourner pour un remboursement complet."
-			},
-			"quality": {
-				"title": "Qualite exceptionnelle",
-				"description": "Concus pour durer, chacun de nos produits est fabrique avec les meilleurs materiaux."
-			}
 		}
 	},
 	"footer": {
-		"quickLinks": "Liens rapides",
-		"aboutUs": "A propos de nous",
-		"refundPolicy": "Politique de remboursement",
+		"description": "Votre boutique unique pour tout l'univers tech. Des produits premium a des prix competitifs.",
+		"shopTitle": "Boutique",
+		"allProducts": "Tous les produits",
+		"companyTitle": "Entreprise",
+		"aboutUs": "A propos",
+		"careers": "Carrieres",
+		"blog": "Blog",
+		"press": "Presse",
+		"contact": "Contact",
+		"supportTitle": "Support",
+		"helpCenter": "Centre d'aide",
+		"shippingAndReturns": "Livraison et retours",
+		"warranty": "Garantie",
 		"privacyPolicy": "Politique de confidentialite",
 		"termsOfService": "Conditions d'utilisation",
-		"shippingPolicy": "Politique de livraison",
-		"copyright": "Copyright © 2026 {{name}} tous droits reserves."
+		"allRightsReserved": "Tous droits reserves.",
+		"privacy": "Confidentialite",
+		"terms": "Conditions",
+		"cookies": "Cookies",
+		"sitemap": "Plan du site"
 	},
 	"product": {
 		"home": "Accueil",

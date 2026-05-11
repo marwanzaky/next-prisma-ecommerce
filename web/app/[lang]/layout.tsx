@@ -15,7 +15,6 @@ import { Locale, locales } from "@repo/types";
 
 import AppProviders from "@/redux/app-providers";
 
-import { Container } from "@/components/common/container";
 import AppStateInit from "@/components/layout/app-state-init";
 import Banner from "@/components/layout/banner";
 import Footer from "@/components/layout/footer";
@@ -150,7 +149,7 @@ export default async function RootLayout({
 								<main>{children}</main>
 							</TooltipProvider>
 
-							<Footer />
+							<Footer locale={locale} />
 						</I18nProvider>
 					</DirectionProvider>
 				</AppProviders>

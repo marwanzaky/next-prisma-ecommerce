@@ -18,7 +18,7 @@ export default function Page() {
 	const { locale, t } = useI18n();
 
 	return (
-		<Section className="bg-[#b2bec3]">
+		<Section>
 			<Container>
 				<Heading
 					as="h1"

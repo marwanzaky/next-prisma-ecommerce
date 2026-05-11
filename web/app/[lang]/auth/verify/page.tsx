@@ -33,7 +33,7 @@ export default function Page() {
 			{loading ? (
 				<p>Logging you in...</p>
 			) : (
-				<>you're email is {emailVerified ? "verified" : "not verified"}</>
+				<>You&apos;re email is {emailVerified ? "verified" : "not verified"}</>
 			)}
 		</Container>
 	);

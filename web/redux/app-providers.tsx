@@ -1,6 +1,6 @@
 "use client";
 
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient } from "@tanstack/react-query";
 import {
 	Persister,
@@ -18,7 +18,7 @@ const queryClient: QueryClient = new QueryClient({
 	},
 });
 
-const persister: Persister = createSyncStoragePersister({
+const persister: Persister = createAsyncStoragePersister({
 	storage: typeof window !== "undefined" ? window.localStorage : undefined,
 });
 

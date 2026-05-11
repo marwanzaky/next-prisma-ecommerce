@@ -58,8 +58,6 @@ function Message({
 export default function Chatbot() {
 	const ref = useRef<HTMLDivElement>(null);
 
-	const [visible, setVisible] = useState(true);
-
 	const [inputValue, setInputValue] = useState("");
 	const [messages, setMessages] = useState<ChatbotMessage[]>([
 		{
@@ -86,7 +84,7 @@ export default function Chatbot() {
 	}, [messages]);
 
 	return (
-		<Dialog modal={false} open={visible}>
+		<Dialog modal={false}>
 			<DialogContent className="max-w-sm left-auto top-auto translate-x-0 translate-y-0 bottom-4 right-4">
 				<DialogHeader>
 					<DialogTitle>AI Assistance</DialogTitle>

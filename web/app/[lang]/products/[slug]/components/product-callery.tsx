@@ -107,7 +107,7 @@ export default function ProductCallery({
 }
 
 function CarouselScrollButtons() {
-	const { dir, t } = useI18n();
+	const { t } = useI18n();
 
 	const { scrollPrev, canScrollPrev, scrollNext, canScrollNext } =
 		useCarousel();

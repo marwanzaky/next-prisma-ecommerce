@@ -12,7 +12,7 @@ export default function Testimonials() {
 	const { t } = useI18n();
 
 	return (
-		<Section className="bg-[#dfe6e9]">
+		<Section className="bg-foreground/5">
 			<Container>
 				<div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
 					<Testimonial

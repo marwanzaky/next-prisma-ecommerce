@@ -1,5 +1,6 @@
 import globals from "globals";
 import { config as baseConfig } from "./base.js";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 
 /**
  * A custom ESLint configuration for Nest.js.
@@ -26,6 +27,42 @@ export const nestJsConfig = [
 			"@typescript-eslint/no-explicit-any": "off",
 			"@typescript-eslint/no-floating-promises": "warn",
 			"@typescript-eslint/no-unsafe-argument": "warn",
+		},
+	},
+	{
+		files: ["src/**/*.ts"],
+		plugins: {
+			"simple-import-sort": simpleImportSort,
+		},
+		languageOptions: {
+			parserOptions: {
+				projectService: true,
+				tsconfigRootDir: import.meta.dirname,
+			},
+		},
+		rules: {
+			"simple-import-sort/imports": [
+				"warn",
+				{
+					groups: [
+						["^\\u0000"],
+
+						["^@nestjs"],
+
+						["^[^@./]"],
+
+						// e.g "@nestjs/..." etc...
+						["^@"],
+
+						// e.g "@/users/...", "@/products/..." etc...
+						["^@/"],
+
+						// e.g "./users/...", "./products/..." etc...
+						["^\\."],
+					],
+				},
+			],
+			"simple-import-sort/exports": "warn",
 		},
 	},
 ];

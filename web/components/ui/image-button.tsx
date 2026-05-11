@@ -30,17 +30,13 @@ export interface ImageIconProps
 		React.ButtonHTMLAttributes<HTMLButtonElement>,
 		VariantProps<typeof imageButtonVariants> {
 	asChild?: boolean;
-	styleClass?: string;
 	imgUrl: string | undefined;
 	fallback: string;
 	alt: string;
 }
 
 const ImageButton = React.forwardRef<HTMLButtonElement, ImageIconProps>(
-	(
-		{ className, styleClass, imgUrl, alt, fallback, asChild = false, ...props },
-		ref,
-	) => {
+	({ className, imgUrl, alt, fallback, asChild = false, ...props }, ref) => {
 		const Comp = asChild ? Slot : "button";
 		return (
 			<Comp

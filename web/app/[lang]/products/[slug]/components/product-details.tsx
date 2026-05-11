@@ -11,8 +11,6 @@ import { sendGTMEvent } from "@next/third-parties/google";
 
 import { ProductWithReviewsEntity } from "@repo/types";
 
-import { useAppDispatch } from "@/redux/store";
-
 import { useI18n } from "@/components/layout/i18n-provider";
 import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
 import { renderLexicalJSONToHTML } from "@/components/ui/lexical/render-lexical-json-to-html";
@@ -49,8 +47,6 @@ export default function ProductDetails({
 }) {
 	const router = useRouter();
 	const { locale, t } = useI18n();
-
-	const dispatch = useAppDispatch();
 
 	const { isFavorite, addToFavorites, removeFromFavorites } =
 		useToggleFavorite(product);

@@ -28,43 +28,71 @@
 		"ar": "العربية"
 	},
 	"home": {
-		"shopNow": "Shop now",
-		"explore": "Explore",
+		"hero": {
+			"titlePrefix": "Your One-Stop Shop for",
+			"titleHighlight": "Everything",
+			"description": "Discover premium products at competitive prices, with fast shipping and exceptional customer service.",
+			"shopNow": "Shop now",
+			"freeShipping": "Free shipping over $50",
+			"support": "24/7 Customer Support"
+		},
+		"categories": {
+			"title": "Shop by Category",
+			"description": "Find the perfect device for your needs from our curated collections"
+		},
 		"featuredProducts": "Featured Products",
-		"whyChooseUs": "Why Should You Choose Us?",
+		"featuredProductsDescription": "We offer the best shopping experience with premium features",
+		"viewAllProducts": "View all products",
+		"whyChooseUs": {
+			"title": "Why Choose Us",
+			"description": "We offer the best shopping experience with premium features",
+			"cards": {
+				"freeShipping": {
+					"title": "Free Shipping",
+					"description": "Free shipping on all orders over $50. Fast and reliable delivery to your doorstep."
+				},
+				"secureCheckout": {
+					"title": "Secure Checkout",
+					"description": "Your payment information is always safe and secure with us. We use industry-leading encryption."
+				},
+				"support": {
+					"title": "24/7 Support",
+					"description": "Our customer support team is always available to help with any questions or concerns."
+				},
+				"qualityGuarantee": {
+					"title": "Quality Guarantee",
+					"description": "We stand behind the quality of every product we sell. 30-day money-back guarantee."
+				}
+			}
+		},
 		"testimonials": {
 			"one": "One of the best purchases. Great, easy and safe to use.",
 			"two": "Simply a very elegant piece of hardware, with a gorgeous UI in the app.",
 			"three": "Delivery was awesome. One day. Payment was simple. Product is perfect and safe.",
 			"four": "Setup was quick, and everything works flawlessly. Highly recommend!"
-		},
-		"reasons": {
-			"shipping": {
-				"title": "Free Shipping",
-				"description": "All purchases over $199 are eligible for free shipping via USPS First Class Mail."
-			},
-			"payments": {
-				"title": "Easy Payments",
-				"description": "All payments are processed instantly over a secure payment protocol."
-			},
-			"refund": {
-				"title": "Money-Back Guarantee",
-				"description": "If an item arrived damaged or you've changed your mind, you can send it back for a full refund."
-			},
-			"quality": {
-				"title": "Finest Quality",
-				"description": "Designed to last, each of our products has been crafted with the finest materials."
-			}
 		}
 	},
 	"footer": {
-		"quickLinks": "Quick links",
+		"description": "Your one-stop shop for everything tech. Premium products at competitive prices.",
+		"shopTitle": "Shop",
+		"allProducts": "All Products",
+		"companyTitle": "Company",
 		"aboutUs": "About Us",
-		"refundPolicy": "Refund Policy",
+		"careers": "Careers",
+		"blog": "Blog",
+		"press": "Press",
+		"contact": "Contact",
+		"supportTitle": "Support",
+		"helpCenter": "Help Center",
+		"shippingAndReturns": "Shipping & Returns",
+		"warranty": "Warranty",
 		"privacyPolicy": "Privacy Policy",
 		"termsOfService": "Terms of Service",
-		"shippingPolicy": "Shipping Policy",
-		"copyright": "Copyright © 2026 {{name}} all rights reserved."
+		"allRightsReserved": "All rights reserved.",
+		"privacy": "Privacy",
+		"terms": "Terms",
+		"cookies": "Cookies",
+		"sitemap": "Sitemap"
 	},
 	"product": {
 		"home": "Home",

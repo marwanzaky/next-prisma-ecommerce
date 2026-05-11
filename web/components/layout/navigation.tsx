@@ -84,8 +84,8 @@ export default function Navigation() {
 	}, [searchParams]);
 
 	return (
-		<Container>
-			<nav className="flex items-center justify-between gap-4 box-content border-b-2 sticky top-0 bg-white z-50 h-16 md:h-20">
+		<nav className="border-b-2 sticky top-0 z-50 bg-white">
+			<Container className="flex items-center justify-between gap-4 h-16 md:h-20">
 				<div className="flex-1 flex items-center gap-0 md:gap-4">
 					<div>
 						<NavigationMenu />
@@ -302,8 +302,8 @@ export default function Navigation() {
 						/>
 					)}
 				</div>
-			</nav>
-		</Container>
+			</Container>
+		</nav>
 	);
 }
 

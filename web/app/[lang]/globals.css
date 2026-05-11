@@ -34,10 +34,6 @@
 	/* custom breakpoints */
 	--breakpoint-container: 1090px;
 
-	/* custom colors */
-	--color-custom-background: oklch(0.3192 0.0102 216.79);
-	--color-custom-background-foreground: oklch(0.9776 0.0021 197.12);
-
 	/* shadcn */
 	--font-heading: var(--font-poppins);
 	--font-sans: var(--font-poppins);

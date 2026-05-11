@@ -16,7 +16,7 @@ function getPreferredLocale(request: NextRequest): Locale {
 
 	try {
 		return match(languages, locales, defaultLocale) as Locale;
-	} catch (e) {
+	} catch {
 		return defaultLocale;
 	}
 }
@@ -27,6 +27,10 @@ export function proxy(request: NextRequest) {
 	const [, maybeLocale] = pathname.split("/");
 
 	if (maybeLocale && hasLocale(maybeLocale)) {
+		return NextResponse.next();
+	}
+
+	if (pathname === "/sitemap.xml") {
 		return NextResponse.next();
 	}
 

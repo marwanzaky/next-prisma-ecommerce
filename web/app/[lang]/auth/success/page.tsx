@@ -19,7 +19,7 @@ export default function Page() {
 		if (token) {
 			googleAuth(token);
 		}
-	}, [searchParams]);
+	}, [searchParams, googleAuth]);
 
 	return (
 		<Container>

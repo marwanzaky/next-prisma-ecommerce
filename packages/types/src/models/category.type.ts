@@ -29,5 +29,6 @@ export type PublicCategory = Pick<
 >;
 
 export type PublicCategoryTree = Omit<PublicCategory, "parent"> & {
+	productCount: number;
 	children: PublicCategoryTree[];
 };

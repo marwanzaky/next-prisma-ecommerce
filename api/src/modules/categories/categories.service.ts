@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { Model } from "mongoose";
+import { Model, ObjectId } from "mongoose";
 
 import {
 	CategoryEntity as CategoryEntityType,
@@ -11,6 +11,8 @@ import {
 	UpdateCategory,
 } from "@repo/types";
 
+import { Product } from "@/products/entities/product.entity";
+
 import { TranslationService } from "../translation/translation.service";
 import { Category as CategoryEntity } from "./entities/category.entity";
 
@@ -19,6 +21,8 @@ export class CategoriesService {
 	constructor(
 		@InjectModel(CategoryEntity.name)
 		private categoryModel: Model<CategoryEntity>,
+		@InjectModel(Product.name)
+		private productModel: Model<Product>,
 		private translationService: TranslationService,
 	) {}
 
@@ -57,6 +61,13 @@ export class CategoriesService {
 	}
 
 	async getPublicCategoryTree() {
+		const counts: { _id: ObjectId; count: number }[] =
+			await this.productModel.aggregate([
+				{ $group: { _id: "$category", count: { $sum: 1 } } },
+			]);
+
+		const countMap = new Map(counts.map((c) => [c._id.toString(), c.count]));
+
 		const categories = await this.categoryModel
 			.find({ isActive: true })
 			.select("name slug parent imgUrl");
@@ -69,6 +80,7 @@ export class CategoriesService {
 				name: cat.name,
 				slug: cat.slug,
 				imgUrl: cat.imgUrl,
+				productCount: countMap.get(cat.id) || 0,
 				children: [],
 			});
 		});
@@ -82,6 +94,7 @@ export class CategoriesService {
 				if (parent) {
 					const categoryTree = categoryMap.get(cat.id);
 					categoryTree && parent.children.push(categoryTree);
+					parent.productCount += categoryMap.get(cat.id)!.productCount;
 				}
 			} else {
 				const categoryTree = categoryMap.get(cat.id);
