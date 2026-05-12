@@ -2,8 +2,8 @@
 
 import clsx from "clsx";
 
-import { InputCurrency } from "./Input-currency";
 import { useI18n } from "../layout/i18n-provider";
+import { InputCurrency } from "./Input-currency";
 
 type InputCurrencyRangeProps = {
 	className?: string;

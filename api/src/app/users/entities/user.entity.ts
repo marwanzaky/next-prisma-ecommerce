@@ -45,6 +45,11 @@ export class User extends Document implements WithoutMongoMeta<UserType> {
 
 	@Prop({ required: true, minlength: 8, select: false })
 	password!: string;
+
+	@Prop({ type: Date })
+	passwordChangedAt!: Date;
+
+	changedPasswordAfter!: (jwtTimestamp: number) => boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -56,3 +61,23 @@ UserSchema.pre<User>("save", async function () {
 
 	this.password = await hash(this.password, 12);
 });
+
+UserSchema.pre<User>("save", function () {
+	if (!this.isModified("password") || this.isNew) return;
+
+	this.passwordChangedAt = new Date(Date.now() - 1000);
+});
+
+UserSchema.methods.changedPasswordAfter = function (
+	this: User,
+	jwtTimestamp: number,
+) {
+	if (this.passwordChangedAt) {
+		const changedTimestamp = Math.floor(
+			this.passwordChangedAt.getTime() / 1000,
+		);
+		return jwtTimestamp < changedTimestamp;
+	}
+
+	return false;
+};

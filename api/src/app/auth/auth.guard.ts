@@ -9,21 +9,28 @@ import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 
-import { IRequest } from "@/types/request.type";
+import { IRequest, RequestUser } from "@/types/request.type";
 
 import { AuthService } from "./auth.service";
+
+import { UsersService } from "../users/users.service";
 
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+	private readonly jwtSecret: string;
+
 	constructor(
 		private jwtService: JwtService,
 		private configService: ConfigService,
 		private reflector: Reflector,
 		private authService: AuthService,
-	) {}
+		private usersService: UsersService,
+	) {
+		this.jwtSecret = this.configService.get<string>("JWT_SECRET")!;
+	}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -39,17 +46,32 @@ export class AuthGuard implements CanActivate {
 		const token = this.authService.extractTokenFromHeader(request);
 
 		if (!token) {
-			throw new UnauthorizedException();
+			throw new UnauthorizedException(
+				"You are not logged in, Please log in to get access",
+			);
 		}
 
-		try {
-			const payload = await this.jwtService.verifyAsync(token, {
-				secret: this.configService.get("JWT_SECRET"),
+		const decoded = await this.jwtService
+			.verifyAsync<RequestUser>(token, {
+				secret: this.jwtSecret,
+			})
+			.catch(() => {
+				throw new UnauthorizedException();
 			});
-			request.user = payload;
-		} catch {
-			throw new UnauthorizedException();
-		}
+
+		const currentUser = await this.usersService.findById(decoded.id);
+
+		if (!currentUser)
+			throw new UnauthorizedException(
+				"The user belonging to this token does no longer exist",
+			);
+
+		if (currentUser.changedPasswordAfter(decoded.iat))
+			throw new UnauthorizedException(
+				"User recently changed password, Please log in again",
+			);
+
+		request.user = decoded;
 
 		return true;
 	}

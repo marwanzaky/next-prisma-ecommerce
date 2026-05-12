@@ -132,6 +132,12 @@ export const authSlice = createSlice({
 			})
 			.addCase(updateMyPasswordAsync.fulfilled, (state, action) => {
 				state.loading = false;
+
+				Cookies.set("token", action.payload.token, {
+					expires: 14,
+					secure: true,
+					sameSite: "strict",
+				});
 			})
 			.addCase(updateMyPasswordAsync.rejected, (state, action) => {
 				state.loading = false;
@@ -142,8 +148,9 @@ export const authSlice = createSlice({
 			.addCase(deleteMeAsync.pending, (state) => {
 				state.loading = true;
 			})
-			.addCase(deleteMeAsync.fulfilled, (state, action) => {
-				state.loading = false;
+			.addCase(deleteMeAsync.fulfilled, () => {
+				Cookies.remove("token");
+				return initialState;
 			})
 			.addCase(deleteMeAsync.rejected, (state, action) => {
 				state.loading = false;

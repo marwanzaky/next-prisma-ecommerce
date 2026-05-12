@@ -8,6 +8,8 @@ export type User = EntityBase & {
 	name: string;
 	email: string;
 
+	passwordChangedAt: Date;
+
 	photoUrl?: string;
 
 	isVerified: boolean;

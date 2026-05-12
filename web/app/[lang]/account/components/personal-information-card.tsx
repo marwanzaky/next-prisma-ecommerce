@@ -209,6 +209,7 @@ export default function PersonalInformationCard() {
 										id="email"
 										type="email"
 										placeholder="m@example.com"
+										readOnly
 										{...register("email")}
 									/>
 								</FieldContent>

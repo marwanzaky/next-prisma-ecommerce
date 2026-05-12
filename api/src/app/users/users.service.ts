@@ -113,6 +113,10 @@ export class UsersService {
 		return user;
 	}
 
+	findById(id: string) {
+		return this.userModel.findById(id);
+	}
+
 	async findPublicById(id: string): Promise<User> {
 		const user = await this.userModel
 			.findById(id)
