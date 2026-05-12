@@ -1,5 +1,7 @@
 {
 	"photoOf": "Photo de {{name}}",
+	"from": "De",
+	"to": "À",
 	"item": "{{count}} article",
 	"items": "{{count}} articles",
 	"product": "{{count}} produit",

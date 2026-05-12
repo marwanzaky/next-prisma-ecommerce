@@ -1,6 +1,9 @@
+"use client";
+
 import clsx from "clsx";
 
 import { InputCurrency } from "./Input-currency";
+import { useI18n } from "../layout/i18n-provider";
 
 type InputCurrencyRangeProps = {
 	className?: string;
@@ -15,25 +18,27 @@ type InputCurrencyRangeProps = {
 
 export function InputCurrencyRange({
 	className,
-	minPlaceholder = "From",
-	maxPlaceholder = "To",
+	minPlaceholder,
+	maxPlaceholder,
 	minValue,
 	maxValue,
 	onMinChange,
 	onMaxChange,
 	required,
 }: InputCurrencyRangeProps) {
+	const { t } = useI18n();
+
 	return (
 		<div className={clsx("flex gap-4", className)}>
 			<InputCurrency
-				placeholder={minPlaceholder}
+				placeholder={minPlaceholder || t("from")}
 				onChange={onMinChange}
 				value={minValue}
 				required={required}
 			/>
 
 			<InputCurrency
-				placeholder={maxPlaceholder}
+				placeholder={maxPlaceholder || t("to")}
 				onChange={onMaxChange}
 				value={maxValue}
 				required={required}

@@ -54,11 +54,23 @@ export const nestJsConfig = [
 						// e.g "@nestjs/..." etc...
 						["^@"],
 
+						// e.g "@/app/users/...", "@/app/products/..." etc...
+						["^@/app"],
+
+						// e.g "@/services/resend/...", "@/app/translation/..." etc...
+						["@/services"],
+
 						// e.g "@/users/...", "@/products/..." etc...
 						["^@/"],
 
+						// e.g "./dto/...", etc...
+						["^\\./dto"],
+
 						// e.g "./users/...", "./products/..." etc...
 						["^\\."],
+
+						// e.g "../users/...", "../products/..." etc...
+						["^\\.\\."],
 					],
 				},
 			],

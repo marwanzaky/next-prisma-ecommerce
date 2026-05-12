@@ -1,5 +1,7 @@
 {
 	"photoOf": "صورة {{name}}",
+	"from": "من",
+	"to": "إلى",
 	"item": "{{count}} منتج",
 	"items": "{{count}} منتجات",
 	"product": "{{count}} منتج",

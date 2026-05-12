@@ -1,7 +1,7 @@
 import "./globals.css";
 
 import { Metadata, Viewport } from "next";
-import { Poppins, Cairo } from "next/font/google";
+import { Cairo, Poppins } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { Organization, WebPage, WebSite, WithContext } from "schema-dts";
