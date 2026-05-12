@@ -48,14 +48,14 @@ export default function ProductCallery({
 						className="scale-[.85] hover:scale-100 shadow-md transition-all"
 						styleClass="filter-(--filter-primary)"
 						icon="favorite_fill"
-						aria-label={t("product.actions.removeFromFavorites")}
+						aria-label={t("productPage.actions.removeFromFavorites")}
 						onClick={removeFromFavorites}
 					/>
 				) : (
 					<ButtonIcon
 						className="scale-[.85] hover:scale-100 shadow-md transition-all"
 						icon="favorite"
-						aria-label={t("product.actions.addToFavorites")}
+						aria-label={t("productPage.actions.addToFavorites")}
 						onClick={addToFavorites}
 					/>
 				)}
@@ -116,7 +116,7 @@ function CarouselScrollButtons() {
 			<ButtonIcon
 				className="absolute shadow-md top-[calc(50%-19px)] inset-s-[9.5px] rtl:rotate-180"
 				icon="arrow_back"
-				aria-label={t("product.actions.previousImage")}
+				aria-label={t("productPage.actions.previousImage")}
 				onClick={scrollPrev}
 				disabled={!canScrollPrev}
 			/>
@@ -124,7 +124,7 @@ function CarouselScrollButtons() {
 			<ButtonIcon
 				className="absolute shadow-md top-[calc(50%-19px)] inset-e-[9.5px] rtl:rotate-180"
 				icon="arrow_forward"
-				aria-label={t("product.actions.nextImage")}
+				aria-label={t("productPage.actions.nextImage")}
 				onClick={scrollNext}
 				disabled={!canScrollNext}
 			/>

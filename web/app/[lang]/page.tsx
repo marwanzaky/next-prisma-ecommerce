@@ -68,7 +68,7 @@ export default async function Page({
 								</p>
 							</div>
 							<div className="flex flex-col gap-3 sm:flex-row">
-								<Link href="/products">
+								<Link href={localizePath("/products", lang)}>
 									<Button className="group" size="lg">
 										{dictionary.home.hero.shopNow}{" "}
 										<ArrowRight className="h-4 w-4 rtl:rotate-180 transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />

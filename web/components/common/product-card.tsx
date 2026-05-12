@@ -43,14 +43,14 @@ export default function ProductCard({ data }: ProductCardProps) {
 						className="scale-[.85] hover:scale-100 shadow-md transition-transform"
 						styleClass="filter-(--filter-primary)"
 						icon="favorite_fill"
-						aria-label={t("product.actions.removeFromFavorites")}
+						aria-label={t("productPage.actions.removeFromFavorites")}
 						onClick={removeFromFavorites}
 					/>
 				) : (
 					<ButtonIcon
 						className="scale-[.85] hover:scale-100 shadow-md transition-transform"
 						icon="favorite"
-						aria-label={t("product.actions.addToFavorites")}
+						aria-label={t("productPage.actions.addToFavorites")}
 						onClick={addToFavorites}
 					/>
 				)}
@@ -98,7 +98,7 @@ export default function ProductCard({ data }: ProductCardProps) {
 				<ButtonIcon
 					className="absolute bottom-1 inset-e-1 sm:bottom-4 sm:inset-e-4"
 					icon="shopping_cart"
-					aria-label={t("product.actions.addToCart")}
+					aria-label={t("productPage.actions.addToCart")}
 					variant="primary"
 					onClick={() => {
 						addToCart(data);

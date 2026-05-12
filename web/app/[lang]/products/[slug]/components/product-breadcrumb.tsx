@@ -62,7 +62,9 @@ export default function ProductBreadcrumb({
 			<BreadcrumbList>
 				<BreadcrumbItem>
 					<BreadcrumbLink asChild>
-						<Link href={localizePath("/", locale)}>{t("product.home")}</Link>
+						<Link href={localizePath("/", locale)}>
+							{t("productPage.home")}
+						</Link>
 					</BreadcrumbLink>
 				</BreadcrumbItem>
 

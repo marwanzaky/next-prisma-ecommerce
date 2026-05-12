@@ -1,5 +1,9 @@
 {
 	"photoOf": "Photo of {{name}}",
+	"item": "{{count}} item",
+	"items": "{{count}} items",
+	"product": "{{count}} product",
+	"products": "{{count}} products",
 	"layout": {
 		"banner": "Sign up and get 20% off to your first order.",
 		"signup": "Sign Up Now"
@@ -94,7 +98,7 @@
 		"cookies": "Cookies",
 		"sitemap": "Sitemap"
 	},
-	"product": {
+	"productPage": {
 		"home": "Home",
 		"discountOff": "Off",
 		"accordion": {

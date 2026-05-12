@@ -1,5 +1,9 @@
 {
 	"photoOf": "صورة {{name}}",
+	"item": "{{count}} منتج",
+	"items": "{{count}} منتجات",
+	"product": "{{count}} منتج",
+	"products": "{{count}} منتجات",
 	"layout": {
 		"banner": "سجّل الآن واحصل على خصم 20٪ على أول طلب لك.",
 		"signup": "سجّل الآن"
@@ -94,7 +98,7 @@
 		"cookies": "ملفات تعريف الارتباط",
 		"sitemap": "خريطة الموقع"
 	},
-	"product": {
+	"productPage": {
 		"home": "الرئيسية",
 		"discountOff": "خصم",
 		"accordion": {

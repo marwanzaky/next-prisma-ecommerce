@@ -16,7 +16,7 @@ import {
 	EmptyHeader,
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
-import { Heading } from "@/shadcn/components/ui/typography";
+import { Heading, TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { localizePath } from "@/lib/i18n";
 
@@ -28,9 +28,18 @@ export default function Page() {
 	return (
 		<Container>
 			<Section className="space-y-2 lg:space-y-4">
-				<Heading as="h4" className="text-center">
-					{t("favoritesPage.title")}
-				</Heading>
+				<div className="flex justify-center items-center gap-2">
+					<Heading as="h4">{t("favoritesPage.title")}</Heading>
+					<TypographyMuted className="text-sm">
+						(
+						{(items.length === 1 ? t("item") : t("items")).replace(
+							"{{count}}",
+							String(items.length),
+						)}
+						)
+					</TypographyMuted>
+				</div>
+
 				{items.length > 0 ? (
 					<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
 						{items.map((item) => (

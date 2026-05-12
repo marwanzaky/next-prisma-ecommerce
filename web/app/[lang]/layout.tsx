@@ -1,7 +1,7 @@
 import "./globals.css";
 
 import { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
+import { Poppins, Cairo } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { Organization, WebPage, WebSite, WithContext } from "schema-dts";
@@ -35,6 +35,13 @@ const poppins = Poppins({
 	subsets: ["latin"],
 	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 	variable: "--font-poppins",
+	display: "swap",
+});
+
+const cairo = Cairo({
+	subsets: ["latin"],
+	weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
+	variable: "--font-cairo",
 	display: "swap",
 });
 
@@ -120,7 +127,12 @@ export default async function RootLayout({
 		<html
 			lang={locale}
 			dir={direction}
-			className={cn("font-poppins", poppins.variable)}
+			className={cn(
+				poppins.variable,
+				cairo.variable,
+				locale === "ar" ? cairo.variable : poppins.variable,
+				locale === "ar" ? "font-cairo" : "font-poppins",
+			)}
 		>
 			<head>
 				<script

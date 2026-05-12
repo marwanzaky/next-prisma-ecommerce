@@ -88,9 +88,9 @@ export default function Reviews({
 			) : (
 				<Empty className="border border-dashed h-full">
 					<EmptyHeader>
-						<EmptyTitle>{t("product.noReviewsTitle")}</EmptyTitle>
+						<EmptyTitle>{t("productPage.noReviewsTitle")}</EmptyTitle>
 						<EmptyDescription className="max-w-xs text-pretty">
-							{t("product.noReviewsDescription")}
+							{t("productPage.noReviewsDescription")}
 						</EmptyDescription>
 					</EmptyHeader>
 				</Empty>

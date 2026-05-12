@@ -62,7 +62,7 @@ export default function ProductPage({
 
 			<Section className="pt-0! space-y-2 lg:space-y-4">
 				<Heading as="h2" variant="h3" className="text-center">
-					{t("product.similarProducts")}
+					{t("productPage.similarProducts")}
 				</Heading>
 
 				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">

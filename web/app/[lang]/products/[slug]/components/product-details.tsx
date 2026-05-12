@@ -100,7 +100,7 @@ export default function ProductDetails({
 
 						{product.discount !== "0%" && (
 							<Badge className="border-none bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 focus-visible:outline-none dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5">
-								{product.discount} {t("product.discountOff")}
+								{product.discount} {t("productPage.discountOff")}
 							</Badge>
 						)}
 					</div>
@@ -144,14 +144,14 @@ export default function ProductDetails({
 						}}
 					>
 						<ShoppingCart />
-						{t("product.actions.addToCart")}
+						{t("productPage.actions.addToCart")}
 					</Button>
 
 					{isFavorite ? (
 						<Button
 							size="xl"
 							variant="outline"
-							aria-label={t("product.actions.removeFromFavorites")}
+							aria-label={t("productPage.actions.removeFromFavorites")}
 							onClick={removeFromFavorites}
 						>
 							<Heart fill="currentColor" className="text-primary" />
@@ -160,7 +160,7 @@ export default function ProductDetails({
 						<Button
 							size="xl"
 							variant="outline"
-							aria-label={t("product.actions.addToFavorites")}
+							aria-label={t("productPage.actions.addToFavorites")}
 							onClick={addToFavorites}
 						>
 							<Heart />
@@ -193,7 +193,7 @@ export default function ProductDetails({
 						router.push(localizePath("/cart", locale));
 					}}
 				>
-					{t("product.actions.buyNow")}
+					{t("productPage.actions.buyNow")}
 				</Button>
 			</div>
 
@@ -205,7 +205,7 @@ export default function ProductDetails({
 			>
 				<AccordionItem value="item-1">
 					<AccordionTrigger>
-						{t("product.accordion.description")}
+						{t("productPage.accordion.description")}
 					</AccordionTrigger>
 					<AccordionContent asChild>
 						<div
@@ -218,7 +218,7 @@ export default function ProductDetails({
 				</AccordionItem>
 				<AccordionItem value="item-2">
 					<AccordionTrigger>
-						{t("product.accordion.shippingRefundPolicy")}
+						{t("productPage.accordion.shippingRefundPolicy")}
 					</AccordionTrigger>
 					<AccordionContent className="prose prose-slate text-sm">
 						<h4>Refund Policy</h4>
@@ -269,7 +269,7 @@ export default function ProductDetails({
 				{product.user && (
 					<AccordionItem value="item-3">
 						<AccordionTrigger>
-							{t("product.accordion.sellerInformation")}
+							{t("productPage.accordion.sellerInformation")}
 						</AccordionTrigger>
 						<AccordionContent>
 							<div className="flex items-center gap-2">
@@ -297,7 +297,7 @@ export default function ProductDetails({
 										{product.user.name}
 									</Link>
 									<TypographyMuted>
-										{t("product.accordion.sellingSince")}{" "}
+										{t("productPage.accordion.sellingSince")}{" "}
 										{stringToDate(
 											product.user.createdAt || product.user.updatedAt,
 										)}

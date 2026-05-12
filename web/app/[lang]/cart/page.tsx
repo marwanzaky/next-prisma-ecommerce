@@ -15,7 +15,7 @@ import {
 	EmptyHeader,
 	EmptyTitle,
 } from "@/shadcn/components/ui/empty";
-import { Heading } from "@/shadcn/components/ui/typography";
+import { Heading, TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { localizePath } from "@/lib/i18n";
 
@@ -30,10 +30,18 @@ export default function Page() {
 
 	return (
 		<Container>
-			<Section>
-				<Heading as="h4" className="text-center mb-2 lg:mb-4">
-					{t("cartPage.title")}
-				</Heading>
+			<Section className="space-y-2 lg:space-y-4">
+				<div className="flex justify-center items-center gap-2">
+					<Heading as="h4">{t("cartPage.title")}</Heading>
+					<TypographyMuted className="text-sm">
+						(
+						{(items.length === 1 ? t("item") : t("items")).replace(
+							"{{count}}",
+							String(items.length),
+						)}
+						)
+					</TypographyMuted>
+				</div>
 
 				{items.length > 0 ? (
 					<div className="flex gap-4 flex-col md:flex-row">

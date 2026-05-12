@@ -62,7 +62,7 @@ export default function Overview({
 	return (
 		<div className="flex flex-col justify-center">
 			<Heading as="h3" variant="h4" className="mx-auto mb-4">
-				{t("product.ratingAndReviews")}
+				{t("productPage.ratingAndReviews")}
 			</Heading>
 
 			<div className="grid grid-cols-2 mb-8">
@@ -72,7 +72,7 @@ export default function Overview({
 					</div>
 					<Stars value={product.avgRatings} displayTotal={false} />
 					<TypographyMuted className="leading-none">
-						{t("product.reviewsCount").replace(
+						{t("productPage.reviewsCount").replace(
 							"{{count}}",
 							String(product.numReviews),
 						)}
@@ -101,20 +101,20 @@ export default function Overview({
 								setRating(0);
 							}}
 						>
-							{t("product.dialog.trigger")}
+							{t("productPage.dialog.trigger")}
 						</Button>
 					</DialogTrigger>
 					<DialogContent className="sm:max-w-[24rem] ">
 						<DialogHeader>
-							<DialogTitle>{t("product.dialog.title")}</DialogTitle>
+							<DialogTitle>{t("productPage.dialog.title")}</DialogTitle>
 							<DialogDescription>
-								{t("product.dialog.description")}
+								{t("productPage.dialog.description")}
 							</DialogDescription>
 						</DialogHeader>
 
 						<FieldGroup>
 							<Field>
-								<FieldLabel>{t("product.dialog.rating")}</FieldLabel>
+								<FieldLabel>{t("productPage.dialog.rating")}</FieldLabel>
 								<div className="flex">
 									{[1, 2, 3, 4, 5].map((star) => (
 										<button
@@ -139,11 +139,11 @@ export default function Overview({
 							</Field>
 							<Field>
 								<FieldLabel id="description">
-									{t("product.dialog.feedback")}
+									{t("productPage.dialog.feedback")}
 								</FieldLabel>
 								<Textarea
 									id="description"
-									placeholder={t("product.dialog.feedbackPlaceholder")}
+									placeholder={t("productPage.dialog.feedbackPlaceholder")}
 									className="min-h-32"
 									onChange={(e) => setDescription(e.target.value)}
 								/>
@@ -158,7 +158,7 @@ export default function Overview({
 									setDisplayDialog(false);
 								}}
 							>
-								{t("product.dialog.cancel")}
+								{t("productPage.dialog.cancel")}
 							</Button>
 
 							<Button
@@ -173,12 +173,12 @@ export default function Overview({
 
 									setDisplayDialog(false);
 
-									toast(t("product.dialog.successToast"), {
+									toast(t("productPage.dialog.successToast"), {
 										position: "top-center",
 									});
 								}}
 							>
-								{t("product.dialog.submit")}
+								{t("productPage.dialog.submit")}
 							</Button>
 						</DialogFooter>
 					</DialogContent>

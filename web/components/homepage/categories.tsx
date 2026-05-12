@@ -51,7 +51,10 @@ export default function Categories({
 								{category.name[locale]}
 							</div>
 							<p className="text-sm text-muted-foreground">
-								{category.productCount} products
+								{(category.productCount === 1
+									? t("product")
+									: t("products")
+								).replace("{{count}}", String(category.productCount))}
 							</p>
 						</div>
 					</Link>
