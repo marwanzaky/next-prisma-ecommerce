@@ -11,6 +11,18 @@ export const authService = {
 			method: "POST",
 			body: JSON.stringify(body),
 		}),
+	resetPassword: (params: { token: string; newPassword: string }) =>
+		clientFetch<{ token: string }>("/auth/resetPassword/" + params.token, {
+			method: "PATCH",
+			body: JSON.stringify({
+				newPassword: params.newPassword,
+			}),
+		}),
+	forgotPassword: (body: { email: string }) =>
+		clientFetch<{ status: string; message: string }>("/auth/forgotPassword/", {
+			method: "POST",
+			body: JSON.stringify(body),
+		}),
 	verify: (token: string) =>
 		clientFetch<{ verified: boolean }>("/auth/verify?token=" + token),
 };

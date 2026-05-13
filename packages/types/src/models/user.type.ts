@@ -9,6 +9,8 @@ export type User = EntityBase & {
 	email: string;
 
 	passwordChangedAt: Date;
+	passwordResetToken: string | undefined;
+	passwordResetExpires: Date | undefined;
 
 	photoUrl?: string;
 

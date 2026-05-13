@@ -146,8 +146,16 @@
 
 .font-poppins {
 	font-family: var(--font-poppins), sans-serif;
+
+	[data-sonner-toaster] {
+		font-family: var(--font-poppins), sans-serif;
+	}
 }
 
 .font-cairo {
 	font-family: var(--font-cairo), sans-serif;
+
+	[data-sonner-toaster] {
+		font-family: var(--font-cairo), sans-serif;
+	}
 }

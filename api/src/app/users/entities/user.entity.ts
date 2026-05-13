@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import { hash } from "bcryptjs";
 import { isEmail } from "class-validator";
+import { createHash, randomBytes } from "crypto";
 import { Document } from "mongoose";
 
 import { User as UserType, UserRole, WithoutMongoMeta } from "@repo/types";
@@ -49,7 +50,14 @@ export class User extends Document implements WithoutMongoMeta<UserType> {
 	@Prop({ type: Date })
 	passwordChangedAt!: Date;
 
+	@Prop({ type: String })
+	passwordResetToken: string | undefined;
+
+	@Prop({ type: Date })
+	passwordResetExpires!: Date | undefined;
+
 	changedPasswordAfter!: (jwtTimestamp: number) => boolean;
+	createPasswordResetToken!: () => string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -80,4 +88,15 @@ UserSchema.methods.changedPasswordAfter = function (
 	}
 
 	return false;
+};
+
+UserSchema.methods.createPasswordResetToken = function (this: User) {
+	const resetToken = randomBytes(32).toString("hex");
+
+	this.passwordResetToken = createHash("sha256")
+		.update(resetToken)
+		.digest("hex");
+	this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+	return resetToken;
 };

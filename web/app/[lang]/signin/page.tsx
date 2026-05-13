@@ -103,7 +103,7 @@ export default function Page() {
 
 										<Link
 											href={localizePath("/forgot-password", locale)}
-											className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+											className="ms-auto inline-block text-sm underline-offset-4 hover:underline"
 										>
 											{t("form.forgotPassword")}
 										</Link>

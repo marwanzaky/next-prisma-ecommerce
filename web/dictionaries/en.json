@@ -279,6 +279,8 @@
 		"cancel": "Cancel",
 		"save": "Save",
 		"saving": "Saving...",
+		"send": "Send",
+		"sending": "Sending...",
 		"update": "Update",
 		"continue": "Continue"
 	},
@@ -338,5 +340,18 @@
 				"description": "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
 			}
 		}
+	},
+	"forgotPasswordPage": {
+		"title": "Reset your password",
+		"description": "Enter the email you use for {{name}} so we can send you a link to reset your password.",
+		"toastTitle": "Check your email for next steps",
+		"toastDescription": "To reset your password, use the link in the email we sent to {{email}}."
+	},
+	"resetPasswordPage": {
+		"title": "Reset password",
+		"description": "Choose a new password below and confirm it. Use the secure link from your email if you opened this page from a reset message.",
+		"successToast": "Your password has been reset. You can sign in with your new password.",
+		"submit": "Reset password",
+		"submitting": "Resetting..."
 	}
 }

@@ -279,6 +279,8 @@
 		"cancel": "Annuler",
 		"save": "Enregistrer",
 		"saving": "Enregistrement...",
+		"send": "Envoyer",
+		"sending": "Envoi en cours...",
 		"update": "Mettre a jour",
 		"continue": "Continuer"
 	},
@@ -329,6 +331,7 @@
 			"confirmPassword": "Confirmer le mot de passe",
 			"confirmPasswordHelp": "Veuillez confirmer votre mot de passe."
 		},
+
 		"deleteAccount": {
 			"title": "Supprimer le compte",
 			"description": "Vous ne voulez plus utiliser notre service ? Vous pouvez supprimer votre compte ici. Cette action est irreversible. Toutes les informations liees a ce compte seront definitivement supprimees.",
@@ -338,5 +341,18 @@
 				"description": "Cette action ne peut pas etre annulee. Cela supprimera definitivement votre compte et donnees de nos serveurs."
 			}
 		}
+	},
+	"forgotPasswordPage": {
+		"title": "Reinitialisez votre mot de passe",
+		"description": "Entrez l'adresse e-mail que vous utilisez pour {{name}} afin que nous puissions vous envoyer un lien pour reinitialiser votre mot de passe.",
+		"toastTitle": "Consultez votre e-mail pour la suite",
+		"toastDescription": "Pour reinitialiser votre mot de passe, utilisez le lien dans l'e-mail que nous avons envoye a {{email}}."
+	},
+	"resetPasswordPage": {
+		"title": "Reinitialiser le mot de passe",
+		"description": "Choisissez un nouveau mot de passe ci-dessous et confirmez-le. Utilisez le lien securise recu par e-mail si vous arrivez depuis un message de reinitialisation.",
+		"successToast": "Votre mot de passe a ete reinitialise. Vous pouvez vous connecter avec votre nouveau mot de passe.",
+		"submit": "Reinitialiser le mot de passe",
+		"submitting": "Reinitialisation..."
 	}
 }

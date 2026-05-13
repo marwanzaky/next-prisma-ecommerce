@@ -162,4 +162,57 @@ export class AuthService {
 
 		return { verified: true };
 	}
+
+	async forgotPassword(email: string) {
+		const response = {
+			status: "success",
+			message: "Token sent to email",
+		};
+
+		const user = await this.userModel.findOne({ email });
+
+		// NOTE: Always return same response even if the user does not exist for security reasons
+		if (!user) {
+			return response;
+		}
+
+		const resetToken = user.createPasswordResetToken();
+
+		await user.save({ validateBeforeSave: false });
+
+		const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
+
+		await this.resendService.sendEmailResetPassword(user.email, resetUrl);
+
+		return response;
+	}
+
+	async resetPassword({
+		token,
+		newPassword,
+	}: {
+		token: string;
+		newPassword: string;
+	}) {
+		const hashedToken = createHash("sha256").update(token).digest("hex");
+
+		const user = await this.userModel.findOne({
+			passwordResetToken: hashedToken,
+			passwordResetExpires: { $gt: Date.now() },
+		});
+
+		if (!user) {
+			throw new BadRequestException("Token is invalid or has expired");
+		}
+
+		user.password = newPassword;
+		user.passwordResetToken = undefined;
+		user.passwordResetExpires = undefined;
+
+		await user.save();
+
+		return {
+			token: await this.createAccessToken(user.id, user.role),
+		};
+	}
 }

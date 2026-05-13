@@ -2,6 +2,8 @@ import {
 	Body,
 	Controller,
 	Get,
+	Param,
+	Patch,
 	Post,
 	Query,
 	Req,
@@ -16,7 +18,9 @@ import { Profile } from "passport-google-oauth20";
 
 import { IRequest } from "@/types/request.type";
 
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
 import { LoginDto } from "./dto/login.dto";
+import { ResetPasswordDto } from "./dto/reset-password.dto";
 import { SignUpDto } from "./dto/signup.dto";
 import { VerifyEmailDto } from "./dto/verify-email.dto";
 
@@ -58,6 +62,25 @@ export class AuthController {
 	})
 	signin(@Body() loginDto: LoginDto) {
 		return this.authService.login(loginDto);
+	}
+
+	@Post("forgotPassword")
+	@ApiOperation({
+		summary: "Send password reset email with token",
+	})
+	forgotPassword(@Body() forgotPassword: ForgotPasswordDto) {
+		return this.authService.forgotPassword(forgotPassword.email);
+	}
+
+	@Patch("resetPassword/:token")
+	@ApiOperation({
+		summary: "Reset user password using reset token",
+	})
+	resetPassword(
+		@Body() { newPassword }: ResetPasswordDto,
+		@Param("token") token: string,
+	) {
+		return this.authService.resetPassword({ token, newPassword });
 	}
 
 	@Get("verify")

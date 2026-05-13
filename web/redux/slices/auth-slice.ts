@@ -31,6 +31,16 @@ const loginAsync = createAsyncThunk("auth/login", authService.login);
 
 const signupAsync = createAsyncThunk("auth/signup", authService.signup);
 
+const resetPasswordAsync = createAsyncThunk(
+	"auth/resetPassword",
+	authService.resetPassword,
+);
+
+const forgotPasswordAsync = createAsyncThunk(
+	"auth/forgotPassword",
+	authService.forgotPassword,
+);
+
 const getMeAsync = createAsyncThunk("auth/getMe", usersService.getMe);
 
 const updateMeAsync = createAsyncThunk("auth/updateMe", usersService.updateMe);
@@ -99,6 +109,25 @@ export const authSlice = createSlice({
 				state.loading = false;
 				state.error = action.error;
 			});
+		// resetPasswordAsync
+		builder
+			.addCase(resetPasswordAsync.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(resetPasswordAsync.fulfilled, (state, action) => {
+				state.loading = false;
+				state.isAuthenticated = true;
+
+				Cookies.set("token", action.payload.token, {
+					expires: 14,
+					secure: true,
+					sameSite: "strict",
+				});
+			})
+			.addCase(resetPasswordAsync.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error;
+			});
 		// getMeAsync
 		builder
 			.addCase(getMeAsync.pending, (state) => {
@@ -163,8 +192,10 @@ export const { setToken, logOut } = authSlice.actions;
 
 export {
 	deleteMeAsync,
+	forgotPasswordAsync,
 	getMeAsync,
 	loginAsync,
+	resetPasswordAsync,
 	signupAsync,
 	updateMeAsync,
 	updateMyPasswordAsync,
