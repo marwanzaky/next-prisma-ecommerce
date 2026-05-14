@@ -1,6 +1,7 @@
 "use cache";
 import { Metadata } from "next";
 import { cacheLife } from "next/cache";
+import { permanentRedirect } from "next/navigation";
 
 import { Locale } from "@repo/types";
 
@@ -30,6 +31,11 @@ export default async function Page({ params }: Props) {
 
 	const product = await getProduct(id);
 
+	const canonicalSlug = createProductSlug(product.name.en, product._id);
+	if (slug !== canonicalSlug) {
+		permanentRedirect(localizePath(`/products/${canonicalSlug}`, lang));
+	}
+
 	const structuredData = generateProductStructuredData(product, lang);
 
 	return (
@@ -41,9 +47,9 @@ export default async function Page({ params }: Props) {
 				}}
 			/>
 
-			<main>
+			<div>
 				<ProductPage product={product} />
-			</main>
+			</div>
 		</>
 	);
 }

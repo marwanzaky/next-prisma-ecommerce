@@ -30,7 +30,7 @@ export function proxy(request: NextRequest) {
 		return NextResponse.next();
 	}
 
-	if (pathname === "/sitemap.xml") {
+	if (pathname === "/sitemap.xml" || pathname === "/robots.txt") {
 		return NextResponse.next();
 	}
 

@@ -3,12 +3,14 @@ import { Product, WithContext } from "schema-dts";
 import { Locale, ProductWithReviewsEntity } from "@repo/types";
 
 import config from "./config";
+import { localizeUrl } from "./i18n";
+import { createProductSlug } from "./string-utils";
 
 export function generateProductStructuredData(
 	product: ProductWithReviewsEntity,
 	locale: Locale,
 ): WithContext<Product> {
-	const productUrl = `${config.clientUrl}/products/${product._id}`;
+	const productUrl = localizeUrl(`/products/${createProductSlug(product.name.en, product._id)}`, locale);
 	const offerId = `${productUrl}#offer`;
 
 	return {

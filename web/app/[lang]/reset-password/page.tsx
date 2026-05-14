@@ -63,7 +63,6 @@ export default function Page() {
 		handleSubmit,
 		formState: { errors, isSubmitting },
 		formState,
-		reset,
 	} = useForm<ResetPasswordInput>({
 		resolver: zodResolver(ResetPasswordSchema),
 		mode: "onSubmit",
