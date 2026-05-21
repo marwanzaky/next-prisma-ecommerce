@@ -162,7 +162,7 @@ function ProductsContent() {
 
 				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
 					{!isLoading ? (
-						data?.map((item) => <ProductCard key={item._id} data={item} />)
+						data?.map((item) => <ProductCard key={item.id} data={item} />)
 					) : (
 						<>
 							<ProductCardSkeleton />

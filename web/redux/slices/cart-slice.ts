@@ -3,8 +3,8 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
-
-import { CartItemEntity, ProductEntity } from "@repo/types";
+import { CartItemWithProduct } from "@repo/database";
+import { Product } from "@repo/database";
 
 import { cartsService } from "@/services/carts-service";
 import { guestCartService } from "@/services/guest-cart-service";
@@ -16,7 +16,7 @@ export const createAppAsyncThunk = createAsyncThunk.withTypes<{
 }>();
 
 export type CartState = {
-	items: CartItemEntity[];
+	items: CartItemWithProduct[];
 
 	loading: boolean;
 	error?: SerializedError;
@@ -40,11 +40,11 @@ const getCartMeAsync = createAppAsyncThunk(
 const postCartItemAsync = createAppAsyncThunk(
 	"cart/postCartItem",
 	(
-		{ product, quantity }: { product: ProductEntity; quantity: number },
+		{ product, quantity }: { product: Product; quantity: number },
 		{ getState },
 	) =>
 		getState().auth.isAuthenticated
-			? cartsService.postItem(product._id, quantity)
+			? cartsService.createCartItem(product.id, quantity)
 			: guestCartService.postItem(product, quantity),
 );
 
@@ -55,7 +55,7 @@ const updateCartItemQuantityAsync = createAppAsyncThunk(
 		{ getState },
 	) =>
 		getState().auth.isAuthenticated
-			? cartsService.updateItemQuantity(productId, quantity)
+			? cartsService.updateCartItemQuantity(productId, quantity)
 			: guestCartService.updateItemQuantity(productId, quantity),
 );
 
@@ -63,7 +63,7 @@ const deleteCartItemAsync = createAppAsyncThunk(
 	"cart/deleteCartItem",
 	(productId: string, { getState }) =>
 		getState().auth.isAuthenticated
-			? cartsService.deleteItem(productId)
+			? cartsService.deleteCartItem(productId)
 			: guestCartService.deleteItem(productId),
 );
 

@@ -1,11 +1,13 @@
-import { ProductEntity } from "@repo/types";
+import { ProductTranslatedText } from "@repo/database";
 
 import { clientFetch } from "@/lib/api-client";
 
 export const favoritesService = {
-	getMe: () => clientFetch<ProductEntity[]>("/favorites"),
+	getMe: () => clientFetch<ProductTranslatedText[]>("/favorites"),
 	post: (productId: string) =>
-		clientFetch<ProductEntity>(`/favorites/${productId}`, { method: "POST" }),
+		clientFetch<ProductTranslatedText>(`/favorites/${productId}`, {
+			method: "POST",
+		}),
 	remove: (productId: string) =>
 		clientFetch<null>(`/favorites/${productId}`, { method: "DELETE" }),
 };

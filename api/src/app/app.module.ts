@@ -1,8 +1,9 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
-import { MongooseModule } from "@nestjs/mongoose";
+
+import { PrismaService } from "@/prisma.service";
 
 import { AdminCategoriesModule } from "./admin/admin-categories/admin-categories.module";
 import { ContactMessagesModule } from "./admin/contact-messages/contact-messages.module";
@@ -27,15 +28,6 @@ import { RolesGuard } from "../guards/roles.guard";
 			isGlobal: true,
 		}),
 
-		// Mongoose config
-		MongooseModule.forRootAsync({
-			imports: [ConfigModule],
-			inject: [ConfigService],
-			useFactory: async (config: ConfigService) => ({
-				uri: config.get<string>("MONGODB_URI"),
-			}),
-		}),
-
 		AuthModule,
 		UsersModule,
 		ProductsModule,
@@ -51,6 +43,7 @@ import { RolesGuard } from "../guards/roles.guard";
 	],
 	providers: [
 		JwtService,
+		PrismaService,
 		{
 			provide: APP_GUARD,
 			useClass: AuthGuard,

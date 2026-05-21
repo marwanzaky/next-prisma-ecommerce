@@ -1,4 +1,6 @@
-import { CategoryEntity, Locale } from "@repo/types";
+import { CategoryTranslatedText } from "@repo/database";
+
+import { Locale } from "@repo/types";
 
 import { Column } from "@/components/ui/table";
 import { LogoCell } from "@/components/ui/table/cells/logo-cell";
@@ -13,11 +15,11 @@ export const getCategoriesColumns = ({
 	editAction,
 }: {
 	locale: Locale;
-	categories: CategoryEntity[];
-	onActiveChange: (value: boolean, row: CategoryEntity) => void;
-	onSortChange: (value: number, row: CategoryEntity) => void;
-	editAction: (row: CategoryEntity) => void;
-}): Column<CategoryEntity>[] => [
+	categories: CategoryTranslatedText[];
+	onActiveChange: (value: boolean, row: CategoryTranslatedText) => void;
+	onSortChange: (value: number, row: CategoryTranslatedText) => void;
+	editAction: (row: CategoryTranslatedText) => void;
+}): Column<CategoryTranslatedText>[] => [
 	{
 		header: "Active",
 		field: "isActive",
@@ -56,11 +58,11 @@ export const getCategoriesColumns = ({
 	},
 	{
 		header: "Parent",
-		field: "parent",
+		field: "parentId",
 		type: "custom",
 		className: "w-[15%]",
 		render(value) {
-			const parentCat = categories?.find((cat) => cat._id === value);
+			const parentCat = categories?.find((cat) => cat.id === value);
 			return <div>{parentCat?.name[locale]}</div>;
 		},
 	},
@@ -79,7 +81,7 @@ export const getCategoriesColumns = ({
 	},
 	{
 		header: "",
-		field: "_id",
+		field: "id",
 		type: "action",
 		className: "w-9.5",
 		actionIcon: "edit",

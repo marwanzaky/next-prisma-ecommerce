@@ -1,13 +1,15 @@
-import { forwardRef, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 
-import { ProductsModule } from "@/app/products/products.module";
+import { CloudinaryModule } from "@/services/cloudinary/cloudinary.module";
+
+import { PrismaService } from "@/prisma.service";
 
 import { PaymentsController } from "./payments.controller";
 import { PaymentsService } from "./payments.service";
 
 @Module({
-	imports: [forwardRef(() => ProductsModule)],
+	imports: [CloudinaryModule],
 	controllers: [PaymentsController],
-	providers: [PaymentsService],
+	providers: [PaymentsService, PrismaService],
 })
 export class PaymentsModule {}

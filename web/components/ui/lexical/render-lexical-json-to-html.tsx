@@ -1,8 +1,11 @@
 import type {
+	SerializedElementNode,
 	SerializedLexicalNode,
 	SerializedParagraphNode,
 	SerializedTextNode,
 } from "lexical";
+
+import { SerializedListNode } from "@lexical/list";
 
 import { ImageNode, SerializedImageNode } from "./nodes/image-node";
 import { SerializedYouTubeNode, YouTubeNode } from "./nodes/youtube-node";
@@ -13,20 +16,24 @@ export function renderLexicalJSONToHTML(
 	return nodes
 		.map((node) => {
 			switch (node.type) {
-				case "youtube":
+				case "youtube": {
 					const youtubeNode = node as SerializedYouTubeNode;
 					return YouTubeNode.exportHTML(youtubeNode.url);
-				case "image":
+				}
+				case "image": {
 					const imageNode = node as SerializedImageNode;
 					return ImageNode.exportHTML(imageNode.src, imageNode.alt ?? "");
-				case "paragraph":
+				}
+				case "paragraph": {
 					const paragraphNode = node as SerializedParagraphNode;
 					const childrenHTML = paragraphNode.children
 						? renderLexicalJSONToHTML(paragraphNode.children)
 						: "";
 					return `<p>${childrenHTML || "<br/>"}</p>`;
-				case "linebreak":
+				}
+				case "linebreak": {
 					return "<br/>";
+				}
 				case "text": {
 					const textNode = node as SerializedTextNode;
 					let text = textNode.text ?? "";
@@ -39,16 +46,17 @@ export function renderLexicalJSONToHTML(
 					return text;
 				}
 				case "list": {
-					const listNode = node as any;
+					const listNode = node as SerializedListNode;
 					const tag = listNode.tag;
 					return `<${tag}>${renderLexicalJSONToHTML(listNode.children)}</${tag}>`;
 				}
 				case "listitem": {
-					const listItemNode = node as any;
+					const listItemNode = node as SerializedElementNode;
 					return `<li>${renderLexicalJSONToHTML(listItemNode.children)}</li>`;
 				}
-				default:
+				default: {
 					return "";
+				}
 			}
 		})
 		.join("");

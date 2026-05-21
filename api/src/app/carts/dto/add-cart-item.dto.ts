@@ -8,8 +8,4 @@ export class AddCartItemDto {
 	@Min(1)
 	@IsOptional()
 	readonly quantity?: number;
-
-	// Params
-	userId!: string;
-	productId!: string;
 }

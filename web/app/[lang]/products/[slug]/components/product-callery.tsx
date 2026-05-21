@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
-import { ProductWithReviewsEntity } from "@repo/types";
+import { ProductWithReviewsAndUser } from "@repo/database";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ButtonIcon } from "@/components/ui/button-icon";
@@ -24,7 +24,7 @@ import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 export default function ProductCallery({
 	product,
 }: {
-	product: ProductWithReviewsEntity;
+	product: ProductWithReviewsAndUser;
 }) {
 	const { dir, t, locale } = useI18n();
 	const { isFavorite, addToFavorites, removeFromFavorites } =
@@ -87,7 +87,7 @@ export default function ProductCallery({
 			<div className="grid grid-cols-4 gap-2 md:gap-4">
 				{product.imgUrls.map((imgUrl, i) => (
 					<Image
-						key={`${product.name} ${i + 1}`}
+						key={`${product.name}-${i + 1}`}
 						role="button"
 						className={cn(
 							"cursor-pointer rounded-lg opacity-100 hover:opacity-50 aspect-square object-cover border border-transparent hover:border-black transition-colors",

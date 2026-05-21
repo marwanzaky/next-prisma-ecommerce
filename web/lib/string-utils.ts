@@ -26,9 +26,9 @@ export function initials(fullName: string): string {
 		.toUpperCase();
 }
 
-export function stringToDate(str: string): string {
-	const date = new Date(str);
-	return date.toLocaleDateString("en-us", {
+export function formatDate(date: Date | string): string {
+	const value = typeof date === "object" ? date : new Date(date);
+	return value.toLocaleDateString("en-us", {
 		year: "numeric",
 		month: "short",
 		day: "numeric",

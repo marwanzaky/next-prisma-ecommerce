@@ -5,10 +5,12 @@ packages:
 allowBuilds:
   "@google/genai": true
   "@nestjs/core": true
+  '@prisma/engines': true
   "@scarf/scarf": true
   "@swc/core": true
   esbuild: true
   msw: true
+  prisma: true
   protobufjs: true
   sharp: true
   unrs-resolver: true

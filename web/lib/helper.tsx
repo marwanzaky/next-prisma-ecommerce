@@ -7,6 +7,10 @@ export function jsonToFormData(data: any) {
 }
 
 function buildFormData(formData: any, data: any, parentKey?: any) {
+	if (data === undefined || data === null) {
+		return;
+	}
+
 	if (
 		data &&
 		typeof data === "object" &&
@@ -22,8 +26,6 @@ function buildFormData(formData: any, data: any, parentKey?: any) {
 			);
 		});
 	} else {
-		const value = data == null ? "" : data;
-
-		formData.append(parentKey, value);
+		formData.append(parentKey, data);
 	}
 }

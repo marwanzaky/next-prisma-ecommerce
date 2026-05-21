@@ -1,274 +1,90 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
+import { BadRequestException, Injectable } from "@nestjs/common";
 
-import mongoose, { Model } from "mongoose";
-
-import {
-	ProductEntity,
-	ProductWithReviewsEntity,
-	Rating,
-	RatingDistribution,
-	TranslatedText,
-} from "@repo/types";
-
-import { Review } from "@/app/reviews/entities/review.entity";
+import { Prisma } from "@repo/database";
 
 import { CategoriesService } from "@/services/categories/categories.service";
-import { TranslationService } from "@/services/translation/translation.service";
+import { CloudinaryService } from "@/services/cloudinary/cloudinary.service";
 
-import { delay } from "@/helper/promise.helper";
-import { CreateProductEntity, UpdateProductEntity } from "@/types/product.type";
-
-import { Product } from "./entities/product.entity";
+import { PrismaService } from "@/prisma.service";
 
 @Injectable()
 export class ProductsService {
 	constructor(
-		@InjectModel(Product.name) private productModel: Model<Product>,
-		@InjectModel(Review.name) private reviewModel: Model<Review>,
+		private prisma: PrismaService,
 		private categoriesService: CategoriesService,
-		private translationService: TranslationService,
+		private cloudinaryService: CloudinaryService,
 	) {}
-
-	async create(
-		user: string,
-		{
-			name,
-			price,
-			priceCompare,
-			imgUrls,
-			description,
-			shortDescription,
-			tags,
-			stock,
-			category,
-		}: CreateProductEntity,
-	): Promise<Product> {
-		const translatedName = await this.translationService.translateText(name);
-		const translatedDescription =
-			await this.translationService.translateJson(description);
-
-		let translatedShortDescription: TranslatedText | undefined = undefined;
-		if (shortDescription) {
-			translatedShortDescription =
-				await this.translationService.translateJson(shortDescription);
-		}
-
-		const product = await this.productModel.create({
-			user,
-			name: translatedName,
-			price,
-			priceCompare,
-			imgUrls,
-			description: translatedDescription,
-			shortDescription: translatedShortDescription,
-			tags: tags || [],
-			stock,
-			category,
-		});
-
-		return product.save();
-	}
 
 	/**
 	 * Returns ProductEntity document
 	 */
-	async find(options?: {
-		sort?: {
-			property?: Extract<keyof ProductEntity, string>;
-			order?: "asc" | "desc";
-		};
-		query?: {
-			ids?: string[];
-			excludeIds?: string[];
-			name?: string;
-			user?: string;
-			minPrice?: number;
-			maxPrice?: number;
-			featured?: boolean;
-			isHero?: boolean;
-			limit?: number;
-			avgRatings?: number;
-			category?: string;
-		};
-	}): Promise<Product[]> {
-		const { sort = {}, query = {} } = options || {};
+	async find(options: {
+		where?: Prisma.ProductWhereInput;
+		orderBy?:
+			| Prisma.ProductOrderByWithRelationInput
+			| Prisma.ProductOrderByWithRelationInput[]
+			| undefined;
+		take?: number;
+		searchName?: string;
+	}) {
+		const { where = {}, orderBy, take, searchName } = options;
 
-		const sortOptions: Record<string, 1 | -1> = {};
-
-		if (sort.property && sort.order) {
-			sortOptions[sort.property] = sort.order === "asc" ? 1 : -1;
-		}
-
-		const filter: Record<string, any> = {};
-
-		if (query.user) {
-			filter.user = new mongoose.Types.ObjectId(query.user);
-		}
-
-		if (query.name) {
-			filter.$or = [
-				{ "name.en": { $regex: new RegExp(query.name, "i") } },
-				{ "name.fr": { $regex: new RegExp(query.name, "i") } },
-				{ "name.ar": { $regex: new RegExp(query.name, "i") } },
+		if (searchName) {
+			where.OR = [
+				...(where.OR || []),
+				...["en", "fr", "ar"].map((lang) => ({
+					name: {
+						path: [lang],
+						string_contains: searchName,
+					},
+				})),
 			];
 		}
 
-		if (query.category) {
-			const categories =
-				await this.categoriesService.getAllDescendantCategoryIds(
-					query.category,
-				);
-
-			filter.category = { $in: categories };
-		}
-
-		if (query.minPrice !== undefined || query.maxPrice !== undefined) {
-			filter.price = {};
-
-			if (query.minPrice !== undefined) filter.price.$gte = query.minPrice;
-			if (query.maxPrice !== undefined) filter.price.$lte = query.maxPrice;
-		}
-
-		if (query.featured !== undefined) {
-			filter.featured = query.featured;
-		}
-
-		if (query.isHero !== undefined) {
-			filter.isHero = query.isHero;
-		}
-
-		if (query.ids && query.ids.length > 0) {
-			filter._id = {
-				$in: query.ids.map((id) => new mongoose.Types.ObjectId(id)),
-			};
-		}
-
-		if (query.excludeIds && query.excludeIds.length > 0) {
-			filter._id = {
-				...filter._id,
-				$nin: query.excludeIds.map((id) => new mongoose.Types.ObjectId(id)),
-			};
-		}
-
-		if (query.avgRatings !== undefined) {
-			filter.avgRatings = { $gte: query.avgRatings };
-		}
-
-		const filteredProducts = this.productModel.find(filter).sort(sortOptions);
-
-		if (query.limit !== undefined && query.limit > 0) {
-			filteredProducts.limit(query.limit);
-		}
-
-		return filteredProducts;
-	}
-
-	async findById(id: string): Promise<ProductWithReviewsEntity> {
-		const product = await this.productModel
-			.findById(id)
-			.populate("reviews")
-			.populate({
-				path: "user",
-				select: "_id name photoUrl updatedAt createdAt",
-			});
-
-		if (!product) {
-			throw new NotFoundException("Could not find the product");
-		}
-
-		return product as unknown as ProductWithReviewsEntity;
-	}
-
-	async findByIdAndUpdate(
-		id: string,
-		updateProductDto: UpdateProductEntity,
-	): Promise<Product | null> {
-		const data: Partial<ProductEntity> = {
-			...updateProductDto,
-			name: undefined,
-			description: undefined,
-			shortDescription: undefined,
-		};
-
-		if (updateProductDto.name) {
-			data.name = await this.translationService.translateText(
-				updateProductDto.name,
-			);
-		}
-
-		await delay(1000);
-
-		if (updateProductDto.description) {
-			data.description = await this.translationService.translateJson(
-				updateProductDto.description,
-			);
-		}
-
-		await delay(1000);
-
-		if (updateProductDto.shortDescription) {
-			data.shortDescription = await this.translationService.translateJson(
-				updateProductDto.shortDescription,
-			);
-		}
-
-		return this.productModel.findByIdAndUpdate(id, data, {
-			new: true,
-			runValidators: true,
+		return this.prisma.product.findMany({
+			where,
+			orderBy,
+			take,
 		});
 	}
 
-	/**
-	 * Find product by id and delete, as well as its reviews
-	 */
-	async findByIdAndDelete(id: string): Promise<Product | null> {
-		await this.reviewModel.deleteMany({
-			product: id,
+	async calcAvgRatings(productId: string): Promise<void> {
+		const stats = await this.prisma.review.aggregate({
+			where: {
+				productId: productId,
+			},
+			_count: {
+				id: true,
+			},
+			_avg: {
+				rating: true,
+			},
 		});
-		return this.productModel.findByIdAndDelete(id);
-	}
 
-	async calcAvgRatings(productId: string) {
-		const stats: { _id: string; numRating: number; avgRating: number }[] =
-			await this.reviewModel.aggregate([
-				{
-					$match: {
-						product: new mongoose.Types.ObjectId(productId),
-					},
-				},
-				{
-					$group: {
-						_id: "$product",
-						numRating: { $sum: 1 },
-						avgRating: { $avg: "$rating" },
-					},
-				},
-			]);
+		const numReviews = stats._count.id ?? 0;
+		const avgRatings = stats._avg.rating ?? 0;
 
-		await this.productModel.findByIdAndUpdate(productId, {
-			numReviews: stats.length > 0 ? stats[0].numRating : 0,
-			avgRatings: stats.length > 0 ? stats[0].avgRating : 0,
+		await this.prisma.product.update({
+			where: { id: productId },
+			data: {
+				numReviews: numReviews,
+				avgRatings: avgRatings,
+			},
 		});
 	}
 
-	async calcRatingDistribution(productId: string) {
-		const distribution: { _id: Rating; count: number }[] =
-			await this.reviewModel.aggregate([
-				{
-					$match: {
-						product: new mongoose.Types.ObjectId(productId),
-					},
-				},
-				{
-					$group: {
-						_id: { $round: ["$rating", 0] },
-						count: { $sum: 1 },
-					},
-				},
-			]);
+	async calcRatingDistribution(productId: string): Promise<void> {
+		const distribution = await this.prisma.review.groupBy({
+			by: ["rating"],
+			where: {
+				productId: productId,
+			},
+			_count: {
+				id: true,
+			},
+		});
 
-		const ratingDistribution: RatingDistribution = {
+		const ratingDistribution: Record<number, number> = {
 			1: 0,
 			2: 0,
 			3: 0,
@@ -277,11 +93,98 @@ export class ProductsService {
 		};
 
 		distribution.forEach((item) => {
-			ratingDistribution[item._id] = item.count;
+			if (item.rating >= 1 && item.rating <= 5) {
+				ratingDistribution[item.rating] = item._count.id;
+			}
 		});
 
-		await this.productModel.findByIdAndUpdate(productId, {
-			ratingDistribution,
+		await this.prisma.product.update({
+			where: { id: productId },
+			data: {
+				ratingDistribution:
+					ratingDistribution as unknown as Prisma.InputJsonValue,
+			},
 		});
+	}
+
+	async buildPatchedImgUrls(
+		existingImgUrls: string[],
+		keptImgs:
+			| {
+					url: string;
+					index: number;
+			  }[]
+			| undefined,
+		newImgs: {
+			imgFiles: Express.Multer.File[];
+			newImgIndices: number[] | undefined;
+		},
+	): Promise<string[]> {
+		const { imgFiles, newImgIndices } = newImgs;
+
+		const slots: Array<string | null> = Array.from({ length: 10 }).map(
+			() => null,
+		);
+
+		const usedIndices = new Set<number>();
+
+		if (keptImgs) {
+			for (const img of keptImgs) {
+				if (
+					!img ||
+					typeof img.url !== "string" ||
+					typeof img.index !== "number"
+				) {
+					throw new BadRequestException("Invalid keptImgs item");
+				}
+				if (img.index < 0 || img.index > 9)
+					throw new BadRequestException("Image index out of range");
+				if (!existingImgUrls.includes(img.url))
+					throw new BadRequestException("keptImgs includes unknown url");
+
+				slots[img.index] = img.url;
+				usedIndices.add(img.index);
+			}
+		}
+
+		if (imgFiles.length > 0) {
+			if (!newImgIndices)
+				throw new BadRequestException(
+					"newImgIndices is required with imgFiles",
+				);
+
+			for (const index of newImgIndices) {
+				if (typeof index !== "number" || Number.isNaN(index))
+					throw new BadRequestException("Invalid newImgIndices item");
+				if (index < 0 || index > 9)
+					throw new BadRequestException("Image index out of range");
+				if (usedIndices.has(index))
+					throw new BadRequestException("Duplicate image index");
+				usedIndices.add(index);
+			}
+
+			const uploadedUrls = await Promise.all(
+				imgFiles.map((file) => this.cloudinaryService.uploadFile(file)),
+			);
+			const definedUploadedUrls = uploadedUrls.filter(
+				(el): el is string => typeof el === "string",
+			);
+
+			if (definedUploadedUrls.length !== imgFiles.length) {
+				throw new BadRequestException("Failed to upload one or more images");
+			}
+
+			for (let i = 0; i < newImgIndices.length; i++) {
+				slots[newImgIndices[i]] = definedUploadedUrls[i];
+			}
+		}
+
+		const finalUrls = slots.filter((url): url is string => Boolean(url));
+
+		if (finalUrls.length > 10) {
+			throw new BadRequestException("Max 10 images");
+		}
+
+		return finalUrls;
 	}
 }

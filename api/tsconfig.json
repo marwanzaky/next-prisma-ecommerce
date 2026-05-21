@@ -5,7 +5,8 @@
 		"rootDir": "../",
 		"jsx": "react",
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["./src/*"],
+			"@/prisma/*": ["./generated/prisma/*"]
 		}
 	},
 	"include": ["src/**/*"]

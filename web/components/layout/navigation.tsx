@@ -195,7 +195,7 @@ export default function Navigation() {
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild>
 									<ImageButton
-										imgUrl={user.photoUrl}
+										imgUrl={user.avatarUrl || undefined}
 										fallback={initials(user.name)}
 										alt={t("photoOf").replace("{{name}}", user.name)}
 									/>
@@ -210,7 +210,10 @@ export default function Navigation() {
 									<DropdownMenuLabel className="p-0 font-normal">
 										<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 											<Avatar className="h-8 w-8">
-												<AvatarImage src={user.photoUrl} alt={user.name} />
+												<AvatarImage
+													src={user.avatarUrl || undefined}
+													alt={user.name}
+												/>
 												<AvatarFallback>{initials(user.name)}</AvatarFallback>
 											</Avatar>
 											<div className="grid flex-1 text-start text-sm leading-tight">

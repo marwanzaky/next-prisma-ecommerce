@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { PublicCategoryTree } from "@repo/types";
+import { PublicCategoryTree } from "@repo/database";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 

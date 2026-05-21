@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 
+import { ContactMessage, ContactMessageStatus } from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
-
-import { ContactMessage, ContactMessageStatus } from "@repo/types";
 
 import { contactMessagesService } from "@/services/contact-messages-service";
 
@@ -81,7 +80,7 @@ export function useAdminMessages() {
 		},
 		{
 			header: "",
-			field: "_id",
+			field: "id",
 			type: "custom",
 			className: "w-9.5",
 			render(value, row) {
@@ -111,7 +110,7 @@ export function useAdminMessages() {
 									<AlertDialogCancel>Cancel</AlertDialogCancel>
 									<AlertDialogAction
 										onClick={() => {
-											contactMessagesService.deleteMessage(row._id);
+											contactMessagesService.deleteMessage(row.id);
 											refetch();
 										}}
 									>
@@ -144,7 +143,7 @@ export function useAdminMessages() {
 										onValueChange={async (value: ContactMessageStatus) => {
 											const newMessage =
 												await contactMessagesService.updateMessageStatus(
-													selectedMessage._id,
+													selectedMessage.id,
 													value,
 												);
 											setSelectedMessage(newMessage);

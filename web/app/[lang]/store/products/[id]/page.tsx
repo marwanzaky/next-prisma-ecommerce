@@ -1,23 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 import { useAppSelector } from "@/redux/store";
 
 import { useI18n } from "@/components/layout/i18n-provider";
-
-import { localizePath } from "@/lib/i18n";
 
 import { ProductBase } from "../product-base";
 import { useSell } from "../use-sell";
 
 export default function Page() {
 	const params = useParams<{ id: string }>();
-	const router = useRouter();
 
-	const { locale, t } = useI18n();
+	const { t } = useI18n();
 	const {
 		initialConfig,
 		form,
@@ -30,12 +27,8 @@ export default function Page() {
 
 	const { products } = useAppSelector((state) => state.userProducts);
 
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
-
-	useEffect(() => {
-		const product = products.find((p) => p._id === params.id);
+	const resetForm = useCallback(() => {
+		const product = products.find((p) => p.id === params.id);
 
 		if (product) {
 			form.reset({
@@ -46,11 +39,22 @@ export default function Page() {
 					max: product.priceCompare / 100,
 				},
 				tags: product.tags,
-				images: product.imgUrls.map((el) => ({ url: el })),
-				category: product.category ?? undefined,
+				images: Array.from({ length: 10 }, (_, i) => {
+					const el = product.imgUrls[i];
+					return el ? { url: el } : undefined;
+				}),
+				categoryId: product.categoryId ?? undefined,
 			});
 		}
 	}, [products, params.id, form]);
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
+	useEffect(() => {
+		resetForm();
+	}, [resetForm]);
 
 	return (
 		<ProductBase
@@ -63,9 +67,7 @@ export default function Page() {
 				updateProduct({ id: params.id, data }),
 			)}
 			submitButtonText={t("buttons.update")}
-			cancelButtonAction={() =>
-				router.push(localizePath("/store/products", locale))
-			}
+			cancelButtonAction={resetForm}
 			injectLoadDescriptionPlugin
 			loading={loading}
 		/>

@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "@repo/types";
+import { PublicUser } from "@repo/database";
 
 import { Container } from "@/components/common/container";
 import { Section } from "@/components/common/section";
@@ -20,7 +20,7 @@ import {
 
 import { initials } from "@/lib/string-utils";
 
-export default function UserProfile({ user }: { user: User }) {
+export default function UserProfile({ user }: { user: PublicUser }) {
 	const { t } = useI18n();
 
 	return (
@@ -31,7 +31,7 @@ export default function UserProfile({ user }: { user: User }) {
 						<div className="flex items-center gap-4">
 							<Avatar className="h-10 w-10">
 								<AvatarImage
-									src={user.photoUrl}
+									src={user.avatarUrl || undefined}
 									alt={t("photoOf").replace("{{name}}", user.name)}
 								/>
 								<AvatarFallback>{initials(user.name)}</AvatarFallback>

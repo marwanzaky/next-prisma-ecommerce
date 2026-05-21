@@ -7,8 +7,7 @@ import { Trash2Icon } from "lucide-react";
 import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { User } from "@repo/types";
+import { PublicUser } from "@repo/database";
 
 import { updateMeAsync } from "@/redux/slices/auth-slice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
@@ -86,7 +85,7 @@ export default function PersonalInformationCard() {
 				name: user.name,
 				email: user.email,
 				photo: {
-					url: user.photoUrl || undefined,
+					url: user.avatarUrl || undefined,
 				},
 			});
 		}
@@ -102,8 +101,8 @@ export default function PersonalInformationCard() {
 				name: data.name,
 				email: data.email,
 				...(data.photo.file
-					? { photoFile: data.photo.file }
-					: { photoUrl: data.photo.url }),
+					? { avatarFile: data.photo.file }
+					: { avatarUrl: data.photo.url }),
 			}),
 		);
 	};
@@ -176,7 +175,7 @@ export default function PersonalInformationCard() {
 													setValue(
 														"photo",
 														{ url: undefined, file: undefined },
-														{ shouldDirty: !!user.photoUrl },
+														{ shouldDirty: !!user.avatarUrl },
 													);
 												}}
 											>
@@ -253,7 +252,7 @@ function PhotoPreview({
 		url?: string | undefined;
 		file?: File | undefined;
 	};
-	user: User;
+	user: PublicUser;
 }) {
 	const { t } = useI18n();
 

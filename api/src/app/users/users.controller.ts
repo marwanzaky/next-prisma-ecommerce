@@ -3,54 +3,77 @@ import {
 	Controller,
 	Delete,
 	Get,
+	NotFoundException,
 	Param,
 	Patch,
 	Post,
 	Req,
+	UnauthorizedException,
 	UploadedFile,
 	UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 
+import { compare, hash } from "bcryptjs";
+
+import { Prisma, Product } from "@repo/database";
+import { PublicUser, User } from "@repo/database";
+
 import { Public } from "@/app/auth/auth.guard";
-import { ProductsService } from "@/app/products/products.service";
 
 import { CloudinaryService } from "@/services/cloudinary/cloudinary.service";
 
 import { Roles } from "@/decorators/roles.decorator";
+import { PrismaService } from "@/prisma.service";
 import { IRequest } from "@/types/request.type";
 
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UpdateUserPasswordDto } from "./dto/update-user-password.dto";
 
-import { UsersService } from "./users.service";
+import { AuthService } from "../auth/auth.service";
+
+export const userPublicSelect: Prisma.UserSelect = {
+	id: true,
+	role: true,
+	name: true,
+	email: true,
+	avatarUrl: true,
+};
 
 @Controller("users")
 @ApiBearerAuth("Authorization")
 export class UsersController {
 	constructor(
-		private readonly usersService: UsersService,
-		private readonly productsService: ProductsService,
+		private readonly prisma: PrismaService,
 		private readonly cloudinaryService: CloudinaryService,
+		private readonly authService: AuthService,
 	) {}
 
 	@Get("/me")
 	@ApiOperation({
 		summary: "Get the authenticated user's info",
 	})
-	async getMe(@Req() request: IRequest) {
-		return this.usersService.findUser(request.user.id);
+	async getMe(@Req() request: IRequest): Promise<PublicUser | null> {
+		return this.prisma.user.findFirst({
+			where: { id: request.user.id },
+			select: userPublicSelect,
+		});
 	}
 
 	@Get("/me/products")
 	@ApiOperation({
 		summary: "Get all products of the authenticated user",
 	})
-	async getMeProducts(@Req() request: IRequest) {
-		return this.productsService.find({
-			query: { user: request.user.id },
+	async getMeProducts(@Req() request: IRequest): Promise<Product[]> {
+		return this.prisma.product.findMany({
+			where: {
+				userId: request.user.id,
+			},
+			orderBy: {
+				createdAt: "asc",
+			},
 		});
 	}
 
@@ -58,26 +81,28 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Update the authenticated user's info",
 	})
-	@UseInterceptors(FileInterceptor("photoFile"))
+	@UseInterceptors(FileInterceptor("avatarFile"))
 	async updateMe(
 		@Req() request: IRequest,
 		@Body() updateUserDto: UpdateUserDto,
-		@UploadedFile() photoFile?: Express.Multer.File,
-	) {
-		let photoUrl: string | undefined;
+		@UploadedFile() avatarFile?: Express.Multer.File,
+	): Promise<PublicUser> {
+		let avatarUrl: string | null = null;
 
-		if (updateUserDto.photoUrl === "") {
-			photoUrl = "";
+		if (avatarFile) {
+			avatarUrl = (await this.cloudinaryService.uploadFile(avatarFile)) || null;
 		}
 
-		if (photoFile) {
-			photoUrl = await this.cloudinaryService.uploadFile(photoFile);
-		}
-
-		return this.usersService.updateUser(request.user.id, {
-			name: updateUserDto.name,
-			email: updateUserDto.email,
-			photoUrl,
+		return this.prisma.user.update({
+			where: {
+				id: request.user.id,
+			},
+			data: {
+				name: updateUserDto.name,
+				email: updateUserDto.email,
+				avatarUrl,
+			},
+			select: userPublicSelect,
 		});
 	}
 
@@ -85,8 +110,13 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Delete the authenticated user's account",
 	})
-	async removeMe(@Req() request: IRequest) {
-		return this.usersService.removeUser(request.user.id);
+	async deleteMe(@Req() request: IRequest): Promise<PublicUser> {
+		return this.prisma.user.delete({
+			where: {
+				id: request.user.id,
+			},
+			select: userPublicSelect,
+		});
 	}
 
 	@Patch("/updateMyPassword")
@@ -97,10 +127,35 @@ export class UsersController {
 		@Req() request: IRequest,
 		@Body() updateUserPasswordDto: UpdateUserPasswordDto,
 	) {
-		return this.usersService.updateUserPassword(
-			request.user.id,
-			updateUserPasswordDto,
-		);
+		const { currentPassword, newPassword } = updateUserPasswordDto;
+
+		const user = await this.prisma.user.findFirst({
+			where: { id: request.user.id },
+		});
+
+		if (!user) {
+			throw new NotFoundException("Could not find the user");
+		}
+
+		const passwordMatch = await compare(currentPassword, user.password);
+
+		if (passwordMatch === false) {
+			throw new UnauthorizedException("Incorrect current password");
+		}
+
+		const hashedPassword = await hash(newPassword, 12);
+
+		await this.prisma.user.update({
+			where: { id: request.user.id },
+			data: {
+				password: hashedPassword,
+				passwordChangedAt: new Date(Date.now() - 1000),
+			},
+		});
+
+		return {
+			token: await this.authService.createAccessToken(user.id, user.role),
+		};
 	}
 
 	@Get("public/:id")
@@ -108,8 +163,11 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Get a specific public user",
 	})
-	async getPublicUser(@Param("id") id: string) {
-		return this.usersService.findPublicById(id);
+	getPublicUser(@Param("id") id: string): Promise<PublicUser | null> {
+		return this.prisma.user.findFirst({
+			where: { id },
+			select: userPublicSelect,
+		});
 	}
 
 	@Get()
@@ -117,8 +175,8 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Get all users (admin-only)",
 	})
-	async getAllUsers() {
-		return this.usersService.findAllUsers();
+	getAllUsers(): Promise<User[]> {
+		return this.prisma.user.findMany();
 	}
 
 	@Post()
@@ -126,8 +184,17 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Create a new user (admin-only)",
 	})
-	async createUsers(@Body() createUserDto: CreateUserDto) {
-		return this.usersService.create(createUserDto);
+	async createUsers(@Body() createUserDto: CreateUserDto): Promise<User> {
+		const { name, email, password } = createUserDto;
+		const hashedPassword = await hash(password, 12);
+
+		return this.prisma.user.create({
+			data: {
+				name,
+				email,
+				password: hashedPassword,
+			},
+		});
 	}
 
 	@Get(":id")
@@ -135,8 +202,12 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Get a specific user (admin-only)",
 	})
-	async getUser(@Param("id") id: string) {
-		return this.usersService.findUser(id);
+	getUser(@Param("id") id: string): Promise<User | null> {
+		return this.prisma.user.findFirst({
+			where: {
+				id,
+			},
+		});
 	}
 
 	@Patch(":id")
@@ -144,11 +215,14 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Update a specific user (admin-only)",
 	})
-	async updateUser(
+	updateUser(
 		@Param("id") id: string,
 		@Body() updateUserDto: UpdateUserDto,
-	) {
-		return this.usersService.updateUser(id, updateUserDto);
+	): Promise<User> {
+		return this.prisma.user.update({
+			where: { id },
+			data: updateUserDto,
+		});
 	}
 
 	@Delete(":id")
@@ -156,7 +230,9 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Remove a specific user (admin-only)",
 	})
-	async removeUser(@Param("id") id: string) {
-		return this.usersService.removeUser(id);
+	deleteUser(@Param("id") id: string): Promise<User> {
+		return this.prisma.user.delete({
+			where: { id },
+		});
 	}
 }

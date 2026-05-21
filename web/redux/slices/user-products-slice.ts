@@ -3,14 +3,13 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
-
-import { ProductEntity } from "@repo/types";
+import { ProductTranslatedText } from "@repo/database";
 
 import { productsService } from "@/services/products-service";
 import { usersService } from "@/services/users-service";
 
 export type UserProductsState = {
-	products: ProductEntity[];
+	products: ProductTranslatedText[];
 	loading: boolean;
 	error?: SerializedError;
 };
@@ -26,14 +25,14 @@ const getUserProductsAsync = createAsyncThunk(
 	usersService.getMeProducts,
 );
 
-const postUserProductAsync = createAsyncThunk(
-	"userProducts/postUserProduct",
-	productsService.post,
+const createUserProductAsync = createAsyncThunk(
+	"userProducts/createUserProduct",
+	productsService.createProduct,
 );
 
 const updateUserProductAsync = createAsyncThunk(
 	"userProducts/updateUserProduct",
-	productsService.update,
+	productsService.updateProduct,
 );
 
 const removeUserProductAsync = createAsyncThunk(
@@ -60,16 +59,16 @@ const userProductsSlice = createSlice({
 				state.error = action.error;
 			});
 
-		// postUserProductAsync
+		// createUserProductAsync
 		builder
-			.addCase(postUserProductAsync.pending, (state) => {
+			.addCase(createUserProductAsync.pending, (state) => {
 				state.loading = true;
 			})
-			.addCase(postUserProductAsync.fulfilled, (state, action) => {
+			.addCase(createUserProductAsync.fulfilled, (state, action) => {
 				state.loading = false;
 				state.products = [...state.products, action.payload];
 			})
-			.addCase(postUserProductAsync.rejected, (state, action) => {
+			.addCase(createUserProductAsync.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error;
 			});
@@ -81,8 +80,8 @@ const userProductsSlice = createSlice({
 			})
 			.addCase(updateUserProductAsync.fulfilled, (state, action) => {
 				state.loading = false;
-				state.products = [...state.products].map((item) =>
-					item._id !== action.payload._id ? item : action.payload,
+				state.products = state.products.map((item) =>
+					item.id !== action.payload.id ? item : action.payload,
 				);
 			})
 			.addCase(updateUserProductAsync.rejected, (state, action) => {
@@ -98,7 +97,7 @@ const userProductsSlice = createSlice({
 			.addCase(removeUserProductAsync.fulfilled, (state, action) => {
 				state.loading = false;
 				state.products = state.products.filter(
-					(item) => item._id !== action.meta.arg,
+					(item) => item.id !== action.meta.arg,
 				);
 			})
 			.addCase(removeUserProductAsync.rejected, (state, action) => {
@@ -109,8 +108,8 @@ const userProductsSlice = createSlice({
 });
 
 export {
+	createUserProductAsync,
 	getUserProductsAsync,
-	postUserProductAsync,
 	removeUserProductAsync,
 	updateUserProductAsync,
 };

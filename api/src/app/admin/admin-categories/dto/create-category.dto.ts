@@ -3,7 +3,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
-import { CreateCategory } from "@repo/types";
+import { CreateCategory } from "@repo/database";
 
 export class CreateCategoryDto implements CreateCategory {
 	@ApiProperty()
@@ -25,5 +25,5 @@ export class CreateCategoryDto implements CreateCategory {
 	@ApiPropertyOptional()
 	@IsString()
 	@IsOptional()
-	readonly parent?: string | null;
+	readonly parentId: string | null = null;
 }

@@ -4,7 +4,6 @@ import { Transform, Type } from "class-transformer";
 import {
 	IsArray,
 	IsBoolean,
-	IsMongoId,
 	IsNumber,
 	IsOptional,
 	IsString,
@@ -12,12 +11,12 @@ import {
 	Min,
 } from "class-validator";
 
-import { ProductEntity } from "@repo/types";
+import { GetAllProducts } from "@repo/database";
 
-export class GetAllProductsDto {
+export class GetAllProductsDto implements GetAllProducts {
 	@ApiPropertyOptional({ type: String, example: "price" })
 	@IsOptional()
-	readonly sortProperty?: keyof ProductEntity;
+	readonly sortProperty?: string;
 
 	@ApiPropertyOptional({ type: String, example: "price" })
 	@IsOptional()
@@ -31,7 +30,7 @@ export class GetAllProductsDto {
 	@ApiPropertyOptional({ type: [String] })
 	@IsOptional()
 	@IsArray()
-	@IsMongoId({ each: true })
+	@IsString({ each: true })
 	@Transform(({ value }) => (Array.isArray(value) ? value : Array(value)))
 	readonly excludeIds?: string[];
 
@@ -83,5 +82,5 @@ export class GetAllProductsDto {
 	@ApiPropertyOptional()
 	@IsString()
 	@IsOptional()
-	readonly category?: string;
+	readonly categoryId?: string;
 }

@@ -7,9 +7,10 @@ import { useRouter } from "next/navigation";
 
 import { ArrowUpDown, EyeIcon, PencilIcon, Trash2Icon } from "lucide-react";
 
+import { ProductTranslatedText, PublicCategoryTree } from "@repo/database";
 import { ColumnDef, Row } from "@tanstack/react-table";
 
-import { Locale, ProductEntity, PublicCategoryTree } from "@repo/types";
+import { Locale } from "@repo/types";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
@@ -33,7 +34,7 @@ import { createProductSlug, formatPrice } from "@/lib/string-utils";
 
 import { DictionaryKeys } from "@/types/i18n.type";
 
-export type SellProduct = ProductEntity & { imgUrl: string };
+export type SellProduct = ProductTranslatedText & { imgUrl: string };
 
 export const getSellColumns = ({
 	categoryTree,
@@ -74,10 +75,10 @@ export const getSellColumns = ({
 		accessorKey: "name",
 		header: t("storeProductsPage.table.product"),
 		cell: ({ row }) => {
-			const href = localizePath(`store/products/${row.original._id}`, locale);
+			const href = localizePath(`store/products/${row.original.id}`, locale);
 			const subcategory = categoryTree
 				?.flatMap((cat) => [...cat.children, cat])
-				.find((cat) => cat._id === row.original.category);
+				.find((cat) => cat.id === row.original.categoryId);
 
 			return (
 				<div className="flex gap-3 items-center">
@@ -104,7 +105,7 @@ export const getSellColumns = ({
 		},
 	},
 	{
-		accessorKey: "category",
+		accessorKey: "categoryId",
 		header: ({ column }) => (
 			<Button
 				variant="ghost"
@@ -117,7 +118,7 @@ export const getSellColumns = ({
 		cell: ({ row }) => {
 			const productCategoryTree = categoryTree?.find((rootCat) =>
 				rootCat.children.some(
-					(childCat) => childCat._id === row.original.category,
+					(childCat) => childCat.id === row.original.categoryId,
 				),
 			);
 
@@ -163,7 +164,7 @@ export const getSellColumns = ({
 				className="w-28"
 				size="icon-lg"
 				value={row.original.stock}
-				onChange={(value) => onStockChange(row.original._id, value)}
+				onChange={(value) => onStockChange(row.original.id, value)}
 			/>
 		),
 	},
@@ -195,11 +196,11 @@ const ActionsCell = ({
 					variant="ghost"
 					size="icon"
 					className="rounded-full"
-					aria-label={`product-${product._id}-remove`}
+					aria-label={`product-${product.id}-remove`}
 					onClick={() => {
 						router.push(
 							localizePath(
-								`/products/${createProductSlug(row.original.name.en, row.original._id)}`,
+								`/products/${createProductSlug(row.original.name.en, row.original.id)}`,
 								locale,
 							),
 						);
@@ -212,10 +213,10 @@ const ActionsCell = ({
 					variant="ghost"
 					size="icon"
 					className="rounded-full"
-					aria-label={`product-${product._id}-edit`}
+					aria-label={`product-${product.id}-edit`}
 					onClick={() => {
 						router.push(
-							localizePath(`/store/products/${row.original._id}`, locale),
+							localizePath(`/store/products/${row.original.id}`, locale),
 						);
 					}}
 				>
@@ -226,7 +227,7 @@ const ActionsCell = ({
 					variant="ghost"
 					size="icon"
 					className="rounded-full"
-					aria-label={`product-${product._id}-remove`}
+					aria-label={`product-${product.id}-remove`}
 					onClick={() => setShowDeleteAlert(true)}
 				>
 					<Trash2Icon />
@@ -245,7 +246,7 @@ const ActionsCell = ({
 					</AlertDialogHeader>
 					<AlertDialogFooter>
 						<AlertDialogCancel>{t("buttons.cancel")}</AlertDialogCancel>
-						<AlertDialogAction onClick={() => onDelete(product._id)}>
+						<AlertDialogAction onClick={() => onDelete(product.id)}>
 							{t("buttons.continue")}
 						</AlertDialogAction>
 					</AlertDialogFooter>

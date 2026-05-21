@@ -8,6 +8,11 @@ import { config as baseConfig } from "./base.js";
 export const libraryConfig = [
 	...baseConfig,
 	{
+		rules: {
+			"@typescript-eslint/no-unused-vars": "off",
+		},
+	},
+	{
 		languageOptions: {
 			globals: {
 				React: true,
@@ -17,9 +22,6 @@ export const libraryConfig = [
 				ecmaVersion: "latest",
 				sourceType: "module",
 			},
-		},
-		env: {
-			node: true,
 		},
 		settings: {
 			"import/resolver": {
@@ -33,5 +35,3 @@ export const libraryConfig = [
 		ignores: [".*.js", "node_modules/", "dist/"],
 	},
 ];
-
-export default libraryConfig;

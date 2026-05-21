@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	Body,
 	Controller,
 	Delete,
@@ -9,21 +10,24 @@ import {
 	Post,
 	Query,
 	Req,
+	UnauthorizedException,
 	UploadedFiles,
 	UseInterceptors,
 } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiConsumes, ApiOperation } from "@nestjs/swagger";
 
-import { Types } from "mongoose";
-
-import { Locale } from "@repo/types";
+import { ProductWithReviewsAndUserRaw } from "@repo/database";
+import { Prisma, Product } from "@repo/database";
+import { Locale, TranslatedText } from "@repo/types";
 
 import { Public } from "@/app/auth/auth.guard";
 
+import { CategoriesService } from "@/services/categories/categories.service";
 import { CloudinaryService } from "@/services/cloudinary/cloudinary.service";
+import { TranslationService } from "@/services/translation/translation.service";
 
-import { UpdateProductEntity } from "@/types/product.type";
+import { PrismaService } from "@/prisma.service";
 import { IRequest } from "@/types/request.type";
 
 import { CreateProductDto } from "./dto/create-product.dto";
@@ -38,8 +42,11 @@ export class ProductsController {
 	private defaultLocale: Locale;
 
 	constructor(
+		private readonly prisma: PrismaService,
+		private readonly categoriesService: CategoriesService,
 		private readonly productsService: ProductsService,
 		private readonly cloudinaryService: CloudinaryService,
+		private readonly translationService: TranslationService,
 	) {
 		this.defaultLocale = process.env.DEFAULT_LOCALE as Locale;
 	}
@@ -53,8 +60,8 @@ export class ProductsController {
 		const products = await this.productsService.find({});
 
 		for (const product of products) {
-			await this.productsService.calcAvgRatings(product._id.toString());
-			await this.productsService.calcRatingDistribution(product._id.toString());
+			await this.productsService.calcAvgRatings(product.id);
+			await this.productsService.calcRatingDistribution(product.id);
 		}
 
 		return {
@@ -63,37 +70,37 @@ export class ProductsController {
 		};
 	}
 
-	@Post("admin/retranslate")
-	@Public()
-	async retranslate() {
-		const defaultLocale = process.env.DEFAULT_LOCALE as Locale;
-		const products = await this.productsService.find();
+	// @Post("admin/retranslate")
+	// @Public()
+	// async retranslate() {
+	// 	const defaultLocale = process.env.DEFAULT_LOCALE as Locale;
+	// 	const products = await this.productsService.find({});
 
-		for (const product of products) {
-			const updatedProduct: UpdateProductEntity = {
-				name: product.name[defaultLocale],
-				description: product.description[defaultLocale],
-				shortDescription: product.shortDescription?.[defaultLocale],
-			};
+	// 	for (const product of products) {
+	// 		const updatedProduct: UpdateProductEntity = {
+	// 			name: product.name[defaultLocale],
+	// 			description: product.description[defaultLocale],
+	// 			shortDescription: product.shortDescription?.[defaultLocale],
+	// 		};
 
-			await this.productsService.findByIdAndUpdate(
-				product._id.toString(),
-				updatedProduct,
-			);
-		}
+	// 		await this.productsService.findByIdAndUpdate(
+	// 			product.id,
+	// 			updatedProduct,
+	// 		);
+	// 	}
 
-		return {
-			success: true,
-			message: `Successfully translated all products (${products.length})`,
-		};
-	}
+	// 	return {
+	// 		success: true,
+	// 		message: `Successfully translated all products (${products.length})`,
+	// 	};
+	// }
 
 	@Get()
 	@Public()
 	@ApiOperation({
 		summary: "Get all products",
 	})
-	async find(@Query() dto: GetAllProductsDto) {
+	async find(@Query() dto: GetAllProductsDto): Promise<Product[]> {
 		const {
 			sortProperty,
 			sortOrder,
@@ -105,25 +112,89 @@ export class ProductsController {
 			isHero,
 			limit,
 			avgRatings,
-			category,
+			categoryId,
 		} = dto;
 
-		return this.productsService.find({
-			sort: {
-				property: sortProperty,
-				order: sortOrder,
-			},
-			query: {
-				name,
-				excludeIds,
-				minPrice,
-				maxPrice,
+		const where: Prisma.ProductWhereInput = {};
+
+		let orderBy:
+			| Prisma.ProductOrderByWithRelationInput
+			| Prisma.ProductOrderByWithRelationInput[]
+			| undefined;
+
+		if (avgRatings !== undefined) {
+			where.avgRatings = {
+				gte: Number(avgRatings),
+			};
+		}
+
+		if (name !== undefined) {
+			where.OR = [
+				{
+					name: {
+						path: ["en"],
+						string_contains: name,
+						mode: "insensitive",
+					},
+				},
+				{
+					name: {
+						path: ["ar"],
+						string_contains: name,
+						mode: "insensitive",
+					},
+				},
+				{
+					name: {
+						path: ["fr"],
+						string_contains: name,
+						mode: "insensitive",
+					},
+				},
+			];
+		}
+
+		if (categoryId !== undefined) {
+			where.categoryId = {
+				in: await this.categoriesService.getAllDescendantCategoryIds(
+					categoryId,
+				),
+			};
+		}
+
+		if (excludeIds !== undefined) {
+			where.id = {
+				notIn: excludeIds,
+			};
+		}
+
+		if (avgRatings !== undefined) {
+			where.avgRatings = {
+				gte: avgRatings,
+			};
+		}
+
+		if (minPrice !== undefined || maxPrice !== undefined) {
+			where.price = {
+				...(minPrice !== undefined && { gte: minPrice }),
+				...(maxPrice !== undefined && { lte: maxPrice }),
+			};
+		}
+
+		if (sortProperty) {
+			orderBy = {
+				[sortProperty]: sortOrder === "desc" ? "desc" : "asc",
+			};
+		}
+
+		return this.prisma.product.findMany({
+			where: {
+				...where,
 				featured,
 				isHero,
-				limit,
-				avgRatings,
-				category,
 			},
+			orderBy,
+			take: limit,
 		});
 	}
 
@@ -135,16 +206,55 @@ export class ProductsController {
 	@UseInterceptors(FilesInterceptor("imgFiles", 10))
 	async create(
 		@Req() req: IRequest,
-		@Body() createProductDto: CreateProductDto,
+		@Body()
+		createProductDto: CreateProductDto,
 		@UploadedFiles() imgFiles: Express.Multer.File[],
-	) {
+	): Promise<Product> {
+		const {
+			name,
+			description,
+			shortDescription,
+			price,
+			priceCompare,
+			stock,
+			tags,
+			categoryId,
+		} = createProductDto;
+
+		const translatedName = await this.translationService.translateText(name);
+		const translatedDescription =
+			await this.translationService.translateJson(description);
+
+		let translatedShortDescription: TranslatedText | undefined = undefined;
+		if (shortDescription) {
+			translatedShortDescription =
+				await this.translationService.translateJson(shortDescription);
+		}
+
 		const imgUrls = await Promise.all(
 			imgFiles.map((file) => this.cloudinaryService.uploadFile(file)),
 		);
 
-		return this.productsService.create(req.user.id, {
-			...createProductDto,
-			imgUrls: imgUrls.filter((el) => el !== undefined),
+		return this.prisma.product.create({
+			data: {
+				name: translatedName,
+				description: translatedDescription,
+				shortDescription: translatedShortDescription,
+				price,
+				priceCompare,
+				ratingDistribution: {
+					"1": 0,
+					"2": 0,
+					"3": 0,
+					"4": 0,
+					"5": 0,
+				},
+				stock,
+				tags,
+				imgUrls: imgUrls.filter((el) => el !== undefined),
+				userId: req.user.id,
+				categoryId,
+			},
 		});
 	}
 
@@ -153,106 +263,154 @@ export class ProductsController {
 	@ApiOperation({
 		summary: "Get a single product by id",
 	})
-	async findById(@Param("id") id: string) {
-		return this.productsService.findById(id);
+	async findById(
+		@Param("id") id: string,
+	): Promise<ProductWithReviewsAndUserRaw | null> {
+		return this.prisma.product.findUnique({
+			where: { id },
+			include: {
+				reviews: {
+					include: {
+						user: {
+							select: {
+								id: true,
+								name: true,
+								avatarUrl: true,
+							},
+						},
+					},
+				},
+				user: {
+					select: {
+						id: true,
+						name: true,
+						avatarUrl: true,
+						createdAt: true,
+						updatedAt: true,
+					},
+				},
+			},
+		});
 	}
 
 	@Patch(":id")
 	@ApiOperation({
-		summary: "Update a product",
+		summary: "Patch a product",
 	})
 	@ApiConsumes("multipart/form-data")
-	@UseInterceptors(FilesInterceptor("newImgs", 10))
-	async update(
+	@UseInterceptors(FilesInterceptor("imgFiles", 10))
+	async patchProduct(
+		@Req() req: IRequest,
 		@Param("id") id: string,
-		@Body() dto: UpdateProductDto,
-		@UploadedFiles() newImgs?: Express.Multer.File[],
+		@Body()
+		updateProductDto: UpdateProductDto,
+		@UploadedFiles() imgFiles: Express.Multer.File[],
 	) {
-		const { newImgsIndex } = dto;
+		const {
+			name,
+			description,
+			shortDescription,
+			price,
+			priceCompare,
+			stock,
+			tags,
+			categoryId,
+			keptImgs,
+			newImgIndices,
+		} = updateProductDto;
 
-		const keptImgsIndex = Array.isArray(dto.keptImgsIndex)
-			? dto.keptImgsIndex.filter((el) => el !== undefined)
-			: [dto.keptImgsIndex].filter((el) => el !== undefined);
+		const existingProduct = await this.prisma.product.findUnique({
+			where: { id },
+		});
 
-		const keptImgsUrl = Array.isArray(dto.keptImgsUrl)
-			? dto.keptImgsUrl.filter((el) => el !== undefined)
-			: [dto.keptImgsUrl].filter((el) => el !== undefined);
-
-		const product = await this.productsService.findById(id);
-
-		if (!product) {
+		if (!existingProduct) {
 			throw new NotFoundException("Product not found");
 		}
 
-		const finalImgUrls: string[] = [];
-
-		if (keptImgsUrl && keptImgsIndex) {
-			keptImgsUrl.forEach((url, i) => {
-				finalImgUrls[keptImgsIndex[i]] = url;
-			});
+		if (existingProduct.userId !== req.user.id) {
+			throw new UnauthorizedException("Not allowed");
 		}
 
-		const newImgsIndexArray = Array.isArray(newImgsIndex)
-			? newImgsIndex.filter((el) => el !== undefined)
-			: [newImgsIndex].filter((el) => el !== undefined);
-
-		if (newImgs && newImgsIndexArray) {
-			for (let i = 0; i < newImgsIndexArray.length; i++) {
-				const newImgUrl = await this.cloudinaryService.uploadFile(newImgs[i]);
-
-				if (newImgUrl) {
-					finalImgUrls[newImgsIndexArray[i]] = newImgUrl;
-				}
-			}
+		if (newImgIndices && imgFiles.length !== newImgIndices.length) {
+			throw new BadRequestException(
+				"newImgIndices length must match imgFiles length",
+			);
 		}
 
-		const updatedProduct: UpdateProductEntity = {};
-
+		let translatedName: TranslatedText | undefined;
 		if (
-			dto.name !== undefined &&
-			dto.name !== product.name[this.defaultLocale]
+			name !== undefined &&
+			(existingProduct.name as TranslatedText)[this.defaultLocale] !== name
 		) {
-			updatedProduct.name = dto.name;
-		}
-		if (
-			dto.description !== undefined &&
-			dto.description !== product.description[this.defaultLocale]
-		) {
-			updatedProduct.description = dto.description;
-		}
-		if (
-			dto.shortDescription !== undefined &&
-			dto.shortDescription !== product.shortDescription?.[this.defaultLocale]
-		) {
-			updatedProduct.shortDescription = dto.shortDescription;
-		}
-		if (dto.price !== undefined) {
-			updatedProduct.price = dto.price;
-		}
-		if (dto.priceCompare !== undefined) {
-			updatedProduct.priceCompare = dto.priceCompare;
-		}
-		if (dto.tags !== undefined) {
-			updatedProduct.tags = dto.tags;
-		}
-		if (dto.category !== undefined) {
-			updatedProduct.category = new Types.ObjectId(dto.category) as any;
-		}
-		if (dto.stock !== undefined) {
-			updatedProduct.stock = dto.stock;
-		}
-		if (finalImgUrls !== undefined) {
-			updatedProduct.imgUrls = finalImgUrls.filter((el) => el !== undefined);
+			translatedName = await this.translationService.translateText(name);
 		}
 
-		return this.productsService.findByIdAndUpdate(id, updatedProduct);
+		let translatedDescription: TranslatedText | undefined;
+		if (
+			description !== undefined &&
+			(existingProduct.description as TranslatedText)[this.defaultLocale] !==
+				description
+		) {
+			translatedDescription =
+				await this.translationService.translateJson(description);
+		}
+
+		let translatedShortDescription: TranslatedText | undefined;
+		if (
+			shortDescription !== undefined &&
+			(existingProduct.shortDescription as TranslatedText)[
+				this.defaultLocale
+			] !== shortDescription
+		) {
+			translatedShortDescription =
+				await this.translationService.translateJson(shortDescription);
+		}
+
+		const imgUrls =
+			keptImgs || newImgIndices
+				? await this.productsService.buildPatchedImgUrls(
+						existingProduct.imgUrls,
+						keptImgs,
+						{
+							imgFiles,
+							newImgIndices: newImgIndices,
+						},
+					)
+				: undefined;
+
+		return this.prisma.product.update({
+			where: { id },
+			data: {
+				name: translatedName,
+				description: translatedDescription,
+				shortDescription: translatedShortDescription,
+				price,
+				priceCompare,
+				stock,
+				tags,
+				categoryId,
+				imgUrls,
+			},
+		});
 	}
 
 	@Delete(":id")
 	@ApiOperation({
 		summary: "Delete a product",
 	})
-	async removeProduct(@Param("id") id: string) {
-		return this.productsService.findByIdAndDelete(id);
+	async deleteProduct(@Req() req: IRequest, @Param("id") id: string) {
+		const existingProduct = await this.prisma.product.findUnique({
+			where: { id },
+		});
+
+		if (!existingProduct) {
+			throw new NotFoundException("Product not found");
+		}
+
+		if (existingProduct.userId !== req.user.id) {
+			throw new UnauthorizedException("Not allowed");
+		}
+
+		return this.prisma.product.delete({ where: { id } });
 	}
 }

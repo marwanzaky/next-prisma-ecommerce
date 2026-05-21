@@ -9,6 +9,7 @@ import { useDebouncedCallback } from "use-debounce";
 import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CreateProduct, UpdateProduct } from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
 
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
@@ -17,10 +18,8 @@ import { ListItemNode, ListNode } from "@lexical/list";
 import { InitialConfigType } from "@lexical/react/LexicalComposer";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 
-import { CreateProduct, UpdateProduct } from "@repo/types";
-
 import {
-	postUserProductAsync,
+	createUserProductAsync,
 	removeUserProductAsync,
 	updateUserProductAsync,
 } from "@/redux/slices/user-products-slice";
@@ -37,13 +36,11 @@ import { localizePath } from "@/lib/i18n";
 import { getSellColumns, SellProduct } from "./columns";
 
 function createProductSchema(t: ReturnType<typeof useI18n>["t"]) {
-	const requiredPositiveNumber = z
-		.number({ error: t("validation.required") })
-		.positive(t("validation.mustBePositive"));
-
-	const optionalPositiveNumber = z
-		.number({ error: t("validation.invalidNumber") })
-		.positive(t("validation.mustBePositive"))
+	const imageSlotSchema = z
+		.object({
+			url: z.url().optional(),
+			file: z.instanceof(File).optional(),
+		})
 		.optional();
 
 	return z.object({
@@ -53,11 +50,15 @@ function createProductSchema(t: ReturnType<typeof useI18n>["t"]) {
 			.min(2, t("validation.nameShort"))
 			.max(120, t("validation.nameLong")),
 		description: z.string().nonempty(t("validation.required")),
-		category: z.string().nonempty(t("validation.required")),
+		categoryId: z.string().nonempty(t("validation.required")),
 		priceRangeUsd: z
 			.object({
-				min: requiredPositiveNumber,
-				max: optionalPositiveNumber,
+				min: z
+					.number({ error: t("validation.required") })
+					.positive(t("validation.mustBePositive")),
+				max: z
+					.number({ error: t("validation.invalidNumber") })
+					.positive(t("validation.mustBePositive")),
 			})
 			.refine((data) => !data.max || data.max >= data.min, {
 				message: t("validation.maxPriceGteMinPrice"),
@@ -65,19 +66,15 @@ function createProductSchema(t: ReturnType<typeof useI18n>["t"]) {
 			}),
 		tags: z.array(z.string()).min(1, t("validation.required")),
 		images: z
-			.array(
-				z
-					.object({
-						url: z.string().optional(),
-						file: z.instanceof(File).optional(),
-					})
-					.optional(),
-			)
-			.optional(),
+			.array(imageSlotSchema)
+			.max(10, "Max 10 images")
+			.refine((imgs) => imgs.some((img) => Boolean(img?.url || img?.file)), {
+				message: t("validation.required"),
+			}),
 	});
 }
 
-export type ProductForm = z.infer<ReturnType<typeof createProductSchema>>;
+export type ProductInput = z.infer<ReturnType<typeof createProductSchema>>;
 
 export function useSell() {
 	const router = useRouter();
@@ -109,7 +106,7 @@ export function useSell() {
 		onError: console.error,
 	};
 
-	const form = useForm<ProductForm>({
+	const form = useForm<ProductInput>({
 		resolver: zodResolver(productSchema),
 		mode: "onChange",
 		defaultValues: {
@@ -121,7 +118,7 @@ export function useSell() {
 			},
 			tags: [],
 			images: [],
-			category: "",
+			categoryId: "",
 		},
 	});
 
@@ -144,23 +141,15 @@ export function useSell() {
 
 				toast("Product deleted.", { position: "top-center" });
 			},
-			onStockChange: (id, value) => {
-				const product = products.find((p) => p._id === id);
-
+			onStockChange: (id, value) =>
 				dispatch(
 					updateUserProductAsync({
 						id,
-						update: {
+						data: {
 							stock: value,
-							keptImgs: product
-								?.imgUrls!.map((imgUrl, index) =>
-									imgUrl ? { url: imgUrl, index } : null,
-								)
-								.filter((el) => el !== null),
 						},
 					}),
-				);
-			},
+				),
 			locale,
 			t,
 		}),
@@ -176,26 +165,24 @@ export function useSell() {
 		),
 
 		addProduct: form.handleSubmit(async (data) => {
-			const { priceRangeUsd, name, description, tags, category, images } = data;
-			const compare = priceRangeUsd.max ?? priceRangeUsd.min;
+			const { priceRangeUsd, name, description, tags, categoryId, images } =
+				data;
 
 			const createProduct: CreateProduct = {
 				name,
 				description,
 				price: priceRangeUsd.min * 100,
-				priceCompare: compare * 100,
-				imgFiles:
-					images &&
-					images
-						.filter(Boolean)
-						.map((img) => img!.file)
-						.filter((img) => img !== undefined),
+				priceCompare: priceRangeUsd.max * 100,
+				imgFiles: images
+					.filter((img) => !!img)
+					.map((img) => img.file)
+					.filter((img) => img !== undefined),
 				tags,
-				category,
+				categoryId,
 				stock: 1,
 			};
 
-			await dispatch(postUserProductAsync(createProduct)).unwrap();
+			await dispatch(createUserProductAsync(createProduct)).unwrap();
 
 			toast("Product created.", { position: "top-center" });
 
@@ -203,31 +190,33 @@ export function useSell() {
 
 			router.push(localizePath("/store/products", locale));
 		}),
-		updateProduct: async ({ id, data }: { id: string; data: ProductForm }) => {
-			const { priceRangeUsd, name, description, tags, category, images } = data;
-			const compare = priceRangeUsd.max ?? priceRangeUsd.min;
+		updateProduct: async ({ id, data }: { id: string; data: ProductInput }) => {
+			const { priceRangeUsd, name, description, tags, categoryId, images } =
+				data;
 
-			const newImgs = images!
-				.map((img, index) => (img?.file ? { file: img.file, index } : null))
-				.filter((el) => el !== null);
+			const keptImgs: UpdateProduct["keptImgs"] = images
+				.filter((img) => !!img)
+				.map((img, index) => (img.url ? { url: img.url, index } : undefined))
+				.filter((obj) => !!obj);
 
-			const keptImgs = images!
-				.map((img, index) => (img?.url ? { url: img.url, index } : null))
-				.filter((el) => el !== null);
+			const newImgs: UpdateProduct["newImgs"] = images
+				.filter((img) => !!img)
+				.map((img, index) => (img.file ? { file: img.file, index } : undefined))
+				.filter((obj) => !!obj);
 
-			const updatedProduct: UpdateProduct = {
+			const updateProduct: UpdateProduct = {
 				name,
 				description,
 				price: priceRangeUsd.min * 100,
-				priceCompare: compare * 100,
-				newImgs,
-				keptImgs,
+				priceCompare: priceRangeUsd.max * 100,
 				tags,
-				category,
+				categoryId,
+				keptImgs: keptImgs,
+				newImgs: newImgs,
 			};
 
 			await dispatch(
-				updateUserProductAsync({ id, update: updatedProduct }),
+				updateUserProductAsync({ id, data: updateProduct }),
 			).unwrap();
 
 			toast("Product updated.", { position: "top-center" });

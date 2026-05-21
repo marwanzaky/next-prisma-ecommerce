@@ -9,7 +9,7 @@ import {
 	IsString,
 } from "class-validator";
 
-import { UpdateCategory } from "@repo/types";
+import { UpdateCategory } from "@repo/database";
 
 export class UpdateCategoryDto implements UpdateCategory {
 	@ApiPropertyOptional()
@@ -18,7 +18,7 @@ export class UpdateCategoryDto implements UpdateCategory {
 	readonly name?: string;
 
 	@ApiPropertyOptional()
-	@IsEmail()
+	@IsString()
 	@IsOptional()
 	readonly slug?: string;
 
@@ -31,7 +31,7 @@ export class UpdateCategoryDto implements UpdateCategory {
 	@ApiPropertyOptional()
 	@IsString()
 	@IsOptional()
-	readonly parent?: string | null;
+	readonly parentId?: string | null;
 
 	@ApiPropertyOptional()
 	@IsBoolean()

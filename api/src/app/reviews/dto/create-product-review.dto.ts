@@ -21,8 +21,4 @@ export class CreateProductReviewDto {
 	@Min(1)
 	@Max(5)
 	readonly rating!: number;
-
-	// Params
-	product!: string;
-	user!: string;
 }

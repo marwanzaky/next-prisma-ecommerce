@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from "@nestjs/swagger";
 
 import { IsEmail, IsOptional } from "class-validator";
 
-import { UpdateUser } from "@repo/types";
+import { UpdateUser } from "@repo/database";
 
 export class UpdateUserDto implements UpdateUser {
 	@ApiPropertyOptional()
@@ -13,8 +13,4 @@ export class UpdateUserDto implements UpdateUser {
 	@IsEmail()
 	@IsOptional()
 	readonly email?: string;
-
-	@ApiPropertyOptional()
-	@IsOptional()
-	readonly photoUrl?: string;
 }

@@ -1,13 +1,9 @@
 "use client";
 
+import { GetAllProducts, ProductWithReviewsAndUser } from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
 
-import { ProductWithReviewsEntity } from "@repo/types";
-
-import {
-	GetAllProductsOptions,
-	productsService,
-} from "@/services/products-service";
+import { productsService } from "@/services/products-service";
 
 import { Container } from "@/components/common/container";
 import ProductCard from "@/components/common/product-card";
@@ -26,21 +22,20 @@ import ProductDetails from "./product-details";
 export default function ProductPage({
 	product,
 }: {
-	product: ProductWithReviewsEntity;
+	product: ProductWithReviewsAndUser;
 }) {
 	const { t } = useI18n();
-	const options: GetAllProductsOptions = {
-		query: {
-			excludeIds: [product._id],
-			category: product.category,
-			limit: 4,
-		},
+	const params: GetAllProducts = {
+		excludeIds: [product.id],
+		categoryId: product.categoryId,
+		limit: 4,
 	};
 
 	const { data: similarProducts, isLoading } = useQuery({
-		queryKey: ["similar-products", options],
-		queryFn: () => productsService.getAllProducts(options),
-		staleTime: 1000 * 60 * 5,
+		queryKey: ["similar-products", params],
+		queryFn: () => productsService.getAllProducts(params),
+		// staleTime: 1000 * 60 * 5,
+		staleTime: 0,
 	});
 
 	return (
@@ -68,7 +63,7 @@ export default function ProductPage({
 				<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
 					{!isLoading ? (
 						similarProducts?.map((item) => (
-							<ProductCard key={item._id} data={item} />
+							<ProductCard key={item.id} data={item} />
 						))
 					) : (
 						<>

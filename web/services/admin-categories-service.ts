@@ -1,23 +1,25 @@
-import { CategoryEntity, CreateCategory, UpdateCategory } from "@repo/types";
+import {
+	CategoryTranslatedText,
+	CreateCategory,
+	UpdateCategory,
+} from "@repo/database";
 
 import { clientFetch } from "@/lib/api-client";
 import { jsonToFormData } from "@/lib/helper";
 
 export const adminCategoriesService = {
-	getAllCategories: () => clientFetch<CategoryEntity[]>("/admin/categories"),
-	addCategory: (category: CreateCategory & { imgFile?: File }) => {
+	getAllCategories: () =>
+		clientFetch<CategoryTranslatedText[]>("/admin/categories"),
+	createCategory: (category: CreateCategory) => {
 		const formData = jsonToFormData(category);
-		return clientFetch<CategoryEntity[]>("/admin/categories", {
+		return clientFetch<CategoryTranslatedText[]>("/admin/categories", {
 			method: "POST",
 			body: formData,
 		});
 	},
-	updateCategory: (
-		id: string,
-		category: UpdateCategory & { imgFile?: File | null },
-	) => {
+	updateCategory: (id: string, category: UpdateCategory) => {
 		const formData = jsonToFormData(category);
-		return clientFetch<CategoryEntity>(`/admin/categories/${id}`, {
+		return clientFetch<CategoryTranslatedText>(`/admin/categories/${id}`, {
 			method: "PATCH",
 			body: formData,
 		});

@@ -1,23 +1,36 @@
 import { Body, Controller, Get, Param, Post, Req } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 
+import { TranslatedText } from "@repo/types";
+
+import { TranslationService } from "@/services/translation/translation.service";
+
+import { PrismaService } from "@/prisma.service";
 import { IRequest } from "@/types/request.type";
 
 import { CreateProductReviewDto } from "./dto/create-product-review.dto";
 
-import { ReviewsService } from "./reviews.service";
+import { ProductsService } from "../products/products.service";
 
 @Controller("products/:id/reviews")
 @ApiBearerAuth("Authorization")
 export class ReviewsController {
-	constructor(private readonly reviewsService: ReviewsService) {}
+	constructor(
+		private prisma: PrismaService,
+		private translationService: TranslationService,
+		private productsService: ProductsService,
+	) {}
 
 	@Get()
 	@ApiOperation({
 		summary: "Get all reviews for a product",
 	})
-	async findAll(@Param("id") productId: string) {
-		return this.reviewsService.findAll({ product: productId });
+	async findMany(@Param("id") productId: string) {
+		return this.prisma.review.findMany({
+			where: {
+				productId,
+			},
+		});
 	}
 
 	@Post()
@@ -27,11 +40,26 @@ export class ReviewsController {
 	async create(
 		@Req() req: IRequest,
 		@Param("id") productId: string,
-		@Body() dto: CreateProductReviewDto,
+		@Body() { rating, description }: CreateProductReviewDto,
 	) {
-		dto.product = productId;
-		dto.user = req.user.id;
+		let translatedDescription: TranslatedText | undefined = undefined;
+		if (description) {
+			translatedDescription =
+				await this.translationService.translateText(description);
+		}
 
-		return this.reviewsService.create(dto);
+		const review = await this.prisma.review.create({
+			data: {
+				rating,
+				description: translatedDescription,
+				productId,
+				userId: req.user.id,
+			},
+		});
+
+		await this.productsService.calcAvgRatings(productId);
+		await this.productsService.calcRatingDistribution(productId);
+
+		return review;
 	}
 }

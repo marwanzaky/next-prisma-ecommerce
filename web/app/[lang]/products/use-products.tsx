@@ -6,15 +6,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { stringify } from "qs";
 
+import { GetAllProducts, Product } from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
 
-import { ProductEntity } from "@repo/types";
-
 import { categoriesService } from "@/services/categories-service";
-import {
-	GetAllProductsOptions,
-	productsService,
-} from "@/services/products-service";
+import { productsService } from "@/services/products-service";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
@@ -67,7 +63,7 @@ export function useProducts() {
 
 	const sortMap: Record<
 		SortOption,
-		{ property: keyof ProductEntity; order: "asc" | "desc" }
+		{ property: keyof Product; order: "asc" | "desc" }
 	> = {
 		relevancy: { property: "createdAt", order: "asc" },
 		"most-popular": { property: "numReviews", order: "desc" },
@@ -86,23 +82,23 @@ export function useProducts() {
 		return categoryTree.flatMap((cat) => [...cat.children, cat]);
 	}, [categoryTree]);
 
-	const productsOptions: GetAllProductsOptions = {
-		sort: sortMap[sort],
-		query: {
-			name,
-			minPrice,
-			maxPrice,
-			avgRatings: rating,
-			category: categories
-				? categories.find((cat) => cat.slug === category)?._id
-				: null,
-		},
+	const productsParams: GetAllProducts = {
+		sortOrder: sortMap[sort].order,
+		sortProperty: sortMap[sort].property,
+		name,
+		minPrice,
+		maxPrice,
+		avgRatings: rating,
+		categoryId: categories
+			? categories.find((cat) => cat.slug === category)?.id
+			: null,
 	};
 
 	const { data, isLoading } = useQuery({
-		queryKey: ["products", productsOptions],
-		queryFn: () => productsService.getAllProducts(productsOptions),
-		staleTime: 1000 * 60 * 5,
+		queryKey: ["products", productsParams],
+		queryFn: () => productsService.getAllProducts(productsParams),
+		// staleTime: 1000 * 60 * 5,
+		staleTime: 0,
 	});
 
 	const options: { label: string; value: SortOption }[] = [

@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-import { IsMongoId, IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsString } from "class-validator";
 
 export class CreateFavoriteDto {
 	@ApiProperty()
-	@IsMongoId()
+	@IsString()
 	@IsNotEmpty()
 	readonly productId!: string;
 }

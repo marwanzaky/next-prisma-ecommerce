@@ -3,13 +3,12 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
-
-import { ProductEntity } from "@repo/types";
+import { ProductTranslatedText } from "@repo/database";
 
 import { favoritesService } from "@/services/favorites-service";
 
 export type FavoritesState = {
-	items: ProductEntity[];
+	items: ProductTranslatedText[];
 
 	loading: boolean;
 	error?: SerializedError;
@@ -77,9 +76,7 @@ export const favoritesSlice = createSlice({
 			})
 			.addCase(removeFavoritesAsync.fulfilled, (state, action) => {
 				state.loading = false;
-				state.items = state.items.filter(
-					(item) => item._id !== action.meta.arg,
-				);
+				state.items = state.items.filter((item) => item.id !== action.meta.arg);
 			})
 			.addCase(removeFavoritesAsync.rejected, (state, action) => {
 				state.loading = false;

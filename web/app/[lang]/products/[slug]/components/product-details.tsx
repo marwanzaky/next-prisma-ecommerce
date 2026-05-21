@@ -8,8 +8,7 @@ import { useRouter } from "next/navigation";
 import { Heart, ShoppingCart } from "lucide-react";
 
 import { sendGTMEvent } from "@next/third-parties/google";
-
-import { ProductWithReviewsEntity } from "@repo/types";
+import { ProductWithReviewsAndUser } from "@repo/database";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
@@ -33,7 +32,7 @@ import { Separator } from "@/shadcn/components/ui/separator";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { localizePath } from "@/lib/i18n";
-import { formatPrice, initials, stringToDate } from "@/lib/string-utils";
+import { formatDate, formatPrice, initials } from "@/lib/string-utils";
 
 import { useCart } from "@/hooks/use-cart";
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
@@ -43,7 +42,7 @@ import ProductBreadcrumb from "./product-breadcrumb";
 export default function ProductDetails({
 	product,
 }: {
-	product: ProductWithReviewsEntity;
+	product: ProductWithReviewsAndUser;
 }) {
 	const router = useRouter();
 	const { locale, t } = useI18n();
@@ -68,7 +67,7 @@ export default function ProductDetails({
 				value: product.price,
 				items: [
 					{
-						item_id: product._id,
+						item_id: product.id,
 						item_name: product.name,
 						price: product.price,
 						quantity: 1,
@@ -76,6 +75,12 @@ export default function ProductDetails({
 				],
 			},
 		});
+	}, [product]);
+
+	const discount = useMemo(() => {
+		const discount = product.priceCompare - product.price;
+		const discountPercent = (discount / product.priceCompare) * 100;
+		return `${Math.round(discountPercent)}%`;
 	}, [product]);
 
 	return (
@@ -98,9 +103,9 @@ export default function ProductDetails({
 							</div>
 						)}
 
-						{product.discount !== "0%" && (
+						{discount !== "0%" && (
 							<Badge className="border-none bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 focus-visible:outline-none dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5">
-								{product.discount} {t("productPage.discountOff")}
+								{discount} {t("productPage.discountOff")}
 							</Badge>
 						)}
 					</div>
@@ -133,7 +138,7 @@ export default function ProductDetails({
 									value: product.price,
 									items: [
 										{
-											item_id: product._id,
+											item_id: product.id,
 											item_name: product.name,
 											price: product.price,
 											quantity: 1,
@@ -181,7 +186,7 @@ export default function ProductDetails({
 								value: product.price,
 								items: [
 									{
-										item_id: product._id,
+										item_id: product.id,
 										item_name: product.name,
 										price: product.price,
 										quantity: 1,
@@ -266,47 +271,43 @@ export default function ProductDetails({
 					</AccordionContent>
 				</AccordionItem>
 
-				{product.user && (
-					<AccordionItem value="item-3">
-						<AccordionTrigger>
-							{t("productPage.accordion.sellerInformation")}
-						</AccordionTrigger>
-						<AccordionContent>
-							<div className="flex items-center gap-2">
-								<Avatar className="h-10 w-10">
-									<AvatarImage
-										role="button"
-										src={product.user.photoUrl}
-										className="cursor-pointer"
-										alt={t("photoOf").replace("{{name}}", product.user.name)}
-										onClick={() =>
-											router.push(
-												localizePath(`/user/${product.user?._id}`, locale),
-											)
-										}
-										loading="lazy"
-									/>
-									<AvatarFallback>{initials(product.user.name)}</AvatarFallback>
-								</Avatar>
+				<AccordionItem value="item-3">
+					<AccordionTrigger>
+						{t("productPage.accordion.sellerInformation")}
+					</AccordionTrigger>
+					<AccordionContent>
+						<div className="flex items-center gap-2">
+							<Avatar className="h-10 w-10">
+								<AvatarImage
+									role="button"
+									src={product.user.avatarUrl || undefined}
+									className="cursor-pointer"
+									alt={t("photoOf").replace("{{name}}", product.user.name)}
+									onClick={() =>
+										router.push(
+											localizePath(`/user/${product.user.id}`, locale),
+										)
+									}
+									loading="lazy"
+								/>
+								<AvatarFallback>{initials(product.user.name)}</AvatarFallback>
+							</Avatar>
 
-								<div>
-									<Link
-										href={localizePath(`/user/${product.user._id}`, locale)}
-										className="no-underline! hover:underline!"
-									>
-										{product.user.name}
-									</Link>
-									<TypographyMuted>
-										{t("productPage.accordion.sellingSince")}{" "}
-										{stringToDate(
-											product.user.createdAt || product.user.updatedAt,
-										)}
-									</TypographyMuted>
-								</div>
+							<div>
+								<Link
+									href={localizePath(`/user/${product.userId}`, locale)}
+									className="no-underline! hover:underline!"
+								>
+									{product.user.name}
+								</Link>
+								<TypographyMuted>
+									{t("productPage.accordion.sellingSince")}{" "}
+									{formatDate(product.user.createdAt || product.user.updatedAt)}
+								</TypographyMuted>
 							</div>
-						</AccordionContent>
-					</AccordionItem>
-				)}
+						</div>
+					</AccordionContent>
+				</AccordionItem>
 			</Accordion>
 		</div>
 	);

@@ -1,17 +1,11 @@
 import { Module } from "@nestjs/common";
-import { MongooseModule } from "@nestjs/mongoose";
 
-import { Cart, CartSchema } from "@/app/carts/entities/cart.entity";
+import { PrismaService } from "@/prisma.service";
 
 import { CartsController } from "./carts.controller";
-import { CartsService } from "./carts.service";
 
 @Module({
-	imports: [
-		MongooseModule.forFeature([{ name: Cart.name, schema: CartSchema }]),
-	],
 	controllers: [CartsController],
-	providers: [CartsService],
-	exports: [CartsService],
+	providers: [PrismaService],
 })
 export class CartsModule {}

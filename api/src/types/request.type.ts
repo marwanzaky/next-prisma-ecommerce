@@ -1,6 +1,6 @@
 import { Request } from "express";
 
-import { UserRole } from "@repo/types";
+import { UserRole } from "@repo/database";
 
 export type RequestUser = {
 	id: string;

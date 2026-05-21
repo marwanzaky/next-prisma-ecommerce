@@ -31,7 +31,7 @@ export default async function Page({ params }: Props) {
 
 	const product = await getProduct(id);
 
-	const canonicalSlug = createProductSlug(product.name.en, product._id);
+	const canonicalSlug = createProductSlug(product.name.en, product.id);
 	if (slug !== canonicalSlug) {
 		permanentRedirect(localizePath(`/products/${canonicalSlug}`, lang));
 	}
@@ -62,7 +62,7 @@ export async function generateStaticParams() {
 	const data = await productsService.getAllProducts();
 
 	return data.map((product) => ({
-		slug: createProductSlug(product.name.en, product._id),
+		slug: createProductSlug(product.name.en, product.id),
 	}));
 }
 
@@ -80,14 +80,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 		};
 	}
 
-	const path = `/products/${createProductSlug(product.name.en, product._id)}`;
+	const path = `/products/${createProductSlug(product.name.en, product.id)}`;
 
 	return {
 		title: `${product.name.en} - Best Price & Reviews | ${config.websiteName}`,
 		description: `${product.description.en.slice(0, 155)}...`,
 		keywords: [
 			product.name.en,
-			...(product.tags || []),
+			...product.tags,
 			"shop",
 			"buy online",
 			config.websiteName,

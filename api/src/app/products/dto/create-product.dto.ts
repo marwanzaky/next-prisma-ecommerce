@@ -3,7 +3,9 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class CreateProductDto {
+import { CreateProduct } from "@repo/database";
+
+export class CreateProductDto implements CreateProduct {
 	@ApiProperty()
 	@IsString()
 	@IsNotEmpty()
@@ -20,13 +22,6 @@ export class CreateProductDto {
 	@IsNotEmpty()
 	@Type(() => Number)
 	readonly priceCompare!: number;
-
-	@ApiProperty({
-		type: "string",
-		format: "binary",
-		isArray: true,
-	})
-	readonly imgFiles!: Express.Multer.File[];
 
 	@ApiProperty()
 	@IsString()
@@ -52,5 +47,12 @@ export class CreateProductDto {
 	@ApiPropertyOptional()
 	@IsString()
 	@IsOptional()
-	readonly category?: string | null;
+	readonly categoryId?: string | null;
+
+	@ApiProperty({
+		type: "string",
+		format: "binary",
+		isArray: true,
+	})
+	readonly imgFiles!: File[];
 }

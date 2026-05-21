@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 import { IsEmail, IsNotEmpty } from "class-validator";
 
-import { CreateUser } from "@repo/types";
+import { CreateUser } from "@repo/database";
 
 export class CreateUserDto implements CreateUser {
 	@ApiProperty()

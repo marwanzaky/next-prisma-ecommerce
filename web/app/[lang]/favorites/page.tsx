@@ -43,7 +43,7 @@ export default function Page() {
 				{items.length > 0 ? (
 					<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
 						{items.map((item) => (
-							<ProductCard data={item} key={item._id} />
+							<ProductCard data={item} key={item.id} />
 						))}
 					</div>
 				) : (

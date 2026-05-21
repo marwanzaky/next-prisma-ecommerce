@@ -1,8 +1,10 @@
 import { Trash2Icon } from "lucide-react";
 
+import { Product } from "@repo/database";
+import { PublicCategoryTree } from "@repo/database";
 import { ColumnDef } from "@tanstack/react-table";
 
-import { CartProductEntity, Locale, PublicCategoryTree } from "@repo/types";
+import { Locale, TranslatedText } from "@repo/types";
 
 import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
 import { LogoCell } from "@/components/ui/table/cells/logo-cell";
@@ -14,7 +16,7 @@ import { createProductSlug, formatPrice } from "@/lib/string-utils";
 
 import { DictionaryKeys } from "@/types/i18n.type";
 
-export type CartItem = CartProductEntity & {
+export type CartItem = Product & {
 	imgUrl: string;
 	quantity: number;
 	total: number;
@@ -39,15 +41,15 @@ export const getCartColumns = ({
 		cell: ({ row }) => {
 			const subcategory = categoryTree
 				?.flatMap((cat) => [...cat.children, cat])
-				.find((cat) => cat._id === row.original.category);
+				.find((cat) => cat.id === row.original.categoryId);
 
 			return (
 				<LogoCell
 					href={localizePath(
-						`/products/${createProductSlug(row.original.name.en, row.original._id)}`,
+						`/products/${createProductSlug((row.original.name as TranslatedText).en, row.original.id)}`,
 						locale,
 					)}
-					label={row.original.name[locale]}
+					label={(row.original.name as TranslatedText)[locale]}
 					imgUrl={row.original.imgUrl}
 					subcategory={subcategory}
 				/>

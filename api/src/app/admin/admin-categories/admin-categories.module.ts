@@ -1,12 +1,15 @@
 import { Module } from "@nestjs/common";
 
-import { CategoriesModule } from "@/services/categories/categories.module";
 import { CloudinaryModule } from "@/services/cloudinary/cloudinary.module";
+import { TranslationModule } from "@/services/translation/translation.module";
+
+import { PrismaService } from "@/prisma.service";
 
 import { AdminCategoriesController } from "./admin-categories.controller";
 
 @Module({
-	imports: [CategoriesModule, CloudinaryModule],
+	imports: [CloudinaryModule, TranslationModule],
+	providers: [PrismaService],
 	controllers: [AdminCategoriesController],
 })
 export class AdminCategoriesModule {}

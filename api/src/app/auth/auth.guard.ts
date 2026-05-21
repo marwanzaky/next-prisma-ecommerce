@@ -9,11 +9,12 @@ import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 
+import { User } from "@repo/database";
+
+import { PrismaService } from "@/prisma.service";
 import { IRequest, RequestUser } from "@/types/request.type";
 
 import { AuthService } from "./auth.service";
-
-import { UsersService } from "../users/users.service";
 
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -27,7 +28,7 @@ export class AuthGuard implements CanActivate {
 		private configService: ConfigService,
 		private reflector: Reflector,
 		private authService: AuthService,
-		private usersService: UsersService,
+		private prismaService: PrismaService,
 	) {
 		this.jwtSecret = this.configService.get<string>("JWT_SECRET")!;
 	}
@@ -59,14 +60,16 @@ export class AuthGuard implements CanActivate {
 				throw new UnauthorizedException();
 			});
 
-		const currentUser = await this.usersService.findById(decoded.id);
+		const currentUser = await this.prismaService.user.findFirst({
+			where: { id: decoded.id },
+		});
 
 		if (!currentUser)
 			throw new UnauthorizedException(
 				"The user belonging to this token does no longer exist",
 			);
 
-		if (currentUser.changedPasswordAfter(decoded.iat))
+		if (changedPasswordAfter(currentUser, decoded.iat))
 			throw new UnauthorizedException(
 				"User recently changed password, Please log in again",
 			);
@@ -75,4 +78,15 @@ export class AuthGuard implements CanActivate {
 
 		return true;
 	}
+}
+
+function changedPasswordAfter(user: User, jwtTimestamp: number) {
+	if (user.passwordChangedAt) {
+		const changedTimestamp = Math.floor(
+			user.passwordChangedAt.getTime() / 1000,
+		);
+		return jwtTimestamp < changedTimestamp;
+	}
+
+	return false;
 }

@@ -1,10 +1,13 @@
-export * from "./models/cart.type";
-export * from "./models/category.type";
-export * from "./models/contact-message.type";
-export * from "./models/entity.type";
-export * from "./models/mongoose.type";
-export * from "./models/review.type";
-export * from "./models/product.types";
-export * from "./models/user.type";
+export const locales = ["en", "fr", "ar"] as const;
 
-export * from "./i18n.type";
+export type Locale = (typeof locales)[number];
+
+export type TranslatedText = {
+	en: string;
+	fr: string;
+	ar: string;
+};
+
+export type Rating = 1 | 2 | 3 | 4 | 5;
+
+export type RatingDistribution = Record<Rating, number>;

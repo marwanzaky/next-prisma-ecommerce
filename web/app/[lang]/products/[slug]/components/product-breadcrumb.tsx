@@ -4,9 +4,9 @@ import { useMemo } from "react";
 
 import Link from "next/link";
 
+import { PublicCategoryTree } from "@repo/database";
+import { ProductWithReviewsAndUser } from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
-
-import { ProductWithReviewsEntity, PublicCategoryTree } from "@repo/types";
 
 import { categoriesService } from "@/services/categories-service";
 
@@ -31,7 +31,7 @@ import { localizePath } from "@/lib/i18n";
 export default function ProductBreadcrumb({
 	product,
 }: {
-	product: ProductWithReviewsEntity;
+	product: ProductWithReviewsAndUser;
 }) {
 	const { locale, t } = useI18n();
 
@@ -45,14 +45,14 @@ export default function ProductBreadcrumb({
 		() =>
 			categoryTree
 				?.flatMap((cat) => [...cat.children, cat])
-				.find((cat) => cat._id === product.category),
+				.find((cat) => cat.id === product.categoryId),
 		[categoryTree, product],
 	);
 
 	const productCategoryTree = useMemo<PublicCategoryTree | undefined>(
 		() =>
 			categoryTree?.find((rootCat) =>
-				rootCat.children.some((childCat) => childCat._id === product.category),
+				rootCat.children.some((childCat) => childCat.id === product.categoryId),
 			),
 		[categoryTree, product],
 	);

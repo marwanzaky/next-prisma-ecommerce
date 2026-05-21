@@ -45,7 +45,7 @@ const ImageButton = React.forwardRef<HTMLButtonElement, ImageIconProps>(
 				{...props}
 			>
 				<Avatar className="w-6 h-6">
-					<AvatarImage src={imgUrl || undefined} alt={alt} />
+					<AvatarImage src={imgUrl} alt={alt} />
 					<AvatarFallback>{fallback}</AvatarFallback>
 				</Avatar>
 			</Comp>

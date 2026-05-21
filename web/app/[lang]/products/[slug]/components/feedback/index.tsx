@@ -1,4 +1,4 @@
-import { ProductWithReviewsEntity } from "@repo/types";
+import { ProductWithReviewsAndUser } from "@repo/database";
 
 import { cn } from "@/lib/utils";
 
@@ -8,7 +8,7 @@ import Reviews from "./reviews";
 export default function ProductFeedback({
 	product,
 }: {
-	product: ProductWithReviewsEntity;
+	product: ProductWithReviewsAndUser;
 }) {
 	return (
 		<div

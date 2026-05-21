@@ -2,9 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 
 import { IsEmail, IsNotEmpty } from "class-validator";
 
-import { CreateUser } from "@repo/types";
+import { SignUp } from "@repo/database";
 
-export class SignUpDto implements CreateUser {
+export class SignUpDto implements SignUp {
 	@ApiProperty()
 	@IsNotEmpty()
 	readonly name!: string;

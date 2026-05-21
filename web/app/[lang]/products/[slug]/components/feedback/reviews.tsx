@@ -5,7 +5,9 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { ProductWithReviewsEntity } from "@repo/types";
+import { ProductWithReviewsAndUser } from "@repo/database";
+
+import { TranslatedText } from "@repo/types";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import Stars from "@/components/ui/stars";
@@ -24,12 +26,12 @@ import {
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { localizePath } from "@/lib/i18n";
-import { initials, stringToDate } from "@/lib/string-utils";
+import { formatDate, initials } from "@/lib/string-utils";
 
 export default function Reviews({
 	product,
 }: {
-	product: ProductWithReviewsEntity;
+	product: ProductWithReviewsAndUser;
 }) {
 	const { locale, t } = useI18n();
 	const router = useRouter();
@@ -48,10 +50,10 @@ export default function Reviews({
 							<AvatarImage
 								role="button"
 								className="cursor-pointer"
-								src={review.user.photoUrl}
+								src={review.user.avatarUrl || undefined}
 								alt={t("photoOf").replace("{{name}}", review.user.name)}
 								onClick={() =>
-									router.push(localizePath(`/user/${review.user._id}`, locale))
+									router.push(localizePath(`/user/${review.user.id}`, locale))
 								}
 								loading="lazy"
 							/>
@@ -63,14 +65,14 @@ export default function Reviews({
 						<div>
 							<div className="leading-none mb-0.5 text-sm">
 								<Link
-									href={localizePath(`/user/${review.user._id}`, locale)}
+									href={localizePath(`/user/${review.user.id}`, locale)}
 									className="hover:underline"
 								>
 									{review.user.name}
 								</Link>
 								&ensp;
 								<span className="text-muted-foreground">
-									{stringToDate(review.createdAt)}
+									{formatDate(review.createdAt)}
 								</span>
 							</div>
 							<Stars
@@ -80,7 +82,7 @@ export default function Reviews({
 								displayTotal={false}
 							/>
 							<TypographyMuted className="text-sm">
-								{review.description?.[locale]}
+								{(review.description as TranslatedText)?.[locale]}
 							</TypographyMuted>
 						</div>
 					</div>

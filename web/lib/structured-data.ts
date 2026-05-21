@@ -1,16 +1,21 @@
 import { Product, WithContext } from "schema-dts";
 
-import { Locale, ProductWithReviewsEntity } from "@repo/types";
+import { ProductWithReviewsAndUser } from "@repo/database";
+
+import { Locale, TranslatedText } from "@repo/types";
 
 import config from "./config";
 import { localizeUrl } from "./i18n";
 import { createProductSlug } from "./string-utils";
 
 export function generateProductStructuredData(
-	product: ProductWithReviewsEntity,
+	product: ProductWithReviewsAndUser,
 	locale: Locale,
 ): WithContext<Product> {
-	const productUrl = localizeUrl(`/products/${createProductSlug(product.name.en, product._id)}`, locale);
+	const productUrl = localizeUrl(
+		`/products/${createProductSlug(product.name.en, product.id)}`,
+		locale,
+	);
 	const offerId = `${productUrl}#offer`;
 
 	return {
@@ -20,7 +25,7 @@ export function generateProductStructuredData(
 		name: product.name[locale],
 		description: product.description[locale],
 		image: product.imgUrls,
-		category: product.category ?? undefined,
+		category: product.categoryId ?? undefined,
 		offers: {
 			"@type": "Offer",
 			"@id": offerId,
@@ -58,8 +63,8 @@ export function generateProductStructuredData(
 				"@type": "Person",
 				name: review.user.name,
 			},
-			reviewBody: review.description?.[locale],
-			datePublished: review.createdAt,
+			reviewBody: (review.description as TranslatedText)?.[locale],
+			datePublished: review.createdAt as unknown as string,
 		})),
 	};
 }

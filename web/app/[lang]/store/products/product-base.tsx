@@ -5,6 +5,8 @@ import { Controller, UseFormReturn } from "react-hook-form";
 
 import Link from "next/link";
 
+import { PublicCategoryTree } from "@repo/database";
+
 import {
 	InitialConfigType,
 	LexicalComposer,
@@ -14,8 +16,6 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-
-import { PublicCategoryTree } from "@repo/types";
 
 import { Container } from "@/components/common/container";
 import { Section } from "@/components/common/section";
@@ -58,11 +58,11 @@ import { Spinner } from "@/shadcn/components/ui/spinner";
 import { localizePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-import { ProductForm } from "./use-sell";
+import { ProductInput } from "./use-sell";
 
 type ProductBaseProps = {
 	initialConfig: InitialConfigType;
-	form: UseFormReturn<ProductForm>;
+	form: UseFormReturn<ProductInput>;
 
 	description: string;
 	onDescriptionChange: (html: string, isEmpty: boolean) => void;
@@ -259,11 +259,11 @@ export function ProductBase({
 											{t("storeProductsPage.form.category")}
 										</FieldLabel>
 										<Controller
-											name="category"
+											name="categoryId"
 											control={control}
 											render={({ field }) => (
 												<Select
-													value={field.value}
+													value={field.value || undefined}
 													onValueChange={(value) =>
 														value && field.onChange(value)
 													}
@@ -279,8 +279,8 @@ export function ProductBase({
 														<SelectGroup>
 															{options.map((item) => (
 																<SelectItem
-																	key={`select-item-${item._id}`}
-																	value={item._id}
+																	key={`select-item-${item.id}`}
+																	value={item.id}
 																>
 																	{item.name[locale]}
 																</SelectItem>
@@ -290,8 +290,8 @@ export function ProductBase({
 												</Select>
 											)}
 										/>
-										{errors.category && (
-											<FieldError>{errors.category.message}</FieldError>
+										{errors.categoryId && (
+											<FieldError>{errors.categoryId.message}</FieldError>
 										)}
 									</Field>
 								</CardContent>

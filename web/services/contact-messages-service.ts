@@ -2,7 +2,7 @@ import {
 	ContactMessage,
 	ContactMessageStatus,
 	CreateContactMessage,
-} from "@repo/types";
+} from "@repo/database";
 
 import { clientFetch } from "@/lib/api-client";
 

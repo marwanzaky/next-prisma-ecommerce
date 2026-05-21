@@ -1,88 +1,64 @@
 import { stringify } from "qs";
 
-import {
-	CreateProduct,
-	ProductEntity,
-	ProductWithReviewsEntity,
-	UpdateProduct,
-} from "@repo/types";
-import { ReviewEntity } from "@repo/types";
+import { GetAllProducts, ProductTranslatedText, Review } from "@repo/database";
+import { CreateProduct, UpdateProduct } from "@repo/database";
+import { ProductWithReviewsAndUser } from "@repo/database";
 
 import { clientFetch } from "@/lib/api-client";
 import { jsonToFormData } from "@/lib/helper";
 
-import { GetAllProductsDto } from "@/types/get-all-products-dto.type";
-
-export type GetAllProductsOptions = {
-	sort?: {
-		property?: keyof ProductEntity;
-		order?: "asc" | "desc";
-	};
-	query?: {
-		excludeIds?: string[];
-		name?: string;
-		user?: string;
-		minPrice?: number;
-		maxPrice?: number;
-		featured?: boolean;
-		isHero?: boolean;
-		limit?: number;
-		avgRatings?: number;
-		category?: string | null;
-	};
-};
-
 export const productsService = {
-	getAllProducts: (options?: GetAllProductsOptions) => {
-		const { sort = {}, query = {} } = options || {};
-
-		const paramsObj: GetAllProductsDto = {
-			...query,
-			sortProperty: sort.property,
-			sortOrder: sort.order,
-		};
-
-		const params = stringify(paramsObj, {
+	getAllProducts: (params?: GetAllProducts) => {
+		const paramsObj = stringify(params ?? {}, {
 			skipNulls: true,
 			arrayFormat: "repeat",
 		});
-		return clientFetch<ProductEntity[]>(`/products?${params}`);
+
+		return clientFetch<ProductTranslatedText[]>(`/products?${paramsObj}`);
 	},
 	getProduct: (id: string) =>
-		clientFetch<ProductWithReviewsEntity>(`/products/${id}`),
-	post: (product: CreateProduct) => {
+		clientFetch<ProductWithReviewsAndUser>(`/products/${id}`),
+	createProduct: (data: CreateProduct) => {
 		const formData = jsonToFormData({
-			...product,
+			...data,
 			imgFiles: undefined,
 		} satisfies CreateProduct);
 
-		product.imgFiles?.forEach((file) => {
-			formData.append("imgFiles", file as any);
+		data.imgFiles?.forEach((file) => {
+			formData.append("imgFiles", file);
 		});
 
-		return clientFetch<ProductEntity>("/products", {
+		return clientFetch<ProductTranslatedText>("/products", {
 			method: "POST",
 			body: formData,
 		});
 	},
-	update: ({ id, update }: { id: string; update: UpdateProduct }) => {
-		const formData = jsonToFormData({
-			...update,
-			newImgs: undefined,
-			keptImgs: undefined,
-		} satisfies UpdateProduct);
+	updateProduct: ({ id, data }: { id: string; data: UpdateProduct }) => {
+		const formData = new FormData();
 
-		update.newImgs?.forEach((img) => {
-			formData.append("newImgs", img.file as any);
-			formData.append("newImgsIndex", String(img.index));
+		Object.entries(data).forEach(([key, value]) => {
+			if (value === undefined || value === null) return;
+
+			if (key === "newImgs") {
+				const newImgs = (value as UpdateProduct["newImgs"]) || [];
+				const indices = newImgs.map((img) => img.index);
+				formData.append("newImgIndices", JSON.stringify(indices));
+
+				newImgs.forEach((img) => {
+					formData.append("imgFiles", img.file);
+				});
+				return;
+			}
+
+			if (Array.isArray(value) || typeof value === "object") {
+				formData.append(key, JSON.stringify(value));
+				return;
+			}
+
+			formData.append(key, String(value));
 		});
 
-		update.keptImgs?.forEach((img) => {
-			formData.append("keptImgsUrl", img.url);
-			formData.append("keptImgsIndex", String(img.index));
-		});
-
-		return clientFetch<ProductEntity>(`/products/${id}`, {
+		return clientFetch<ProductTranslatedText>(`/products/${id}`, {
 			method: "PATCH",
 			body: formData,
 		});
@@ -96,7 +72,7 @@ export const productsService = {
 		rating: number;
 		description?: string;
 	}) =>
-		clientFetch<ReviewEntity>(`/products/${product.id}/reviews`, {
+		clientFetch<Review>(`/products/${product.id}/reviews`, {
 			method: "POST",
 			body: JSON.stringify({
 				rating: product.rating,

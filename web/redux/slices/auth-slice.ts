@@ -5,14 +5,13 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
-
-import { User } from "@repo/types";
+import { PublicUser } from "@repo/database";
 
 import { authService } from "@/services/auth-service";
 import { usersService } from "@/services/users-service";
 
 export type AuthState = {
-	user: User | null;
+	user: PublicUser | null;
 	isAuthenticated: boolean;
 
 	loading: boolean;

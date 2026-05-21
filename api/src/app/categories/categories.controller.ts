@@ -5,17 +5,26 @@ import { Public } from "@/app/auth/auth.guard";
 
 import { CategoriesService } from "@/services/categories/categories.service";
 
+import { PrismaService } from "@/prisma.service";
+
 @Controller("categories")
 @Public()
 export class CategoriesController {
-	constructor(private categoriesService: CategoriesService) {}
+	constructor(
+		private categoriesService: CategoriesService,
+		private prisma: PrismaService,
+	) {}
 
 	@Get()
 	@ApiOperation({
 		summary: "Get all categories",
 	})
-	async getAllCategories() {
-		return this.categoriesService.findPublic({ isActive: true });
+	async findMany() {
+		return this.prisma.category.findMany({
+			where: {
+				isActive: true,
+			},
+		});
 	}
 
 	@Get("tree")

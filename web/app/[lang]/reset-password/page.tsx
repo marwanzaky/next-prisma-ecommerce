@@ -76,7 +76,9 @@ export default function Page() {
 		await dispatch(
 			resetPasswordAsync({
 				token: searchParams.get("token") || "",
-				newPassword: data.newPassword,
+				body: {
+					newPassword: data.newPassword,
+				},
 			}),
 		).unwrap();
 

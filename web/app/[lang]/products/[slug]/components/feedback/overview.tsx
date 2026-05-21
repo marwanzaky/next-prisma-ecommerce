@@ -7,7 +7,9 @@ import { useRouter } from "next/navigation";
 import { StarIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import { ProductWithReviewsEntity, Rating } from "@repo/types";
+import { ProductWithReviewsAndUser } from "@repo/database";
+
+import { Rating } from "@repo/types";
 
 import { useAppSelector } from "@/redux/store";
 
@@ -37,7 +39,7 @@ import { cn } from "@/lib/utils";
 export default function Overview({
 	product,
 }: {
-	product: ProductWithReviewsEntity;
+	product: ProductWithReviewsAndUser;
 }) {
 	const router = useRouter();
 
@@ -166,7 +168,7 @@ export default function Overview({
 								disabled={rating === 0}
 								onClick={async () => {
 									await productsService.postProductReview({
-										id: product._id,
+										id: product.id,
 										rating,
 										description,
 									});

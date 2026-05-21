@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 
-import { ProductEntity } from "@repo/types";
+import { Product } from "@repo/database";
 
 import {
 	deleteCartItemAsync,
@@ -13,7 +13,7 @@ export function useCart() {
 
 	const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-	const addToCart = async (product: ProductEntity, quantity: number = 1) => {
+	const addToCart = async (product: Product, quantity: number = 1) => {
 		await dispatch(postCartItemAsync({ product, quantity })).unwrap();
 
 		if (isAuthenticated) {

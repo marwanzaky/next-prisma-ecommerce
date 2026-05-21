@@ -1,28 +1,21 @@
 import {
 	BadRequestException,
-	forwardRef,
-	Inject,
 	Injectable,
 	UnauthorizedException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import { InjectModel } from "@nestjs/mongoose";
 
-import { compare } from "bcryptjs";
+import { compare, hash } from "bcryptjs";
 import { createHash, randomBytes } from "crypto";
-import { Model } from "mongoose";
 import { Profile } from "passport-google-oauth20";
 
-import { UserRole } from "@repo/types";
-
-import { CartsService } from "@/app/carts/carts.service";
-import { User } from "@/app/users/entities/user.entity";
-import { UsersService } from "@/app/users/users.service";
+import { UserRole } from "@repo/database";
 
 import { ResendService } from "@/services/resend/resend.service";
 
 import { generatePassword } from "@/helper/string.helper";
+import { PrismaService } from "@/prisma.service";
 import { IRequest } from "@/types/request.type";
 
 import { LoginDto } from "./dto/login.dto";
@@ -31,11 +24,9 @@ import { SignUpDto } from "./dto/signup.dto";
 @Injectable()
 export class AuthService {
 	constructor(
-		@InjectModel(User.name) private userModel: Model<User>,
 		private jwtService: JwtService,
 		private configService: ConfigService,
-		private cartsService: CartsService,
-		@Inject(forwardRef(() => UsersService)) private usersService: UsersService,
+		private prismaService: PrismaService,
 		private resendService: ResendService,
 	) {}
 
@@ -55,36 +46,45 @@ export class AuthService {
 	}
 	async loginWithGoogle(user: Profile): Promise<{ token: string }> {
 		const userEmail = user.emails?.[0].value || "";
-		const existingUser = await this.usersService
-			.findByEmail(userEmail)
-			.catch(() => null);
+
+		const existingUser = await this.prismaService.user.findUnique({
+			where: { email: userEmail },
+			select: {
+				id: true,
+				role: true,
+			},
+		});
 
 		if (!existingUser) {
 			const randomPassword = generatePassword();
+			const hashedPassword = await hash(randomPassword, 12);
 
-			const createdUser = await this.usersService.create({
-				email: userEmail,
-				name: `${user.name?.givenName ?? ""} ${user.name?.familyName ?? ""}`.trim(),
-				password: randomPassword,
-				photoUrl: user.photos?.[0].value,
-				isVerified: true,
+			const createdUser = await this.prismaService.user.create({
+				data: {
+					email: userEmail,
+					name: `${user.name?.givenName ?? ""} ${user.name?.familyName ?? ""}`.trim(),
+					password: hashedPassword,
+					avatarUrl: user.photos?.[0].value,
+					isVerified: true,
+				},
 			});
 
-			await this.cartsService.create(createdUser._id.toString(), []);
+			await this.prismaService.cart.create({
+				data: {
+					userId: createdUser.id,
+					items: {
+						create: [],
+					},
+				},
+			});
 
 			return {
-				token: await this.createAccessToken(
-					createdUser._id.toString(),
-					createdUser.role,
-				),
+				token: await this.createAccessToken(createdUser.id, createdUser.role),
 			};
 		}
 
 		return {
-			token: await this.createAccessToken(
-				existingUser._id.toString(),
-				existingUser.role,
-			),
+			token: await this.createAccessToken(existingUser.id, existingUser.role),
 		};
 	}
 
@@ -97,31 +97,35 @@ export class AuthService {
 			Date.now() + 1000 * 60 * 60 * 24,
 		);
 
-		const user = await this.usersService.create({
-			...signupDto,
-			isVerified: false,
-			emailVerificationTokenHash,
-			emailVerificationTokenExpiresAt,
+		const hashedPassword = await hash(signupDto.password, 12);
+
+		const user = await this.prismaService.user.create({
+			data: {
+				...signupDto,
+				password: hashedPassword,
+				isVerified: false,
+				emailVerificationTokenHash,
+				emailVerificationTokenExpiresAt,
+			},
 		});
 
-		await this.cartsService.create(user._id.toString(), []);
-
 		const verifyUrl = `${process.env.CLIENT_URL}/auth/verify?token=${verificationToken}`;
+
 		await this.resendService.sendEmailVerification(user.email, verifyUrl);
 
 		return {
-			token: await this.createAccessToken(user._id.toString(), user.role),
+			token: await this.createAccessToken(user.id, user.role),
 		};
 	}
 
 	async login(loginDto: LoginDto) {
 		const { email, password } = loginDto;
 
-		const user = await this.userModel
-			.findOne({
+		const user = await this.prismaService.user.findUnique({
+			where: {
 				email,
-			})
-			.select("+password");
+			},
+		});
 
 		if (!user) {
 			throw new UnauthorizedException("Invalid email or password");
@@ -134,31 +138,39 @@ export class AuthService {
 		}
 
 		return {
-			token: await this.createAccessToken(user._id.toString(), user.role),
+			token: await this.createAccessToken(user.id, user.role),
 		};
 	}
 
 	async verifyEmail(token: string) {
 		const tokenHash = createHash("sha256").update(token).digest("hex");
 
-		const user = await this.userModel
-			.findOne({
+		const user = await this.prismaService.user.findFirst({
+			where: {
 				emailVerificationTokenHash: tokenHash,
-				emailVerificationTokenExpiresAt: { $gt: new Date() },
-			})
-			.select(
-				"+emailVerificationTokenHash +emailVerificationTokenExpiresAt isVerified",
-			);
+				emailVerificationTokenExpiresAt: {
+					gt: new Date(),
+				},
+			},
+			select: {
+				id: true,
+			},
+		});
 
 		if (!user) {
 			throw new BadRequestException("Invalid or expired verification token");
 		}
 
-		user.isVerified = true;
-		user.emailVerificationTokenHash = undefined;
-		user.emailVerificationTokenExpiresAt = undefined;
-
-		await user.save();
+		await this.prismaService.user.update({
+			where: {
+				id: user.id,
+			},
+			data: {
+				isVerified: true,
+				emailVerificationTokenHash: null,
+				emailVerificationTokenExpiresAt: null,
+			},
+		});
 
 		return { verified: true };
 	}
@@ -169,16 +181,27 @@ export class AuthService {
 			message: "Token sent to email",
 		};
 
-		const user = await this.userModel.findOne({ email });
+		const user = await this.prismaService.user.findFirst({
+			where: { email: email.toLowerCase() },
+			select: { id: true, email: true },
+		});
 
 		// NOTE: Always return same response even if the user does not exist for security reasons
 		if (!user) {
 			return response;
 		}
 
-		const resetToken = user.createPasswordResetToken();
+		const resetToken = randomBytes(32).toString("hex");
 
-		await user.save({ validateBeforeSave: false });
+		await this.prismaService.user.update({
+			where: { id: user.id },
+			data: {
+				passwordResetToken: createHash("sha256")
+					.update(resetToken)
+					.digest("hex"),
+				passwordResetExpires: new Date(Date.now() + 10 * 60 * 1000),
+			},
+		});
 
 		const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
 
@@ -196,20 +219,36 @@ export class AuthService {
 	}) {
 		const hashedToken = createHash("sha256").update(token).digest("hex");
 
-		const user = await this.userModel.findOne({
-			passwordResetToken: hashedToken,
-			passwordResetExpires: { $gt: Date.now() },
+		const user = await this.prismaService.user.findFirst({
+			where: {
+				passwordResetToken: hashedToken,
+				passwordResetExpires: {
+					gt: new Date(),
+				},
+			},
+			select: {
+				id: true,
+				role: true,
+			},
 		});
 
 		if (!user) {
 			throw new BadRequestException("Token is invalid or has expired");
 		}
 
-		user.password = newPassword;
-		user.passwordResetToken = undefined;
-		user.passwordResetExpires = undefined;
+		const hashedPassword = await hash(newPassword, 12);
 
-		await user.save();
+		await this.prismaService.user.update({
+			where: {
+				id: user.id,
+			},
+			data: {
+				password: hashedPassword,
+				passwordResetToken: null,
+				passwordResetExpires: null,
+				passwordChangedAt: new Date(Date.now() - 1000),
+			},
+		});
 
 		return {
 			token: await this.createAccessToken(user.id, user.role),

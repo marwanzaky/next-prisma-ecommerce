@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { ProductEntity } from "@repo/types";
+import { ProductTranslatedText } from "@repo/database";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ButtonIcon } from "@/components/ui/button-icon";
@@ -19,7 +19,7 @@ import { useCart } from "@/hooks/use-cart";
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
 type ProductCardProps = {
-	data: ProductEntity;
+	data: ProductTranslatedText;
 };
 
 export default function ProductCard({ data }: ProductCardProps) {
@@ -58,7 +58,7 @@ export default function ProductCard({ data }: ProductCardProps) {
 
 			<Link
 				href={localizePath(
-					`/products/${createProductSlug(data.name.en, data._id)}`,
+					`/products/${createProductSlug(data.name.en, data.id)}`,
 					locale,
 				)}
 			>

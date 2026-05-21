@@ -72,11 +72,11 @@ export function useCartPage() {
 		locale,
 		onQuantityChange(value, row) {
 			dispatch(
-				updateCartItemQuantityAsync({ productId: row._id, quantity: value }),
+				updateCartItemQuantityAsync({ productId: row.id, quantity: value }),
 			);
 		},
 		deleteAction(row) {
-			removeFromCart(row._id);
+			removeFromCart(row.id);
 		},
 	});
 
@@ -94,7 +94,7 @@ export function useCartPage() {
 
 		const response = await paymentsService.createCheckoutSession(
 			items.map((item) => ({
-				id: item.product._id,
+				id: item.product.id,
 				quantity: item.quantity,
 			})),
 		);

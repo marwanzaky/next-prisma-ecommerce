@@ -16,10 +16,11 @@ import { getCategoriesColumns } from "./columns";
 
 export function useAdminCategories() {
 	const { locale } = useI18n();
-	const { register, handleSubmit, formState, control, reset } = useForm<{
+	const form = useForm<{
+		id: string;
 		name: string;
 		slug: string;
-		parent?: string | null;
+		parentId?: string | null;
 		sortOrder: number;
 		image: {
 			url?: string;
@@ -49,14 +50,15 @@ export function useAdminCategories() {
 
 		return data.map((category) => ({
 			label: category.name[locale],
-			value: category._id,
+			value: category.id,
 		}));
 	}, [data, locale]);
 
 	const resetForm = () => {
-		reset({
+		form.reset({
+			id: undefined,
 			name: undefined,
-			parent: undefined,
+			parentId: undefined,
 			slug: undefined,
 			sortOrder: undefined,
 			image: {
@@ -71,7 +73,7 @@ export function useAdminCategories() {
 			locale,
 			categories: data ?? [],
 			async onSortChange(value, row) {
-				await adminCategoriesService.updateCategory(row._id, {
+				await adminCategoriesService.updateCategory(row.id, {
 					sortOrder: value,
 				});
 
@@ -80,7 +82,7 @@ export function useAdminCategories() {
 				refetch();
 			},
 			async onActiveChange(value, row) {
-				await adminCategoriesService.updateCategory(row._id, {
+				await adminCategoriesService.updateCategory(row.id, {
 					isActive: value,
 				});
 
@@ -89,11 +91,11 @@ export function useAdminCategories() {
 				refetch();
 			},
 			editAction(row) {
-				reset({
+				form.reset({
 					...row,
 					name: row.name[locale],
 					image: {
-						url: row.imgUrl,
+						url: row.imgUrl || undefined,
 					},
 				});
 
@@ -112,34 +114,38 @@ export function useAdminCategories() {
 		editDialog,
 		setEditDialog,
 
-		control,
-		register,
-		formState,
+		form,
 		options,
 
-		categorySubmit: handleSubmit(async (data) => {
-			await adminCategoriesService.addCategory({
+		createCategory: form.handleSubmit(async (data) => {
+			await adminCategoriesService.createCategory({
 				name: data.name,
 				slug: data.slug,
-				parent: data.parent,
+				parentId: data.parentId ?? null,
 				sortOrder: data.sortOrder * 1,
 				imgFile: data.image.file,
 			});
-			setOpen(false);
-			categoryTreeRefetch();
-			refetch();
-		}),
-		editCategorySubmit: handleSubmit(async (formData) => {
-			const id = data?.find((cat) => cat.slug === formData.slug)?._id || "";
 
-			await adminCategoriesService.updateCategory(id, {
-				name: formData.name,
-				parent: formData.parent,
-				sortOrder: formData.sortOrder * 1,
-				imgFile: formData.image.file,
-			});
-			setEditDialog(false);
+			setOpen(false);
+
+			categoryTreeRefetch();
+
 			refetch();
 		}),
+		updateCategory: form.handleSubmit(
+			async ({ id, name, parentId, sortOrder, image, slug }) => {
+				await adminCategoriesService.updateCategory(id, {
+					name,
+					slug,
+					parentId: parentId ?? null,
+					sortOrder: sortOrder * 1,
+					imgFile: image.file,
+				});
+
+				setEditDialog(false);
+
+				refetch();
+			},
+		),
 	};
 }

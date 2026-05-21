@@ -1,31 +1,32 @@
-import type {
-	ProductEntity,
+import {
+	ProductTranslatedText,
+	PublicUser,
 	UpdateUser,
 	UpdateUserPassword,
-	User,
-} from "@repo/types";
+} from "@repo/database";
 
 import { clientFetch } from "@/lib/api-client";
 import { jsonToFormData } from "@/lib/helper";
 
 export const usersService = {
-	getMe: () => clientFetch<User>("/users/me"),
-	getMeProducts: () => clientFetch<ProductEntity[]>("/users/me/products"),
-	updateMe: (updatedUser: UpdateUser & { photoFile?: File }) =>
-		clientFetch<User>("/users/updateMe", {
+	getMe: () => clientFetch<PublicUser>("/users/me"),
+	getMeProducts: () =>
+		clientFetch<ProductTranslatedText[]>("/users/me/products"),
+	updateMe: (updatedUser: UpdateUser) =>
+		clientFetch<PublicUser>("/users/updateMe", {
 			method: "PATCH",
 			body: jsonToFormData(updatedUser),
 		}),
-	updateMyPassword: ({ currentPassword, newPassword }: UpdateUserPassword) =>
+	updateMyPassword: (updateUserPassword: UpdateUserPassword) =>
 		clientFetch<{ token: string }>("/users/updateMyPassword", {
 			method: "PATCH",
-			body: JSON.stringify({ currentPassword, newPassword }),
+			body: JSON.stringify(updateUserPassword),
 		}),
 	deleteMe: () =>
-		clientFetch<User>("/users/deleteMe", {
+		clientFetch<PublicUser>("/users/deleteMe", {
 			method: "DELETE",
 		}),
 
 	// Users
-	getPublicById: (id: string) => clientFetch<User>(`/users/public/${id}`),
+	getPublicById: (id: string) => clientFetch<PublicUser>(`/users/public/${id}`),
 };

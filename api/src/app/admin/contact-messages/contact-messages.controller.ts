@@ -11,25 +11,28 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { Public } from "@/app/auth/auth.guard";
 
+import { Roles } from "@/decorators/roles.decorator";
+import { PrismaService } from "@/prisma.service";
+
 import { SendContactMessageDto } from "./dto/send-contact-message.dto";
 import { UpdateContactMessageStatusDto } from "./dto/update-contact-message-status.dto";
-
-import { ContactMessagesService } from "./contact-messages.service";
 
 @Controller("contact-messages")
 @ApiTags("Contact Messages")
 export class ContactMessagesController {
-	constructor(private contactMessagesService: ContactMessagesService) {}
+	constructor(private prisma: PrismaService) {}
 
 	@Get()
+	@Roles("admin")
 	@ApiOperation({
 		summary: "Get all contact messages (admin)",
 	})
 	async getAll() {
-		return this.contactMessagesService.find();
+		return this.prisma.contactMessage.findMany();
 	}
 
 	@Patch(":id")
+	@Roles("admin")
 	@ApiOperation({
 		summary: "Update contact message status (admin)",
 	})
@@ -37,7 +40,12 @@ export class ContactMessagesController {
 		@Param("id") id: string,
 		@Body() body: UpdateContactMessageStatusDto,
 	) {
-		return this.contactMessagesService.findByIdAndUpdate(id, body.status);
+		return this.prisma.contactMessage.update({
+			where: { id },
+			data: {
+				status: body.status,
+			},
+		});
 	}
 
 	@Post()
@@ -48,19 +56,24 @@ export class ContactMessagesController {
 	async create(@Body() body: SendContactMessageDto) {
 		const { name, email, message, subject } = body;
 
-		return this.contactMessagesService.create({
-			name,
-			email,
-			message,
-			subject,
+		return this.prisma.contactMessage.create({
+			data: {
+				name,
+				email,
+				message,
+				subject,
+			},
 		});
 	}
 
 	@Delete(":id")
+	@Roles("admin")
 	@ApiOperation({
 		summary: "Delete contact message (admin)",
 	})
 	async delete(@Param("id") id: string) {
-		return this.contactMessagesService.findByIdAndDelete(id);
+		return this.prisma.contactMessage.delete({
+			where: { id },
+		});
 	}
 }

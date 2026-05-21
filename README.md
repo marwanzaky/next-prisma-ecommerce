@@ -8,19 +8,20 @@
 
 ## about
 
-[Website](https://mamolio.store) project is a modern ecommerce store built from the ground up to deliver speed, security, and scalability. Designed with Next.js 16, Tailwind CSS 4, NestJS, and MongoDB.
+[Website](https://mamolio.store) project is a modern ecommerce store built from the ground up to deliver speed, security, and scalability. Designed with Next.js 16, Tailwind CSS 4, NestJS, and PostgreSQL.
 
 <div>
   <img src="https://img.shields.io/badge/-TypeScript-2c3e50.svg?logo=typescript&style=flat">
   <img src="https://img.shields.io/badge/-Next.js-2c3e50.svg?logo=next.js&style=flat">
-  <img src="https://img.shields.io/badge/-React.js-2c3e50.svg?logo=react&style=flat">
+  <img src="https://img.shields.io/badge/-React-2c3e50.svg?logo=react&style=flat">
   <img src="https://img.shields.io/badge/-Redux-2c3e50.svg?logo=redux&style=flat">
   <img src="https://img.shields.io/badge/-Tailwind CSS-2c3e50.svg?logo=tailwindcss&style=flat">
   <img src="https://img.shields.io/badge/-Shadcn-2c3e50.svg?logo=shadcnui&style=flat">
   <img src="https://img.shields.io/badge/-PWA-2c3e50.svg?logo=pwa&style=flat">
   <img src="https://img.shields.io/badge/-Nest.js-2c3e50.svg?logo=nestjs&style=flat">
   <img src="https://img.shields.io/badge/-Node.js-2c3e50.svg?logo=node.js&style=flat">
-  <img src="https://img.shields.io/badge/-MongoDB-2c3e50.svg?logo=mongodb&style=flat">
+  <img src="https://img.shields.io/badge/-PostgreSQL-2c3e50.svg?logo=postgresql&style=flat">
+  <img src="https://img.shields.io/badge/-Prisma-2c3e50.svg?logo=prisma&style=flat">
   <img src="https://img.shields.io/badge/-Cloudinary-2c3e50.svg?logo=cloudinary&style=flat">
   <img src="https://img.shields.io/badge/-Google Analytics 4-2c3e50.svg?logo=google-analytics&style=flat">
   <img src="https://img.shields.io/badge/-Stripe-2c3e50.svg?logo=stripe&style=flat">
@@ -36,7 +37,7 @@
 - **auth**: [jwt](https://www.jwt.io) + [google-oauth-2.0](https://developers.google.com/identity/protocols/oauth2)
 - **storage**: [cloudinary](https://cloudinary.com)
 - **analytics**: [vercel](https://vercel.com/docs/analytics) + [google-analytics-4](https://developers.google.com/analytics)
-- **db**: [mongodb](https://www.mongodb.com/) + [mongoose](https://mongoosejs.com)
+- **db**: [prisma](https://www.prisma.io/) ([postgresql](https://www.postgresql.org/)) + [supabase](https://supabase.com/)
 - **forms**: [react-hook-form](https://react-hook-form.com/) + [zod](https://zod.dev)
 - **tables**: [tanstack-table](https://tanstack.com/table)
 - **payments**: [stripe](https://stripe.com)

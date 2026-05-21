@@ -1,28 +1,49 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiPropertyOptional } from "@nestjs/swagger";
 
-import { Type } from "class-transformer";
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import {
+	IsArray,
+	IsInt,
+	IsNotEmpty,
+	IsNumber,
+	IsOptional,
+	IsString,
+	IsUrl,
+	ValidateNested,
+} from "class-validator";
 
-export class UpdateProductDto {
-	@ApiProperty()
+import { UpdateProduct } from "@repo/database";
+
+class KeptImgDto {
+	@IsUrl()
+	readonly url!: string;
+
+	@IsInt()
+	readonly index!: number;
+}
+
+export class UpdateProductDto implements UpdateProduct {
+	@ApiPropertyOptional()
 	@IsString()
+	@IsNotEmpty()
 	@IsOptional()
 	readonly name?: string;
 
-	@ApiProperty()
+	@ApiPropertyOptional()
 	@IsNumber()
 	@IsOptional()
 	@Type(() => Number)
 	readonly price?: number;
 
-	@ApiProperty()
+	@ApiPropertyOptional()
 	@IsNumber()
 	@IsOptional()
 	@Type(() => Number)
 	readonly priceCompare?: number;
 
-	@ApiProperty()
+	@ApiPropertyOptional()
 	@IsString()
+	@IsNotEmpty()
 	@IsOptional()
 	readonly description?: string;
 
@@ -31,36 +52,52 @@ export class UpdateProductDto {
 	@IsOptional()
 	readonly shortDescription?: string;
 
-	@ApiProperty()
-	@IsString({ each: true })
+	@ApiPropertyOptional({
+		type: [String],
+	})
 	@IsOptional()
+	@Transform(({ value }: { value: string }) => JSON.parse(value))
+	@IsString({ each: true })
 	readonly tags?: string[];
 
-	@ApiProperty()
+	@ApiPropertyOptional()
 	@IsNumber()
 	@IsOptional()
 	@Type(() => Number)
 	readonly stock?: number;
 
-	@ApiPropertyOptional({ type: [Number] })
-	@Type(() => Number)
-	@IsNumber({}, { each: true })
-	@IsOptional()
-	newImgsIndex?: number[];
-
-	@ApiPropertyOptional({ type: [String] })
-	@IsString({ each: true })
-	@IsOptional()
-	keptImgsUrl?: string[];
-
-	@ApiPropertyOptional({ type: [Number] })
-	@Type(() => Number)
-	@IsNumber({}, { each: true })
-	@IsOptional()
-	keptImgsIndex?: number[];
-
-	@ApiPropertyOptional()
+	@ApiPropertyOptional({
+		description: "Category id; empty string clears category",
+	})
 	@IsString()
 	@IsOptional()
-	readonly category?: string;
+	@Transform(({ value }: { value: string }) => (value === "" ? null : value))
+	readonly categoryId?: string | null;
+
+	@ApiPropertyOptional({
+		description: "JSON stringified array of { url: string, index: number }",
+	})
+	@IsOptional()
+	@Transform(({ value }: { value: string }) => JSON.parse(value))
+	@IsArray()
+	@ValidateNested({ each: true })
+	@Type(() => KeptImgDto)
+	readonly keptImgs?: KeptImgDto[];
+
+	@ApiPropertyOptional({
+		description: "JSON stringified number[] matching uploaded imgFiles order",
+		type: [Number],
+	})
+	@IsOptional()
+	@Transform(({ value }: { value: string }) => JSON.parse(value))
+	@IsArray()
+	@IsInt({ each: true })
+	readonly newImgIndices?: number[];
+
+	@ApiPropertyOptional({
+		type: "string",
+		format: "binary",
+		isArray: true,
+	})
+	readonly imgFiles?: Express.Multer.File[];
 }

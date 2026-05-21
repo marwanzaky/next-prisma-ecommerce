@@ -1,5 +1,3 @@
-import { User } from "@repo/types";
-
 import { usersService } from "@/services/users-service";
 
 import UserProfile from "./user-profile";
@@ -16,7 +14,7 @@ export default async function Page({ params }: Props) {
 	return <UserProfile user={user} />;
 }
 
-async function getPublicUser(id: string): Promise<User> {
+async function getPublicUser(id: string) {
 	"use cache";
 	return await usersService.getPublicById(id);
 }

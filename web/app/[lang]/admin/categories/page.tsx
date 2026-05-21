@@ -29,6 +29,8 @@ import {
 import { Heading } from "@/shadcn/components/ui/typography";
 
 import { useAdminCategories } from "./use-admin-categories";
+import { Spinner } from "@/shadcn/components/ui/spinner";
+import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function Page() {
 	const {
@@ -42,14 +44,19 @@ export default function Page() {
 		editDialog,
 		setEditDialog,
 
-		control,
-		register,
-		formState,
+		form: {
+			control,
+			register,
+			formState,
+			formState: { isSubmitting },
+		},
 		options,
 
-		categorySubmit,
-		editCategorySubmit,
+		createCategory,
+		updateCategory,
 	} = useAdminCategories();
+
+	const { t } = useI18n();
 
 	return (
 		<Container>
@@ -72,7 +79,7 @@ export default function Page() {
 							<DialogTitle>Add category</DialogTitle>
 						</DialogHeader>
 
-						<form onSubmit={categorySubmit} className="space-y-4">
+						<form onSubmit={createCategory} className="space-y-4">
 							<FieldGroup>
 								<Field>
 									<FieldLabel>Category Image</FieldLabel>
@@ -116,7 +123,7 @@ export default function Page() {
 								<Field>
 									<FieldLabel>Category Parent</FieldLabel>
 									<Controller
-										name="parent"
+										name="parentId"
 										control={control}
 										render={({ field }) => (
 											<Select
@@ -157,10 +164,20 @@ export default function Page() {
 
 							<DialogFooter className="gap-2">
 								<DialogClose asChild>
-									<Button variant="outline">Cancel</Button>
+									<Button variant="outline">{t("buttons.cancel")}</Button>
 								</DialogClose>
-								<Button type="submit" disabled={!formState.isDirty}>
-									Submit
+
+								<Button
+									type="submit"
+									disabled={!formState.isDirty || isSubmitting}
+								>
+									{isSubmitting ? (
+										<>
+											<Spinner /> {t("buttons.saving")}
+										</>
+									) : (
+										t("buttons.save")
+									)}
 								</Button>
 							</DialogFooter>
 						</form>
@@ -173,7 +190,7 @@ export default function Page() {
 							<DialogTitle>Edit category</DialogTitle>
 						</DialogHeader>
 
-						<form onSubmit={editCategorySubmit} className="space-y-4">
+						<form onSubmit={updateCategory} className="space-y-4">
 							<FieldGroup>
 								<Field>
 									<FieldLabel>Category Image</FieldLabel>
@@ -214,8 +231,33 @@ export default function Page() {
 									/>
 								</Field>
 								<Field>
-									<FieldLabel htmlFor="parent">Category Parent</FieldLabel>
-									<Input id="parent" {...register("parent")} />
+									<FieldLabel>Category Parent</FieldLabel>
+									<Controller
+										name="parentId"
+										control={control}
+										render={({ field }) => (
+											<Select
+												value={field.value || ""}
+												onValueChange={field.onChange}
+											>
+												<SelectTrigger>
+													<SelectValue />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectGroup>
+														{options.map((item) => (
+															<SelectItem
+																key={`select-item-${item.value}`}
+																value={item.value}
+															>
+																{item.label}
+															</SelectItem>
+														))}
+													</SelectGroup>
+												</SelectContent>
+											</Select>
+										)}
+									/>
 								</Field>
 								<Field>
 									<FieldLabel htmlFor="sort-order">
@@ -234,11 +276,20 @@ export default function Page() {
 
 							<DialogFooter>
 								<DialogClose asChild>
-									<Button variant="outline">Cancel</Button>
+									<Button variant="outline">{t("buttons.cancel")}</Button>
 								</DialogClose>
 
-								<Button type="submit" disabled={!formState.isDirty}>
-									Save
+								<Button
+									type="submit"
+									disabled={!formState.isDirty || isSubmitting}
+								>
+									{isSubmitting ? (
+										<>
+											<Spinner /> {t("buttons.saving")}
+										</>
+									) : (
+										t("buttons.save")
+									)}
 								</Button>
 							</DialogFooter>
 						</form>

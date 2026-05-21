@@ -116,7 +116,7 @@ export default async function Page({
 
 					<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-6">
 						{featuredProducts.map((item) => (
-							<ProductCard key={item._id} data={item} />
+							<ProductCard key={item.id} data={item} />
 						))}
 					</div>
 
@@ -140,10 +140,8 @@ export default async function Page({
 
 async function getFeaturedProducts() {
 	return await productsService.getAllProducts({
-		query: {
-			featured: true,
-			limit: 4,
-		},
+		featured: true,
+		limit: 4,
 	});
 }
 

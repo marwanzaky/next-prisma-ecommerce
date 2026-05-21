@@ -1,0 +1,165 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  user
+  admin
+}
+
+model User {
+  id                              String   @id @default(cuid())
+  role                            UserRole  @default(user)
+  isVerified                      Boolean   @default(false)
+  email                           String    @unique
+  name                            String
+  avatarUrl                       String?
+  
+  password                        String
+  passwordChangedAt               DateTime?
+  passwordResetToken              String?
+  passwordResetExpires            DateTime?
+  emailVerificationTokenHash      String?
+  emailVerificationTokenExpiresAt DateTime?
+
+  products Product[]
+  favorites Favorite[]
+  reviews Review[]
+  cart Cart?
+
+  createdAt                       DateTime  @default(now())
+  updatedAt                       DateTime  @updatedAt
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  
+  name                Json
+  description         Json
+  shortDescription    Json?
+  ratingDistribution  Json
+
+  price            Float
+  priceCompare     Float
+  isHero           Boolean  @default(false)
+  stock            Int      @default(1)
+  avgRatings       Float    @default(0.0)
+  numReviews       Int      @default(0)
+  imgUrls          String[]
+  tags             String[]
+  featured         Boolean  @default(false)
+
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+
+  categoryId       String?
+  category         Category? @relation(fields: [categoryId], references: [id])
+
+  favoritedBy Favorite[]
+  reviews          Review[]
+  cartItems        CartItem[]
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        Json
+  slug        String   @unique
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  imgUrl      String?
+
+  parentId    String?
+  parent      Category?  @relation("CategoryToParent", fields: [parentId], references: [id], onDelete: Cascade)
+  children    Category[] @relation("CategoryToParent")
+
+  products Product[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Review {
+  id          String  @id @default(uuid())
+  rating      Int
+  description Json?
+
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  items     CartItem[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  quantity  Int      @default(1)
+
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@unique([cartId, productId])
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
+}
+
+enum ContactMessageStatus {
+  new 
+  read
+  replied
+}
+
+model ContactMessage {
+  id        String               @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String               @db.Text
+  
+  status    ContactMessageStatus @default(new)
+
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+}
