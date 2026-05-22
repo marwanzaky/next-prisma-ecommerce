@@ -7,20 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 
 import { contactMessagesService } from "@/services/contact-messages-service";
 
-import { ButtonIcon } from "@/components/ui/button-icon";
-import { Column } from "@/components/ui/table";
-
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger,
-} from "@/shadcn/components/ui/alert-dialog";
 import {
 	Dialog,
 	DialogContent,
@@ -40,6 +26,8 @@ import {
 } from "@/shadcn/components/ui/select";
 import { Textarea } from "@/shadcn/components/ui/textarea";
 
+import { getMessagesColumns } from "./columns";
+
 export function useAdminMessages() {
 	const { data, isLoading, refetch } = useQuery({
 		queryKey: ["contact-messages"],
@@ -49,81 +37,6 @@ export function useAdminMessages() {
 
 	const [visible, setVisible] = useState(false);
 	const [selectedMessage, setSelectedMessage] = useState<ContactMessage>();
-
-	const columns: Column<ContactMessage>[] = [
-		{
-			header: "Status",
-			field: "status",
-			type: "text",
-			className: "text-center! capitalize",
-		},
-		{
-			header: "Name",
-			field: "name",
-			type: "text",
-		},
-		{
-			header: "Email",
-			field: "email",
-			type: "text",
-		},
-		{
-			header: "Message",
-			field: "message",
-			type: "text",
-			className: "max-w-xs truncate",
-		},
-		{
-			header: "Date",
-			field: "createdAt",
-			type: "date",
-		},
-		{
-			header: "",
-			field: "id",
-			type: "custom",
-			className: "w-9.5",
-			render(value, row) {
-				return (
-					<div className="flex gap-2">
-						<ButtonIcon
-							icon="visibility"
-							aria-label="View message"
-							onClick={() => {
-								setSelectedMessage(row);
-								setVisible(true);
-							}}
-						/>
-						<AlertDialog>
-							<AlertDialogTrigger asChild>
-								<ButtonIcon icon="delete" aria-label="Delete message" />
-							</AlertDialogTrigger>
-							<AlertDialogContent>
-								<AlertDialogHeader>
-									<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-									<AlertDialogDescription>
-										This action cannot be undone. This will permanently delete
-										the message data from our servers.
-									</AlertDialogDescription>
-								</AlertDialogHeader>
-								<AlertDialogFooter>
-									<AlertDialogCancel>Cancel</AlertDialogCancel>
-									<AlertDialogAction
-										onClick={() => {
-											contactMessagesService.deleteMessage(row.id);
-											refetch();
-										}}
-									>
-										Continue
-									</AlertDialogAction>
-								</AlertDialogFooter>
-							</AlertDialogContent>
-						</AlertDialog>
-					</div>
-				);
-			},
-		},
-	];
 
 	const ViewMessageDialog = (
 		<Dialog open={visible} onOpenChange={setVisible}>
@@ -206,7 +119,16 @@ export function useAdminMessages() {
 	);
 
 	return {
-		columns,
+		columns: getMessagesColumns({
+			onDeleteMessage: (id) => {
+				contactMessagesService.deleteMessage(id);
+				refetch();
+			},
+			viewMessageAction: (row) => {
+				setSelectedMessage(row);
+				setVisible(true);
+			},
+		}),
 		isLoading,
 		data,
 		ViewMessageDialog,

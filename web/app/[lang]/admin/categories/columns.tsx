@@ -1,11 +1,17 @@
+import { PencilIcon } from "lucide-react";
+
 import { CategoryTranslatedText } from "@repo/database";
+import { ColumnDef } from "@tanstack/react-table";
 
 import { Locale } from "@repo/types";
 
-import { Column } from "@/components/ui/table";
+import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
 import { LogoCell } from "@/components/ui/table/cells/logo-cell";
 
+import { Button } from "@/shadcn/components/ui/button";
 import { Checkbox } from "@/shadcn/components/ui/checkbox";
+
+import { DictionaryKeys } from "@/types/i18n.type";
 
 export const getCategoriesColumns = ({
 	locale,
@@ -13,78 +19,85 @@ export const getCategoriesColumns = ({
 	onActiveChange,
 	onSortChange,
 	editAction,
+	t,
 }: {
 	locale: Locale;
 	categories: CategoryTranslatedText[];
 	onActiveChange: (value: boolean, row: CategoryTranslatedText) => void;
 	onSortChange: (value: number, row: CategoryTranslatedText) => void;
 	editAction: (row: CategoryTranslatedText) => void;
-}): Column<CategoryTranslatedText>[] => [
+	t: (key: DictionaryKeys, fallback?: string) => string;
+}): ColumnDef<CategoryTranslatedText>[] => [
 	{
-		header: "Active",
-		field: "isActive",
-		type: "custom",
-		className: "text-center! w-0",
-		render: (value: boolean, row) => {
-			return (
-				<div className="flex justify-center">
-					<Checkbox
-						id="category-checkbox"
-						name="category-checkbox"
-						checked={value}
-						onClick={() => onActiveChange?.(!value, row)}
-					/>
-				</div>
-			);
-		},
+		accessorKey: "isActive",
+		header: () => <div className="flex justify-center">Active</div>,
+		cell: ({ row }) => (
+			<div className="flex justify-center">
+				<Checkbox
+					checked={row.original.isActive}
+					onCheckedChange={(value) => row.toggleSelected(!!value)}
+					onClick={() => onActiveChange?.(!row.original.isActive, row.original)}
+					aria-label={t("storeProductsPage.table.selectRow")}
+				/>
+			</div>
+		),
 	},
 	{
 		header: "Name",
-		field: "imgUrl",
-		type: "custom",
-		className: "w-[40%]",
-		render: (value, row) => {
+		accessorKey: "imgUrl",
+		cell: ({ row }) => {
 			const params = new URLSearchParams();
-			params.set("category", row.slug);
+			params.set("category", row.original.slug);
 
 			return (
 				<LogoCell
 					href={`/products?${params.toString()}`}
-					label={row.name[locale]}
-					imgUrl={value}
+					label={row.original.name[locale]}
+					imgUrl={row.original.imgUrl ?? undefined}
 				/>
 			);
 		},
 	},
 	{
 		header: "Parent",
-		field: "parentId",
-		type: "custom",
-		className: "w-[15%]",
-		render(value) {
-			const parentCat = categories?.find((cat) => cat.id === value);
+		accessorKey: "parentId",
+		cell({ row }) {
+			const parentCat = categories?.find(
+				(cat) => cat.id === row.original.parentId,
+			);
+
 			return <div>{parentCat?.name[locale]}</div>;
 		},
 	},
 	{
 		header: "Slug",
-		field: "slug",
-		type: "text",
-		className: "w-[15%]",
+		accessorKey: "slug",
 	},
 	{
 		header: "Sort",
-		field: "sortOrder",
-		type: "number-input",
-		className: "w-[10%]",
-		onChange: onSortChange,
+		accessorKey: "sortOrder",
+		cell: ({ row }) => (
+			<InputWithPlusMinusButtons
+				min={0}
+				className="w-28"
+				size="icon-lg"
+				value={row.original.sortOrder}
+				onChange={(value) => onSortChange(value, row.original)}
+			/>
+		),
 	},
 	{
-		header: "",
-		field: "id",
-		type: "action",
-		className: "w-9.5",
-		actionIcon: "edit",
-		action: editAction,
+		id: "actions",
+		header: "Actions",
+		cell: ({ row }) => (
+			<Button
+				variant="ghost"
+				size="icon"
+				className="rounded-full"
+				onClick={() => editAction(row.original)}
+			>
+				<PencilIcon />
+			</Button>
+		),
 	},
 ];

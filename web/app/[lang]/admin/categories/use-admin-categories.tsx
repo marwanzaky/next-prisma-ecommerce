@@ -15,7 +15,7 @@ import { useI18n } from "@/components/layout/i18n-provider";
 import { getCategoriesColumns } from "./columns";
 
 export function useAdminCategories() {
-	const { locale } = useI18n();
+	const { t, locale } = useI18n();
 	const form = useForm<{
 		id: string;
 		name: string;
@@ -101,6 +101,7 @@ export function useAdminCategories() {
 
 				setEditDialog(true);
 			},
+			t,
 		}),
 		data,
 		isLoading,

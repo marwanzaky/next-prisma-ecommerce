@@ -282,7 +282,9 @@
 		"send": "Send",
 		"sending": "Sending...",
 		"update": "Update",
-		"continue": "Continue"
+		"continue": "Continue",
+		"submit": "Submit",
+		"submitting": "Submitting..."
 	},
 	"validation": {
 		"required": "This field is required.",

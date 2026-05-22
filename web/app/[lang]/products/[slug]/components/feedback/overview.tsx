@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 import { useRouter } from "next/navigation";
 
 import { StarIcon } from "lucide-react";
 import { toast } from "sonner";
+import z from "zod";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductWithReviewsAndUser } from "@repo/database";
 
 import { Rating } from "@repo/types";
@@ -28,7 +31,14 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/shadcn/components/ui/dialog";
-import { Field, FieldGroup, FieldLabel } from "@/shadcn/components/ui/field";
+import {
+	Field,
+	FieldContent,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@/shadcn/components/ui/field";
+import { Spinner } from "@/shadcn/components/ui/spinner";
 import { Textarea } from "@/shadcn/components/ui/textarea";
 import { Heading } from "@/shadcn/components/ui/typography";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
@@ -44,12 +54,38 @@ export default function Overview({
 	const router = useRouter();
 
 	const { locale, t } = useI18n();
-	const { isAuthenticated } = useAppSelector((state) => state.auth);
+	const { isAuthenticated, user } = useAppSelector((state) => state.auth);
 
 	const [displayDialog, setDisplayDialog] = useState(false);
-	const [rating, setRating] = useState(0);
 	const [hoverRating, setHoverRating] = useState(0);
-	const [description, setDescription] = useState("");
+
+	const userLeftReview = useMemo(
+		() => !!user && !!product.reviews.find((r) => r.user.id === user.id),
+		[product, user],
+	);
+
+	const ReviewSchema = z.object({
+		rating: z.number().min(1, t("validation.required")),
+		description: z.string().optional(),
+	});
+
+	type ReviewInput = z.infer<typeof ReviewSchema>;
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+		reset,
+		formState,
+		control,
+	} = useForm<ReviewInput>({
+		resolver: zodResolver(ReviewSchema),
+		mode: "onSubmit",
+		defaultValues: {
+			rating: 0,
+			description: undefined,
+		},
+	});
 
 	const calculatePercentage = (starRating: Rating): string => {
 		if (!product.ratingDistribution || product.numReviews === 0) {
@@ -92,7 +128,7 @@ export default function Overview({
 
 			<div className="flex justify-center">
 				<Dialog open={displayDialog} onOpenChange={setDisplayDialog}>
-					<DialogTrigger asChild>
+					<DialogTrigger asChild disabled={userLeftReview}>
 						<Button
 							size="lg"
 							onClick={(e) => {
@@ -100,7 +136,11 @@ export default function Overview({
 									e.preventDefault();
 									return router.push(localizePath("/signin", locale));
 								}
-								setRating(0);
+
+								reset({
+									rating: 0,
+									description: undefined,
+								});
 							}}
 						>
 							{t("productPage.dialog.trigger")}
@@ -114,75 +154,95 @@ export default function Overview({
 							</DialogDescription>
 						</DialogHeader>
 
-						<FieldGroup>
-							<Field>
-								<FieldLabel>{t("productPage.dialog.rating")}</FieldLabel>
-								<div className="flex">
-									{[1, 2, 3, 4, 5].map((star) => (
-										<button
-											className="transition-transform hover:scale-110 "
-											key={star}
-											onClick={() => setRating(star)}
-											onMouseEnter={() => setHoverRating(star)}
-											onMouseLeave={() => setHoverRating(0)}
-											type="button"
-										>
-											<StarIcon
-												className={cn(
-													"h-8 w-8 mr-1 transition-colors",
-													(hoverRating || rating) >= star
-														? "fill-yellow-400 text-yellow-400"
-														: "text-muted-foreground",
-												)}
-											/>
-										</button>
-									))}
-								</div>
-							</Field>
-							<Field>
-								<FieldLabel id="description">
-									{t("productPage.dialog.feedback")}
-								</FieldLabel>
-								<Textarea
-									id="description"
-									placeholder={t("productPage.dialog.feedbackPlaceholder")}
-									className="min-h-32"
-									onChange={(e) => setDescription(e.target.value)}
-								/>
-							</Field>
-						</FieldGroup>
+						<form
+							onSubmit={handleSubmit(async ({ rating, description }) => {
+								await productsService.postProductReview({
+									id: product.id,
+									rating,
+									description,
+								});
 
-						<DialogFooter>
-							<Button
-								variant="outline"
-								type="button"
-								onClick={() => {
-									setDisplayDialog(false);
-								}}
-							>
-								{t("productPage.dialog.cancel")}
-							</Button>
+								setDisplayDialog(false);
 
-							<Button
-								type="button"
-								disabled={rating === 0}
-								onClick={async () => {
-									await productsService.postProductReview({
-										id: product.id,
-										rating,
-										description,
-									});
+								toast(t("productPage.dialog.successToast"), {
+									position: "top-center",
+								});
+							})}
+						>
+							<FieldGroup>
+								<Field>
+									<FieldLabel>{t("productPage.dialog.rating")}</FieldLabel>
+									<Controller
+										name="rating"
+										control={control}
+										render={({ field }) => {
+											return (
+												<div className="flex">
+													{[1, 2, 3, 4, 5].map((star) => (
+														<button
+															className="transition-transform hover:scale-110 "
+															key={star}
+															onClick={() => field.onChange(star)}
+															onMouseEnter={() => setHoverRating(star)}
+															onMouseLeave={() => setHoverRating(0)}
+															type="button"
+														>
+															<StarIcon
+																className={cn(
+																	"h-8 w-8 mr-1 transition-colors",
+																	(hoverRating || field.value) >= star
+																		? "fill-yellow-400 text-yellow-400"
+																		: "text-muted-foreground",
+																)}
+															/>
+														</button>
+													))}
+												</div>
+											);
+										}}
+									/>
+									<FieldError>{errors.rating?.message}</FieldError>
+								</Field>
+								<Field>
+									<FieldLabel id="description">
+										{t("productPage.dialog.feedback")}
+									</FieldLabel>
+									<FieldContent>
+										<Textarea
+											id="description"
+											placeholder={t("productPage.dialog.feedbackPlaceholder")}
+											className="min-h-32"
+											{...register("description")}
+										/>
+									</FieldContent>
+								</Field>
+							</FieldGroup>
 
-									setDisplayDialog(false);
+							<DialogFooter>
+								<Button
+									variant="outline"
+									type="button"
+									onClick={() => {
+										setDisplayDialog(false);
+									}}
+								>
+									{t("productPage.dialog.cancel")}
+								</Button>
 
-									toast(t("productPage.dialog.successToast"), {
-										position: "top-center",
-									});
-								}}
-							>
-								{t("productPage.dialog.submit")}
-							</Button>
-						</DialogFooter>
+								<Button
+									type="submit"
+									disabled={!formState.isDirty || isSubmitting}
+								>
+									{isSubmitting ? (
+										<>
+											<Spinner /> {t("buttons.submitting")}
+										</>
+									) : (
+										t("buttons.submit")
+									)}
+								</Button>
+							</DialogFooter>
+						</form>
 					</DialogContent>
 				</Dialog>
 			</div>

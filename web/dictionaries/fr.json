@@ -282,7 +282,9 @@
 		"send": "Envoyer",
 		"sending": "Envoi en cours...",
 		"update": "Mettre a jour",
-		"continue": "Continuer"
+		"continue": "Continuer",
+		"submit": "Soumettre",
+		"submitting": "Envoi en cours..."
 	},
 	"validation": {
 		"required": "Ce champ est obligatoire.",

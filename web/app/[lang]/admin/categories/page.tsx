@@ -4,8 +4,9 @@ import { Controller } from "react-hook-form";
 
 import { Container } from "@/components/common/container";
 import { Section } from "@/components/common/section";
+import { useI18n } from "@/components/layout/i18n-provider";
+import { DataTable } from "@/components/ui/data-table/data-table";
 import ImageInput from "@/components/ui/image-input";
-import { Table } from "@/components/ui/table";
 
 import { Button } from "@/shadcn/components/ui/button";
 import {
@@ -26,11 +27,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shadcn/components/ui/select";
-import { Heading } from "@/shadcn/components/ui/typography";
+import { Spinner } from "@/shadcn/components/ui/spinner";
+import { Heading, TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { useAdminCategories } from "./use-admin-categories";
-import { Spinner } from "@/shadcn/components/ui/spinner";
-import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function Page() {
 	const {
@@ -60,13 +60,23 @@ export default function Page() {
 
 	return (
 		<Container>
-			<Section>
-				<Heading as="h4" className="text-center mb-2 lg:mb-4">
-					Your Categories
-				</Heading>
+			<Section className="space-y-2 lg:space-y-4">
+				<div className="flex justify-center items-center gap-2">
+					<Heading as="h4">Your Categories</Heading>
+					{data && (
+						<TypographyMuted className="text-sm">
+							(
+							{(data.length === 1 ? t("item") : t("items")).replace(
+								"{{count}}",
+								String(data.length),
+							)}
+							)
+						</TypographyMuted>
+					)}
+				</div>
 
 				{!isLoading && data && data.length > 0 && (
-					<Table className="mb-8" columns={columns} data={data} />
+					<DataTable columns={columns} data={data} />
 				)}
 
 				<Button className="block ml-auto" onClick={openDialog}>

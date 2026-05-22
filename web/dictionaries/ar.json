@@ -282,7 +282,9 @@
 		"send": "ارسال",
 		"sending": "جار الارسال...",
 		"update": "تحديث",
-		"continue": "متابعة"
+		"continue": "متابعة",
+		"submit": "إرسال",
+		"submitting": "جاري الإرسال..."
 	},
 	"validation": {
 		"required": "هذا الحقل مطلوب.",

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Req } from "@nestjs/common";
+import {
+	BadRequestException,
+	Body,
+	Controller,
+	Get,
+	Param,
+	Post,
+	Req,
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 
 import { TranslatedText } from "@repo/types";
@@ -42,6 +50,19 @@ export class ReviewsController {
 		@Param("id") productId: string,
 		@Body() { rating, description }: CreateProductReviewDto,
 	) {
+		const existingReview = await this.prisma.review.findFirst({
+			where: {
+				userId: req.user.id,
+				productId,
+			},
+		});
+
+		if (existingReview) {
+			throw new BadRequestException(
+				"User already left review for this product",
+			);
+		}
+
 		let translatedDescription: TranslatedText | undefined = undefined;
 		if (description) {
 			translatedDescription =

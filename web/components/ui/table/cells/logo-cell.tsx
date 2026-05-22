@@ -9,7 +9,7 @@ import { Avatar, AvatarImage } from "@/shadcn/components/ui/avatar";
 export type LogoCellProps = {
 	label: string;
 	subcategory?: PublicCategoryTree | undefined;
-	imgUrl: string;
+	imgUrl: string | undefined;
 	href: string;
 };
 
