@@ -109,6 +109,12 @@ export class AuthService {
 			},
 		});
 
+		await this.prismaService.cart.create({
+			data: {
+				userId: user.id,
+			},
+		});
+
 		const verifyUrl = `${process.env.CLIENT_URL}/auth/verify?token=${verificationToken}`;
 
 		await this.resendService.sendEmailVerification(user.email, verifyUrl);

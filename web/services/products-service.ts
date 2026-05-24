@@ -1,6 +1,12 @@
 import { stringify } from "qs";
 
-import { GetAllProducts, ProductTranslatedText, Review } from "@repo/database";
+import {
+	CreateProductReview,
+	GetAllProducts,
+	ProductTranslatedText,
+	Review,
+	UpdateProductReview,
+} from "@repo/database";
 import { CreateProduct, UpdateProduct } from "@repo/database";
 import { ProductWithReviewsAndUser } from "@repo/database";
 
@@ -67,16 +73,14 @@ export const productsService = {
 		clientFetch<null>(`/products/${id}`, {
 			method: "DELETE",
 		}),
-	postProductReview: (product: {
-		id: string;
-		rating: number;
-		description?: string;
-	}) =>
-		clientFetch<Review>(`/products/${product.id}/reviews`, {
+	createProductReview: (params: { id: string; body: CreateProductReview }) =>
+		clientFetch<Review>(`/products/${params.id}/reviews`, {
 			method: "POST",
-			body: JSON.stringify({
-				rating: product.rating,
-				description: product.description,
-			}),
+			body: JSON.stringify(params.body),
+		}),
+	updateProductReview: (params: { id: string; body: UpdateProductReview }) =>
+		clientFetch<Review>(`/products/${params.id}/reviews`, {
+			method: "PATCH",
+			body: JSON.stringify(params.body),
 		}),
 };

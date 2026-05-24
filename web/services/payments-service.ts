@@ -1,14 +1,11 @@
+import { CreateCheckoutSession } from "@repo/database";
+
 import { clientFetch } from "@/lib/api-client";
 
 export const paymentsService = {
-	createCheckoutSession: (
-		items: {
-			id: string;
-			quantity: number;
-		}[],
-	) =>
+	createCheckoutSession: (body: CreateCheckoutSession) =>
 		clientFetch<{ url: string }>("/payments/create-checkout-session", {
 			method: "POST",
-			body: JSON.stringify({ items }),
+			body: JSON.stringify(body),
 		}),
 };

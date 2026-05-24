@@ -14,9 +14,8 @@ import { AuthGuard } from "@nestjs/passport";
 import { ApiOperation } from "@nestjs/swagger";
 
 import { Response } from "express";
-import { Profile } from "passport-google-oauth20";
 
-import { IRequest } from "@/types/request.type";
+import { GoogleRequest } from "@/types/request.type";
 
 import { ForgotPasswordDto } from "./dto/forgot-password.dto";
 import { LoginDto } from "./dto/login.dto";
@@ -38,12 +37,10 @@ export class AuthController {
 
 	@Get("google/callback")
 	@UseGuards(AuthGuard("google"))
-	async googleAuthRedirect(@Req() req: IRequest, @Res() res: Response) {
+	async googleAuthRedirect(@Req() req: GoogleRequest, @Res() res: Response) {
 		const clientUrl = process.env.CLIENT_URL!;
 
-		const { token } = await this.authService.loginWithGoogle(
-			req.user as unknown as Profile,
-		);
+		const { token } = await this.authService.loginWithGoogle(req.user);
 
 		return res.redirect(`${clientUrl}/auth/success?token=${token}`);
 	}

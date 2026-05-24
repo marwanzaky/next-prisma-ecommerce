@@ -29,9 +29,9 @@
 			"outputs": []
 		},
 		"dev": {
+			"dependsOn": ["^build"],
 			"persistent": true,
-			"cache": false,
-			"dependsOn": ["^build"]
+			"cache": false
 		}
 	}
 }

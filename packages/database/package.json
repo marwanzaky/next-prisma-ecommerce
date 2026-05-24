@@ -10,15 +10,15 @@
 		}
 	},
 	"scripts": {
-		"build": "tsup src/client.ts --format cjs --dts --sourcemap --clean",
+		"build": "pnpm generate && tsup src/client.ts --format cjs --dts --sourcemap --clean",
+		"dev": "pnpm generate && tsup src/client.ts --format cjs --dts --sourcemap --watch",
+		"generate": "prisma generate",
 		"db:migrate:deploy": "prisma migrate deploy",
 		"db:migrate:dev": "prisma migrate dev",
 		"db:push": "prisma db push",
 		"db:seed": "tsx src/seed.ts",
-		"dev": "tsup src/client.ts --format cjs --dts --sourcemap --watch",
 		"format": "prisma format",
 		"lint": "eslint .",
-		"generate": "prisma generate",
 		"studio": "prisma studio"
 	},
 	"dependencies": {

@@ -9,7 +9,9 @@ import {
 	Min,
 } from "class-validator";
 
-export class CreateProductReviewDto {
+import { CreateProductReview } from "@repo/database";
+
+export class CreateProductReviewDto implements CreateProductReview {
 	@ApiProperty()
 	@IsString()
 	@IsOptional()

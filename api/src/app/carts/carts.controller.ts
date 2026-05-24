@@ -15,7 +15,7 @@ import { CartWithItems } from "@repo/database";
 import { PrismaService } from "@/prisma.service";
 import { IRequest } from "@/types/request.type";
 
-import { AddCartItemDto } from "./dto/add-cart-item.dto";
+import { CreateCartItemDto } from "./dto/create-cart-item.dto";
 import { UpdateCartItemDto } from "./dto/update-cart-item.dto";
 
 @Controller("carts")
@@ -27,22 +27,34 @@ export class CartsController {
 	@ApiOperation({
 		summary: "Get the current user's cart",
 	})
-	getMe(@Req() request: IRequest): Promise<CartWithItems | null> {
-		return this.prisma.cart.findFirst({
+	async getCartMe(@Req() request: IRequest): Promise<CartWithItems | null> {
+		let cart = await this.prisma.cart.findFirst({
 			where: {
 				userId: request.user.id,
 			},
 			include: {
 				items: {
-					orderBy: {
-						createdAt: "asc",
-					},
-					include: {
-						product: true,
-					},
+					orderBy: { createdAt: "asc" },
+					include: { product: true },
 				},
 			},
 		});
+
+		if (!cart) {
+			cart = await this.prisma.cart.create({
+				data: {
+					userId: request.user.id,
+				},
+				include: {
+					items: {
+						orderBy: { createdAt: "asc" },
+						include: { product: true },
+					},
+				},
+			});
+		}
+
+		return cart;
 	}
 
 	@Post("items/:productId")
@@ -52,7 +64,7 @@ export class CartsController {
 	async createCartItem(
 		@Req() req: IRequest,
 		@Param("productId") productId: string,
-		@Body() { quantity }: AddCartItemDto,
+		@Body() { quantity }: CreateCartItemDto,
 	): Promise<CartWithItems | null> {
 		const cart = await this.prisma.cart.upsert({
 			where: { userId: req.user.id },

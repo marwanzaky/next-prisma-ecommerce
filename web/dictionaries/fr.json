@@ -111,6 +111,7 @@
 		},
 		"dialog": {
 			"trigger": "Ecrire un avis",
+			"triggerEdit": "Modifier votre avis",
 			"title": "Ecrire un avis",
 			"description": "Veuillez noter votre experience et partager des commentaires supplementaires.",
 			"rating": "Note",

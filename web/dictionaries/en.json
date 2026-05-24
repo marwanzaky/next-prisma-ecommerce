@@ -111,6 +111,7 @@
 		},
 		"dialog": {
 			"trigger": "Write a review",
+			"triggerEdit": "Edit your review",
 			"title": "Write a review",
 			"description": "Please rate your experience and share any additional feedback.",
 			"rating": "Rating",
