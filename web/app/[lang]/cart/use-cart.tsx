@@ -67,9 +67,9 @@ export function useCartPage() {
 	}, [items, locale]);
 
 	const columns = getCartColumns({
-		categoryTree,
 		t,
 		locale,
+		categoryTree,
 		onQuantityChange(value, row) {
 			dispatch(
 				updateCartItemQuantityAsync({ productId: row.id, quantity: value }),
@@ -92,12 +92,12 @@ export function useCartPage() {
 	) => {
 		event.preventDefault();
 
-		const response = await paymentsService.createCheckoutSession(
-			items.map((item) => ({
+		const response = await paymentsService.createCheckoutSession({
+			items: items.map((item) => ({
 				id: item.product.id,
 				quantity: item.quantity,
 			})),
-		);
+		});
 
 		(window as Window).location = response.url;
 	};

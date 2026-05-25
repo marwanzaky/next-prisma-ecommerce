@@ -12,7 +12,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductWithReviewsAndUser } from "@repo/database";
 
-import { Rating } from "@repo/types";
+import { Rating, TranslatedText } from "@repo/types";
 
 import { useAppSelector } from "@/redux/store";
 
@@ -59,8 +59,8 @@ export default function Overview({
 	const [displayDialog, setDisplayDialog] = useState(false);
 	const [hoverRating, setHoverRating] = useState(0);
 
-	const userLeftReview = useMemo(
-		() => !!user && !!product.reviews.find((r) => r.user.id === user.id),
+	const userReview = useMemo(
+		() => (user ? product.reviews.find((r) => r.user.id === user.id) : null),
 		[product, user],
 	);
 
@@ -128,7 +128,7 @@ export default function Overview({
 
 			<div className="flex justify-center">
 				<Dialog open={displayDialog} onOpenChange={setDisplayDialog}>
-					<DialogTrigger asChild disabled={userLeftReview}>
+					<DialogTrigger asChild>
 						<Button
 							size="lg"
 							onClick={(e) => {
@@ -137,13 +137,22 @@ export default function Overview({
 									return router.push(localizePath("/signin", locale));
 								}
 
-								reset({
-									rating: 0,
-									description: undefined,
-								});
+								if (userReview) {
+									reset({
+										rating: userReview.rating,
+										description: (userReview.description as TranslatedText)?.en,
+									});
+								} else {
+									reset({
+										rating: 0,
+										description: undefined,
+									});
+								}
 							}}
 						>
-							{t("productPage.dialog.trigger")}
+							{userReview
+								? t("productPage.dialog.triggerEdit")
+								: t("productPage.dialog.trigger")}
 						</Button>
 					</DialogTrigger>
 					<DialogContent className="sm:max-w-[24rem] ">
@@ -156,12 +165,20 @@ export default function Overview({
 
 						<form
 							onSubmit={handleSubmit(async ({ rating, description }) => {
-								await productsService.postProductReview({
-									id: product.id,
-									rating,
-									description,
-								});
-
+								if (userReview) {
+									await productsService.updateProductReview({
+										id: product.id,
+										body: {
+											rating,
+											description,
+										},
+									});
+								} else {
+									await productsService.createProductReview({
+										id: product.id,
+										body: { rating, description },
+									});
+								}
 								setDisplayDialog(false);
 
 								toast(t("productPage.dialog.successToast"), {

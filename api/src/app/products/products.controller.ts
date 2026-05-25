@@ -28,7 +28,7 @@ import { CloudinaryService } from "@/services/cloudinary/cloudinary.service";
 import { TranslationService } from "@/services/translation/translation.service";
 
 import { PrismaService } from "@/prisma.service";
-import { IRequest } from "@/types/request.type";
+import { AuthenticatedRequest } from "@/types/request.type";
 
 import { CreateProductDto } from "./dto/create-product.dto";
 import { GetAllProductsDto } from "./dto/get-all-products.dto";
@@ -205,7 +205,7 @@ export class ProductsController {
 	@ApiConsumes("multipart/form-data")
 	@UseInterceptors(FilesInterceptor("imgFiles", 10))
 	async create(
-		@Req() req: IRequest,
+		@Req() req: AuthenticatedRequest,
 		@Body()
 		createProductDto: CreateProductDto,
 		@UploadedFiles() imgFiles: Express.Multer.File[],
@@ -300,7 +300,7 @@ export class ProductsController {
 	@ApiConsumes("multipart/form-data")
 	@UseInterceptors(FilesInterceptor("imgFiles", 10))
 	async patchProduct(
-		@Req() req: IRequest,
+		@Req() req: AuthenticatedRequest,
 		@Param("id") id: string,
 		@Body()
 		updateProductDto: UpdateProductDto,
@@ -398,7 +398,10 @@ export class ProductsController {
 	@ApiOperation({
 		summary: "Delete a product",
 	})
-	async deleteProduct(@Req() req: IRequest, @Param("id") id: string) {
+	async deleteProduct(
+		@Req() req: AuthenticatedRequest,
+		@Param("id") id: string,
+	) {
 		const existingProduct = await this.prisma.product.findUnique({
 			where: { id },
 		});

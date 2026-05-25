@@ -26,7 +26,7 @@ import { CloudinaryService } from "@/services/cloudinary/cloudinary.service";
 
 import { Roles } from "@/decorators/roles.decorator";
 import { PrismaService } from "@/prisma.service";
-import { IRequest } from "@/types/request.type";
+import { AuthenticatedRequest } from "@/types/request.type";
 
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
@@ -55,7 +55,9 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Get the authenticated user's info",
 	})
-	async getMe(@Req() request: IRequest): Promise<PublicUser | null> {
+	async getMe(
+		@Req() request: AuthenticatedRequest,
+	): Promise<PublicUser | null> {
 		return this.prisma.user.findFirst({
 			where: { id: request.user.id },
 			select: userPublicSelect,
@@ -66,7 +68,9 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Get all products of the authenticated user",
 	})
-	async getMeProducts(@Req() request: IRequest): Promise<Product[]> {
+	async getMeProducts(
+		@Req() request: AuthenticatedRequest,
+	): Promise<Product[]> {
 		return this.prisma.product.findMany({
 			where: {
 				userId: request.user.id,
@@ -83,7 +87,7 @@ export class UsersController {
 	})
 	@UseInterceptors(FileInterceptor("avatarFile"))
 	async updateMe(
-		@Req() request: IRequest,
+		@Req() request: AuthenticatedRequest,
 		@Body() updateUserDto: UpdateUserDto,
 		@UploadedFile() avatarFile?: Express.Multer.File,
 	): Promise<PublicUser> {
@@ -110,7 +114,7 @@ export class UsersController {
 	@ApiOperation({
 		summary: "Delete the authenticated user's account",
 	})
-	async deleteMe(@Req() request: IRequest): Promise<PublicUser> {
+	async deleteMe(@Req() request: AuthenticatedRequest): Promise<PublicUser> {
 		return this.prisma.user.delete({
 			where: {
 				id: request.user.id,
@@ -124,7 +128,7 @@ export class UsersController {
 		summary: "Update the authenticated user's password",
 	})
 	async updateMyPassword(
-		@Req() request: IRequest,
+		@Req() request: AuthenticatedRequest,
 		@Body() updateUserPasswordDto: UpdateUserPasswordDto,
 	) {
 		const { currentPassword, newPassword } = updateUserPasswordDto;

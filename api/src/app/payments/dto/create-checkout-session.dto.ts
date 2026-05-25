@@ -9,6 +9,8 @@ import {
 	ValidateNested,
 } from "class-validator";
 
+import { CreateCheckoutSession } from "@repo/database";
+
 class CreateCheckoutSessionItemDto {
 	@ApiProperty()
 	@IsMongoId()
@@ -20,7 +22,7 @@ class CreateCheckoutSessionItemDto {
 	quantity: number = 1;
 }
 
-export class CreateCheckoutSessionDto {
+export class CreateCheckoutSessionDto implements CreateCheckoutSession {
 	@ApiProperty({ type: [CreateCheckoutSessionItemDto] })
 	@IsArray()
 	@ValidateNested({ each: true })

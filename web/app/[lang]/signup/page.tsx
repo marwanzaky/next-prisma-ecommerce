@@ -98,7 +98,7 @@ export default function Page() {
 		const action = await dispatch(signupAsync({ name, email, password }));
 
 		if (signupAsync.fulfilled.match(action)) {
-			router.push(localizePath("/signin", locale));
+			router.push(localizePath("/", locale));
 		}
 	}
 
