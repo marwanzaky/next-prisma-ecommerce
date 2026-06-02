@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 
 import { PublicCategoryTree } from "@repo/database";
-import { ProductWithReviewsAndUser } from "@repo/database";
+import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
 
 import { categoriesService } from "@/services/categories-service";
@@ -31,7 +31,7 @@ import { localizePath } from "@/lib/i18n";
 export default function ProductBreadcrumb({
 	product,
 }: {
-	product: ProductWithReviewsAndUser;
+	product: ProductWithVariantsReviewsUserTranslatedText;
 }) {
 	const { locale, t } = useI18n();
 

@@ -13,7 +13,7 @@ import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 import { CartWithItems } from "@repo/database";
 
 import { PrismaService } from "@/prisma.service";
-import { IRequest } from "@/types/request.type";
+import { AuthenticatedRequest } from "@/types/request.type";
 
 import { CreateCartItemDto } from "./dto/create-cart-item.dto";
 import { UpdateCartItemDto } from "./dto/update-cart-item.dto";
@@ -27,7 +27,9 @@ export class CartsController {
 	@ApiOperation({
 		summary: "Get the current user's cart",
 	})
-	async getCartMe(@Req() request: IRequest): Promise<CartWithItems | null> {
+	async getCartMe(
+		@Req() request: AuthenticatedRequest,
+	): Promise<CartWithItems | null> {
 		let cart = await this.prisma.cart.findFirst({
 			where: {
 				userId: request.user.id,
@@ -62,7 +64,7 @@ export class CartsController {
 		summary: "Add a product to the user's cart",
 	})
 	async createCartItem(
-		@Req() req: IRequest,
+		@Req() req: AuthenticatedRequest,
 		@Param("productId") productId: string,
 		@Body() { quantity }: CreateCartItemDto,
 	): Promise<CartWithItems | null> {
@@ -122,7 +124,7 @@ export class CartsController {
 		summary: "Update quantity of a product in the user's cart",
 	})
 	async updateCartItemQuantity(
-		@Req() req: IRequest,
+		@Req() req: AuthenticatedRequest,
 		@Param("productId") productId: string,
 		@Body() { quantity }: UpdateCartItemDto,
 	): Promise<CartWithItems | null> {
@@ -152,7 +154,7 @@ export class CartsController {
 		summary: "Remove a product from the user's cart",
 	})
 	async deleteCartItem(
-		@Req() req: IRequest,
+		@Req() req: AuthenticatedRequest,
 		@Param("productId") productId: string,
 	): Promise<CartWithItems | null> {
 		return await this.prisma.cart.update({

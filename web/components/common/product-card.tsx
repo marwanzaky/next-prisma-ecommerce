@@ -1,9 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
 
-import { ProductTranslatedText } from "@repo/database";
+import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ButtonIcon } from "@/components/ui/button-icon";
@@ -19,7 +21,7 @@ import { useCart } from "@/hooks/use-cart";
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
 type ProductCardProps = {
-	data: ProductTranslatedText;
+	data: ProductWithVariantsReviewsUserTranslatedText;
 };
 
 export default function ProductCard({ data }: ProductCardProps) {
@@ -29,6 +31,8 @@ export default function ProductCard({ data }: ProductCardProps) {
 	const { isFavorite, addToFavorites, removeFromFavorites } =
 		useToggleFavorite(data);
 	const { addToCart } = useCart();
+
+	const variant = useMemo(() => data.variants[0], [data]);
 
 	return (
 		<div
@@ -86,11 +90,12 @@ export default function ProductCard({ data }: ProductCardProps) {
 
 				<div className="flex items-center gap-x-2">
 					<div className="leading-none! text-base md:text-2xl">
-						{formatPrice(data.price / 100, locale)}
+						{formatPrice(variant.price / 100, locale)}
 					</div>
-					{data.priceCompare > data.price && (
+
+					{variant.compareAtPrice && variant.compareAtPrice > variant.price && (
 						<div className="text-gray-500 line-through leading-none! text-sm md:text-lg">
-							{formatPrice(data.priceCompare / 100, locale)}
+							{formatPrice(variant.compareAtPrice / 100, locale)}
 						</div>
 					)}
 				</div>

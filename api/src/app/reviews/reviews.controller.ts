@@ -15,7 +15,7 @@ import { Locale, TranslatedText } from "@repo/types";
 import { TranslationService } from "@/services/translation/translation.service";
 
 import { PrismaService } from "@/prisma.service";
-import { IRequest } from "@/types/request.type";
+import { AuthenticatedRequest } from "@/types/request.type";
 
 import { CreateProductReviewDto } from "./dto/create-product-review.dto";
 import { UpdateProductReviewDto } from "./dto/update-product-review.dto";
@@ -52,7 +52,7 @@ export class ReviewsController {
 		summary: "Add a review for a product",
 	})
 	async create(
-		@Req() req: IRequest,
+		@Req() req: AuthenticatedRequest,
 		@Param("id") productId: string,
 		@Body() { rating, description }: CreateProductReviewDto,
 	) {
@@ -95,7 +95,7 @@ export class ReviewsController {
 		summary: "Update review for a product",
 	})
 	async update(
-		@Req() req: IRequest,
+		@Req() req: AuthenticatedRequest,
 		@Param("id") productId: string,
 		@Body() { rating, description }: UpdateProductReviewDto,
 	) {

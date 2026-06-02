@@ -35,6 +35,7 @@ export default function ImageInput({
 		<div className="relative">
 			{previewUrl && (
 				<ButtonIcon
+					type="button"
 					icon="close"
 					aria-label="Remove image"
 					className="absolute -top-4 -right-4 z-10 scale-50 border-2"

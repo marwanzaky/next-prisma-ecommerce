@@ -1,4 +1,4 @@
-import { ProductWithReviewsAndUser } from "@repo/database";
+import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
 
 import { cn } from "@/lib/utils";
 
@@ -8,7 +8,7 @@ import Reviews from "./reviews";
 export default function ProductFeedback({
 	product,
 }: {
-	product: ProductWithReviewsAndUser;
+	product: ProductWithVariantsReviewsUserTranslatedText;
 }) {
 	return (
 		<div

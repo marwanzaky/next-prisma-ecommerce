@@ -16,7 +16,7 @@ import { ResendService } from "@/services/resend/resend.service";
 
 import { generatePassword } from "@/helper/string.helper";
 import { PrismaService } from "@/prisma.service";
-import { IRequest } from "@/types/request.type";
+import { AuthenticatedRequest } from "@/types/request.type";
 
 import { LoginDto } from "./dto/login.dto";
 import { SignUpDto } from "./dto/signup.dto";
@@ -30,7 +30,7 @@ export class AuthService {
 		private resendService: ResendService,
 	) {}
 
-	extractTokenFromHeader(request: IRequest): string | undefined {
+	extractTokenFromHeader(request: AuthenticatedRequest): string | undefined {
 		const [type, token] = request.headers.authorization?.split(" ") ?? [];
 		return type === "Bearer" ? token : undefined;
 	}

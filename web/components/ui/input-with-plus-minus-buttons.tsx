@@ -69,6 +69,7 @@ const InputWithPlusMinusButtons = ({
 	return (
 		<ButtonGroup className={cn("w-full", className)}>
 			<Button
+				type="button"
 				slot="decrement"
 				variant="outline"
 				size={size}
@@ -85,6 +86,7 @@ const InputWithPlusMinusButtons = ({
 				onChange={handleInputChange}
 			/>
 			<Button
+				type="button"
 				slot="increment"
 				variant="outline"
 				size={size}

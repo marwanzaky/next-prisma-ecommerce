@@ -13,7 +13,6 @@ import { ColumnDef, Row } from "@tanstack/react-table";
 import { Locale } from "@repo/types";
 
 import { useI18n } from "@/components/layout/i18n-provider";
-import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
 
 import {
 	AlertDialog,
@@ -34,18 +33,74 @@ import { createProductSlug, formatPrice } from "@/lib/string-utils";
 
 import { DictionaryKeys } from "@/types/i18n.type";
 
+import { ProductInput } from "./use-sell";
+
 export type SellProduct = ProductTranslatedText & { imgUrl: string };
+
+export const getVariantsColumns = ({
+	productId,
+	locale,
+	t,
+}: {
+	productId?: string;
+	locale: Locale;
+	t: (key: DictionaryKeys, fallback?: string) => string;
+}): ColumnDef<ProductInput["variants"][0]>[] => {
+	const columns: ColumnDef<ProductInput["variants"][0]>[] = [
+		{ accessorKey: "title", header: "Variant" },
+		{
+			accessorKey: "price",
+			header: ({ column }) => (
+				<Button
+					variant="ghost"
+					type="button"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+				>
+					{t("storeProductsPage.table.price")}
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			),
+			cell: ({ row }) => (
+				<div>{formatPrice(row.original.price / 100, locale)}</div>
+			),
+		},
+		{
+			accessorKey: "stock",
+			header: t("storeProductsPage.table.stock"),
+		},
+	];
+
+	if (productId) {
+		columns.push({
+			id: "actions",
+			cell: ({ row }) => {
+				return (
+					<Link href={`${productId}/variants/${row.original.variantId}`}>
+						<Button
+							type="button"
+							variant="ghost"
+							size="icon"
+							className="rounded-full"
+						>
+							<PencilIcon />
+						</Button>
+					</Link>
+				);
+			},
+		});
+	}
+
+	return columns;
+};
 
 export const getSellColumns = ({
 	categoryTree,
 	onDelete,
-	onStockChange,
 	locale,
 	t,
 }: {
 	categoryTree: PublicCategoryTree[] | undefined;
 	onDelete: (id: string) => void;
-	onStockChange: (id: string, value: number) => void;
 	locale: Locale;
 	t: (key: DictionaryKeys, fallback?: string) => string;
 }): ColumnDef<SellProduct>[] => [
@@ -124,49 +179,6 @@ export const getSellColumns = ({
 
 			return <div>{productCategoryTree?.name[locale]}</div>;
 		},
-	},
-	{
-		accessorKey: "price",
-		header: ({ column }) => (
-			<Button
-				variant="ghost"
-				onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-			>
-				{t("storeProductsPage.table.price")}
-				<ArrowUpDown className="ml-2 h-4 w-4" />
-			</Button>
-		),
-		cell: ({ row }) => (
-			<div>{formatPrice(row.original.price / 100, locale)}</div>
-		),
-	},
-	{
-		accessorKey: "priceCompare",
-		header: ({ column }) => (
-			<Button
-				variant="ghost"
-				onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-			>
-				{t("storeProductsPage.table.compare")}
-				<ArrowUpDown className="ml-2 h-4 w-4" />
-			</Button>
-		),
-		cell: ({ row }) => (
-			<div>{formatPrice(row.original.priceCompare / 100, locale)}</div>
-		),
-	},
-	{
-		accessorKey: "stock",
-		header: t("storeProductsPage.table.stock"),
-		cell: ({ row }) => (
-			<InputWithPlusMinusButtons
-				min={0}
-				className="w-28"
-				size="icon-lg"
-				value={row.original.stock}
-				onChange={(value) => onStockChange(row.original.id, value)}
-			/>
-		),
 	},
 	{
 		id: "actions",

@@ -12,7 +12,7 @@ import { JwtService } from "@nestjs/jwt";
 import { User } from "@repo/database";
 
 import { PrismaService } from "@/prisma.service";
-import { IRequest, RequestUser } from "@/types/request.type";
+import { AuthenticatedRequest, RequestUser } from "@/types/request.type";
 
 import { AuthService } from "./auth.service";
 
@@ -43,7 +43,7 @@ export class AuthGuard implements CanActivate {
 			return true;
 		}
 
-		const request: IRequest = context.switchToHttp().getRequest();
+		const request: AuthenticatedRequest = context.switchToHttp().getRequest();
 		const token = this.authService.extractTokenFromHeader(request);
 
 		if (!token) {

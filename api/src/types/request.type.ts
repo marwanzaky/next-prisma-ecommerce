@@ -10,7 +10,7 @@ export type RequestUser = {
 	exp: number;
 };
 
-export interface IRequest extends Request {
+export interface AuthenticatedRequest extends Request {
 	user: RequestUser;
 }
 

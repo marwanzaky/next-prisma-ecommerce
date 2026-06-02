@@ -56,13 +56,13 @@ export const getCartColumns = ({
 			);
 		},
 	},
-	{
-		header: t("cartPage.table.price"),
-		accessorKey: "price",
-		cell: ({ row }) => (
-			<div>{formatPrice(row.original.price / 100, locale)}</div>
-		),
-	},
+	// {
+	// 	header: t("cartPage.table.price"),
+	// 	accessorKey: "price",
+	// 	cell: ({ row }) => (
+	// 		<div>{formatPrice(row.original.price / 100, locale)}</div>
+	// 	),
+	// },
 	{
 		header: t("cartPage.table.quantity"),
 		accessorKey: "quantity",

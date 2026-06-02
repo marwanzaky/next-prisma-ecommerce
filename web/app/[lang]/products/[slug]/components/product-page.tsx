@@ -1,6 +1,11 @@
 "use client";
 
-import { GetAllProducts, ProductWithReviewsAndUser } from "@repo/database";
+import { useMemo, useState } from "react";
+
+import {
+	GetAllProducts,
+	ProductWithVariantsReviewsUserTranslatedText,
+} from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
 
 import { productsService } from "@/services/products-service";
@@ -17,12 +22,12 @@ import { cn } from "@/lib/utils";
 
 import Feedback from "./feedback";
 import ProductCallery from "./product-callery";
-import ProductDetails from "./product-details";
+import ProductDetails, { selectedProductVariant } from "./product-details";
 
 export default function ProductPage({
 	product,
 }: {
-	product: ProductWithReviewsAndUser;
+	product: ProductWithVariantsReviewsUserTranslatedText;
 }) {
 	const { t } = useI18n();
 	const params: GetAllProducts = {
@@ -38,6 +43,21 @@ export default function ProductPage({
 		staleTime: 0,
 	});
 
+	const [selectedOptions, setSelectedOptions] = useState<
+		Record<string, string>
+	>(() => {
+		const result: Record<string, string> = {};
+		product.options.forEach((option) => {
+			result[option.id] = option.values[0].id;
+		});
+		return result;
+	});
+
+	const selectedVariant = useMemo(
+		() => selectedProductVariant(product, selectedOptions)!,
+		[product, selectedOptions],
+	);
+
 	return (
 		<Container>
 			<Section className="space-y-4 md:space-y-4">
@@ -48,8 +68,13 @@ export default function ProductPage({
 						"gap-x-10 gap-y-5",
 					)}
 				>
-					<ProductCallery product={product} />
-					<ProductDetails product={product} />
+					<ProductCallery product={product} selectedVariant={selectedVariant} />
+					<ProductDetails
+						product={product}
+						selectedVariant={selectedVariant}
+						selectedOptions={selectedOptions}
+						setSelectedOptions={setSelectedOptions}
+					/>
 				</div>
 
 				<Feedback product={product} />

@@ -51,20 +51,29 @@ function createProductSchema(t: ReturnType<typeof useI18n>["t"]) {
 			.max(120, t("validation.nameLong")),
 		description: z.string().nonempty(t("validation.required")),
 		categoryId: z.string().nonempty(t("validation.required")),
-		priceRangeUsd: z
-			.object({
-				min: z
-					.number({ error: t("validation.required") })
-					.positive(t("validation.mustBePositive")),
-				max: z
-					.number({ error: t("validation.invalidNumber") })
-					.positive(t("validation.mustBePositive")),
-			})
-			.refine((data) => !data.max || data.max >= data.min, {
-				message: t("validation.maxPriceGteMinPrice"),
-				path: ["max"],
-			}),
 		tags: z.array(z.string()).min(1, t("validation.required")),
+		options: z.array(
+			z.object({
+				name: z.string(),
+				values: z.array(z.string()),
+			}),
+		),
+		variants: z.array(
+			z.object({
+				variantId: z.string().optional(),
+				title: z.string(),
+				price: z.number().min(0, "Price must be positive"),
+				stock: z.number().int().min(0, "Stock cannot be negative"),
+				sku: z.string().optional(),
+				selections: z.array(
+					z.object({
+						optionName: z.string(),
+						optionValue: z.string(),
+					}),
+				),
+				images: z.array(imageSlotSchema).max(10, "Max 10 images"),
+			}),
+		),
 		images: z
 			.array(imageSlotSchema)
 			.max(10, "Max 10 images")
@@ -112,12 +121,9 @@ export function useSell() {
 		defaultValues: {
 			name: "",
 			description: "",
-			priceRangeUsd: {
-				min: undefined,
-				max: undefined,
-			},
 			tags: [],
 			images: [],
+			variants: [],
 			categoryId: "",
 		},
 	});
@@ -141,15 +147,6 @@ export function useSell() {
 
 				toast("Product deleted.", { position: "top-center" });
 			},
-			onStockChange: (id, value) =>
-				dispatch(
-					updateUserProductAsync({
-						id,
-						data: {
-							stock: value,
-						},
-					}),
-				),
 			locale,
 			t,
 		}),
@@ -164,20 +161,30 @@ export function useSell() {
 			[categoryTree],
 		),
 
-		addProduct: form.handleSubmit(async (data) => {
-			const { priceRangeUsd, name, description, tags, categoryId, images } =
+		createProduct: form.handleSubmit(async (data) => {
+			const { name, description, tags, categoryId, images, options, variants } =
 				data;
 
 			const createProduct: CreateProduct = {
 				name,
 				description,
-				price: priceRangeUsd.min * 100,
-				priceCompare: priceRangeUsd.max * 100,
 				imgFiles: images
 					.filter((img) => !!img)
 					.map((img) => img.file)
 					.filter((img) => img !== undefined),
 				tags,
+				options: options.map((option, optionIndex) => ({
+					name: option.name,
+					position: optionIndex,
+					values: option.values.map((value, valueIndex) => ({
+						value,
+						position: valueIndex,
+					})),
+				})),
+				variants: variants.map((variant) => ({
+					...variant,
+					compareAtPrice: variant.price,
+				})),
 				categoryId,
 				stock: 1,
 			};
@@ -191,7 +198,7 @@ export function useSell() {
 			router.push(localizePath("/store/products", locale));
 		}),
 		updateProduct: async ({ id, data }: { id: string; data: ProductInput }) => {
-			const { priceRangeUsd, name, description, tags, categoryId, images } =
+			const { name, description, tags, categoryId, images, options, variants } =
 				data;
 
 			const keptImgs: UpdateProduct["keptImgs"] = images
@@ -207,10 +214,40 @@ export function useSell() {
 			const updateProduct: UpdateProduct = {
 				name,
 				description,
-				price: priceRangeUsd.min * 100,
-				priceCompare: priceRangeUsd.max * 100,
 				tags,
 				categoryId,
+				options: options.map((option, optionIndex) => ({
+					name: option.name,
+					position: optionIndex,
+					values: option.values.map((value, valueIndex) => ({
+						value,
+						position: valueIndex,
+					})),
+				})),
+				variants: variants.map((variant) => {
+					const variantImages = variant.images;
+
+					const variantKeptImgs: UpdateProduct["keptImgs"] = variantImages
+						.filter((img) => !!img)
+						.map((img, index) =>
+							img.url ? { url: img.url, index } : undefined,
+						)
+						.filter((obj) => !!obj);
+
+					const variantNewImgs: UpdateProduct["newImgs"] = variantImages
+						.filter((img) => !!img)
+						.map((img, index) =>
+							img.file ? { file: img.file, index } : undefined,
+						)
+						.filter((obj) => !!obj);
+
+					return {
+						...variant,
+						compareAtPrice: variant.price,
+						keptImgs: variantKeptImgs,
+						newImgs: variantNewImgs,
+					};
+				}),
 				keptImgs: keptImgs,
 				newImgs: newImgs,
 			};

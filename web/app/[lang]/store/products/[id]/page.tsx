@@ -34,15 +34,30 @@ export default function Page() {
 			form.reset({
 				name: product.name.en,
 				description: product.description.en,
-				priceRangeUsd: {
-					min: product.price / 100,
-					max: product.priceCompare / 100,
-				},
 				tags: product.tags,
 				images: Array.from({ length: 10 }, (_, i) => {
 					const el = product.imgUrls[i];
 					return el ? { url: el } : undefined;
 				}),
+				options: product.options.map((option) => ({
+					name: option.name,
+					values: option.values.map((value) => value.value),
+				})),
+				variants: product.variants.map((variant) => ({
+					variantId: variant.id,
+					title: variant.title || "",
+					price: variant.price,
+					selections: variant.selections.map((selection) => ({
+						optionName: selection.option.name,
+						optionValue: selection.optionValue.value,
+					})),
+					sku: variant.sku || "",
+					stock: variant.stock,
+					images: Array.from({ length: 10 }, (_, i) => {
+						const el = variant.imgUrls[i];
+						return el ? { url: el } : undefined;
+					}),
+				})),
 				categoryId: product.categoryId ?? undefined,
 			});
 		}
@@ -58,14 +73,16 @@ export default function Page() {
 
 	return (
 		<ProductBase
+			productId={products.find((p) => p.id === params.id)!.id}
+			title={products.find((p) => p.id === params.id)!.name["en"]}
 			initialConfig={initialConfig}
 			form={form}
 			options={options}
 			onDescriptionChange={onDescriptionChange}
 			description={description}
-			onSubmit={form.handleSubmit((data) =>
-				updateProduct({ id: params.id, data }),
-			)}
+			onSubmit={form.handleSubmit((data) => {
+				updateProduct({ id: params.id, data });
+			})}
 			submitButtonText={t("buttons.update")}
 			cancelButtonAction={resetForm}
 			injectLoadDescriptionPlugin

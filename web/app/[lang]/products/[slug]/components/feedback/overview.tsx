@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ProductWithReviewsAndUser } from "@repo/database";
+import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
 
 import { Rating, TranslatedText } from "@repo/types";
 
@@ -49,7 +49,7 @@ import { cn } from "@/lib/utils";
 export default function Overview({
 	product,
 }: {
-	product: ProductWithReviewsAndUser;
+	product: ProductWithVariantsReviewsUserTranslatedText;
 }) {
 	const router = useRouter();
 

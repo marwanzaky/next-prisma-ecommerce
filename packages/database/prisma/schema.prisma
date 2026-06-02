@@ -45,15 +45,14 @@ model Product {
   shortDescription   Json?
   ratingDistribution Json
 
-  price        Float
-  priceCompare Float
-  isHero       Boolean  @default(false)
-  stock        Int      @default(1)
-  avgRatings   Float    @default(0.0)
-  numReviews   Int      @default(0)
-  imgUrls      String[]
-  tags         String[]
-  featured     Boolean  @default(false)
+  avgRatings Float    @default(0.0)
+  numReviews Int      @default(0)
+  imgUrls    String[]
+  tags       String[]
+  featured   Boolean  @default(false)
+
+  options  ProductOption[]
+  variants ProductVariant[]
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
@@ -67,6 +66,68 @@ model Product {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ProductOption {
+  id String @id @default(cuid())
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  name     String // Color, Size
+  position Int    @default(0)
+
+  values            ProductOptionValue[]
+  variantSelections VariantSelection[]
+}
+
+model ProductOptionValue {
+  id String @id @default(cuid())
+
+  optionId String
+  option   ProductOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+
+  value    String // Black, XL, Cotton
+  position Int    @default(0)
+
+  variantSelections VariantSelection[]
+}
+
+model ProductVariant {
+  id String @id @default(cuid())
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  // Example: "Black / XL"
+  title String?
+
+  sku String? @unique
+
+  price          Int
+  compareAtPrice Int?
+
+  stock Int @default(0)
+
+  imgUrls String[]
+
+  selections VariantSelection[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VariantSelection {
+  id String @id @default(cuid())
+
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  optionId String
+  option   ProductOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+
+  optionValueId String
+  optionValue   ProductOptionValue @relation(fields: [optionValueId], references: [id], onDelete: Cascade)
 }
 
 model Category {

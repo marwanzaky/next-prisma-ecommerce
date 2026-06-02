@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
-import { ProductWithReviewsAndUser } from "@repo/database";
+import {
+	ProductVariant,
+	ProductWithVariantsReviewsUserTranslatedText,
+} from "@repo/database";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ButtonIcon } from "@/components/ui/button-icon";
@@ -23,8 +26,10 @@ import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
 export default function ProductCallery({
 	product,
+	selectedVariant,
 }: {
-	product: ProductWithReviewsAndUser;
+	product: ProductWithVariantsReviewsUserTranslatedText;
+	selectedVariant: ProductVariant;
 }) {
 	const { dir, t, locale } = useI18n();
 	const { isFavorite, addToFavorites, removeFromFavorites } =
@@ -32,6 +37,16 @@ export default function ProductCallery({
 
 	const [imgIndex, setImgIndex] = useState(0);
 	const [api, setApi] = useState<CarouselApi>();
+
+	const [imgUrls, setImgUrls] = useState<string[]>([]);
+
+	useEffect(() => {
+		if (selectedVariant) {
+			setImgUrls(selectedVariant.imgUrls);
+		} else {
+			setImgUrls(product.imgUrls);
+		}
+	}, [product, selectedVariant]);
 
 	useEffect(() => {
 		if (!api) return;
@@ -67,7 +82,7 @@ export default function ProductCallery({
 				opts={{ direction: dir }}
 			>
 				<CarouselContent>
-					{product.imgUrls.map((src, i) => (
+					{imgUrls.map((src, i) => (
 						<CarouselItem key={`carousel-item-${i}`}>
 							<Image
 								className="w-full rounded-lg"
@@ -85,7 +100,7 @@ export default function ProductCallery({
 			</Carousel>
 
 			<div className="grid grid-cols-4 gap-2 md:gap-4">
-				{product.imgUrls.map((imgUrl, i) => (
+				{imgUrls.map((imgUrl, i) => (
 					<Image
 						key={`${product.name}-${i + 1}`}
 						role="button"

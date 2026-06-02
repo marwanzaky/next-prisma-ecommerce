@@ -4,46 +4,26 @@ import { Transform, Type } from "class-transformer";
 import {
 	IsArray,
 	IsInt,
-	IsNotEmpty,
-	IsNumber,
 	IsOptional,
 	IsString,
-	IsUrl,
 	ValidateNested,
 } from "class-validator";
 
 import { UpdateProduct } from "@repo/database";
 
-class KeptImgDto {
-	@IsUrl()
-	readonly url!: string;
+import { KeptImgDto } from "@/dtos/kept-img.dto";
 
-	@IsInt()
-	readonly index!: number;
-}
+import { ProductOptionDto } from "./create-product.dto";
+import { UpdateProductVariantDto } from "./update-product-variant.dto";
 
 export class UpdateProductDto implements UpdateProduct {
 	@ApiPropertyOptional()
 	@IsString()
-	@IsNotEmpty()
 	@IsOptional()
 	readonly name?: string;
 
 	@ApiPropertyOptional()
-	@IsNumber()
-	@IsOptional()
-	@Type(() => Number)
-	readonly price?: number;
-
-	@ApiPropertyOptional()
-	@IsNumber()
-	@IsOptional()
-	@Type(() => Number)
-	readonly priceCompare?: number;
-
-	@ApiPropertyOptional()
 	@IsString()
-	@IsNotEmpty()
 	@IsOptional()
 	readonly description?: string;
 
@@ -59,12 +39,6 @@ export class UpdateProductDto implements UpdateProduct {
 	@Transform(({ value }: { value: string }) => JSON.parse(value))
 	@IsString({ each: true })
 	readonly tags?: string[];
-
-	@ApiPropertyOptional()
-	@IsNumber()
-	@IsOptional()
-	@Type(() => Number)
-	readonly stock?: number;
 
 	@ApiPropertyOptional({
 		description: "Category id; empty string clears category",
@@ -100,4 +74,23 @@ export class UpdateProductDto implements UpdateProduct {
 		isArray: true,
 	})
 	readonly imgFiles?: Express.Multer.File[];
+
+	@IsArray()
+	@ValidateNested({ each: true })
+	@Type(() => ProductOptionDto)
+	@Transform(({ value }: { value: string }) => JSON.parse(value))
+	options!: ProductOptionDto[];
+
+	@ApiPropertyOptional({
+		description: "JSON stringified array of UpdateProductVariantDto structures",
+		type: [UpdateProductVariantDto],
+	})
+	@IsArray()
+	@IsOptional()
+	@ValidateNested({ each: true })
+	@Type(() => UpdateProductVariantDto)
+	@Transform(({ value }: { value: string }) =>
+		value ? JSON.parse(value) : undefined,
+	)
+	readonly variants?: UpdateProductVariantDto[];
 }

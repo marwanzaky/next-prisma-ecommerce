@@ -1,11 +1,16 @@
 {
 	"name": "@repo/database",
 	"version": "1.0.0",
-	"main": "./dist/client.js",
-	"types": "./dist/client.d.ts",
+	"main": "./src/client.ts",
+	"types": "./src/client.ts",
 	"exports": {
 		".": {
-			"types": "./dist/client.d.ts",
+			"types": {
+				"import": "./src/client.ts",
+				"require": "./src/client.ts",
+				"default": "./src/client.ts"
+			},
+			"import": "./dist/client.js",
 			"default": "./dist/client.js"
 		}
 	},

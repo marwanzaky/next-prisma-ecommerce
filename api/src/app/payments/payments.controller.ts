@@ -43,7 +43,7 @@ export class PaymentsController {
 						price_data: {
 							currency: "usd",
 							product_data: { name: (matchProduct.name as TranslatedText).en },
-							unit_amount: matchProduct.price,
+							// unit_amount: matchProduct.price,
 						},
 						quantity: item.quantity,
 					};
