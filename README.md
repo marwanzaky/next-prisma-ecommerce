@@ -7,8 +7,10 @@
 
 
 ## about
+the website project is a modern ecommerce store built from the ground up to deliver speed, security, and scalability. designed with nextjs 16, tailwind 4, nestjs, and postgresql.
 
-[Website](https://mamolio.store) project is a modern ecommerce store built from the ground up to deliver speed, security, and scalability. Designed with Next.js 16, Tailwind CSS 4, NestJS, and PostgreSQL.
+- stable demo: https://mamolio.store
+- beta demo (supporting product variants): https://v2.mamolio.store
 
 <div>
   <img src="https://img.shields.io/badge/-TypeScript-2c3e50.svg?logo=typescript&style=flat">
@@ -43,66 +45,93 @@
 - **payments**: [stripe](https://stripe.com)
 - **api**: [nestjs](https://nestjs.com) + [swagger](https://swagger.io)
 
-## Features
-- SEO friendly
-  - Dynamic product metadata
-  - Dynamic product structured data
-  - Dynamic sitemap.xml
-- Lightweight and instant load
-- High-quality code and a very structured codebase
-- Sign in/Sign up with email and password (JWT), or with Google (OAuth 2.0)
-- Easily customize design with shadcn [create](https://ui.shadcn.com/create). Copy the preset and use the command `npx shadcn@latest init --preset [CODE]` in `/web` directory
-- Full-stack Monorepo
-  - `/web` for front-end
-  - `/api` for back-end
-  - `/shared` for shared typescript files
-- Progressive Web Apps (PWA) support
-- Response on mobile, tablets, and desktop
-- Lighthouse scores
-  - **Semantic HTML:** Correct heading hierarchy and ARIA landmarks.
-  - **Optimized Core Web Vitals:** Near-instant page loads and minimal layout shift.
-  - **Search Engine Optimized:** Dynamic JSON-LD structured data, automated sitemaps, and optimized metadata for every product page.
-<img width="1024" height="188" alt="googlechrome github io_lighthouse_viewer_ (1)" src="https://github.com/user-attachments/assets/d77d59af-024a-4ed0-a1f8-59a0233ecb42" />
-<img width="1304" height="278" alt="www google com_search_q=mamolio oq=mamolio gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQRRg8MgYIAhBFGDwyBggDEEUYPDIICAQQRRgnGDsyBggFEEUYOzIGCAYQRRg7MgYIBxBFGEHSAQgxOTY2ajBqN6gCALACAA sourceid=chrome ie=UTF-8" src="https://github.com/user-attachments/assets/6f3ada84-47c5-42b0-af2d-cafec1003b7c" />
+## key features
+- **product variants**: option-based variants with selections, inventory, pricing, skus, and images.
+- **seller dashboard**: create, edit, and delete products from /store/products.
+- **product discovery**: product listing, search, filtering, sorting, categories, and pricing filters.
+- **product details**: variant-aware product pages with image galleries, reviews, ratings, and structured metadata.
+- **authentication**: email/password auth, jwt sessions, google oauth, email verification, password reset.
+- **cart and checkout**: variant-based cart items and Stripe checkout sessions.
+- **favorites and reviews**: customer favorites, product reviews, average ratings, and rating distribution.
+- **seo: dynamic metadata**, JSON-LD product data, sitemap generation, and semantic page structure.
+- **internationalization**: localized routes under /[lang] with translated product text support.
+- **pwa support**: installable frontend with web app manifest.
 
-## Available Pages
-- Home: `/`
-- Products: `/products`
-- Product: `/products/:id`
-- Cart: `/cart`
-- Favorites: `/favorites`
-- Store: `/store/products`
-- Signin: `/signin`
-- Signup: `/signup`
-- Contact: `/contact`
-- Account: `/account`
+## previews
+<table>
+  <tr>
+    <td width="50%">
+      <strong>product discovery</strong>
+      <br />
+      <span>search, filter, sort, and browse products across responsive layouts.</span>
+      <br /><br />
+      <img width="100%" alt="Mamolio product listing with filters" src="https://github.com/user-attachments/assets/4936b492-a564-4477-85a9-40d1a42d9946" />
+    </td>
+    <td width="50%">
+      <strong>product discovery</strong>
+      <br />
+      <span>search, filter, sort, and browse products across responsive layouts.</span>
+      <br /><br />
+      <img width="100%" alt="Mamolio product listing with filters" src="https://github.com/user-attachments/assets/745505ee-2018-4538-b355-c295927dfda9" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <strong>seller dashboard</strong>
+      <br />
+      <span>manage products from the store dashboard with create, edit, and delete actions.</span>
+      <br /><br />
+      <img width="100%" alt="Mamolio seller products dashboard" src="https://github.com/user-attachments/assets/44b16563-6378-4053-a5ea-2e955a72cb9a" />
+    </td>
+    <td width="50%">
+      <strong>product editor</strong>
+      <br />
+      <span>create rich product listings with descriptions, media, pricing, and variants.</span>
+      <br /><br />
+      <img width="100%" alt="Mamolio product editor page" src="https://github.com/user-attachments/assets/999dd4ea-b5ac-426b-9d4c-31d61ec56d5e" />
+    </td>
+  </tr>
+</table>
 
-## 📂 Project Structure
+## pages
+- home: `/`
+- products: `/products`
+- product: `/products/:id`
+- cart: `/cart`
+- favorites: `/favorites`
+- store: `/store/products`
+- signin: `/signin`
+- signup: `/signup`
+- contact: `/contact`
+- account: `/account`
+
+## structure
+
+```txt
+.
+├── api/                  # nestjs backend
+├── web/                  # nextjs frontend
+├── packages/database/    # prisma schema, generated client, shared db types
+├── packages/types/       # shared typescript types
+├── packages/ui/          # shared ui package
+├── packages/eslint-config/
+└── packages/typescript-config/
 ```
-├── api/          # NestJS Backend
-├── web/          # Next.js Frontend
-└── shared/       # Shared TypeScript interfaces
-```
 
-## Features
-### 🔎 Search & Filtering `/products`
-- Search products by name/keyword
-- Filter by category, price, or other attributes
-- Sorting options (price, newest, etc.)
-<img width="60%" height="auto" alt="mamolio store_products_sort=relevancy minPrice=299 maxPrice=1299 rating=3" src="https://github.com/user-attachments/assets/4936b492-a564-4477-85a9-40d1a42d9946" />
-<img width="35%" height="auto" alt="mamolio store_products_sort=relevancy" src="https://github.com/user-attachments/assets/745505ee-2018-4538-b355-c295927dfda9" />
+## apis
+- **products**: product crud, variants, reviews, filtering, and product detail data.
+- **carts**: variant-based cart items.
+- **payments**: stripe checkout session creation.
+- **auth**: signup, login, google oauth, email verification, password reset.
+- **users**: profile and password management.
+- **categories**: public and admin category apis.
+- **favorites**: saved product management.
+- **uploads**: media upload support.
+- **contact** messages: Contact form and admin message handling.
+- **chat**: ai-assisted chat endpoint.
 
-### Form Validation
-<img width="auto" height="512" alt="mamolio store_signup (2)" src="https://github.com/user-attachments/assets/b4305f17-acd7-48d1-82cb-b6d343fd2329" />
+## contact
 
-### 🛍️ Store `/store/products`
-- Create, edit, and delete products
-- Rich WYSIWYG editor with support for images, formatting, and YouTube Shorts embeds.
-<img width="60%" height="auto" alt="mamolio store_store_products" src="https://github.com/user-attachments/assets/44b16563-6378-4053-a5ea-2e955a72cb9a" />
-<img width="35%" height="auto" alt="mamolio store_store_products_67746fbf537e5b283bd1352a" src="https://github.com/user-attachments/assets/999dd4ea-b5ac-426b-9d4c-31d61ec56d5e" />
+have questions, feedback, or want to collaborate? feel free to reach out!
 
-## Contact
-
-Have questions, feedback, or want to collaborate? Feel free to reach out!
-
-- Email: marouaneezzaky@gmail.com
+- **email**: marouaneezzaky@gmail.com

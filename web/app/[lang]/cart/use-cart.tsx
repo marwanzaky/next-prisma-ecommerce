@@ -77,21 +77,22 @@ export function useCartPage() {
 		categoryTree,
 		onQuantityChange(value, row) {
 			dispatch(
-				updateCartItemQuantityAsync({ productId: row.id, quantity: value }),
+				updateCartItemQuantityAsync({
+					productId: row.variantId,
+					quantity: value,
+				}),
 			);
 		},
 		deleteAction(row) {
-			removeFromCart(row.id);
+			removeFromCart(row.variantId);
 		},
 	});
 
 	const tableData: CartItem[] = items.map((item) => ({
-		...item.product,
-		// imgUrl: item.product.imgUrls[0],
-		imgUrl: "",
+		...item,
+		imgUrl: item.variant.imgUrls[0],
 		quantity: item.quantity,
-		// total: item.product.price * item.quantity,
-		total: 0,
+		total: item.variant.price * item.quantity,
 	}));
 
 	const checkout: React.MouseEventHandler<HTMLButtonElement> = async (
@@ -101,7 +102,7 @@ export function useCartPage() {
 
 		const response = await paymentsService.createCheckoutSession({
 			items: items.map((item) => ({
-				id: item.product.id,
+				id: item.variant.id,
 				quantity: item.quantity,
 			})),
 		});

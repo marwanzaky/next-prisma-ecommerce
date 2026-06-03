@@ -1,27 +1,29 @@
-import { CartItemWithProduct } from "@repo/database";
+import { CartItemWithProductVariant, ProductVariant } from "@repo/database";
 import { Product } from "@repo/database";
 
 const STORAGE_KEY = "guest_cart";
 
-const getItems = (): CartItemWithProduct[] => {
+const getItems = (): CartItemWithProductVariant[] => {
 	const raw = localStorage.getItem(STORAGE_KEY);
 	return raw ? JSON.parse(raw) : [];
 };
 
-const saveItems = (items: CartItemWithProduct[]) => {
+const saveItems = (items: CartItemWithProductVariant[]) => {
 	localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 };
 
 export const guestCartService = {
-	getMe: async (): Promise<{ items: CartItemWithProduct[] }> => {
+	getMe: async (): Promise<{ items: CartItemWithProductVariant[] }> => {
 		return { items: getItems() };
 	},
 	postItem: async (
-		product: Product,
+		productVariant: ProductVariant,
 		quantity: number,
-	): Promise<{ items: CartItemWithProduct[] }> => {
+	): Promise<{ items: CartItemWithProductVariant[] }> => {
 		const cartItems = getItems();
-		const index = cartItems.findIndex((item) => item.productId === product.id);
+		const index = cartItems.findIndex(
+			(item) => item.variantId === productVariant.id,
+		);
 
 		if (index > -1) {
 			cartItems[index].quantity += quantity;
@@ -30,8 +32,8 @@ export const guestCartService = {
 				quantity,
 				cartId: "1234",
 				id: "1234",
-				productId: product.id,
-				product,
+				variantId: productVariant.id,
+				variant: productVariant as CartItemWithProductVariant["variant"],
 				createdAt: new Date(),
 				updatedAt: new Date(),
 			});
@@ -47,9 +49,9 @@ export const guestCartService = {
 	updateItemQuantity: async (
 		productId: string,
 		quantity: number,
-	): Promise<{ items: CartItemWithProduct[] }> => {
+	): Promise<{ items: CartItemWithProductVariant[] }> => {
 		const cartItems = getItems();
-		const index = cartItems.findIndex((item) => item.productId === productId);
+		const index = cartItems.findIndex((item) => item.variantId === productId);
 
 		if (index > -1) {
 			if (quantity <= 0) {
@@ -64,9 +66,11 @@ export const guestCartService = {
 	},
 
 	deleteItem: async (
-		productId: string,
-	): Promise<{ items: CartItemWithProduct[] }> => {
-		const cartItems = getItems().filter((item) => item.productId !== productId);
+		productVariantId: string,
+	): Promise<{ items: CartItemWithProductVariant[] }> => {
+		const cartItems = getItems().filter(
+			(item) => item.variantId !== productVariantId,
+		);
 		saveItems(cartItems);
 		return { items: cartItems };
 	},

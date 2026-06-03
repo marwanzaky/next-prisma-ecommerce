@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 
-import { Product } from "@repo/database";
+import { ProductVariant } from "@repo/database";
 
 import {
 	deleteCartItemAsync,
@@ -13,8 +13,11 @@ export function useCart() {
 
 	const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-	const addToCart = async (product: Product, quantity: number = 1) => {
-		await dispatch(postCartItemAsync({ product, quantity })).unwrap();
+	const addToCart = async (
+		productVariant: ProductVariant,
+		quantity: number = 1,
+	) => {
+		await dispatch(postCartItemAsync({ productVariant, quantity })).unwrap();
 
 		if (isAuthenticated) {
 			toast("Added to cart.", { position: "top-center" });
@@ -23,8 +26,8 @@ export function useCart() {
 		}
 	};
 
-	const removeFromCart = async (productId: string) => {
-		await dispatch(deleteCartItemAsync(productId)).unwrap();
+	const removeFromCart = async (productVariantId: string) => {
+		await dispatch(deleteCartItemAsync(productVariantId)).unwrap();
 
 		if (isAuthenticated) {
 			toast("Removed from cart.", { position: "top-center" });

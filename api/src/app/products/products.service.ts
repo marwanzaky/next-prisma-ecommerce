@@ -610,6 +610,8 @@ export class ProductsService {
 			},
 		});
 
+		await this.deleteUnusedImages(existingVariant.imgUrls, keptImgs);
+
 		return this.prisma.product.findUnique({
 			where: {
 				id,
@@ -716,17 +718,12 @@ export class ProductsService {
 
 		if (keptImgs) {
 			for (const img of keptImgs) {
-				if (
-					!img ||
-					typeof img.url !== "string" ||
-					typeof img.index !== "number"
-				) {
-					throw new BadRequestException("Invalid keptImgs item");
-				}
-				if (img.index < 0 || img.index > 9)
+				if (img.index < 0 || img.index > 9) {
 					throw new BadRequestException("Image index out of range");
-				if (!existingImgUrls.includes(img.url))
+				}
+				if (!existingImgUrls.includes(img.url)) {
 					throw new BadRequestException("keptImgs includes unknown url");
+				}
 
 				slots[img.index] = img.url;
 				usedIndices.add(img.index);
@@ -734,18 +731,19 @@ export class ProductsService {
 		}
 
 		if (imgFiles.length > 0) {
-			if (!newImgIndices)
+			if (!newImgIndices) {
 				throw new BadRequestException(
 					"newImgIndices is required with imgFiles",
 				);
+			}
 
 			for (const index of newImgIndices) {
-				if (typeof index !== "number" || Number.isNaN(index))
-					throw new BadRequestException("Invalid newImgIndices item");
-				if (index < 0 || index > 9)
+				if (index < 0 || index > 9) {
 					throw new BadRequestException("Image index out of range");
-				if (usedIndices.has(index))
+				}
+				if (usedIndices.has(index)) {
 					throw new BadRequestException("Duplicate image index");
+				}
 				usedIndices.add(index);
 			}
 
@@ -772,5 +770,29 @@ export class ProductsService {
 		}
 
 		return finalUrls;
+	}
+
+	async deleteUnusedImages(
+		existingImgUrls: string[],
+		keptImgs: { url: string; index: number }[] | undefined,
+	): Promise<void> {
+		const keptUrlsSet = new Set(keptImgs ? keptImgs.map((img) => img.url) : []);
+
+		const urlsToDelete = existingImgUrls.filter((url) => !keptUrlsSet.has(url));
+
+		if (urlsToDelete.length === 0) return;
+
+		Promise.allSettled(
+			urlsToDelete.map((url) => this.cloudinaryService.deleteFile(url)),
+		).then((results) => {
+			results.forEach((result, idx) => {
+				if (result.status === "rejected") {
+					console.error(
+						`Cloudinary cleanup failed for orphaned URL: ${urlsToDelete[idx]}`,
+						result.reason,
+					);
+				}
+			});
+		});
 	}
 }

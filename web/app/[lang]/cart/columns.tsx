@@ -1,6 +1,6 @@
 import { Trash2Icon } from "lucide-react";
 
-import { Product } from "@repo/database";
+import { CartItemWithProductVariant } from "@repo/database";
 import { PublicCategoryTree } from "@repo/database";
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -16,7 +16,7 @@ import { createProductSlug, formatPrice } from "@/lib/string-utils";
 
 import { DictionaryKeys } from "@/types/i18n.type";
 
-export type CartItem = Product & {
+export type CartItem = CartItemWithProductVariant & {
 	imgUrl: string;
 	quantity: number;
 	total: number;
@@ -41,15 +41,15 @@ export const getCartColumns = ({
 		cell: ({ row }) => {
 			const subcategory = categoryTree
 				?.flatMap((cat) => [...cat.children, cat])
-				.find((cat) => cat.id === row.original.categoryId);
+				.find((cat) => cat.id === row.original.variant.product.categoryId);
 
 			return (
 				<LogoCell
 					href={localizePath(
-						`/products/${createProductSlug((row.original.name as TranslatedText).en, row.original.id)}`,
+						`/products/${createProductSlug((row.original.variant.product.name as TranslatedText).en, row.original.variant.productId)}`,
 						locale,
 					)}
-					label={(row.original.name as TranslatedText)[locale]}
+					label={(row.original.variant.product.name as TranslatedText)[locale]}
 					imgUrl={row.original.imgUrl}
 					subcategory={subcategory}
 				/>

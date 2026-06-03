@@ -55,7 +55,7 @@ export default async function Page({ params }: Props) {
 }
 
 async function getProduct(id: string) {
-	return await productsService.getProduct(id);
+	return productsService.getProduct(id);
 }
 
 export async function generateStaticParams() {

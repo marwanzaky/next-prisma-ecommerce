@@ -153,7 +153,10 @@ export default function ProductDetails({
 												| "Dark Gray"
 												| "Grey"
 												| "Forest Green"
-												| "Brown";
+												| "Brown"
+												| "Beige"
+												| "Red"
+												| "Blue";
 
 											let backgroundColor = "#fff";
 
@@ -166,6 +169,10 @@ export default function ProductDetails({
 											if (color === "Grey") backgroundColor = "#808080";
 											if (color === "Forest Green") backgroundColor = "#228B22";
 											if (color === "Brown") backgroundColor = "#964B00";
+											if (color === "Beige") backgroundColor = "#F5F5DC";
+											if (color === "Beige") backgroundColor = "#F5F5DC";
+											if (color === "Red") backgroundColor = "#FF0000";
+											if (color === "Blue") backgroundColor = "#0000FF";
 
 											return isColor ? (
 												<button
@@ -260,7 +267,7 @@ export default function ProductDetails({
 						size="xl"
 						className="flex-1"
 						onClick={() => {
-							addToCart(product, quantity);
+							addToCart(selectedVariant, quantity);
 						}}
 					>
 						<ShoppingCart />
@@ -292,7 +299,7 @@ export default function ProductDetails({
 					size="xl"
 					variant="secondary"
 					onClick={() => {
-						addToCart(product, quantity);
+						addToCart(selectedVariant, quantity);
 
 						router.push(localizePath("/cart", locale));
 					}}

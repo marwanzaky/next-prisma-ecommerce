@@ -30,4 +30,23 @@ export class CloudinaryService {
 			readable.pipe(stream);
 		});
 	}
+
+	async deleteFile(url: string): Promise<void> {
+		try {
+			// Extract the public ID from the Cloudinary URL
+			// Example URL: https://res.cloudinary.com/demo/image/upload/v1234567/folder/sample.jpg
+			// Extracts: "folder/sample"
+			const splits = url.split("/");
+			const uploadIndex = splits.findIndex((path) => path === "upload");
+			// Grabs everything after 'upload/v1234567/' and removes extension
+			const publicId = splits
+				.slice(uploadIndex + 2)
+				.join("/")
+				.split(".")[0];
+
+			return await cloudinary.uploader.destroy(publicId);
+		} catch (error) {
+			console.error(`Failed to delete image from Cloudinary: ${url}`, error);
+		}
+	}
 }

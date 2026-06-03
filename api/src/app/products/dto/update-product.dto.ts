@@ -1,17 +1,9 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 
 import { Transform, Type } from "class-transformer";
-import {
-	IsArray,
-	IsInt,
-	IsOptional,
-	IsString,
-	ValidateNested,
-} from "class-validator";
+import { IsArray, IsOptional, IsString, ValidateNested } from "class-validator";
 
 import { UpdateProduct } from "@repo/database";
-
-import { KeptImgDto } from "@/dtos/kept-img.dto";
 
 import { ProductOptionDto } from "./create-product.dto";
 import { UpdateProductVariantDto } from "./update-product-variant.dto";
