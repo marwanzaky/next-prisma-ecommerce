@@ -63,7 +63,7 @@ export function useProducts() {
 
 	const sortMap: Record<
 		SortOption,
-		{ property: keyof Product; order: "asc" | "desc" }
+		{ property: keyof Product | "price"; order: "asc" | "desc" }
 	> = {
 		relevancy: { property: "createdAt", order: "asc" },
 		"most-popular": { property: "numReviews", order: "desc" },

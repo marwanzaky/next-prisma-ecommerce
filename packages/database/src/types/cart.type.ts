@@ -1,10 +1,17 @@
 import { Prisma } from "../../generated/prisma/client";
 
-const cartWithItems = {
+export const cartWithItems = {
 	include: {
 		items: {
+			orderBy: {
+				createdAt: "asc",
+			},
 			include: {
-				product: true,
+				variant: {
+					include: {
+						product: true,
+					},
+				},
 			},
 		},
 	},
@@ -12,12 +19,16 @@ const cartWithItems = {
 
 export type CartWithItems = Prisma.CartGetPayload<typeof cartWithItems>;
 
-const cartItemWithProduct = {
+export const cartItemWithProductVariant = {
 	include: {
-		product: true,
+		variant: {
+			include: {
+				product: true,
+			},
+		},
 	},
 } satisfies Prisma.CartItemDefaultArgs;
 
-export type CartItemWithProduct = Prisma.CartItemGetPayload<
-	typeof cartItemWithProduct
+export type CartItemWithProductVariant = Prisma.CartItemGetPayload<
+	typeof cartItemWithProductVariant
 >;

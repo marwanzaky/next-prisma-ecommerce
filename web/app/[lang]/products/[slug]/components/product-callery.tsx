@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
-import { ProductWithReviewsAndUser } from "@repo/database";
+import {
+	ProductVariant,
+	ProductWithVariantsReviewsUserTranslatedText,
+} from "@repo/database";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ButtonIcon } from "@/components/ui/button-icon";
@@ -23,8 +26,10 @@ import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
 export default function ProductCallery({
 	product,
+	selectedVariant,
 }: {
-	product: ProductWithReviewsAndUser;
+	product: ProductWithVariantsReviewsUserTranslatedText;
+	selectedVariant: ProductVariant;
 }) {
 	const { dir, t, locale } = useI18n();
 	const { isFavorite, addToFavorites, removeFromFavorites } =
@@ -67,7 +72,7 @@ export default function ProductCallery({
 				opts={{ direction: dir }}
 			>
 				<CarouselContent>
-					{product.imgUrls.map((src, i) => (
+					{selectedVariant.imgUrls.map((src, i) => (
 						<CarouselItem key={`carousel-item-${i}`}>
 							<Image
 								className="w-full rounded-lg"
@@ -85,7 +90,7 @@ export default function ProductCallery({
 			</Carousel>
 
 			<div className="grid grid-cols-4 gap-2 md:gap-4">
-				{product.imgUrls.map((imgUrl, i) => (
+				{selectedVariant.imgUrls.map((imgUrl, i) => (
 					<Image
 						key={`${product.name}-${i + 1}`}
 						role="button"

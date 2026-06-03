@@ -1,27 +1,50 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
-import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import {
+	ArrayMinSize,
+	IsArray,
+	IsNotEmpty,
+	IsNumber,
+	IsOptional,
+	IsString,
+	ValidateNested,
+} from "class-validator";
 
 import { CreateProduct } from "@repo/database";
+
+import { CreateProductVariantDto } from "./create-product-variant.dto";
+
+export class ProductOptionDto {
+	@IsString()
+	@IsNotEmpty()
+	name!: string;
+
+	@IsNumber()
+	@IsNotEmpty()
+	position!: number;
+
+	@IsArray()
+	@ValidateNested({ each: true })
+	@Type(() => ProductOptionValueDto)
+	values!: ProductOptionValueDto[];
+}
+
+export class ProductOptionValueDto {
+	@IsString()
+	@IsNotEmpty()
+	value!: string;
+
+	@IsNumber()
+	@IsNotEmpty()
+	position!: number;
+}
 
 export class CreateProductDto implements CreateProduct {
 	@ApiProperty()
 	@IsString()
 	@IsNotEmpty()
 	readonly name!: string;
-
-	@ApiProperty()
-	@IsNumber()
-	@IsNotEmpty()
-	@Type(() => Number)
-	readonly price!: number;
-
-	@ApiProperty()
-	@IsNumber()
-	@IsNotEmpty()
-	@Type(() => Number)
-	readonly priceCompare!: number;
 
 	@ApiProperty()
 	@IsString()
@@ -34,15 +57,11 @@ export class CreateProductDto implements CreateProduct {
 	readonly shortDescription?: string;
 
 	@ApiPropertyOptional()
+	@IsArray()
 	@IsString({ each: true })
 	@IsOptional()
+	@Transform(({ value }: { value: string }) => JSON.parse(value))
 	readonly tags?: string[];
-
-	@ApiPropertyOptional()
-	@IsNumber()
-	@IsOptional()
-	@Type(() => Number)
-	readonly stock?: number = 1;
 
 	@ApiPropertyOptional()
 	@IsString()
@@ -55,4 +74,17 @@ export class CreateProductDto implements CreateProduct {
 		isArray: true,
 	})
 	readonly imgFiles!: File[];
+
+	@IsArray()
+	@ValidateNested({ each: true })
+	@Type(() => ProductOptionDto)
+	@Transform(({ value }: { value: string }) => JSON.parse(value))
+	options!: ProductOptionDto[];
+
+	@IsArray()
+	@ValidateNested({ each: true })
+	@Type(() => CreateProductVariantDto)
+	@ArrayMinSize(1)
+	@Transform(({ value }: { value: string }) => JSON.parse(value))
+	variants!: CreateProductVariantDto[];
 }

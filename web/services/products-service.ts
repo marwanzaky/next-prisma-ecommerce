@@ -3,15 +3,14 @@ import { stringify } from "qs";
 import {
 	CreateProductReview,
 	GetAllProducts,
-	ProductTranslatedText,
 	Review,
 	UpdateProductReview,
+	UpdateProductVariant,
 } from "@repo/database";
 import { CreateProduct, UpdateProduct } from "@repo/database";
-import { ProductWithReviewsAndUser } from "@repo/database";
+import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
 
 import { clientFetch } from "@/lib/api-client";
-import { jsonToFormData } from "@/lib/helper";
 
 export const productsService = {
 	getAllProducts: (params?: GetAllProducts) => {
@@ -20,24 +19,35 @@ export const productsService = {
 			arrayFormat: "repeat",
 		});
 
-		return clientFetch<ProductTranslatedText[]>(`/products?${paramsObj}`);
+		return clientFetch<ProductWithVariantsReviewsUserTranslatedText[]>(
+			`/products?${paramsObj}`,
+		);
 	},
 	getProduct: (id: string) =>
-		clientFetch<ProductWithReviewsAndUser>(`/products/${id}`),
+		clientFetch<ProductWithVariantsReviewsUserTranslatedText>(
+			`/products/${id}`,
+		),
 	createProduct: (data: CreateProduct) => {
-		const formData = jsonToFormData({
-			...data,
-			imgFiles: undefined,
-		} satisfies CreateProduct);
+		const formData = new FormData();
 
-		data.imgFiles?.forEach((file) => {
-			formData.append("imgFiles", file);
+		Object.entries(data).forEach(([key, value]) => {
+			if (value === undefined || value === null) return;
+
+			if (Array.isArray(value) || typeof value === "object") {
+				formData.append(key, JSON.stringify(value));
+				return;
+			}
+
+			formData.append(key, String(value));
 		});
 
-		return clientFetch<ProductTranslatedText>("/products", {
-			method: "POST",
-			body: formData,
-		});
+		return clientFetch<ProductWithVariantsReviewsUserTranslatedText>(
+			"/products",
+			{
+				method: "POST",
+				body: formData,
+			},
+		);
 	},
 	updateProduct: ({ id, data }: { id: string; data: UpdateProduct }) => {
 		const formData = new FormData();
@@ -45,8 +55,38 @@ export const productsService = {
 		Object.entries(data).forEach(([key, value]) => {
 			if (value === undefined || value === null) return;
 
+			if (Array.isArray(value) || typeof value === "object") {
+				formData.append(key, JSON.stringify(value));
+				return;
+			}
+
+			formData.append(key, String(value));
+		});
+
+		return clientFetch<ProductWithVariantsReviewsUserTranslatedText>(
+			`/products/${id}`,
+			{
+				method: "PATCH",
+				body: formData,
+			},
+		);
+	},
+	updateProductVariant: ({
+		id,
+		variantId,
+		data,
+	}: {
+		id: string;
+		variantId: string;
+		data: UpdateProductVariant;
+	}) => {
+		const formData = new FormData();
+
+		Object.entries(data).forEach(([key, value]) => {
+			if (value === undefined || value === null) return;
+
 			if (key === "newImgs") {
-				const newImgs = (value as UpdateProduct["newImgs"]) || [];
+				const newImgs = (value as UpdateProductVariant["newImgs"]) || [];
 				const indices = newImgs.map((img) => img.index);
 				formData.append("newImgIndices", JSON.stringify(indices));
 
@@ -64,10 +104,13 @@ export const productsService = {
 			formData.append(key, String(value));
 		});
 
-		return clientFetch<ProductTranslatedText>(`/products/${id}`, {
-			method: "PATCH",
-			body: formData,
-		});
+		return clientFetch<ProductWithVariantsReviewsUserTranslatedText>(
+			`/products/${id}/variants/${variantId}`,
+			{
+				method: "PATCH",
+				body: formData,
+			},
+		);
 	},
 	remove: (id: string) =>
 		clientFetch<null>(`/products/${id}`, {

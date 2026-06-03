@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { ProductWithReviewsAndUser } from "@repo/database";
+import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
 
 import { TranslatedText } from "@repo/types";
 
@@ -31,7 +31,7 @@ import { formatDate, initials } from "@/lib/string-utils";
 export default function Reviews({
 	product,
 }: {
-	product: ProductWithReviewsAndUser;
+	product: ProductWithVariantsReviewsUserTranslatedText;
 }) {
 	const { locale, t } = useI18n();
 	const router = useRouter();

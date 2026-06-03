@@ -1,6 +1,6 @@
 import { Product, WithContext } from "schema-dts";
 
-import { ProductWithReviewsAndUser } from "@repo/database";
+import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
 
 import { Locale, TranslatedText } from "@repo/types";
 
@@ -9,7 +9,7 @@ import { localizeUrl } from "./i18n";
 import { createProductSlug } from "./string-utils";
 
 export function generateProductStructuredData(
-	product: ProductWithReviewsAndUser,
+	product: ProductWithVariantsReviewsUserTranslatedText,
 	locale: Locale,
 ): WithContext<Product> {
 	const productUrl = localizeUrl(
@@ -18,21 +18,23 @@ export function generateProductStructuredData(
 	);
 	const offerId = `${productUrl}#offer`;
 
+	const variant = product.variants[0];
+
 	return {
 		"@context": "https://schema.org",
 		"@type": "Product",
 		"@id": productUrl,
 		name: product.name[locale],
 		description: product.description[locale],
-		image: product.imgUrls,
+		image: variant.imgUrls,
 		category: product.categoryId ?? undefined,
 		offers: {
 			"@type": "Offer",
 			"@id": offerId,
-			price: product.price,
+			price: variant.price,
 			priceCurrency: "USD",
 			availability:
-				product.stock > 0
+				variant.stock > 0
 					? "https://schema.org/InStock"
 					: "https://schema.org/OutOfStock",
 			seller: {
@@ -42,7 +44,7 @@ export function generateProductStructuredData(
 			},
 			inventoryLevel: {
 				"@type": "QuantitativeValue",
-				value: product.stock,
+				value: variant.stock,
 			},
 		},
 		aggregateRating:

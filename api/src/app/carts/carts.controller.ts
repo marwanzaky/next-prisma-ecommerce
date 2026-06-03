@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 
-import { CartWithItems } from "@repo/database";
+import { cartWithItems, CartWithItems } from "@repo/database";
 
 import { PrismaService } from "@/prisma.service";
 import { AuthenticatedRequest } from "@/types/request.type";
@@ -34,12 +34,7 @@ export class CartsController {
 			where: {
 				userId: request.user.id,
 			},
-			include: {
-				items: {
-					orderBy: { createdAt: "asc" },
-					include: { product: true },
-				},
-			},
+			...cartWithItems,
 		});
 
 		if (!cart) {
@@ -47,25 +42,20 @@ export class CartsController {
 				data: {
 					userId: request.user.id,
 				},
-				include: {
-					items: {
-						orderBy: { createdAt: "asc" },
-						include: { product: true },
-					},
-				},
+				...cartWithItems,
 			});
 		}
 
 		return cart;
 	}
 
-	@Post("items/:productId")
+	@Post("items/:productVariantId")
 	@ApiOperation({
 		summary: "Add a product to the user's cart",
 	})
 	async createCartItem(
 		@Req() req: AuthenticatedRequest,
-		@Param("productId") productId: string,
+		@Param("productVariantId") productVariantId: string,
 		@Body() { quantity }: CreateCartItemDto,
 	): Promise<CartWithItems | null> {
 		const cart = await this.prisma.cart.upsert({
@@ -82,16 +72,16 @@ export class CartsController {
 				items: {
 					upsert: {
 						where: {
-							cartId_productId: {
+							cartId_variantId: {
 								cartId: cart.id,
-								productId,
+								variantId: productVariantId,
 							},
 						},
 						update: {
 							quantity: { increment: quantity },
 						},
 						create: {
-							productId,
+							variantId: productVariantId,
 							quantity,
 						},
 					},
@@ -101,31 +91,22 @@ export class CartsController {
 				userId: req.user.id,
 				items: {
 					create: {
-						productId,
+						variantId: productVariantId,
 						quantity,
 					},
 				},
 			},
-			include: {
-				items: {
-					orderBy: {
-						createdAt: "asc",
-					},
-					include: {
-						product: true,
-					},
-				},
-			},
+			...cartWithItems,
 		});
 	}
 
-	@Patch("items/:productId/quantity")
+	@Patch("items/:productVariantId/quantity")
 	@ApiOperation({
 		summary: "Update quantity of a product in the user's cart",
 	})
 	async updateCartItemQuantity(
 		@Req() req: AuthenticatedRequest,
-		@Param("productId") productId: string,
+		@Param("productVariantId") productVariantId: string,
 		@Body() { quantity }: UpdateCartItemDto,
 	): Promise<CartWithItems | null> {
 		return await this.prisma.cart.update({
@@ -133,29 +114,22 @@ export class CartsController {
 			data: {
 				items: {
 					updateMany: {
-						where: { productId },
+						where: { variantId: productVariantId },
 						data: { quantity },
 					},
 				},
 			},
-			include: {
-				items: {
-					orderBy: {
-						createdAt: "asc",
-					},
-					include: { product: true },
-				},
-			},
+			...cartWithItems,
 		});
 	}
 
-	@Delete("items/:productId")
+	@Delete("items/:productVariantId")
 	@ApiOperation({
 		summary: "Remove a product from the user's cart",
 	})
 	async deleteCartItem(
 		@Req() req: AuthenticatedRequest,
-		@Param("productId") productId: string,
+		@Param("productVariantId") productVariantId: string,
 	): Promise<CartWithItems | null> {
 		return await this.prisma.cart.update({
 			where: {
@@ -164,20 +138,11 @@ export class CartsController {
 			data: {
 				items: {
 					deleteMany: {
-						productId,
+						variantId: productVariantId,
 					},
 				},
 			},
-			include: {
-				items: {
-					orderBy: {
-						createdAt: "asc",
-					},
-					include: {
-						product: true,
-					},
-				},
-			},
+			...cartWithItems,
 		});
 	}
 }

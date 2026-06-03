@@ -3,13 +3,13 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
-import { ProductTranslatedText } from "@repo/database";
+import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
 
 import { productsService } from "@/services/products-service";
 import { usersService } from "@/services/users-service";
 
 export type UserProductsState = {
-	products: ProductTranslatedText[];
+	products: ProductWithVariantsReviewsUserTranslatedText[];
 	loading: boolean;
 	error?: SerializedError;
 };
@@ -33,6 +33,11 @@ const createUserProductAsync = createAsyncThunk(
 const updateUserProductAsync = createAsyncThunk(
 	"userProducts/updateUserProduct",
 	productsService.updateProduct,
+);
+
+const updateUserProductVariantAsync = createAsyncThunk(
+	"userProducts/updateUserProductVariant",
+	productsService.updateProductVariant,
 );
 
 const removeUserProductAsync = createAsyncThunk(
@@ -80,11 +85,27 @@ const userProductsSlice = createSlice({
 			})
 			.addCase(updateUserProductAsync.fulfilled, (state, action) => {
 				state.loading = false;
-				state.products = state.products.map((item) =>
-					item.id !== action.payload.id ? item : action.payload,
+				state.products = state.products.map((product) =>
+					product.id !== action.payload.id ? product : action.payload,
 				);
 			})
 			.addCase(updateUserProductAsync.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error;
+			});
+
+		// updateUserProductVariantAsync
+		builder
+			.addCase(updateUserProductVariantAsync.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(updateUserProductVariantAsync.fulfilled, (state, action) => {
+				state.loading = false;
+				state.products = state.products.map((product) =>
+					product.id !== action.payload.id ? product : action.payload,
+				);
+			})
+			.addCase(updateUserProductVariantAsync.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error;
 			});
@@ -112,6 +133,7 @@ export {
 	getUserProductsAsync,
 	removeUserProductAsync,
 	updateUserProductAsync,
+	updateUserProductVariantAsync,
 };
 
 export default userProductsSlice.reducer;

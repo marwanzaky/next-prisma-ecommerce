@@ -1,7 +1,11 @@
 import { Controller, Delete, Get, Param, Post, Req } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 
-import { Product } from "@repo/database";
+import {
+	Product,
+	productWithVariantsReviewsUser,
+	ProductWithVariantsReviewsUser,
+} from "@repo/database";
 
 import { PrismaService } from "@/prisma.service";
 import { AuthenticatedRequest } from "@/types/request.type";
@@ -17,13 +21,17 @@ export class FavoritesController {
 	@ApiOperation({
 		summary: "Get all favorite products",
 	})
-	async get(@Req() request: AuthenticatedRequest): Promise<Product[]> {
+	async getMe(
+		@Req() request: AuthenticatedRequest,
+	): Promise<ProductWithVariantsReviewsUser[]> {
 		const favorites = await this.prisma.favorite.findMany({
 			where: {
 				userId: request.user.id,
 			},
 			include: {
-				product: true,
+				product: {
+					...productWithVariantsReviewsUser,
+				},
 			},
 		});
 
@@ -37,7 +45,7 @@ export class FavoritesController {
 	async create(
 		@Req() request: AuthenticatedRequest,
 		@Param() { productId }: CreateFavoriteDto,
-	): Promise<Product> {
+	): Promise<ProductWithVariantsReviewsUser> {
 		const favorite = await this.prisma.favorite.upsert({
 			where: {
 				userId_productId: {
@@ -51,7 +59,9 @@ export class FavoritesController {
 				productId,
 			},
 			include: {
-				product: true,
+				product: {
+					...productWithVariantsReviewsUser,
+				},
 			},
 		});
 

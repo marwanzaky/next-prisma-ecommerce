@@ -9,7 +9,11 @@ import { useDebouncedCallback } from "use-debounce";
 import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateProduct, UpdateProduct } from "@repo/database";
+import {
+	CreateProduct,
+	UpdateProduct,
+	UpdateProductVariant,
+} from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
 
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
@@ -51,26 +55,29 @@ function createProductSchema(t: ReturnType<typeof useI18n>["t"]) {
 			.max(120, t("validation.nameLong")),
 		description: z.string().nonempty(t("validation.required")),
 		categoryId: z.string().nonempty(t("validation.required")),
-		priceRangeUsd: z
-			.object({
-				min: z
-					.number({ error: t("validation.required") })
-					.positive(t("validation.mustBePositive")),
-				max: z
-					.number({ error: t("validation.invalidNumber") })
-					.positive(t("validation.mustBePositive")),
-			})
-			.refine((data) => !data.max || data.max >= data.min, {
-				message: t("validation.maxPriceGteMinPrice"),
-				path: ["max"],
-			}),
 		tags: z.array(z.string()).min(1, t("validation.required")),
-		images: z
-			.array(imageSlotSchema)
-			.max(10, "Max 10 images")
-			.refine((imgs) => imgs.some((img) => Boolean(img?.url || img?.file)), {
-				message: t("validation.required"),
+		options: z.array(
+			z.object({
+				name: z.string(),
+				values: z.array(z.string()),
 			}),
+		),
+		variants: z.array(
+			z.object({
+				variantId: z.string().optional(),
+				title: z.string(),
+				price: z.number().min(0, "Price must be positive"),
+				stock: z.number().int().min(0, "Stock cannot be negative"),
+				sku: z.string().optional(),
+				selections: z.array(
+					z.object({
+						optionName: z.string(),
+						optionValue: z.string(),
+					}),
+				),
+				images: z.array(imageSlotSchema).max(10, "Max 10 images"),
+			}),
+		),
 	});
 }
 
@@ -112,12 +119,8 @@ export function useSell() {
 		defaultValues: {
 			name: "",
 			description: "",
-			priceRangeUsd: {
-				min: undefined,
-				max: undefined,
-			},
 			tags: [],
-			images: [],
+			variants: [],
 			categoryId: "",
 		},
 	});
@@ -130,7 +133,7 @@ export function useSell() {
 
 	const tableData: SellProduct[] = products.map((item) => ({
 		...item,
-		imgUrl: item.imgUrls[0],
+		imgUrl: item.variants[0].imgUrls[0],
 	}));
 
 	return {
@@ -141,15 +144,6 @@ export function useSell() {
 
 				toast("Product deleted.", { position: "top-center" });
 			},
-			onStockChange: (id, value) =>
-				dispatch(
-					updateUserProductAsync({
-						id,
-						data: {
-							stock: value,
-						},
-					}),
-				),
 			locale,
 			t,
 		}),
@@ -164,20 +158,25 @@ export function useSell() {
 			[categoryTree],
 		),
 
-		addProduct: form.handleSubmit(async (data) => {
-			const { priceRangeUsd, name, description, tags, categoryId, images } =
-				data;
+		createProduct: form.handleSubmit(async (data) => {
+			const { name, description, tags, categoryId, options, variants } = data;
 
 			const createProduct: CreateProduct = {
 				name,
 				description,
-				price: priceRangeUsd.min * 100,
-				priceCompare: priceRangeUsd.max * 100,
-				imgFiles: images
-					.filter((img) => !!img)
-					.map((img) => img.file)
-					.filter((img) => img !== undefined),
 				tags,
+				options: options.map((option, optionIndex) => ({
+					name: option.name,
+					position: optionIndex,
+					values: option.values.map((value, valueIndex) => ({
+						value,
+						position: valueIndex,
+					})),
+				})),
+				variants: variants.map((variant) => ({
+					...variant,
+					compareAtPrice: variant.price,
+				})),
 				categoryId,
 				stock: 1,
 			};
@@ -191,28 +190,46 @@ export function useSell() {
 			router.push(localizePath("/store/products", locale));
 		}),
 		updateProduct: async ({ id, data }: { id: string; data: ProductInput }) => {
-			const { priceRangeUsd, name, description, tags, categoryId, images } =
-				data;
-
-			const keptImgs: UpdateProduct["keptImgs"] = images
-				.filter((img) => !!img)
-				.map((img, index) => (img.url ? { url: img.url, index } : undefined))
-				.filter((obj) => !!obj);
-
-			const newImgs: UpdateProduct["newImgs"] = images
-				.filter((img) => !!img)
-				.map((img, index) => (img.file ? { file: img.file, index } : undefined))
-				.filter((obj) => !!obj);
+			const { name, description, tags, categoryId, options, variants } = data;
 
 			const updateProduct: UpdateProduct = {
 				name,
 				description,
-				price: priceRangeUsd.min * 100,
-				priceCompare: priceRangeUsd.max * 100,
 				tags,
 				categoryId,
-				keptImgs: keptImgs,
-				newImgs: newImgs,
+				options: options.map((option, optionIndex) => ({
+					name: option.name,
+					position: optionIndex,
+					values: option.values.map((value, valueIndex) => ({
+						value,
+						position: valueIndex,
+					})),
+				})),
+				variants: variants.map((variant) => {
+					const variantImages = variant.images;
+
+					const variantKeptImgs: UpdateProductVariant["keptImgs"] =
+						variantImages
+							.filter((img) => !!img)
+							.map((img, index) =>
+								img.url ? { url: img.url, index } : undefined,
+							)
+							.filter((obj) => !!obj);
+
+					const variantNewImgs: UpdateProductVariant["newImgs"] = variantImages
+						.filter((img) => !!img)
+						.map((img, index) =>
+							img.file ? { file: img.file, index } : undefined,
+						)
+						.filter((obj) => !!obj);
+
+					return {
+						...variant,
+						compareAtPrice: variant.price,
+						keptImgs: variantKeptImgs,
+						newImgs: variantNewImgs,
+					};
+				}),
 			};
 
 			await dispatch(

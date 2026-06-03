@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	Body,
 	Controller,
 	Delete,
@@ -17,7 +18,11 @@ import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 
 import { compare, hash } from "bcryptjs";
 
-import { Prisma, Product } from "@repo/database";
+import {
+	Prisma,
+	ProductWithVariantsReviewsUser,
+	productWithVariantsReviewsUser,
+} from "@repo/database";
 import { PublicUser, User } from "@repo/database";
 
 import { Public } from "@/app/auth/auth.guard";
@@ -70,7 +75,7 @@ export class UsersController {
 	})
 	async getMeProducts(
 		@Req() request: AuthenticatedRequest,
-	): Promise<Product[]> {
+	): Promise<ProductWithVariantsReviewsUser[]> {
 		return this.prisma.product.findMany({
 			where: {
 				userId: request.user.id,
@@ -78,6 +83,7 @@ export class UsersController {
 			orderBy: {
 				createdAt: "asc",
 			},
+			...productWithVariantsReviewsUser,
 		});
 	}
 
@@ -94,7 +100,25 @@ export class UsersController {
 		let avatarUrl: string | null = null;
 
 		if (avatarFile) {
-			avatarUrl = (await this.cloudinaryService.uploadFile(avatarFile)) || null;
+			const uploadedUrl = await this.cloudinaryService.uploadFile(avatarFile);
+
+			if (!uploadedUrl) {
+				throw new BadRequestException("Failed to upload new avatar");
+			}
+
+			avatarUrl = uploadedUrl;
+		}
+
+		const currentUser = await this.prisma.user.findUnique({
+			where: { id: request.user.id },
+			select: { avatarUrl: true },
+		});
+
+		if (!currentUser) {
+			throw new BadRequestException("Use does not exist");
+		}
+		if (currentUser.avatarUrl) {
+			await this.cloudinaryService.deleteFile(currentUser.avatarUrl);
 		}
 
 		return this.prisma.user.update({

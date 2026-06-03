@@ -12,19 +12,20 @@ export default function Page() {
 		form,
 		options,
 		onDescriptionChange,
-		addProduct,
+		createProduct,
 		description,
 		loading,
 	} = useSell();
 
 	return (
 		<ProductBase
+			title="New Product"
 			initialConfig={initialConfig}
 			form={form}
 			options={options}
 			onDescriptionChange={onDescriptionChange}
 			description={description}
-			onSubmit={addProduct}
+			onSubmit={createProduct}
 			submitButtonText={t("buttons.save")}
 			loading={loading}
 		/>

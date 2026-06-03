@@ -1,48 +1,65 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { Heart, ShoppingCart } from "lucide-react";
 
-import { sendGTMEvent } from "@next/third-parties/google";
-import { ProductWithReviewsAndUser } from "@repo/database";
+import {
+	ProductVariant,
+	ProductWithVariantsReviewsUserTranslatedText,
+} from "@repo/database";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
-import { renderLexicalJSONToHTML } from "@/components/ui/lexical/render-lexical-json-to-html";
 import Stars from "@/components/ui/stars";
 
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/shadcn/components/ui/accordion";
-import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-} from "@/shadcn/components/ui/avatar";
 import { Badge } from "@/shadcn/components/ui/badge";
 import { Button } from "@/shadcn/components/ui/button";
+import {
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@/shadcn/components/ui/field";
 import { Separator } from "@/shadcn/components/ui/separator";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { localizePath } from "@/lib/i18n";
-import { formatDate, formatPrice, initials } from "@/lib/string-utils";
+import { formatPrice } from "@/lib/string-utils";
+import { cn } from "@/lib/utils";
 
 import { useCart } from "@/hooks/use-cart";
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
+import ProductAccordions from "./product-accordions";
 import ProductBreadcrumb from "./product-breadcrumb";
+
+export function selectedProductVariant(
+	product: ProductWithVariantsReviewsUserTranslatedText,
+	selectedOptions: Record<string, string>,
+) {
+	return product.variants.find((variant) =>
+		variant.selections.every(
+			(selection) =>
+				selectedOptions[selection.optionId] === selection.optionValueId,
+		),
+	);
+}
 
 export default function ProductDetails({
 	product,
+	selectedVariant,
+	selectedOptions,
+	setSelectedOptions,
 }: {
-	product: ProductWithReviewsAndUser;
+	product: ProductWithVariantsReviewsUserTranslatedText;
+	selectedVariant: ProductVariant;
+	selectedOptions: Record<string, string>;
+	setSelectedOptions: React.Dispatch<
+		React.SetStateAction<Record<string, string>>
+	>;
 }) {
 	const router = useRouter();
 	const { locale, t } = useI18n();
@@ -54,34 +71,15 @@ export default function ProductDetails({
 
 	const [quantity, setQuantity] = useState(1);
 
-	const descriptionHtml = useMemo(() => {
-		const parsed = JSON.parse(product.description[locale]);
-		return renderLexicalJSONToHTML(parsed.root.children);
-	}, [product.description, locale]);
-
-	useEffect(() => {
-		sendGTMEvent({
-			event: "view_item",
-			value: {
-				currency: "USD",
-				value: product.price,
-				items: [
-					{
-						item_id: product.id,
-						item_name: product.name,
-						price: product.price,
-						quantity: 1,
-					},
-				],
-			},
-		});
-	}, [product]);
-
 	const discount = useMemo(() => {
-		const discount = product.priceCompare - product.price;
-		const discountPercent = (discount / product.priceCompare) * 100;
+		if (!selectedVariant.compareAtPrice) {
+			return "0%";
+		}
+
+		const discount = selectedVariant.compareAtPrice - selectedVariant.price;
+		const discountPercent = (discount / selectedVariant.compareAtPrice) * 100;
 		return `${Math.round(discountPercent)}%`;
-	}, [product]);
+	}, [selectedVariant]);
 
 	return (
 		<div className="space-y-4 lg:space-y-8">
@@ -95,13 +93,15 @@ export default function ProductDetails({
 
 					<div className="flex items-center gap-3 overflow-hidden">
 						<div className="text-4xl">
-							{formatPrice(product.price / 100, locale)}
+							{formatPrice(selectedVariant.price / 100, locale)}
 						</div>
-						{product.priceCompare > product.price && (
-							<div className="text-muted-foreground line-through text-2xl">
-								{formatPrice(product.priceCompare / 100, locale)}
-							</div>
-						)}
+
+						{selectedVariant.compareAtPrice != null &&
+							selectedVariant.compareAtPrice > selectedVariant.price && (
+								<div className="text-muted-foreground line-through text-2xl">
+									{formatPrice(selectedVariant.compareAtPrice / 100, locale)}
+								</div>
+							)}
 
 						{discount !== "0%" && (
 							<Badge className="border-none bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 focus-visible:outline-none dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5">
@@ -110,7 +110,145 @@ export default function ProductDetails({
 						)}
 					</div>
 
+					{product.options.length > 0 && (
+						<FieldGroup>
+							{product.options.map((option) => (
+								<Field key={option.id}>
+									<div className="flex justify-between">
+										<FieldLabel>{option.name}</FieldLabel>
+										<TypographyMuted className="text-sm">
+											{
+												option.values.find(
+													(value) =>
+														value.id === selectedOptions[value.optionId],
+												)?.value
+											}
+										</TypographyMuted>
+									</div>
+
+									<div className="flex flex-wrap gap-2">
+										{option.values.map((value, i) => {
+											const isSelected =
+												selectedOptions[option.id] === value.id;
+
+											const matchingVariant = selectedProductVariant(product, {
+												...selectedOptions,
+												[option.id]: value.id,
+											});
+
+											const isColor = option.name === "Color";
+
+											const isAvailable =
+												!!matchingVariant && matchingVariant.stock > 0;
+
+											const isPurchasable = true;
+
+											const color = value.value as
+												| "Black"
+												| "White"
+												| "Navy"
+												| "Cranberry"
+												| "Pink"
+												| "Stone"
+												| "Dark Gray"
+												| "Grey"
+												| "Forest Green"
+												| "Brown"
+												| "Beige"
+												| "Red"
+												| "Blue";
+
+											let backgroundColor = "#fff";
+
+											if (color === "Black") backgroundColor = "#000";
+											if (color === "Navy") backgroundColor = "#000080";
+											if (color === "Cranberry") backgroundColor = "#A60A3D";
+											if (color === "Pink") backgroundColor = "#FFC0CB";
+											if (color === "Stone") backgroundColor = "#ADA587";
+											if (color === "Dark Gray") backgroundColor = "#A9A9A9";
+											if (color === "Grey") backgroundColor = "#808080";
+											if (color === "Forest Green") backgroundColor = "#228B22";
+											if (color === "Brown") backgroundColor = "#964B00";
+											if (color === "Beige") backgroundColor = "#F5F5DC";
+											if (color === "Beige") backgroundColor = "#F5F5DC";
+											if (color === "Red") backgroundColor = "#FF0000";
+											if (color === "Blue") backgroundColor = "#0000FF";
+
+											return isColor ? (
+												<button
+													type="button"
+													key={`button-option-${value.optionId}-${i}`}
+													onClick={() =>
+														setSelectedOptions((prev) => ({
+															...prev,
+															[option.id]: value.id,
+														}))
+													}
+													disabled={!isAvailable}
+													title={value.value}
+													style={{ backgroundColor }}
+													className={cn(
+														"w-10 h-10 rounded-lg border transition-all relative overflow-hidden",
+														isSelected
+															? "border-gray-900 ring-2 ring-primary ring-offset-2"
+															: "border-gray-200",
+														!isAvailable
+															? "opacity-30 cursor-not-allowed"
+															: "cursor-pointer",
+													)}
+												>
+													{!isPurchasable && isAvailable && (
+														<span className="absolute inset-0 flex items-center justify-center">
+															<span className="w-full h-0.5 bg-gray-400 rotate-45 absolute" />
+														</span>
+													)}
+												</button>
+											) : (
+												<Button
+													type="button"
+													key={`button-option-${value.optionId}-${i}`}
+													variant="outline"
+													onClick={() =>
+														setSelectedOptions((prev) => ({
+															...prev,
+															[option.id]: value.id,
+														}))
+													}
+													disabled={!isAvailable}
+													className={
+														isSelected
+															? "ring-2 ring-primary ring-offset-2 border-primary"
+															: ""
+													}
+												>
+													{value.value}
+													{!isPurchasable && isAvailable && (
+														<span className="ml-1 text-xs text-gray-400">
+															Out Of Stock
+														</span>
+													)}
+												</Button>
+											);
+										})}
+									</div>
+								</Field>
+							))}
+
+							{selectedVariant === undefined && (
+								<FieldError>
+									Selected option combination is not available.
+								</FieldError>
+							)}
+						</FieldGroup>
+					)}
+
 					<Stars value={product.avgRatings} total={product.numReviews} />
+
+					<div className="text-sm text-muted-foreground">
+						{selectedVariant.stock > 0
+							? `In stock: ${selectedVariant.stock}`
+							: "Out of stock"}
+					</div>
 				</div>
 			</div>
 
@@ -129,23 +267,7 @@ export default function ProductDetails({
 						size="xl"
 						className="flex-1"
 						onClick={() => {
-							addToCart(product, quantity);
-
-							sendGTMEvent({
-								event: "add_to_cart",
-								value: {
-									currency: "USD",
-									value: product.price,
-									items: [
-										{
-											item_id: product.id,
-											item_name: product.name,
-											price: product.price,
-											quantity: 1,
-										},
-									],
-								},
-							});
+							addToCart(selectedVariant, quantity);
 						}}
 					>
 						<ShoppingCart />
@@ -177,23 +299,7 @@ export default function ProductDetails({
 					size="xl"
 					variant="secondary"
 					onClick={() => {
-						addToCart(product, quantity);
-
-						sendGTMEvent({
-							event: "add_to_cart",
-							value: {
-								currency: "USD",
-								value: product.price,
-								items: [
-									{
-										item_id: product.id,
-										item_name: product.name,
-										price: product.price,
-										quantity: 1,
-									},
-								],
-							},
-						});
+						addToCart(selectedVariant, quantity);
 
 						router.push(localizePath("/cart", locale));
 					}}
@@ -202,113 +308,7 @@ export default function ProductDetails({
 				</Button>
 			</div>
 
-			<Accordion
-				defaultValue="item-1"
-				type="single"
-				collapsible
-				className="w-full"
-			>
-				<AccordionItem value="item-1">
-					<AccordionTrigger>
-						{t("productPage.accordion.description")}
-					</AccordionTrigger>
-					<AccordionContent asChild>
-						<div
-							className="prose prose-slate text-sm [&_img]:rounded-lg"
-							dangerouslySetInnerHTML={{
-								__html: descriptionHtml,
-							}}
-						/>
-					</AccordionContent>
-				</AccordionItem>
-				<AccordionItem value="item-2">
-					<AccordionTrigger>
-						{t("productPage.accordion.shippingRefundPolicy")}
-					</AccordionTrigger>
-					<AccordionContent className="prose prose-slate text-sm">
-						<h4>Refund Policy</h4>
-						<p>
-							We have a 30-day return policy, which means you have 30 days after
-							receiving your item to request a return.
-							<br />
-							<br />
-							To be eligible for a return, your item must be in the same
-							condition that you received it, unworn or unused, with tags, and
-							in its original packaging. You&apos;ll also need the receipt or
-							proof of purchase.
-							<br />
-							<br />
-							To start a return, you can contact us at{" "}
-							{process.env.NEXT_PUBLIC_CONTACT}. If your return is accepted,
-							we&apos;ll send you a return shipping label, as well as
-							instructions on how and where to send your package. Items sent
-							back to us without first requesting a return will not be accepted.
-							<br />
-							<br />
-							You can always contact us for any return question at{" "}
-							{process.env.NEXT_PUBLIC_CONTACT}.
-						</p>
-
-						<h4>Shipping Policy</h4>
-						<p>
-							All orders are processed within 1 to 3 business days (excluding
-							weekends and holidays) after receiving your order confirmation
-							email. You will receive another notification when your order has
-							shipped.
-						</p>
-
-						<h4>International Shipping</h4>
-						<p>
-							We offer international shipping to the following countries: United
-							States, United Kingdom, Australia, Canada, Germany, France, Spain,
-							United Arab Emirates, Indonesia.
-							<br />
-							<br />
-							Your order may be subject to import duties and taxes (including
-							VAT), which are incurred once a shipment reaches your destination
-							country.
-						</p>
-					</AccordionContent>
-				</AccordionItem>
-
-				<AccordionItem value="item-3">
-					<AccordionTrigger>
-						{t("productPage.accordion.sellerInformation")}
-					</AccordionTrigger>
-					<AccordionContent>
-						<div className="flex items-center gap-2">
-							<Avatar className="h-10 w-10">
-								<AvatarImage
-									role="button"
-									src={product.user.avatarUrl || undefined}
-									className="cursor-pointer"
-									alt={t("photoOf").replace("{{name}}", product.user.name)}
-									onClick={() =>
-										router.push(
-											localizePath(`/user/${product.user.id}`, locale),
-										)
-									}
-									loading="lazy"
-								/>
-								<AvatarFallback>{initials(product.user.name)}</AvatarFallback>
-							</Avatar>
-
-							<div>
-								<Link
-									href={localizePath(`/user/${product.userId}`, locale)}
-									className="no-underline! hover:underline!"
-								>
-									{product.user.name}
-								</Link>
-								<TypographyMuted>
-									{t("productPage.accordion.sellingSince")}{" "}
-									{formatDate(product.user.createdAt || product.user.updatedAt)}
-								</TypographyMuted>
-							</div>
-						</div>
-					</AccordionContent>
-				</AccordionItem>
-			</Accordion>
+			<ProductAccordions product={product} />
 		</div>
 	);
 }
