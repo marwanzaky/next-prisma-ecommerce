@@ -47,7 +47,6 @@ model Product {
 
   avgRatings Float    @default(0.0)
   numReviews Int      @default(0)
-  imgUrls    String[]
   tags       String[]
   featured   Boolean  @default(false)
 
@@ -72,7 +71,7 @@ model ProductOption {
   id String @id @default(cuid())
 
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   name     String // Color, Size
   position Int    @default(0)
@@ -97,7 +96,7 @@ model ProductVariant {
   id String @id @default(cuid())
 
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   // Example: "Black / XL"
   title String?

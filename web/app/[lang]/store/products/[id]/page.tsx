@@ -35,10 +35,6 @@ export default function Page() {
 				name: product.name.en,
 				description: product.description.en,
 				tags: product.tags,
-				images: Array.from({ length: 10 }, (_, i) => {
-					const el = product.imgUrls[i];
-					return el ? { url: el } : undefined;
-				}),
 				options: product.options.map((option) => ({
 					name: option.name,
 					values: option.values.map((value) => value.value),
@@ -51,7 +47,7 @@ export default function Page() {
 						optionName: selection.option.name,
 						optionValue: selection.optionValue.value,
 					})),
-					sku: variant.sku || "",
+					sku: variant.sku ?? "",
 					stock: variant.stock,
 					images: Array.from({ length: 10 }, (_, i) => {
 						const el = variant.imgUrls[i];

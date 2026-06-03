@@ -87,7 +87,8 @@ export function useCartPage() {
 
 	const tableData: CartItem[] = items.map((item) => ({
 		...item.product,
-		imgUrl: item.product.imgUrls[0],
+		// imgUrl: item.product.imgUrls[0],
+		imgUrl: "",
 		quantity: item.quantity,
 		// total: item.product.price * item.quantity,
 		total: 0,

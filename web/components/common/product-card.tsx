@@ -68,7 +68,7 @@ export default function ProductCard({ data }: ProductCardProps) {
 			>
 				<Image
 					className="aspect-square object-cover w-full h-full"
-					src={data.imgUrls[0]}
+					src={variant.imgUrls[0]}
 					alt={data.name[locale]}
 					width={512}
 					height={512}

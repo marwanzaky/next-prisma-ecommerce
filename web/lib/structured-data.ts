@@ -26,7 +26,7 @@ export function generateProductStructuredData(
 		"@id": productUrl,
 		name: product.name[locale],
 		description: product.description[locale],
-		image: product.imgUrls,
+		image: variant.imgUrls,
 		category: product.categoryId ?? undefined,
 		offers: {
 			"@type": "Offer",

@@ -97,13 +97,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 			title: product.name.en,
 			description: product.description.en,
 			path: localizePath(path, lang),
-			image: product.imgUrls[0],
+			image: product.variants[0].imgUrls[0],
 			type: "website",
 		}),
 		twitter: generateTwitterMetadata({
 			title: product.name.en,
 			description: product.description.en,
-			image: product.imgUrls[0],
+			image: product.variants[0].imgUrls[0],
 		}),
 		alternates: generateLocaleAlternates(path, lang),
 	};

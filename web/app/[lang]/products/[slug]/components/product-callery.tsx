@@ -38,16 +38,6 @@ export default function ProductCallery({
 	const [imgIndex, setImgIndex] = useState(0);
 	const [api, setApi] = useState<CarouselApi>();
 
-	const [imgUrls, setImgUrls] = useState<string[]>([]);
-
-	useEffect(() => {
-		if (selectedVariant) {
-			setImgUrls(selectedVariant.imgUrls);
-		} else {
-			setImgUrls(product.imgUrls);
-		}
-	}, [product, selectedVariant]);
-
 	useEffect(() => {
 		if (!api) return;
 		api.on("select", () => {
@@ -82,7 +72,7 @@ export default function ProductCallery({
 				opts={{ direction: dir }}
 			>
 				<CarouselContent>
-					{imgUrls.map((src, i) => (
+					{selectedVariant.imgUrls.map((src, i) => (
 						<CarouselItem key={`carousel-item-${i}`}>
 							<Image
 								className="w-full rounded-lg"
@@ -100,7 +90,7 @@ export default function ProductCallery({
 			</Carousel>
 
 			<div className="grid grid-cols-4 gap-2 md:gap-4">
-				{imgUrls.map((imgUrl, i) => (
+				{selectedVariant.imgUrls.map((imgUrl, i) => (
 					<Image
 						key={`${product.name}-${i + 1}`}
 						role="button"

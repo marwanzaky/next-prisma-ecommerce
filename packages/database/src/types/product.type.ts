@@ -26,7 +26,6 @@ export type CreateProduct = {
 	tags?: string[];
 	stock?: number;
 	categoryId?: string | null;
-	imgFiles?: File[];
 	options: {
 		name: string;
 		position: number;
@@ -38,6 +37,8 @@ export type CreateProduct = {
 	variants: CreateProductVariant[];
 };
 
+export type UpdateProduct = Partial<CreateProduct>;
+
 export type CreateProductVariant = {
 	title: string;
 	price: number;
@@ -48,18 +49,6 @@ export type CreateProductVariant = {
 		optionValue: string;
 	}[];
 	sku?: string;
-	newImgs?: {
-		file: File;
-		index: number;
-	}[];
-	keptImgs?: {
-		url: string;
-		index: number;
-	}[];
-};
-
-export type UpdateProduct = Partial<Omit<CreateProduct, "imgFiles">> & {
-	variants?: CreateProductVariant[];
 	newImgs?: {
 		file: File;
 		index: number;

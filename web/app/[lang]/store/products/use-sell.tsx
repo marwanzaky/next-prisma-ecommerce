@@ -9,7 +9,11 @@ import { useDebouncedCallback } from "use-debounce";
 import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateProduct, UpdateProduct } from "@repo/database";
+import {
+	CreateProduct,
+	UpdateProduct,
+	UpdateProductVariant,
+} from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
 
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
@@ -74,12 +78,6 @@ function createProductSchema(t: ReturnType<typeof useI18n>["t"]) {
 				images: z.array(imageSlotSchema).max(10, "Max 10 images"),
 			}),
 		),
-		images: z
-			.array(imageSlotSchema)
-			.max(10, "Max 10 images")
-			.refine((imgs) => imgs.some((img) => Boolean(img?.url || img?.file)), {
-				message: t("validation.required"),
-			}),
 	});
 }
 
@@ -122,7 +120,6 @@ export function useSell() {
 			name: "",
 			description: "",
 			tags: [],
-			images: [],
 			variants: [],
 			categoryId: "",
 		},
@@ -136,7 +133,7 @@ export function useSell() {
 
 	const tableData: SellProduct[] = products.map((item) => ({
 		...item,
-		imgUrl: item.imgUrls[0],
+		imgUrl: item.variants[0].imgUrls[0],
 	}));
 
 	return {
@@ -162,16 +159,11 @@ export function useSell() {
 		),
 
 		createProduct: form.handleSubmit(async (data) => {
-			const { name, description, tags, categoryId, images, options, variants } =
-				data;
+			const { name, description, tags, categoryId, options, variants } = data;
 
 			const createProduct: CreateProduct = {
 				name,
 				description,
-				imgFiles: images
-					.filter((img) => !!img)
-					.map((img) => img.file)
-					.filter((img) => img !== undefined),
 				tags,
 				options: options.map((option, optionIndex) => ({
 					name: option.name,
@@ -198,18 +190,7 @@ export function useSell() {
 			router.push(localizePath("/store/products", locale));
 		}),
 		updateProduct: async ({ id, data }: { id: string; data: ProductInput }) => {
-			const { name, description, tags, categoryId, images, options, variants } =
-				data;
-
-			const keptImgs: UpdateProduct["keptImgs"] = images
-				.filter((img) => !!img)
-				.map((img, index) => (img.url ? { url: img.url, index } : undefined))
-				.filter((obj) => !!obj);
-
-			const newImgs: UpdateProduct["newImgs"] = images
-				.filter((img) => !!img)
-				.map((img, index) => (img.file ? { file: img.file, index } : undefined))
-				.filter((obj) => !!obj);
+			const { name, description, tags, categoryId, options, variants } = data;
 
 			const updateProduct: UpdateProduct = {
 				name,
@@ -227,14 +208,15 @@ export function useSell() {
 				variants: variants.map((variant) => {
 					const variantImages = variant.images;
 
-					const variantKeptImgs: UpdateProduct["keptImgs"] = variantImages
-						.filter((img) => !!img)
-						.map((img, index) =>
-							img.url ? { url: img.url, index } : undefined,
-						)
-						.filter((obj) => !!obj);
+					const variantKeptImgs: UpdateProductVariant["keptImgs"] =
+						variantImages
+							.filter((img) => !!img)
+							.map((img, index) =>
+								img.url ? { url: img.url, index } : undefined,
+							)
+							.filter((obj) => !!obj);
 
-					const variantNewImgs: UpdateProduct["newImgs"] = variantImages
+					const variantNewImgs: UpdateProductVariant["newImgs"] = variantImages
 						.filter((img) => !!img)
 						.map((img, index) =>
 							img.file ? { file: img.file, index } : undefined,
@@ -248,8 +230,6 @@ export function useSell() {
 						newImgs: variantNewImgs,
 					};
 				}),
-				keptImgs: keptImgs,
-				newImgs: newImgs,
 			};
 
 			await dispatch(

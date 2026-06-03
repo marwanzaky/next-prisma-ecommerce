@@ -144,7 +144,7 @@ export function syncAndGenerateVariants(
 			title: combo.title,
 			price: 0,
 			stock: 0,
-			sku: `${slugify(baseSku)}-${combo.selections.map((s) => slugify(s.optionValue)).join("-")}`,
+			sku: generateProductSKU(baseSku, combo.selections),
 			selections: combo.selections,
 			images: Array.from({ length: 10 }, (_, i) => {
 				return undefined;
@@ -153,6 +153,10 @@ export function syncAndGenerateVariants(
 
 	// Combine them: old preserved array layout first (order kept), then newly added combinations
 	return [...preservedVariants, ...newVariants];
+}
+
+function generateProductSKU(baseSku: string, selections: any[]): string {
+	return `${slugify(baseSku)}-${selections.map((s) => slugify(s.optionValue)).join("-")}`;
 }
 
 type ProductBaseProps = {
@@ -212,16 +216,38 @@ export function ProductBase({
 	React.useEffect(() => {
 		const currentVariants = form.getValues("variants");
 
+		let updatedVariants: ProductInput["variants"] = [];
+
 		// Generate the synced matrix list
-		const updatedVariants = syncAndGenerateVariants(
-			optionsWatch || [],
-			currentVariants,
-			optionsName.split(" ").slice(0, 3).join("-"),
-		);
+		if ((optionsWatch || []).length > 0) {
+			updatedVariants = syncAndGenerateVariants(
+				optionsWatch,
+				currentVariants,
+				optionsName.split(" ").slice(0, 3).join("-"),
+			);
+		} else if (currentVariants.length === 0) {
+			updatedVariants = [
+				{
+					title: optionsName || title,
+					price: 0,
+					stock: 0,
+					sku: generateProductSKU(
+						`${optionsName.split(" ").slice(0, 3).join("-")}-${productId}`,
+						[],
+					),
+					selections: [],
+					images: Array.from({ length: 10 }, (_, i) => {
+						return undefined;
+					}),
+				},
+			];
+		} else if (currentVariants.length === 1) {
+			updatedVariants = currentVariants;
+		}
 
 		// Atomically replace the form's variants array state
 		replaceVariants(updatedVariants);
-	}, [optionsWatch, replaceVariants]);
+	}, [optionsWatch, replaceVariants, optionsName]);
 
 	return (
 		<Container>
@@ -296,30 +322,6 @@ export function ProductBase({
 											</div>
 											{errors.description && (
 												<FieldError>{errors.description.message}</FieldError>
-											)}
-										</Field>
-
-										<Field>
-											<FieldLabel>
-												{t("storeProductsPage.form.media")}
-											</FieldLabel>
-											<div className="grid grid-cols-5 gap-4">
-												{Array.from({ length: 10 }).map((_, index) => (
-													<Controller
-														key={index}
-														name={`images.${index}`}
-														control={control}
-														render={({ field }) => (
-															<ImageInput
-																value={field.value}
-																onChange={field.onChange}
-															/>
-														)}
-													/>
-												))}
-											</div>
-											{errors.images && (
-												<FieldError>{errors.images.message}</FieldError>
 											)}
 										</Field>
 									</FieldGroup>

@@ -48,33 +48,6 @@ export class UpdateProductDto implements UpdateProduct {
 	@Transform(({ value }: { value: string }) => (value === "" ? null : value))
 	readonly categoryId?: string | null;
 
-	@ApiPropertyOptional({
-		description: "JSON stringified array of { url: string, index: number }",
-	})
-	@IsOptional()
-	@Transform(({ value }: { value: string }) => JSON.parse(value))
-	@IsArray()
-	@ValidateNested({ each: true })
-	@Type(() => KeptImgDto)
-	readonly keptImgs?: KeptImgDto[];
-
-	@ApiPropertyOptional({
-		description: "JSON stringified number[] matching uploaded imgFiles order",
-		type: [Number],
-	})
-	@IsOptional()
-	@Transform(({ value }: { value: string }) => JSON.parse(value))
-	@IsArray()
-	@IsInt({ each: true })
-	readonly newImgIndices?: number[];
-
-	@ApiPropertyOptional({
-		type: "string",
-		format: "binary",
-		isArray: true,
-	})
-	readonly imgFiles?: Express.Multer.File[];
-
 	@IsArray()
 	@ValidateNested({ each: true })
 	@Type(() => ProductOptionDto)

@@ -165,117 +165,113 @@ export class ProductsService {
 			variants,
 		} = params;
 
-		return this.prisma.$transaction(async (tx) => {
-			const product = await tx.product.create({
-				data: {
-					name: await this.translationService.translateText(name),
-					description: await this.translationService.translateJson(description),
-					shortDescription: shortDescription
-						? await this.translationService.translateJson(shortDescription)
-						: undefined,
-					ratingDistribution: {
-						"1": 0,
-						"2": 0,
-						"3": 0,
-						"4": 0,
-						"5": 0,
-					},
-					tags,
-					userId,
-					categoryId,
-				},
-			});
-
-			const optionMap = new Map<string, Prisma.ProductOptionModel>();
-			const valueMap = new Map<string, Prisma.ProductOptionValueModel>();
-
-			for (const option of options) {
-				const createdOption = await tx.productOption.create({
+		return this.prisma.$transaction(
+			async (tx) => {
+				const product = await tx.product.create({
 					data: {
-						name: option.name,
-						productId: product.id,
-						position: option.position,
+						name: await this.translationService.translateText(name),
+						description:
+							await this.translationService.translateJson(description),
+						shortDescription: shortDescription
+							? await this.translationService.translateJson(shortDescription)
+							: undefined,
+						ratingDistribution: {
+							"1": 0,
+							"2": 0,
+							"3": 0,
+							"4": 0,
+							"5": 0,
+						},
+						tags,
+						userId,
+						categoryId,
 					},
 				});
 
-				optionMap.set(option.name, createdOption);
+				const optionMap = new Map<string, Prisma.ProductOptionModel>();
+				const valueMap = new Map<string, Prisma.ProductOptionValueModel>();
 
-				for (const value of option.values) {
-					const createdValue = await tx.productOptionValue.create({
+				for (const option of options) {
+					const createdOption = await tx.productOption.create({
 						data: {
-							optionId: createdOption.id,
-							value: value.value,
-							position: value.position,
+							name: option.name,
+							productId: product.id,
+							position: option.position,
 						},
 					});
 
-					valueMap.set(`${option.name}:${value.value}`, createdValue);
-				}
-			}
+					optionMap.set(option.name, createdOption);
 
-			for (const variant of variants) {
-				const createdVariant = await tx.productVariant.create({
-					data: {
-						productId: product.id,
-						title: variant.title,
-						price: variant.price,
-						compareAtPrice: variant.compareAtPrice,
-						stock: variant.stock,
-						sku: variant.sku,
-					},
-				});
+					for (const value of option.values) {
+						const createdValue = await tx.productOptionValue.create({
+							data: {
+								optionId: createdOption.id,
+								value: value.value,
+								position: value.position,
+							},
+						});
 
-				for (const selection of variant.selections) {
-					const option = optionMap.get(selection.optionName);
-
-					if (!option) {
-						throw new Error(`Invalid option: ${selection.optionName}`);
+						valueMap.set(`${option.name}:${value.value}`, createdValue);
 					}
+				}
 
-					const optionValue = valueMap.get(
-						`${selection.optionName}:${selection.optionValue}`,
-					);
+				for (const variant of variants) {
+					const createdVariant = await tx.productVariant.create({
+						data: {
+							productId: product.id,
+							title: variant.title,
+							price: variant.price,
+							compareAtPrice: variant.compareAtPrice,
+							stock: variant.stock,
+							sku: variant.sku,
+						},
+					});
 
-					if (!optionValue) {
-						throw new Error(
-							`Invalid option value: ${selection.optionName} -> ${selection.optionValue}`,
+					for (const selection of variant.selections) {
+						const option = optionMap.get(selection.optionName);
+
+						if (!option) {
+							throw new Error(`Invalid option: ${selection.optionName}`);
+						}
+
+						const optionValue = valueMap.get(
+							`${selection.optionName}:${selection.optionValue}`,
 						);
+
+						if (!optionValue) {
+							throw new Error(
+								`Invalid option value: ${selection.optionName} -> ${selection.optionValue}`,
+							);
+						}
+
+						await tx.variantSelection.create({
+							data: {
+								variantId: createdVariant.id,
+								optionId: option.id,
+								optionValueId: optionValue.id,
+							},
+						});
 					}
-
-					await tx.variantSelection.create({
-						data: {
-							variantId: createdVariant.id,
-							optionId: option.id,
-							optionValueId: optionValue.id,
-						},
-					});
 				}
-			}
 
-			return tx.product.findUnique({
-				where: { id: product.id },
-				...productWithVariantsReviewsUser,
-			});
-		});
+				return tx.product.findUnique({
+					where: { id: product.id },
+					...productWithVariantsReviewsUser,
+				});
+			},
+			{
+				timeout: 10000,
+			},
+		);
 	}
 
 	async update(
 		id: string,
 		userId: string,
 		params: UpdateProductDto,
-		imgFiles: Express.Multer.File[],
 	): Promise<ProductWithVariantsReviewsUser> {
-		const {
-			name,
-			description,
-			shortDescription,
-			tags,
-			categoryId,
-			keptImgs,
-			newImgIndices,
-			options,
-			variants,
-		} = params;
+		const { name, description, shortDescription, tags, categoryId, options } =
+			params;
 
 		const existingProduct = await this.prisma.product.findUnique({
 			where: { id },
@@ -287,12 +283,6 @@ export class ProductsService {
 
 		if (existingProduct.userId !== userId) {
 			throw new UnauthorizedException("Not allowed");
-		}
-
-		if (newImgIndices && imgFiles.length !== newImgIndices.length) {
-			throw new BadRequestException(
-				"newImgIndices length must match imgFiles length",
-			);
 		}
 
 		let translatedName: TranslatedText | undefined;
@@ -323,14 +313,6 @@ export class ProductsService {
 			translatedShortDescription =
 				await this.translationService.translateJson(shortDescription);
 		}
-
-		const imgUrls =
-			keptImgs || newImgIndices
-				? await this.buildPatchedImgUrls(existingProduct.imgUrls, keptImgs, {
-						imgFiles,
-						newImgIndices: newImgIndices,
-					})
-				: undefined;
 
 		return this.prisma.$transaction(
 			async (tx) => {
@@ -484,7 +466,7 @@ export class ProductsService {
 								incomingVariant.newImgIndices &&
 								incomingVariant.newImgIndices.length > 0
 									? await this.buildPatchedImgUrls([], [], {
-											imgFiles,
+											imgFiles: [],
 											newImgIndices: incomingVariant.newImgIndices,
 										})
 									: [];
@@ -549,7 +531,6 @@ export class ProductsService {
 						description: translatedDescription,
 						shortDescription: translatedShortDescription,
 						tags,
-						imgUrls,
 						categoryId,
 					},
 

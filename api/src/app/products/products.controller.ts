@@ -104,7 +104,6 @@ export class ProductsController {
 		@Req() req: AuthenticatedRequest,
 		@Body()
 		createProductDto: CreateProductDto,
-		@UploadedFiles() imgFiles: Express.Multer.File[],
 	): Promise<ProductWithVariantsReviewsUser | null> {
 		return this.productsService.create(req.user.id, createProductDto);
 	}
@@ -129,19 +128,13 @@ export class ProductsController {
 	})
 	@ApiConsumes("multipart/form-data")
 	@UseInterceptors(FilesInterceptor("imgFiles", 10))
-	patchProduct(
+	update(
 		@Req() req: AuthenticatedRequest,
 		@Param("id") id: string,
 		@Body()
 		updateProductDto: UpdateProductDto,
-		@UploadedFiles() imgFiles: Express.Multer.File[],
 	) {
-		return this.productsService.update(
-			id,
-			req.user.id,
-			updateProductDto,
-			imgFiles,
-		);
+		return this.productsService.update(id, req.user.id, updateProductDto);
 	}
 
 	@Patch(":id/variants/:variantId")
@@ -150,7 +143,7 @@ export class ProductsController {
 	})
 	@ApiConsumes("multipart/form-data")
 	@UseInterceptors(FilesInterceptor("imgFiles", 10))
-	updateProductVariant(
+	updateVariant(
 		@Req() req: AuthenticatedRequest,
 		@Param("id") id: string,
 		@Param("variantId") variantId: string,

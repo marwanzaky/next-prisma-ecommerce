@@ -11,7 +11,6 @@ import { CreateProduct, UpdateProduct } from "@repo/database";
 import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
 
 import { clientFetch } from "@/lib/api-client";
-import { jsonToFormData } from "@/lib/helper";
 
 export const productsService = {
 	getAllProducts: (params?: GetAllProducts) => {
@@ -56,17 +55,6 @@ export const productsService = {
 		Object.entries(data).forEach(([key, value]) => {
 			if (value === undefined || value === null) return;
 
-			if (key === "newImgs") {
-				const newImgs = (value as UpdateProduct["newImgs"]) || [];
-				const indices = newImgs.map((img) => img.index);
-				formData.append("newImgIndices", JSON.stringify(indices));
-
-				newImgs.forEach((img) => {
-					formData.append("imgFiles", img.file);
-				});
-				return;
-			}
-
 			if (Array.isArray(value) || typeof value === "object") {
 				formData.append(key, JSON.stringify(value));
 				return;
@@ -98,7 +86,7 @@ export const productsService = {
 			if (value === undefined || value === null) return;
 
 			if (key === "newImgs") {
-				const newImgs = (value as UpdateProduct["newImgs"]) || [];
+				const newImgs = (value as UpdateProductVariant["newImgs"]) || [];
 				const indices = newImgs.map((img) => img.index);
 				formData.append("newImgIndices", JSON.stringify(indices));
 
