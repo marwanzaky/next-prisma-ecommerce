@@ -3,7 +3,7 @@ import { Profile } from "passport-google-oauth20";
 
 import { UserRole } from "@repo/database";
 
-export type RequestUser = {
+export type AuthenticatedUser = {
 	id: string;
 	role: UserRole;
 	iat: number;
@@ -11,7 +11,7 @@ export type RequestUser = {
 };
 
 export interface AuthenticatedRequest extends Request {
-	user: RequestUser;
+	user: AuthenticatedUser;
 }
 
 export interface GoogleRequest extends Request {

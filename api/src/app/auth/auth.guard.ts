@@ -12,7 +12,7 @@ import { JwtService } from "@nestjs/jwt";
 import { User } from "@repo/database";
 
 import { PrismaService } from "@/prisma.service";
-import { AuthenticatedRequest, RequestUser } from "@/types/request.type";
+import { AuthenticatedRequest, AuthenticatedUser } from "@/types/request.type";
 
 import { AuthService } from "./auth.service";
 
@@ -53,7 +53,7 @@ export class AuthGuard implements CanActivate {
 		}
 
 		const decoded = await this.jwtService
-			.verifyAsync<RequestUser>(token, {
+			.verifyAsync<AuthenticatedUser>(token, {
 				secret: this.jwtSecret,
 			})
 			.catch(() => {
