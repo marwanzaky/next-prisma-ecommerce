@@ -3,8 +3,8 @@ import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 
 import {
 	Product,
-	productWithVariantsReviewsUser,
 	ProductWithVariantsReviewsUser,
+	productWithVariantsReviewsUser,
 } from "@repo/database";
 
 import { PrismaService } from "@/prisma.service";

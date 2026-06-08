@@ -9,11 +9,7 @@ import { useDebouncedCallback } from "use-debounce";
 import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	CreateProduct,
-	UpdateProduct,
-	UpdateProductVariant,
-} from "@repo/database";
+import { CreateProduct, UpdateProduct } from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
 
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
@@ -35,51 +31,12 @@ import { useI18n } from "@/components/layout/i18n-provider";
 import { ImageNode } from "@/components/ui/lexical/nodes/image-node";
 import { YouTubeNode } from "@/components/ui/lexical/nodes/youtube-node";
 
+import { getKeptAndNewImgs } from "@/lib/helper";
 import { localizePath } from "@/lib/i18n";
+import { createVariant } from "@/lib/variants";
 
 import { getSellColumns, SellProduct } from "./columns";
-
-function createProductSchema(t: ReturnType<typeof useI18n>["t"]) {
-	const imageSlotSchema = z
-		.object({
-			url: z.url().optional(),
-			file: z.instanceof(File).optional(),
-		})
-		.optional();
-
-	return z.object({
-		name: z
-			.string()
-			.nonempty(t("validation.required"))
-			.min(2, t("validation.nameShort"))
-			.max(120, t("validation.nameLong")),
-		description: z.string().nonempty(t("validation.required")),
-		categoryId: z.string().nonempty(t("validation.required")),
-		tags: z.array(z.string()).min(1, t("validation.required")),
-		options: z.array(
-			z.object({
-				name: z.string(),
-				values: z.array(z.string()),
-			}),
-		),
-		variants: z.array(
-			z.object({
-				variantId: z.string().optional(),
-				title: z.string(),
-				price: z.number().min(0, "Price must be positive"),
-				stock: z.number().int().min(0, "Stock cannot be negative"),
-				sku: z.string().optional(),
-				selections: z.array(
-					z.object({
-						optionName: z.string(),
-						optionValue: z.string(),
-					}),
-				),
-				images: z.array(imageSlotSchema).max(10, "Max 10 images"),
-			}),
-		),
-	});
-}
+import { createProductSchema } from "./schemas";
 
 export type ProductInput = z.infer<ReturnType<typeof createProductSchema>>;
 
@@ -120,7 +77,10 @@ export function useSell() {
 			name: "",
 			description: "",
 			tags: [],
-			variants: [],
+			variants: [
+				createVariant({ title: "Untitled", baseSku: "", selections: [] }),
+			],
+			options: [],
 			categoryId: "",
 		},
 	});
@@ -158,37 +118,47 @@ export function useSell() {
 			[categoryTree],
 		),
 
-		createProduct: form.handleSubmit(async (data) => {
-			const { name, description, tags, categoryId, options, variants } = data;
+		createProduct: form.handleSubmit(
+			async (data) => {
+				const { name, description, tags, categoryId, options, variants } = data;
 
-			const createProduct: CreateProduct = {
-				name,
-				description,
-				tags,
-				options: options.map((option, optionIndex) => ({
-					name: option.name,
-					position: optionIndex,
-					values: option.values.map((value, valueIndex) => ({
-						value,
-						position: valueIndex,
+				const createProduct: CreateProduct = {
+					name,
+					description,
+					tags,
+					options: options.map((option, optionIndex) => ({
+						name: option.name,
+						position: optionIndex,
+						values: option.values.map((value, valueIndex) => ({
+							value,
+							position: valueIndex,
+						})),
 					})),
-				})),
-				variants: variants.map((variant) => ({
-					...variant,
-					compareAtPrice: variant.price,
-				})),
-				categoryId,
-				stock: 1,
-			};
+					variants: variants.map((variant) => {
+						const { keptImgs, newImgs } = getKeptAndNewImgs(variant.images);
 
-			await dispatch(createUserProductAsync(createProduct)).unwrap();
+						return {
+							...variant,
+							price: variant.priceRangeUsd.min * 100,
+							compareAtPrice: variant.priceRangeUsd.max * 100,
+							keptImgs,
+							newImgs,
+						};
+					}),
+					categoryId,
+					stock: 1,
+				};
 
-			toast("Product created.", { position: "top-center" });
+				await dispatch(createUserProductAsync(createProduct)).unwrap();
 
-			form.reset();
+				toast("Product created.", { position: "top-center" });
 
-			router.push(localizePath("/store/products", locale));
-		}),
+				form.reset();
+
+				router.push(localizePath("/store/products", locale));
+			},
+			(e) => console.log(e),
+		),
 		updateProduct: async ({ id, data }: { id: string; data: ProductInput }) => {
 			const { name, description, tags, categoryId, options, variants } = data;
 
@@ -206,28 +176,14 @@ export function useSell() {
 					})),
 				})),
 				variants: variants.map((variant) => {
-					const variantImages = variant.images;
-
-					const variantKeptImgs: UpdateProductVariant["keptImgs"] =
-						variantImages
-							.filter((img) => !!img)
-							.map((img, index) =>
-								img.url ? { url: img.url, index } : undefined,
-							)
-							.filter((obj) => !!obj);
-
-					const variantNewImgs: UpdateProductVariant["newImgs"] = variantImages
-						.filter((img) => !!img)
-						.map((img, index) =>
-							img.file ? { file: img.file, index } : undefined,
-						)
-						.filter((obj) => !!obj);
+					const { keptImgs, newImgs } = getKeptAndNewImgs(variant.images);
 
 					return {
 						...variant,
-						compareAtPrice: variant.price,
-						keptImgs: variantKeptImgs,
-						newImgs: variantNewImgs,
+						price: variant.priceRangeUsd.min * 100,
+						compareAtPrice: variant.priceRangeUsd.max * 100,
+						keptImgs,
+						newImgs,
 					};
 				}),
 			};

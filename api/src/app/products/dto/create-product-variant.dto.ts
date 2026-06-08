@@ -1,8 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import {
 	IsArray,
+	IsInt,
 	IsNotEmpty,
 	IsNumber,
 	IsOptional,
@@ -12,6 +13,8 @@ import {
 } from "class-validator";
 
 import { CreateProductVariant } from "@repo/database";
+
+import { KeptImgDto } from "@/dtos/kept-img.dto";
 
 export class CreateProductVariantDto implements CreateProductVariant {
 	@ApiProperty()
@@ -42,8 +45,8 @@ export class CreateProductVariantDto implements CreateProductVariant {
 
 	@ApiProperty()
 	@IsString()
-	@IsOptional()
-	readonly sku?: string;
+	@IsNotEmpty()
+	readonly sku!: string;
 
 	@ApiProperty()
 	@IsArray()
@@ -51,6 +54,33 @@ export class CreateProductVariantDto implements CreateProductVariant {
 	@Type(() => VariantSelectionDto)
 	@IsOptional()
 	readonly selections!: VariantSelectionDto[];
+
+	@ApiPropertyOptional({
+		description: "JSON stringified array of { url: string, index: number }",
+	})
+	@IsOptional()
+	@Transform(({ value }: { value: string }) => JSON.parse(value))
+	@IsArray()
+	@ValidateNested({ each: true })
+	@Type(() => KeptImgDto)
+	readonly keptImgs?: KeptImgDto[];
+
+	@ApiPropertyOptional({
+		description: "JSON stringified number[] matching uploaded imgFiles order",
+		type: [Number],
+	})
+	@IsOptional()
+	@Transform(({ value }: { value: string }) => JSON.parse(value))
+	@IsArray()
+	@IsInt({ each: true })
+	readonly newImgIndices?: number[];
+
+	@ApiPropertyOptional({
+		type: "string",
+		format: "binary",
+		isArray: true,
+	})
+	readonly imgFiles?: Express.Multer.File[];
 }
 
 export class VariantSelectionDto {

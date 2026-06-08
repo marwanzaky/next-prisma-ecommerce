@@ -60,35 +60,35 @@ the website project is a modern ecommerce store built from the ground up to deli
 ## previews
 <table>
   <tr>
-    <td width="50%">
+    <td width="50%" valign="top">
       <strong>product discovery</strong>
       <br />
       <span>search, filter, sort, and browse products across responsive layouts.</span>
       <br /><br />
-      <img width="100%" alt="Mamolio product listing with filters" src="https://github.com/user-attachments/assets/4936b492-a564-4477-85a9-40d1a42d9946" />
+      <video width="100%" src="https://github.com/user-attachments/assets/835b486d-1d11-4a22-86f1-e19b9ad56fec" muted autoplay loop controls></video>
     </td>
-    <td width="50%">
+    <td width="50%" valign="top">
       <strong>product discovery</strong>
       <br />
       <span>search, filter, sort, and browse products across responsive layouts.</span>
       <br /><br />
-      <img width="100%" alt="Mamolio product listing with filters" src="https://github.com/user-attachments/assets/745505ee-2018-4538-b355-c295927dfda9" />
+      <video width="100%" src="https://github.com/user-attachments/assets/80ae5ddf-923e-4df0-9e4b-327ba1d03115" muted autoplay loop controls></video>
     </td>
   </tr>
   <tr>
-    <td width="50%">
+    <td width="50%" valign="top">
       <strong>seller dashboard</strong>
       <br />
       <span>manage products from the store dashboard with create, edit, and delete actions.</span>
       <br /><br />
-      <img width="100%" alt="Mamolio seller products dashboard" src="https://github.com/user-attachments/assets/44b16563-6378-4053-a5ea-2e955a72cb9a" />
+      <video width="100%" src="https://github.com/user-attachments/assets/f38d3f09-470a-4a83-95fe-19032a9932e4" muted autoplay loop controls></video>
     </td>
-    <td width="50%">
+    <td width="50%" valign="top">
       <strong>product editor</strong>
       <br />
       <span>create rich product listings with descriptions, media, pricing, and variants.</span>
       <br /><br />
-      <img width="100%" alt="Mamolio product editor page" src="https://github.com/user-attachments/assets/999dd4ea-b5ac-426b-9d4c-31d61ec56d5e" />
+      <video width="100%" src="https://github.com/user-attachments/assets/e6ebfc1d-54fc-4fa6-8c2e-091e393675ed" muted autoplay loop controls></video>
     </td>
   </tr>
 </table>

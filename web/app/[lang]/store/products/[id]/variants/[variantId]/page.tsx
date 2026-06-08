@@ -9,7 +9,8 @@ import { useParams } from "next/navigation";
 import z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UpdateProductVariant } from "@repo/database";
+
+import { TranslatedText } from "@repo/types";
 
 import { updateUserProductVariantAsync } from "@/redux/slices/user-products-slice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
@@ -19,7 +20,6 @@ import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 import ImageInput from "@/components/ui/image-input";
 import { InputCurrencyRange } from "@/components/ui/input-currency-range";
-import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
 
 import {
 	Breadcrumb,
@@ -40,45 +40,10 @@ import {
 import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
 
+import { getKeptAndNewImgs } from "@/lib/helper";
 import { localizePath } from "@/lib/i18n";
 
-function createVariantSchema(t: ReturnType<typeof useI18n>["t"]) {
-	const imageSlotSchema = z
-		.object({
-			url: z.url().optional(),
-			file: z.instanceof(File).optional(),
-		})
-		.optional();
-
-	return z.object({
-		title: z
-			.string()
-			.min(2, t("validation.nameShort"))
-			.max(120, t("validation.nameLong"))
-			.nullable(),
-		stock: z.number().positive(),
-		sku: z.string().nullable(),
-		priceRangeUsd: z
-			.object({
-				min: z
-					.number({ error: t("validation.required") })
-					.positive(t("validation.mustBePositive")),
-				max: z
-					.number({ error: t("validation.invalidNumber") })
-					.positive(t("validation.mustBePositive")),
-			})
-			.refine((data) => !data.max || data.max >= data.min, {
-				message: t("validation.maxPriceGteMinPrice"),
-				path: ["max"],
-			}),
-		images: z
-			.array(imageSlotSchema)
-			.max(10, "Max 10 images")
-			.refine((imgs) => imgs.some((img) => Boolean(img?.url || img?.file)), {
-				message: t("validation.required"),
-			}),
-	});
-}
+import { createVariantSchema } from "../../../schemas";
 
 export type VariantInput = z.infer<ReturnType<typeof createVariantSchema>>;
 
@@ -123,7 +88,7 @@ export default function Page() {
 				max: undefined,
 			},
 			sku: undefined,
-			stock: undefined,
+			stock: 0,
 			images: [],
 		},
 	});
@@ -137,9 +102,7 @@ export default function Page() {
 			title: variant.title,
 			priceRangeUsd: {
 				min: variant.price / 100,
-				max: variant.compareAtPrice
-					? variant.compareAtPrice / 100
-					: variant.price,
+				max: variant.compareAtPrice / 100,
 			},
 			stock: variant.stock,
 			sku: variant.sku,
@@ -178,7 +141,7 @@ export default function Page() {
 								<Link
 									href={localizePath(`/store/products/${product.id}`, locale)}
 								>
-									{product.name[locale]}
+									{(product.name as TranslatedText)[locale]}
 								</Link>
 							</BreadcrumbLink>
 						</BreadcrumbItem>
@@ -193,39 +156,30 @@ export default function Page() {
 
 				<form
 					className="space-y-4"
-					onSubmit={handleSubmit(async (data) => {
-						const { title, priceRangeUsd, images, sku, stock } = data;
+					onSubmit={handleSubmit(
+						async (data) => {
+							const { title, priceRangeUsd, images, sku, stock } = data;
 
-						const keptImgs: UpdateProductVariant["keptImgs"] = images
-							.filter((img) => !!img)
-							.map((img, index) =>
-								img.url ? { url: img.url, index } : undefined,
-							)
-							.filter((obj) => !!obj);
+							const { keptImgs, newImgs } = getKeptAndNewImgs(images);
 
-						const newImgs: UpdateProductVariant["newImgs"] = images
-							.filter((img) => !!img)
-							.map((img, index) =>
-								img.file ? { file: img.file, index } : undefined,
-							)
-							.filter((obj) => !!obj);
-
-						await dispatch(
-							updateUserProductVariantAsync({
-								id: params.id,
-								variantId: params.variantId,
-								data: {
-									title,
-									price: priceRangeUsd.min * 100,
-									compareAtPrice: priceRangeUsd.max * 100,
-									keptImgs: keptImgs,
-									newImgs: newImgs,
-									stock,
-									sku,
-								},
-							}),
-						);
-					})}
+							await dispatch(
+								updateUserProductVariantAsync({
+									id: params.id,
+									variantId: params.variantId,
+									data: {
+										title,
+										price: priceRangeUsd.min * 100,
+										compareAtPrice: priceRangeUsd.max * 100,
+										keptImgs: keptImgs,
+										newImgs: newImgs,
+										stock,
+										sku,
+									},
+								}),
+							);
+						},
+						(e) => console.log("e", e),
+					)}
 				>
 					<div className="flex flex-col sm:flex-row gap-4">
 						<div className="sm:w-1/2 space-y-4">
@@ -331,11 +285,13 @@ export default function Page() {
 											name="stock"
 											control={control}
 											render={({ field }) => (
-												<InputWithPlusMinusButtons
+												<Input
+													type="number"
 													min={0}
-													size="icon-lg"
 													value={field.value}
-													onChange={field.onChange}
+													onChange={(e) =>
+														field.onChange(Number(e.target.value))
+													}
 												/>
 											)}
 										/>

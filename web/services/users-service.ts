@@ -1,5 +1,5 @@
 import {
-	ProductWithVariantsReviewsUserTranslatedText,
+	ProductWithVariantsReviewsUser,
 	PublicUser,
 	UpdateUser,
 	UpdateUserPassword,
@@ -11,9 +11,7 @@ import { jsonToFormData } from "@/lib/helper";
 export const usersService = {
 	getMe: () => clientFetch<PublicUser>("/users/me"),
 	getMeProducts: () =>
-		clientFetch<ProductWithVariantsReviewsUserTranslatedText[]>(
-			"/users/me/products",
-		),
+		clientFetch<ProductWithVariantsReviewsUser[]>("/users/me/products"),
 	updateMe: (updatedUser: UpdateUser) =>
 		clientFetch<PublicUser>("/users/updateMe", {
 			method: "PATCH",

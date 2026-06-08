@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-import { locales } from "@repo/types";
+import { locales, TranslatedText } from "@repo/types";
 
 import { productsService } from "@/services/products-service";
 
@@ -57,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const products = await productsService.getAllProducts();
 	const productPages = products.flatMap((product) => {
 		return getLocalizedEntries({
-			pathname: `/products/${createProductSlug(product.name.en, product.id)}`,
+			pathname: `/products/${createProductSlug((product.name as TranslatedText).en, product.id)}`,
 			lastModified: new Date(product.updatedAt),
 			changeFrequency: "weekly" as const,
 			priority: 0.9,

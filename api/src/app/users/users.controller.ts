@@ -19,9 +19,9 @@ import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 import { compare, hash } from "bcryptjs";
 
 import {
-	Prisma,
 	ProductWithVariantsReviewsUser,
 	productWithVariantsReviewsUser,
+	publicUser,
 } from "@repo/database";
 import { PublicUser, User } from "@repo/database";
 
@@ -38,14 +38,6 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { UpdateUserPasswordDto } from "./dto/update-user-password.dto";
 
 import { AuthService } from "../auth/auth.service";
-
-export const userPublicSelect: Prisma.UserSelect = {
-	id: true,
-	role: true,
-	name: true,
-	email: true,
-	avatarUrl: true,
-};
 
 @Controller("users")
 @ApiBearerAuth("Authorization")
@@ -65,7 +57,7 @@ export class UsersController {
 	): Promise<PublicUser | null> {
 		return this.prisma.user.findFirst({
 			where: { id: request.user.id },
-			select: userPublicSelect,
+			...publicUser,
 		});
 	}
 
@@ -97,7 +89,16 @@ export class UsersController {
 		@Body() updateUserDto: UpdateUserDto,
 		@UploadedFile() avatarFile?: Express.Multer.File,
 	): Promise<PublicUser> {
-		let avatarUrl: string | null = null;
+		const currentUser = await this.prisma.user.findUnique({
+			where: { id: request.user.id },
+			select: { avatarUrl: true },
+		});
+
+		if (!currentUser) {
+			throw new BadRequestException("Use does not exist");
+		}
+
+		let avatarUrl: string | null | undefined;
 
 		if (avatarFile) {
 			const uploadedUrl = await this.cloudinaryService.uploadFile(avatarFile);
@@ -107,18 +108,17 @@ export class UsersController {
 			}
 
 			avatarUrl = uploadedUrl;
-		}
 
-		const currentUser = await this.prisma.user.findUnique({
-			where: { id: request.user.id },
-			select: { avatarUrl: true },
-		});
-
-		if (!currentUser) {
-			throw new BadRequestException("Use does not exist");
+			if (currentUser.avatarUrl) {
+				await this.cloudinaryService.deleteFile(currentUser.avatarUrl);
+			}
 		}
-		if (currentUser.avatarUrl) {
-			await this.cloudinaryService.deleteFile(currentUser.avatarUrl);
+		if (updateUserDto.removeAvatar === true) {
+			avatarUrl = null;
+
+			if (currentUser.avatarUrl) {
+				await this.cloudinaryService.deleteFile(currentUser.avatarUrl);
+			}
 		}
 
 		return this.prisma.user.update({
@@ -130,7 +130,7 @@ export class UsersController {
 				email: updateUserDto.email,
 				avatarUrl,
 			},
-			select: userPublicSelect,
+			...publicUser,
 		});
 	}
 
@@ -143,7 +143,7 @@ export class UsersController {
 			where: {
 				id: request.user.id,
 			},
-			select: userPublicSelect,
+			...publicUser,
 		});
 	}
 
@@ -194,7 +194,7 @@ export class UsersController {
 	getPublicUser(@Param("id") id: string): Promise<PublicUser | null> {
 		return this.prisma.user.findFirst({
 			where: { id },
-			select: userPublicSelect,
+			...publicUser,
 		});
 	}
 

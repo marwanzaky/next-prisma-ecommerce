@@ -3,12 +3,12 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
-import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
+import { ProductWithVariantsReviewsUser } from "@repo/database";
 
 import { favoritesService } from "@/services/favorites-service";
 
 export type FavoritesState = {
-	items: ProductWithVariantsReviewsUserTranslatedText[];
+	items: ProductWithVariantsReviewsUser[];
 
 	loading: boolean;
 	error?: SerializedError;

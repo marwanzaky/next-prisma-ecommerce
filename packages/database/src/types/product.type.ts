@@ -1,23 +1,6 @@
-import { Prisma, Product as ProductType } from "../../generated/prisma/client";
+import { Prisma } from "../../generated/prisma/client";
 
-type TranslatedText = {
-	en: string;
-	fr: string;
-	ar: string;
-};
-
-type Rating = 1 | 2 | 3 | 4 | 5;
-
-type RatingDistribution = Record<Rating, number>;
-
-export type ProductTranslatedText = Omit<
-	ProductType,
-	"name" | "description" | "shortDescription"
-> & {
-	name: TranslatedText;
-	description: TranslatedText;
-	shortDescription: TranslatedText;
-};
+export type { Product } from "../../generated/prisma/client";
 
 export type CreateProduct = {
 	name: string;
@@ -48,7 +31,7 @@ export type CreateProductVariant = {
 		optionName: string;
 		optionValue: string;
 	}[];
-	sku?: string;
+	sku: string;
 	newImgs?: {
 		file: File;
 		index: number;
@@ -118,16 +101,6 @@ export const productWithVariantsReviewsUser = {
 export type ProductWithVariantsReviewsUser = Prisma.ProductGetPayload<
 	typeof productWithVariantsReviewsUser
 >;
-
-export type ProductWithVariantsReviewsUserTranslatedText = Omit<
-	Prisma.ProductGetPayload<typeof productWithVariantsReviewsUser>,
-	"name" | "description" | "shortDescription" | "ratingDistribution"
-> & {
-	name: TranslatedText;
-	description: TranslatedText;
-	shortDescription: TranslatedText;
-	ratingDistribution: RatingDistribution;
-};
 
 export type GetAllProducts = {
 	sortProperty?: string;

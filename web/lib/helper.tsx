@@ -1,3 +1,5 @@
+import { UpdateProductVariant } from "@repo/database";
+
 export function jsonToFormData(data: any) {
 	const formData = new FormData();
 
@@ -28,4 +30,26 @@ function buildFormData(formData: any, data: any, parentKey?: any) {
 	} else {
 		formData.append(parentKey, data);
 	}
+}
+
+export function getKeptAndNewImgs(
+	images: (
+		| {
+				url?: string | undefined;
+				file?: File | undefined;
+		  }
+		| undefined
+	)[],
+) {
+	const keptImgs: UpdateProductVariant["keptImgs"] = images
+		.filter((img) => !!img)
+		.map((img, index) => (img.url ? { url: img.url, index } : undefined))
+		.filter((obj) => !!obj);
+
+	const newImgs: UpdateProductVariant["newImgs"] = images
+		.filter((img) => !!img)
+		.map((img, index) => (img.file ? { file: img.file, index } : undefined))
+		.filter((obj) => !!obj);
+
+	return { keptImgs, newImgs };
 }

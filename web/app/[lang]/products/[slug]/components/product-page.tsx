@@ -2,10 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import {
-	GetAllProducts,
-	ProductWithVariantsReviewsUserTranslatedText,
-} from "@repo/database";
+import { GetAllProducts, ProductWithVariantsReviewsUser } from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
 
 import { productsService } from "@/services/products-service";
@@ -27,7 +24,7 @@ import ProductDetails, { selectedProductVariant } from "./product-details";
 export default function ProductPage({
 	product,
 }: {
-	product: ProductWithVariantsReviewsUserTranslatedText;
+	product: ProductWithVariantsReviewsUser;
 }) {
 	const { t } = useI18n();
 	const params: GetAllProducts = {

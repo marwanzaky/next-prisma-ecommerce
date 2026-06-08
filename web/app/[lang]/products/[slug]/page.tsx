@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import { permanentRedirect } from "next/navigation";
 
-import { Locale } from "@repo/types";
+import { Locale, TranslatedText } from "@repo/types";
 
 import { productsService } from "@/services/products-service";
 
@@ -31,7 +31,10 @@ export default async function Page({ params }: Props) {
 
 	const product = await getProduct(id);
 
-	const canonicalSlug = createProductSlug(product.name.en, product.id);
+	const canonicalSlug = createProductSlug(
+		(product.name as TranslatedText).en,
+		product.id,
+	);
 	if (slug !== canonicalSlug) {
 		permanentRedirect(localizePath(`/products/${canonicalSlug}`, lang));
 	}
@@ -62,7 +65,7 @@ export async function generateStaticParams() {
 	const data = await productsService.getAllProducts();
 
 	return data.map((product) => ({
-		slug: createProductSlug(product.name.en, product.id),
+		slug: createProductSlug((product.name as TranslatedText).en, product.id),
 	}));
 }
 
@@ -80,13 +83,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 		};
 	}
 
-	const path = `/products/${createProductSlug(product.name.en, product.id)}`;
+	const path = `/products/${createProductSlug((product.name as TranslatedText).en, product.id)}`;
 
 	return {
-		title: `${product.name.en} - Best Price & Reviews | ${config.websiteName}`,
-		description: `${product.description.en.slice(0, 155)}...`,
+		title: `${(product.name as TranslatedText).en} - Best Price & Reviews | ${config.websiteName}`,
+		description: `${(product.description as TranslatedText).en.slice(0, 155)}...`,
 		keywords: [
-			product.name.en,
+			(product.name as TranslatedText).en,
 			...product.tags,
 			"shop",
 			"buy online",
@@ -94,15 +97,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 		].filter(Boolean),
 		authors: [{ name: config.websiteName }],
 		openGraph: generateOgMetadata({
-			title: product.name.en,
-			description: product.description.en,
+			title: (product.name as TranslatedText).en,
+			description: (product.description as TranslatedText).en,
 			path: localizePath(path, lang),
 			image: product.variants[0].imgUrls[0],
 			type: "website",
 		}),
 		twitter: generateTwitterMetadata({
-			title: product.name.en,
-			description: product.description.en,
+			title: (product.name as TranslatedText).en,
+			description: (product.description as TranslatedText).en,
 			image: product.variants[0].imgUrls[0],
 		}),
 		alternates: generateLocaleAlternates(path, lang),

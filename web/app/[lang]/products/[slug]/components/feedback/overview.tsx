@@ -10,9 +10,9 @@ import { toast } from "sonner";
 import z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
+import { ProductWithVariantsReviewsUser } from "@repo/database";
 
-import { Rating, TranslatedText } from "@repo/types";
+import { Rating, RatingDistribution, TranslatedText } from "@repo/types";
 
 import { useAppSelector } from "@/redux/store";
 
@@ -49,7 +49,7 @@ import { cn } from "@/lib/utils";
 export default function Overview({
 	product,
 }: {
-	product: ProductWithVariantsReviewsUserTranslatedText;
+	product: ProductWithVariantsReviewsUser;
 }) {
 	const router = useRouter();
 
@@ -92,7 +92,8 @@ export default function Overview({
 			return "0%";
 		}
 
-		const count = product.ratingDistribution[starRating] || 0;
+		const count =
+			(product.ratingDistribution as RatingDistribution)[starRating] || 0;
 		const percentage = (count / product.numReviews) * 100;
 		return `${Math.round(percentage)}%`;
 	};

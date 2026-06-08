@@ -1,20 +1,13 @@
-import {
-	ProductTranslatedText,
-	ProductWithVariantsReviewsUserTranslatedText,
-} from "@repo/database";
+import { ProductWithVariantsReviewsUser } from "@repo/database";
 
 import { clientFetch } from "@/lib/api-client";
 
 export const favoritesService = {
-	getMe: () =>
-		clientFetch<ProductWithVariantsReviewsUserTranslatedText[]>("/favorites"),
+	getMe: () => clientFetch<ProductWithVariantsReviewsUser[]>("/favorites"),
 	post: (productId: string) =>
-		clientFetch<ProductWithVariantsReviewsUserTranslatedText>(
-			`/favorites/${productId}`,
-			{
-				method: "POST",
-			},
-		),
+		clientFetch<ProductWithVariantsReviewsUser>(`/favorites/${productId}`, {
+			method: "POST",
+		}),
 	remove: (productId: string) =>
 		clientFetch<null>(`/favorites/${productId}`, { method: "DELETE" }),
 };

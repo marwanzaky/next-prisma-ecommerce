@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
-import { ProductBase } from "../product-base";
+import { ProductBase } from "../components/product-base";
 import { useSell } from "../use-sell";
 
 export default function Page() {

@@ -4,6 +4,7 @@ import { Transform, Type } from "class-transformer";
 import {
 	ArrayMinSize,
 	IsArray,
+	IsInt,
 	IsNotEmpty,
 	IsNumber,
 	IsOptional,
@@ -68,13 +69,6 @@ export class CreateProductDto implements CreateProduct {
 	@IsOptional()
 	readonly categoryId?: string | null;
 
-	@ApiProperty({
-		type: "string",
-		format: "binary",
-		isArray: true,
-	})
-	readonly imgFiles!: File[];
-
 	@IsArray()
 	@ValidateNested({ each: true })
 	@Type(() => ProductOptionDto)
@@ -87,4 +81,21 @@ export class CreateProductDto implements CreateProduct {
 	@ArrayMinSize(1)
 	@Transform(({ value }: { value: string }) => JSON.parse(value))
 	variants!: CreateProductVariantDto[];
+
+	@ApiPropertyOptional({
+		description: "JSON stringified number[] matching uploaded imgFiles order",
+		type: [Number],
+	})
+	@IsOptional()
+	@Transform(({ value }: { value: string }) => JSON.parse(value))
+	@IsArray()
+	@IsInt({ each: true })
+	readonly newImgIndices?: number[];
+
+	@ApiPropertyOptional({
+		type: "string",
+		format: "binary",
+		isArray: true,
+	})
+	readonly imgFiles?: Express.Multer.File[];
 }

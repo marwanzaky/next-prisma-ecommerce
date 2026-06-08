@@ -1,6 +1,6 @@
 import { Product, WithContext } from "schema-dts";
 
-import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
+import { ProductWithVariantsReviewsUser } from "@repo/database";
 
 import { Locale, TranslatedText } from "@repo/types";
 
@@ -9,11 +9,11 @@ import { localizeUrl } from "./i18n";
 import { createProductSlug } from "./string-utils";
 
 export function generateProductStructuredData(
-	product: ProductWithVariantsReviewsUserTranslatedText,
+	product: ProductWithVariantsReviewsUser,
 	locale: Locale,
 ): WithContext<Product> {
 	const productUrl = localizeUrl(
-		`/products/${createProductSlug(product.name.en, product.id)}`,
+		`/products/${createProductSlug((product.name as TranslatedText).en, product.id)}`,
 		locale,
 	);
 	const offerId = `${productUrl}#offer`;
@@ -24,8 +24,8 @@ export function generateProductStructuredData(
 		"@context": "https://schema.org",
 		"@type": "Product",
 		"@id": productUrl,
-		name: product.name[locale],
-		description: product.description[locale],
+		name: (product.name as TranslatedText)[locale],
+		description: (product.description as TranslatedText)[locale],
 		image: variant.imgUrls,
 		category: product.categoryId ?? undefined,
 		offers: {

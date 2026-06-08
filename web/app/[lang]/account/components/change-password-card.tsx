@@ -29,29 +29,12 @@ import {
 import { Input } from "@/shadcn/components/ui/input";
 import { Spinner } from "@/shadcn/components/ui/spinner";
 
+import { ChangePasswordInput, createChangePasswordSchema } from "./schemas";
+
 export default function ChangePasswordCard() {
 	const { t } = useI18n();
 
-	const ChangePasswordSchema = z
-		.object({
-			currentPassword: z.string().nonempty(t("validation.required")),
-			newPassword: z
-				.string()
-				.nonempty(t("validation.required"))
-				.min(8, t("validation.passwordShort"))
-				.max(32, t("validation.passwordLong")),
-			confirmPassword: z.string().nonempty(t("validation.required")),
-		})
-		.refine((data) => data.newPassword === data.confirmPassword, {
-			message: t("validation.passwordsDontMatch"),
-			path: ["confirmPassword"],
-		})
-		.refine((data) => data.newPassword !== data.currentPassword, {
-			message: t("validation.sameAsCurrent"),
-			path: ["newPassword"],
-		});
-
-	type ChangePasswordInput = z.infer<typeof ChangePasswordSchema>;
+	const changePasswordSchema = createChangePasswordSchema(t);
 
 	const {
 		register,
@@ -60,7 +43,7 @@ export default function ChangePasswordCard() {
 		formState,
 		reset,
 	} = useForm<ChangePasswordInput>({
-		resolver: zodResolver(ChangePasswordSchema),
+		resolver: zodResolver(changePasswordSchema),
 		mode: "onSubmit",
 	});
 	const dispatch = useAppDispatch();

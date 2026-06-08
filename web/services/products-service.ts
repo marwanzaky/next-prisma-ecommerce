@@ -8,7 +8,7 @@ import {
 	UpdateProductVariant,
 } from "@repo/database";
 import { CreateProduct, UpdateProduct } from "@repo/database";
-import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
+import { ProductWithVariantsReviewsUser } from "@repo/database";
 
 import { clientFetch } from "@/lib/api-client";
 
@@ -19,14 +19,12 @@ export const productsService = {
 			arrayFormat: "repeat",
 		});
 
-		return clientFetch<ProductWithVariantsReviewsUserTranslatedText[]>(
+		return clientFetch<ProductWithVariantsReviewsUser[]>(
 			`/products?${paramsObj}`,
 		);
 	},
 	getProduct: (id: string) =>
-		clientFetch<ProductWithVariantsReviewsUserTranslatedText>(
-			`/products/${id}`,
-		),
+		clientFetch<ProductWithVariantsReviewsUser>(`/products/${id}`),
 	createProduct: (data: CreateProduct) => {
 		const formData = new FormData();
 
@@ -41,13 +39,23 @@ export const productsService = {
 			formData.append(key, String(value));
 		});
 
-		return clientFetch<ProductWithVariantsReviewsUserTranslatedText>(
-			"/products",
-			{
-				method: "POST",
-				body: formData,
-			},
-		);
+		const hasVariants = data.variants ? data.variants.length > 1 : false;
+
+		if (!hasVariants && data.variants) {
+			const variant = data.variants[0];
+			const newImgs = variant.newImgs || [];
+			const indices = newImgs.map((img) => img.index);
+			formData.append("newImgIndices", JSON.stringify(indices));
+
+			newImgs.forEach((img) => {
+				formData.append("imgFiles", img.file);
+			});
+		}
+
+		return clientFetch<ProductWithVariantsReviewsUser>("/products", {
+			method: "POST",
+			body: formData,
+		});
 	},
 	updateProduct: ({ id, data }: { id: string; data: UpdateProduct }) => {
 		const formData = new FormData();
@@ -63,13 +71,23 @@ export const productsService = {
 			formData.append(key, String(value));
 		});
 
-		return clientFetch<ProductWithVariantsReviewsUserTranslatedText>(
-			`/products/${id}`,
-			{
-				method: "PATCH",
-				body: formData,
-			},
-		);
+		const hasVariants = data.variants ? data.variants.length > 1 : false;
+
+		if (!hasVariants && data.variants) {
+			const variant = data.variants[0];
+			const newImgs = variant.newImgs || [];
+			const indices = newImgs.map((img) => img.index);
+			formData.append("newImgIndices", JSON.stringify(indices));
+
+			newImgs.forEach((img) => {
+				formData.append("imgFiles", img.file);
+			});
+		}
+
+		return clientFetch<ProductWithVariantsReviewsUser>(`/products/${id}`, {
+			method: "PATCH",
+			body: formData,
+		});
 	},
 	updateProductVariant: ({
 		id,
@@ -104,7 +122,7 @@ export const productsService = {
 			formData.append(key, String(value));
 		});
 
-		return clientFetch<ProductWithVariantsReviewsUserTranslatedText>(
+		return clientFetch<ProductWithVariantsReviewsUser>(
 			`/products/${id}/variants/${variantId}`,
 			{
 				method: "PATCH",

@@ -5,7 +5,9 @@ import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
+import { ProductWithVariantsReviewsUser } from "@repo/database";
+
+import { TranslatedText } from "@repo/types";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ButtonIcon } from "@/components/ui/button-icon";
@@ -21,7 +23,7 @@ import { useCart } from "@/hooks/use-cart";
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
 
 type ProductCardProps = {
-	data: ProductWithVariantsReviewsUserTranslatedText;
+	data: ProductWithVariantsReviewsUser;
 };
 
 export default function ProductCard({ data }: ProductCardProps) {
@@ -62,14 +64,14 @@ export default function ProductCard({ data }: ProductCardProps) {
 
 			<Link
 				href={localizePath(
-					`/products/${createProductSlug(data.name.en, data.id)}`,
+					`/products/${createProductSlug((data.name as TranslatedText).en, data.id)}`,
 					locale,
 				)}
 			>
 				<Image
 					className="aspect-square object-cover w-full h-full"
 					src={variant.imgUrls[0]}
-					alt={data.name[locale]}
+					alt={(data.name as TranslatedText)[locale]}
 					width={512}
 					height={512}
 					loading="lazy"
@@ -78,7 +80,7 @@ export default function ProductCard({ data }: ProductCardProps) {
 
 			<div className="relative p-2 md:p-4">
 				<h3 className="truncate leading-none! mb-1 text-base md:text-lg">
-					{data.name[locale]}
+					{(data.name as TranslatedText)[locale]}
 				</h3>
 
 				<Stars

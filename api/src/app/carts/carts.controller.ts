@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 
-import { cartWithItems, CartWithItems } from "@repo/database";
+import { CartWithItems,cartWithItems } from "@repo/database";
 
 import { PrismaService } from "@/prisma.service";
 import { AuthenticatedRequest } from "@/types/request.type";

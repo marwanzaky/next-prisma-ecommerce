@@ -5,7 +5,9 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
+import { ProductWithVariantsReviewsUser } from "@repo/database";
+
+import { TranslatedText } from "@repo/types";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { renderLexicalJSONToHTML } from "@/components/ui/lexical/render-lexical-json-to-html";
@@ -29,13 +31,13 @@ import { formatDate, initials } from "@/lib/string-utils";
 export default function ProductAccordions({
 	product,
 }: {
-	product: ProductWithVariantsReviewsUserTranslatedText;
+	product: ProductWithVariantsReviewsUser;
 }) {
 	const router = useRouter();
 	const { locale, t } = useI18n();
 
 	const descriptionHtml = useMemo(() => {
-		const parsed = JSON.parse(product.description[locale]);
+		const parsed = JSON.parse((product.description as TranslatedText)[locale]);
 		return renderLexicalJSONToHTML(parsed.root.children);
 	}, [product.description, locale]);
 

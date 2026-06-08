@@ -216,6 +216,14 @@ export class ProductsService {
 				}
 
 				for (const variant of variants) {
+					const variantImgUrls =
+						variant.newImgIndices && variant.newImgIndices.length > 0
+							? await this.buildPatchedImgUrls([], [], {
+									imgFiles: variant.imgFiles || [],
+									newImgIndices: variant.newImgIndices,
+								})
+							: [];
+
 					const createdVariant = await tx.productVariant.create({
 						data: {
 							productId: product.id,
@@ -224,6 +232,7 @@ export class ProductsService {
 							compareAtPrice: variant.compareAtPrice,
 							stock: variant.stock,
 							sku: variant.sku,
+							imgUrls: variantImgUrls,
 						},
 					});
 
@@ -260,7 +269,7 @@ export class ProductsService {
 				});
 			},
 			{
-				timeout: 10000,
+				timeout: 30000,
 			},
 		);
 	}
@@ -455,7 +464,7 @@ export class ProductsService {
 											baseUrls,
 											incomingVariant.keptImgs,
 											{
-												imgFiles: [], // Passed down globally from Multer interceptor
+												imgFiles: incomingVariant.imgFiles || [], // Passed down globally from Multer interceptor
 												newImgIndices: incomingVariant.newImgIndices,
 											},
 										)
@@ -466,7 +475,7 @@ export class ProductsService {
 								incomingVariant.newImgIndices &&
 								incomingVariant.newImgIndices.length > 0
 									? await this.buildPatchedImgUrls([], [], {
-											imgFiles: [],
+											imgFiles: incomingVariant.imgFiles || [],
 											newImgIndices: incomingVariant.newImgIndices,
 										})
 									: [];
@@ -479,6 +488,7 @@ export class ProductsService {
 								data: {
 									title: incomingVariant.title,
 									price: incomingVariant.price,
+									compareAtPrice: incomingVariant.compareAtPrice,
 									stock: incomingVariant.stock,
 									sku: incomingVariant.sku,
 									imgUrls: variantImgUrls,
@@ -491,6 +501,7 @@ export class ProductsService {
 									productId: id,
 									title: incomingVariant.title,
 									price: incomingVariant.price,
+									compareAtPrice: incomingVariant.compareAtPrice,
 									stock: incomingVariant.stock,
 									sku: incomingVariant.sku,
 									imgUrls: variantImgUrls,

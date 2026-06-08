@@ -1,5 +1,4 @@
 import { CartItemWithProductVariant, ProductVariant } from "@repo/database";
-import { Product } from "@repo/database";
 
 const STORAGE_KEY = "guest_cart";
 

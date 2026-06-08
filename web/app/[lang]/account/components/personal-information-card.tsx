@@ -40,26 +40,15 @@ import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { initials } from "@/lib/string-utils";
 
+import {
+	createPersonalInformationSchema,
+	PersonalInformationInput,
+} from "./schemas";
+
 export default function PersonalInformationCard() {
 	const { t } = useI18n();
 
-	const PersonalInformationSchema = z.object({
-		name: z
-			.string()
-			.nonempty(t("validation.required"))
-			.regex(/^[a-zA-Z0-9\s'-]+$/, t("validation.invalidChars"))
-			.min(2, t("validation.nameShort"))
-			.max(32, t("validation.nameLong")),
-		email: z
-			.email(t("validation.emailInvalid"))
-			.nonempty(t("validation.required")),
-		photo: z.object({
-			url: z.url(t("validation.invalidUrl")).optional(),
-			file: z.instanceof(File).optional(),
-		}),
-	});
-
-	type PersonalInformationInput = z.infer<typeof PersonalInformationSchema>;
+	const personalInformationSchema = createPersonalInformationSchema(t);
 
 	const {
 		register,
@@ -70,7 +59,7 @@ export default function PersonalInformationCard() {
 		formState,
 		control,
 	} = useForm<PersonalInformationInput>({
-		resolver: zodResolver(PersonalInformationSchema),
+		resolver: zodResolver(personalInformationSchema),
 		mode: "onSubmit",
 	});
 
@@ -100,6 +89,7 @@ export default function PersonalInformationCard() {
 			updateMeAsync({
 				name: data.name,
 				email: data.email,
+				removeAvatar: !data.photo.file && !data.photo.url,
 				...(data.photo.file
 					? { avatarFile: data.photo.file }
 					: { avatarUrl: data.photo.url }),

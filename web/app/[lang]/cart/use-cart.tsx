@@ -42,32 +42,27 @@ export function useCartPage() {
 			};
 		}
 
-		// const subtotalValue = items.reduce(
-		// 	(acc, item) => acc + (item.product.priceCompare * item.quantity) / 100,
-		// 	0,
-		// );
+		const subtotalValue = items.reduce(
+			(acc, item) => acc + (item.variant.compareAtPrice * item.quantity) / 100,
+			0,
+		);
 
-		// const totalValue = items.reduce(
-		// 	(acc, item) => acc + (item.product.price * item.quantity) / 100,
-		// 	0,
-		// );
+		const totalValue = items.reduce(
+			(acc, item) => acc + (item.variant.price * item.quantity) / 100,
+			0,
+		);
 
-		// const discountValue = subtotalValue - totalValue;
-		// const discountPercentValue =
-		// 	subtotalValue > 0 ? (discountValue / subtotalValue) * 100 : 0;
+		const discountValue = subtotalValue - totalValue;
+		const discountPercentValue =
+			subtotalValue > 0 ? (discountValue / subtotalValue) * 100 : 0;
 
-		// const shippingValue = 0;
+		const shippingValue = 0;
 
 		return {
-			// subtotal: formatPrice(subtotalValue, locale),
-			// discount: formatPrice(discountValue, locale),
-			// discountPercent: `${discountPercentValue.toFixed(0)}%`,
-			// total: formatPrice(totalValue + shippingValue, locale),
-
-			subtotal: "",
-			discount: "",
-			discountPercent: "",
-			total: "",
+			subtotal: formatPrice(subtotalValue, locale),
+			discount: formatPrice(discountValue, locale),
+			discountPercent: `${discountPercentValue.toFixed(0)}%`,
+			total: formatPrice(totalValue + shippingValue, locale),
 		};
 	}, [items, locale]);
 

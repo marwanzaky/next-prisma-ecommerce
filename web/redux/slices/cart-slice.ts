@@ -4,7 +4,6 @@ import {
 	SerializedError,
 } from "@reduxjs/toolkit";
 import { CartItemWithProductVariant, ProductVariant } from "@repo/database";
-import { Product } from "@repo/database";
 
 import { cartsService } from "@/services/carts-service";
 import { guestCartService } from "@/services/guest-cart-service";

@@ -7,10 +7,10 @@ import { useRouter } from "next/navigation";
 
 import { ArrowUpDown, EyeIcon, PencilIcon, Trash2Icon } from "lucide-react";
 
-import { ProductTranslatedText, PublicCategoryTree } from "@repo/database";
+import { Product, PublicCategoryTree } from "@repo/database";
 import { ColumnDef, Row } from "@tanstack/react-table";
 
-import { Locale } from "@repo/types";
+import { Locale, TranslatedText } from "@repo/types";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
@@ -35,7 +35,7 @@ import { DictionaryKeys } from "@/types/i18n.type";
 
 import { ProductInput } from "./use-sell";
 
-export type SellProduct = ProductTranslatedText & { imgUrl: string };
+export type SellProduct = Product & { imgUrl: string };
 
 export const getVariantsColumns = ({
 	productId,
@@ -61,7 +61,7 @@ export const getVariantsColumns = ({
 				</Button>
 			),
 			cell: ({ row }) => (
-				<div>{formatPrice(row.original.price / 100, locale)}</div>
+				<div>{formatPrice(row.original.priceRangeUsd.min, locale)}</div>
 			),
 		},
 		{
@@ -74,7 +74,7 @@ export const getVariantsColumns = ({
 		columns.push({
 			id: "actions",
 			cell: ({ row }) => {
-				return (
+				return row.original.variantId ? (
 					<Link href={`${productId}/variants/${row.original.variantId}`}>
 						<Button
 							type="button"
@@ -85,6 +85,8 @@ export const getVariantsColumns = ({
 							<PencilIcon />
 						</Button>
 					</Link>
+				) : (
+					<div className="h-8 w-8" />
 				);
 			},
 		});
@@ -142,14 +144,16 @@ export const getSellColumns = ({
 							<AvatarImage
 								className="rounded-none"
 								src={row.original.imgUrl}
-								alt={`${t("photoOf").replace("{{name}}", row.original.name[locale])}`}
+								alt={`${t("photoOf").replace("{{name}}", (row.original.name as TranslatedText)[locale])}`}
 							/>
 						</Avatar>
 					</Link>
 
 					<div>
 						<div className="font-medium hover:text-primary transition-colors max-w-60 truncate">
-							<Link href={href}>{row.original.name[locale]}</Link>
+							<Link href={href}>
+								{(row.original.name as TranslatedText)[locale]}
+							</Link>
 						</div>
 						<span className="text-muted-foreground text-xs">
 							{subcategory?.name[locale]}
@@ -212,7 +216,7 @@ const ActionsCell = ({
 					onClick={() => {
 						router.push(
 							localizePath(
-								`/products/${createProductSlug(row.original.name.en, row.original.id)}`,
+								`/products/${createProductSlug((row.original.name as TranslatedText).en, row.original.id)}`,
 								locale,
 							),
 						);

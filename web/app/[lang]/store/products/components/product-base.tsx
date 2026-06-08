@@ -1,16 +1,9 @@
 "use client";
 
 import * as React from "react";
-import {
-	Controller,
-	useFieldArray,
-	UseFormReturn,
-	useWatch,
-} from "react-hook-form";
+import { Controller, useFieldArray, UseFormReturn } from "react-hook-form";
 
 import Link from "next/link";
-
-import { ArrowUpDown, PencilIcon, Trash2 } from "lucide-react";
 
 import { PublicCategoryTree } from "@repo/database";
 
@@ -29,13 +22,14 @@ import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import ImageInput from "@/components/ui/image-input";
+import { InputCurrencyRange } from "@/components/ui/input-currency-range";
 import { InputTags } from "@/components/ui/input-tags";
+import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
 import { ImageToolbarButtonPlugin } from "@/components/ui/lexical/plugins/image-tooltbar-button-plugin";
 import { LoadDescriptionPlugin } from "@/components/ui/lexical/plugins/load-description-plugin";
 import { OnChangePlugin } from "@/components/ui/lexical/plugins/on-change-plugin";
 import YouTubePastePlugin from "@/components/ui/lexical/plugins/youTube-paste-plugin";
 
-import { Badge } from "@/shadcn/components/ui/badge";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -61,103 +55,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shadcn/components/ui/select";
-import { Separator } from "@/shadcn/components/ui/separator";
 import { Spinner } from "@/shadcn/components/ui/spinner";
 
 import { localizePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-import { getVariantsColumns } from "./columns";
-import { ProductInput } from "./use-sell";
-
-function slugify(text: string): string {
-	return text
-		.toString()
-		.toUpperCase()
-		.trim()
-		.replace(/\s+/g, "-")
-		.replace(/[^\w\-]+/g, "")
-		.replace(/\-\-+/g, "-");
-}
-
-export function syncAndGenerateVariants(
-	options: ProductInput["options"],
-	currentVariants: ProductInput["variants"],
-	baseSku: string,
-): ProductInput["variants"] {
-	// 1. Filter out incomplete entries
-	const validOptions = options.filter(
-		(opt) => opt.name && opt.values.length > 0,
-	);
-	if (validOptions.length === 0) return [];
-
-	// 2. Compute the Cartesian Product Matrix
-	const cartesian = (acc: any[][], curr: string[]): any[][] =>
-		acc.flatMap((c) => curr.map((n) => [...c, n]));
-
-	const valueGroups = validOptions.map((opt) => opt.values);
-	const combinations = valueGroups.reduce(cartesian, [[]]) as string[][];
-
-	// 3. Create a Set of valid mathematical signature strings for quick lookup
-	const generatedSignatures = new Set<string>();
-
-	const targetCombinations = combinations.map((combination) => {
-		const selections = combination.map((val, index) => ({
-			optionName: validOptions[index].name,
-			optionValue: val,
-		}));
-
-		const signature = selections
-			.map((s) => `${s.optionName}:${s.optionValue}`)
-			.sort()
-			.join("|");
-
-		generatedSignatures.add(signature);
-
-		return { title: combination.join(" / "), selections, signature };
-	});
-
-	// 4. PRESERVE ORDER: Filter out current variants that are still valid mathematically
-	const preservedVariants: ProductInput["variants"] = currentVariants.filter(
-		(variant) => {
-			const variantSignature = variant.selections
-				.map((s) => `${s.optionName}:${s.optionValue}`)
-				.sort()
-				.join("|");
-			return generatedSignatures.has(variantSignature);
-		},
-	);
-
-	// 5. APPEND NEW ENTRIES: Find combinations that aren't present in current state
-	const currentSignatures = new Set(
-		currentVariants.map((v) =>
-			v.selections
-				.map((s) => `${s.optionName}:${s.optionValue}`)
-				.sort()
-				.join("|"),
-		),
-	);
-
-	const newVariants: ProductInput["variants"] = targetCombinations
-		.filter((combo) => !currentSignatures.has(combo.signature))
-		.map((combo) => ({
-			title: combo.title,
-			price: 0,
-			stock: 0,
-			sku: generateProductSKU(baseSku, combo.selections),
-			selections: combo.selections,
-			images: Array.from({ length: 10 }, (_, i) => {
-				return undefined;
-			}),
-		}));
-
-	// Combine them: old preserved array layout first (order kept), then newly added combinations
-	return [...preservedVariants, ...newVariants];
-}
-
-function generateProductSKU(baseSku: string, selections: any[]): string {
-	return `${slugify(baseSku)}-${selections.map((s) => slugify(s.optionValue)).join("-")}`;
-}
+import { getVariantsColumns } from "../columns";
+import { ProductInput } from "../use-sell";
+import { ProductOption } from "./product-option";
+import { useStoreProducts } from "./use-store-products";
 
 type ProductBaseProps = {
 	productId?: string;
@@ -200,54 +106,16 @@ export function ProductBase({
 
 	const { locale, t } = useI18n();
 
+	const { hasVariants, variantsWatch } = useStoreProducts({
+		form,
+		productId,
+		title,
+	});
+
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: "options",
 	});
-
-	const { fields: fieldsVariants, replace: replaceVariants } = useFieldArray({
-		control: form.control,
-		name: "variants",
-	});
-
-	const optionsWatch = useWatch({ control: form.control, name: "options" });
-	const optionsName = useWatch({ control: form.control, name: "name" });
-
-	React.useEffect(() => {
-		const currentVariants = form.getValues("variants");
-
-		let updatedVariants: ProductInput["variants"] = [];
-
-		// Generate the synced matrix list
-		if ((optionsWatch || []).length > 0) {
-			updatedVariants = syncAndGenerateVariants(
-				optionsWatch,
-				currentVariants,
-				optionsName.split(" ").slice(0, 3).join("-"),
-			);
-		} else if (currentVariants.length === 0) {
-			updatedVariants = [
-				{
-					title: optionsName || title,
-					price: 0,
-					stock: 0,
-					sku: generateProductSKU(
-						`${optionsName.split(" ").slice(0, 3).join("-")}-${productId}`,
-						[],
-					),
-					selections: [],
-					images: Array.from({ length: 10 }, (_, i) => {
-						return undefined;
-					}),
-				},
-			];
-		} else if (currentVariants.length === 1) {
-			updatedVariants = currentVariants;
-		}
-
-		// Atomically replace the form's variants array state
-		replaceVariants(updatedVariants);
-	}, [optionsWatch, replaceVariants, optionsName]);
 
 	return (
 		<Container>
@@ -324,6 +192,32 @@ export function ProductBase({
 												<FieldError>{errors.description.message}</FieldError>
 											)}
 										</Field>
+
+										{!hasVariants && (
+											<Field>
+												<FieldLabel>
+													{t("storeProductsPage.form.media")}
+												</FieldLabel>
+												<div className="grid grid-cols-5 gap-4">
+													{Array.from({ length: 10 }).map((_, index) => (
+														<Controller
+															key={index}
+															name={`variants.0.images.${index}`}
+															control={control}
+															render={({ field }) => (
+																<ImageInput
+																	value={field.value}
+																	onChange={field.onChange}
+																/>
+															)}
+														/>
+													))}
+												</div>
+												<FieldError>
+													{errors.variants?.[0]?.images?.message}
+												</FieldError>
+											</Field>
+										)}
 									</FieldGroup>
 								</CardContent>
 							</Card>
@@ -366,14 +260,16 @@ export function ProductBase({
 											</Button>
 										)}
 
-										<DataTable
-											columns={getVariantsColumns({
-												t,
-												locale,
-												productId,
-											})}
-											data={fieldsVariants}
-										/>
+										{hasVariants && (
+											<DataTable
+												columns={getVariantsColumns({
+													t,
+													locale,
+													productId,
+												})}
+												data={variantsWatch}
+											/>
+										)}
 									</Field>
 								</CardContent>
 							</Card>
@@ -446,6 +342,104 @@ export function ProductBase({
 									</Field>
 								</CardContent>
 							</Card>
+
+							{!hasVariants && (
+								<>
+									<Card className="h-fit">
+										<CardContent>
+											<Field>
+												<FieldLabel>
+													{t("storeProductsPage.form.price")}
+												</FieldLabel>
+												<Controller
+													name="variants.0.priceRangeUsd"
+													control={control}
+													render={({ field }) => (
+														<InputCurrencyRange
+															minPlaceholder={t(
+																"storeProductsPage.form.priceMinPlaceholder",
+															)}
+															maxPlaceholder={t(
+																"storeProductsPage.form.priceMaxPlaceholder",
+															)}
+															minValue={field.value.min}
+															maxValue={field.value.max}
+															onMinChange={(min) =>
+																field.onChange({
+																	min,
+																	max:
+																		field.value.max == null
+																			? min
+																			: Math.max(min || 0, field.value.max),
+																})
+															}
+															onMaxChange={(max) =>
+																field.onChange({
+																	min:
+																		field.value.min == null
+																			? max
+																			: Math.min(field.value.min, max || 0),
+																	max,
+																})
+															}
+														/>
+													)}
+												/>
+
+												{(errors.variants?.[0]?.priceRangeUsd?.min ||
+													errors.variants?.[0]?.priceRangeUsd?.max) && (
+													<FieldError>
+														{errors.variants[0].priceRangeUsd.min?.message ||
+															errors.variants[0].priceRangeUsd.max?.message}
+													</FieldError>
+												)}
+											</Field>
+										</CardContent>
+									</Card>
+
+									<Card className="h-fit">
+										<CardContent>
+											<Field>
+												<FieldLabel>Stock</FieldLabel>
+												<Controller
+													name="variants.0.stock"
+													control={control}
+													render={({ field }) => (
+														<InputWithPlusMinusButtons
+															min={0}
+															size="icon-lg"
+															value={field.value}
+															onChange={field.onChange}
+														/>
+													)}
+												/>
+
+												<FieldError>
+													{errors.variants?.[0]?.stock?.message}
+												</FieldError>
+											</Field>
+										</CardContent>
+									</Card>
+
+									<Card className="h-fit">
+										<CardContent>
+											<Field>
+												<FieldLabel htmlFor="sku">SKU</FieldLabel>
+												<Input
+													id="sku"
+													placeholder="TS-BLK-S"
+													{...register("variants.0.sku")}
+												/>
+												{errors.variants?.[0]?.sku && (
+													<FieldError>
+														{errors.variants[0].sku.message}
+													</FieldError>
+												)}
+											</Field>
+										</CardContent>
+									</Card>
+								</>
+							)}
 						</div>
 					</div>
 
@@ -467,124 +461,5 @@ export function ProductBase({
 				</form>
 			</Section>
 		</Container>
-	);
-}
-
-function ProductOption({
-	form,
-	optionIndex,
-	onDelete,
-}: {
-	form: UseFormReturn<ProductInput>;
-	optionIndex: number;
-	onDelete: () => void;
-}) {
-	const [edit, setEdit] = React.useState(false);
-	const {
-		register,
-		control,
-		watch,
-		formState: { errors },
-	} = form;
-
-	const optionName = watch(`options.${optionIndex}.name`);
-	const optionValues = watch(`options.${optionIndex}.values`);
-	const optionError = errors.options?.[optionIndex];
-
-	return (
-		<>
-			{edit ? (
-				<FieldGroup>
-					<Field>
-						<FieldLabel htmlFor="option-name">Option name</FieldLabel>
-						<Input
-							id="option-name"
-							placeholder="e.g., Size, Color"
-							{...register(`options.${optionIndex}.name`)}
-						/>
-						<FieldError>{optionError?.name?.message}</FieldError>
-					</Field>
-
-					<Field>
-						<FieldLabel htmlFor="option-values">Option values</FieldLabel>
-						<Controller
-							name={`options.${optionIndex}.values`}
-							control={control}
-							render={({ field }) => (
-								<InputTags
-									id="option-values"
-									placeholder="Press Enter to add tags"
-									value={field.value ?? []}
-									onChange={field.onChange}
-								/>
-							)}
-						/>
-						<FieldError>{optionError?.values?.message}</FieldError>
-					</Field>
-
-					<Field orientation="horizontal">
-						<Button
-							type="button"
-							variant="destructive"
-							size="sm"
-							onClick={onDelete}
-						>
-							<Trash2 /> Remove option
-						</Button>
-						<Button type="button" size="sm" onClick={() => setEdit(false)}>
-							Done
-						</Button>
-					</Field>
-				</FieldGroup>
-			) : (
-				<div>
-					<div className="flex justify-between items-center">
-						<span className="font-medium text-sm">
-							{optionName || (
-								<span className="italic text-muted-foreground">
-									Unnamed Option
-								</span>
-							)}
-						</span>
-
-						<div className="flex gap-1">
-							<Button
-								type="button"
-								variant="ghost"
-								size="sm"
-								onClick={() => setEdit(true)}
-							>
-								Edit
-							</Button>
-
-							<Button
-								type="button"
-								variant="ghost"
-								size="sm"
-								onClick={onDelete}
-							>
-								<Trash2 className="text-destructive" />
-							</Button>
-						</div>
-					</div>
-
-					<div className="flex flex-wrap gap-1.5">
-						{optionValues.length === 0 ? (
-							<span className="text-xs text-muted-foreground italic">
-								No values provided
-							</span>
-						) : (
-							optionValues.map((val, idx) => (
-								<Badge key={`${val}-${idx}`} variant="secondary">
-									{val}
-								</Badge>
-							))
-						)}
-					</div>
-				</div>
-			)}
-
-			<Separator />
-		</>
 	);
 }

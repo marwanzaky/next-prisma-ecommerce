@@ -5,8 +5,10 @@ import { useMemo } from "react";
 import Link from "next/link";
 
 import { PublicCategoryTree } from "@repo/database";
-import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
+import { ProductWithVariantsReviewsUser } from "@repo/database";
 import { useQuery } from "@tanstack/react-query";
+
+import { TranslatedText } from "@repo/types";
 
 import { categoriesService } from "@/services/categories-service";
 
@@ -31,7 +33,7 @@ import { localizePath } from "@/lib/i18n";
 export default function ProductBreadcrumb({
 	product,
 }: {
-	product: ProductWithVariantsReviewsUserTranslatedText;
+	product: ProductWithVariantsReviewsUser;
 }) {
 	const { locale, t } = useI18n();
 
@@ -104,10 +106,12 @@ export default function ProductBreadcrumb({
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<BreadcrumbPage className="truncate">
-								{product.name[locale]}
+								{(product.name as TranslatedText)[locale]}
 							</BreadcrumbPage>
 						</TooltipTrigger>
-						<TooltipContent>{product.name[locale]}</TooltipContent>
+						<TooltipContent>
+							{(product.name as TranslatedText)[locale]}
+						</TooltipContent>
 					</Tooltip>
 				</BreadcrumbItem>
 			</BreadcrumbList>

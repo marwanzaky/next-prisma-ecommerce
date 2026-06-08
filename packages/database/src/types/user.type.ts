@@ -1,21 +1,20 @@
 import { Prisma, User } from "../../generated/prisma/client";
 
-export const userPublicSelect: Prisma.UserSelect = {
-	id: true,
-	role: true,
-	name: true,
-	email: true,
-	avatarUrl: true,
-};
-
-const publicUser = {
-	select: userPublicSelect,
+export const publicUser = {
+	select: {
+		id: true,
+		role: true,
+		name: true,
+		email: true,
+		avatarUrl: true,
+	},
 } satisfies Prisma.UserDefaultArgs;
 
 export type PublicUser = Prisma.UserGetPayload<typeof publicUser>;
 
 export type UpdateUser = Partial<Pick<User, "name" | "email">> & {
 	avatarFile?: File;
+	removeAvatar?: boolean;
 };
 
 export type CreateUser = {

@@ -43,3 +43,49 @@ export function createProductSlug(name: string, id: string): string {
 
 	return `${slug}-${id}`;
 }
+
+export type OptionValue =
+	| "Black"
+	| "White"
+	| "Navy"
+	| "Cranberry"
+	| "Pink"
+	| "Stone"
+	| "Dark Gray"
+	| "Grey"
+	| "Forest Green"
+	| "Brown"
+	| "Beige"
+	| "Red"
+	| "Blue";
+
+export function optionColorToHex(value: OptionValue): string {
+	switch (value) {
+		case "White":
+			return "#fff";
+		case "Black":
+			return "#000";
+		case "Navy":
+			return "#000080";
+		case "Cranberry":
+			return "#A60A3D";
+		case "Pink":
+			return "#FFC0CB";
+		case "Stone":
+			return "#ADA587";
+		case "Dark Gray":
+			return "#A9A9A9";
+		case "Grey":
+			return "#808080";
+		case "Forest Green":
+			return "#228B22";
+		case "Brown":
+			return "#964B00";
+		case "Beige":
+			return "#F5F5DC";
+		case "Red":
+			return "#FF0000";
+		case "Blue":
+			return "#0000FF";
+	}
+}

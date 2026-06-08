@@ -3,13 +3,13 @@ import {
 	createSlice,
 	SerializedError,
 } from "@reduxjs/toolkit";
-import { ProductWithVariantsReviewsUserTranslatedText } from "@repo/database";
+import { ProductWithVariantsReviewsUser } from "@repo/database";
 
 import { productsService } from "@/services/products-service";
 import { usersService } from "@/services/users-service";
 
 export type UserProductsState = {
-	products: ProductWithVariantsReviewsUserTranslatedText[];
+	products: ProductWithVariantsReviewsUser[];
 	loading: boolean;
 	error?: SerializedError;
 };

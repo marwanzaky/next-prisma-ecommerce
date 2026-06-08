@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
-import {
-	ProductVariant,
-	ProductWithVariantsReviewsUserTranslatedText,
-} from "@repo/database";
+import { ProductVariant, ProductWithVariantsReviewsUser } from "@repo/database";
+
+import { TranslatedText } from "@repo/types";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { ButtonIcon } from "@/components/ui/button-icon";
@@ -28,7 +27,7 @@ export default function ProductCallery({
 	product,
 	selectedVariant,
 }: {
-	product: ProductWithVariantsReviewsUserTranslatedText;
+	product: ProductWithVariantsReviewsUser;
 	selectedVariant: ProductVariant;
 }) {
 	const { dir, t, locale } = useI18n();
@@ -77,7 +76,7 @@ export default function ProductCallery({
 							<Image
 								className="w-full rounded-lg"
 								src={src}
-								alt={product.name[locale]}
+								alt={(product.name as TranslatedText)[locale]}
 								width={512}
 								height={512}
 								priority={i === 0}

@@ -1,7 +1,14 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 
 import { Transform, Type } from "class-transformer";
-import { IsArray, IsOptional, IsString, ValidateNested } from "class-validator";
+import {
+	ArrayMinSize,
+	IsArray,
+	IsInt,
+	IsOptional,
+	IsString,
+	ValidateNested,
+} from "class-validator";
 
 import { UpdateProduct } from "@repo/database";
 
@@ -54,8 +61,26 @@ export class UpdateProductDto implements UpdateProduct {
 	@IsOptional()
 	@ValidateNested({ each: true })
 	@Type(() => UpdateProductVariantDto)
+	@ArrayMinSize(1)
 	@Transform(({ value }: { value: string }) =>
 		value ? JSON.parse(value) : undefined,
 	)
 	readonly variants?: UpdateProductVariantDto[];
+
+	@ApiPropertyOptional({
+		description: "JSON stringified number[] matching uploaded imgFiles order",
+		type: [Number],
+	})
+	@IsOptional()
+	@Transform(({ value }: { value: string }) => JSON.parse(value))
+	@IsArray()
+	@IsInt({ each: true })
+	readonly newImgIndices?: number[];
+
+	@ApiPropertyOptional({
+		type: "string",
+		format: "binary",
+		isArray: true,
+	})
+	readonly imgFiles?: Express.Multer.File[];
 }

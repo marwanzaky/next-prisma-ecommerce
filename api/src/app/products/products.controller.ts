@@ -104,7 +104,25 @@ export class ProductsController {
 		@Req() req: AuthenticatedRequest,
 		@Body()
 		createProductDto: CreateProductDto,
+		@UploadedFiles() imgFiles: Express.Multer.File[],
 	): Promise<ProductWithVariantsReviewsUser | null> {
+		if (createProductDto.variants) {
+			const hasVariants = createProductDto.variants.length > 1;
+
+			if (!hasVariants) {
+				return this.productsService.create(req.user.id, {
+					...createProductDto,
+					variants: [
+						{
+							...createProductDto.variants[0],
+							newImgIndices: createProductDto.newImgIndices,
+							imgFiles,
+						},
+					],
+				});
+			}
+		}
+
 		return this.productsService.create(req.user.id, createProductDto);
 	}
 
@@ -133,7 +151,25 @@ export class ProductsController {
 		@Param("id") id: string,
 		@Body()
 		updateProductDto: UpdateProductDto,
+		@UploadedFiles() imgFiles: Express.Multer.File[],
 	) {
+		if (updateProductDto.variants) {
+			const hasVariants = updateProductDto.variants.length > 1;
+
+			if (!hasVariants) {
+				return this.productsService.update(id, req.user.id, {
+					...updateProductDto,
+					variants: [
+						{
+							...updateProductDto.variants[0],
+							newImgIndices: updateProductDto.newImgIndices,
+							imgFiles,
+						},
+					],
+				});
+			}
+		}
+
 		return this.productsService.update(id, req.user.id, updateProductDto);
 	}
 

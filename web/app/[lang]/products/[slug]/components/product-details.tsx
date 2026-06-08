@@ -6,10 +6,9 @@ import { useRouter } from "next/navigation";
 
 import { Heart, ShoppingCart } from "lucide-react";
 
-import {
-	ProductVariant,
-	ProductWithVariantsReviewsUserTranslatedText,
-} from "@repo/database";
+import { ProductVariant, ProductWithVariantsReviewsUser } from "@repo/database";
+
+import { TranslatedText } from "@repo/types";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
@@ -27,7 +26,7 @@ import { Separator } from "@/shadcn/components/ui/separator";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { localizePath } from "@/lib/i18n";
-import { formatPrice } from "@/lib/string-utils";
+import { formatPrice, optionColorToHex, OptionValue } from "@/lib/string-utils";
 import { cn } from "@/lib/utils";
 
 import { useCart } from "@/hooks/use-cart";
@@ -37,7 +36,7 @@ import ProductAccordions from "./product-accordions";
 import ProductBreadcrumb from "./product-breadcrumb";
 
 export function selectedProductVariant(
-	product: ProductWithVariantsReviewsUserTranslatedText,
+	product: ProductWithVariantsReviewsUser,
 	selectedOptions: Record<string, string>,
 ) {
 	return product.variants.find((variant) =>
@@ -54,7 +53,7 @@ export default function ProductDetails({
 	selectedOptions,
 	setSelectedOptions,
 }: {
-	product: ProductWithVariantsReviewsUserTranslatedText;
+	product: ProductWithVariantsReviewsUser;
 	selectedVariant: ProductVariant;
 	selectedOptions: Record<string, string>;
 	setSelectedOptions: React.Dispatch<
@@ -72,10 +71,6 @@ export default function ProductDetails({
 	const [quantity, setQuantity] = useState(1);
 
 	const discount = useMemo(() => {
-		if (!selectedVariant.compareAtPrice) {
-			return "0%";
-		}
-
 		const discount = selectedVariant.compareAtPrice - selectedVariant.price;
 		const discountPercent = (discount / selectedVariant.compareAtPrice) * 100;
 		return `${Math.round(discountPercent)}%`;
@@ -88,7 +83,7 @@ export default function ProductDetails({
 
 				<div className="space-y-1 lg:space-y-2">
 					<h1 className="scroll-m-20 text-4xl tracking-tight lg:text-5xl">
-						{product.name[locale]}
+						{(product.name as TranslatedText)[locale]}
 					</h1>
 
 					<div className="flex items-center gap-3 overflow-hidden">
@@ -96,12 +91,11 @@ export default function ProductDetails({
 							{formatPrice(selectedVariant.price / 100, locale)}
 						</div>
 
-						{selectedVariant.compareAtPrice != null &&
-							selectedVariant.compareAtPrice > selectedVariant.price && (
-								<div className="text-muted-foreground line-through text-2xl">
-									{formatPrice(selectedVariant.compareAtPrice / 100, locale)}
-								</div>
-							)}
+						{selectedVariant.compareAtPrice > selectedVariant.price && (
+							<div className="text-muted-foreground line-through text-2xl">
+								{formatPrice(selectedVariant.compareAtPrice / 100, locale)}
+							</div>
+						)}
 
 						{discount !== "0%" && (
 							<Badge className="border-none bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 focus-visible:outline-none dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5">
@@ -136,57 +130,29 @@ export default function ProductDetails({
 												[option.id]: value.id,
 											});
 
-											const isColor = option.name === "Color";
-
 											const isAvailable =
 												!!matchingVariant && matchingVariant.stock > 0;
 
 											const isPurchasable = true;
 
-											const color = value.value as
-												| "Black"
-												| "White"
-												| "Navy"
-												| "Cranberry"
-												| "Pink"
-												| "Stone"
-												| "Dark Gray"
-												| "Grey"
-												| "Forest Green"
-												| "Brown"
-												| "Beige"
-												| "Red"
-												| "Blue";
+											const selectOption = () =>
+												setSelectedOptions((prev) => ({
+													...prev,
+													[option.id]: value.id,
+												}));
 
-											let backgroundColor = "#fff";
-
-											if (color === "Black") backgroundColor = "#000";
-											if (color === "Navy") backgroundColor = "#000080";
-											if (color === "Cranberry") backgroundColor = "#A60A3D";
-											if (color === "Pink") backgroundColor = "#FFC0CB";
-											if (color === "Stone") backgroundColor = "#ADA587";
-											if (color === "Dark Gray") backgroundColor = "#A9A9A9";
-											if (color === "Grey") backgroundColor = "#808080";
-											if (color === "Forest Green") backgroundColor = "#228B22";
-											if (color === "Brown") backgroundColor = "#964B00";
-											if (color === "Beige") backgroundColor = "#F5F5DC";
-											if (color === "Beige") backgroundColor = "#F5F5DC";
-											if (color === "Red") backgroundColor = "#FF0000";
-											if (color === "Blue") backgroundColor = "#0000FF";
-
-											return isColor ? (
+											return option.name === "Color" ? (
 												<button
 													type="button"
 													key={`button-option-${value.optionId}-${i}`}
-													onClick={() =>
-														setSelectedOptions((prev) => ({
-															...prev,
-															[option.id]: value.id,
-														}))
-													}
+													onClick={selectOption}
 													disabled={!isAvailable}
 													title={value.value}
-													style={{ backgroundColor }}
+													style={{
+														backgroundColor: optionColorToHex(
+															value.value as OptionValue,
+														),
+													}}
 													className={cn(
 														"w-10 h-10 rounded-lg border transition-all relative overflow-hidden",
 														isSelected
@@ -208,12 +174,7 @@ export default function ProductDetails({
 													type="button"
 													key={`button-option-${value.optionId}-${i}`}
 													variant="outline"
-													onClick={() =>
-														setSelectedOptions((prev) => ({
-															...prev,
-															[option.id]: value.id,
-														}))
-													}
+													onClick={selectOption}
 													disabled={!isAvailable}
 													className={
 														isSelected
