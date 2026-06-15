@@ -12,6 +12,7 @@ export type AuthenticatedUser = {
 
 export interface AuthenticatedRequest extends Request {
 	user: AuthenticatedUser;
+	rawBody: Buffer<ArrayBufferLike>;
 }
 
 export interface GoogleRequest extends Request {

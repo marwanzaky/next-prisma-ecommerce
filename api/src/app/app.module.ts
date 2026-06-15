@@ -13,11 +13,13 @@ import { CartsModule } from "./carts/carts.module";
 import { CategoriesModule } from "./categories/categories.module";
 import { ChatModule } from "./chat/chat.module";
 import { FavoritesModule } from "./favorites/favorites.module";
+import { OrdersModule } from "./orders/orders.module";
 import { PaymentsModule } from "./payments/payments.module";
 import { ProductsModule } from "./products/products.module";
 import { ReviewsModule } from "./reviews/reviews.module";
 import { UploadsModule } from "./uploads/uploads.module";
 import { UsersModule } from "./users/users.module";
+import { WebhooksModule } from "./webhooks/webhooks.module";
 
 import { RolesGuard } from "../guards/roles.guard";
 
@@ -40,6 +42,8 @@ import { RolesGuard } from "../guards/roles.guard";
 		UploadsModule,
 		AdminCategoriesModule,
 		CategoriesModule,
+		OrdersModule,
+		WebhooksModule,
 	],
 	providers: [
 		JwtService,

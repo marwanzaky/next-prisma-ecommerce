@@ -23,6 +23,7 @@ import {
 	FieldLabel,
 } from "@/shadcn/components/ui/field";
 import { Separator } from "@/shadcn/components/ui/separator";
+import { Spinner } from "@/shadcn/components/ui/spinner";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { localizePath } from "@/lib/i18n";
@@ -66,7 +67,7 @@ export default function ProductDetails({
 	const { isFavorite, addToFavorites, removeFromFavorites } =
 		useToggleFavorite(product);
 
-	const { addToCart } = useCart();
+	const { addToCart, addToCartLoading } = useCart();
 
 	const [quantity, setQuantity] = useState(1);
 
@@ -230,8 +231,9 @@ export default function ProductDetails({
 						onClick={() => {
 							addToCart(selectedVariant, quantity);
 						}}
+						disabled={addToCartLoading}
 					>
-						<ShoppingCart />
+						{addToCartLoading ? <Spinner /> : <ShoppingCart />}
 						{t("productPage.actions.addToCart")}
 					</Button>
 

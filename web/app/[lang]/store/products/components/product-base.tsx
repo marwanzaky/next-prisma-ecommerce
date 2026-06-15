@@ -76,7 +76,6 @@ type ProductBaseProps = {
 	options: PublicCategoryTree[];
 	onSubmit: React.SubmitEventHandler<HTMLFormElement>;
 
-	loading: boolean;
 	injectLoadDescriptionPlugin?: boolean;
 
 	submitButtonText: string;
@@ -92,7 +91,6 @@ export function ProductBase({
 	onDescriptionChange,
 	options,
 	onSubmit,
-	loading,
 	injectLoadDescriptionPlugin,
 
 	submitButtonText,
@@ -101,7 +99,7 @@ export function ProductBase({
 	const {
 		control,
 		register,
-		formState: { errors, isDirty },
+		formState: { errors, isDirty, isSubmitting },
 	} = form;
 
 	const { locale, t } = useI18n();
@@ -405,11 +403,13 @@ export function ProductBase({
 													name="variants.0.stock"
 													control={control}
 													render={({ field }) => (
-														<InputWithPlusMinusButtons
+														<Input
+															type="number"
 															min={0}
-															size="icon-lg"
 															value={field.value}
-															onChange={field.onChange}
+															onChange={(e) =>
+																field.onChange(Number(e.target.value))
+															}
 														/>
 													)}
 												/>
@@ -453,9 +453,14 @@ export function ProductBase({
 								{t("buttons.cancel")}
 							</Button>
 						)}
-						<Button type="submit" disabled={!isDirty || loading}>
-							{loading && <Spinner />}
-							{submitButtonText}
+						<Button type="submit" disabled={!isDirty || isSubmitting}>
+							{isSubmitting ? (
+								<>
+									<Spinner /> {t("buttons.saving")}
+								</>
+							) : (
+								t("buttons.save")
+							)}
 						</Button>
 					</div>
 				</form>

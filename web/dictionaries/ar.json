@@ -203,7 +203,8 @@
 			"shipping": "الشحن",
 			"totalItem": "المجموع ({{count}} منتج)",
 			"totalItems": "المجموع ({{count}} منتجات)",
-			"proceedToCheckout": "المتابعة للدفع"
+			"proceedToCheckout": "المتابعة للدفع",
+			"proceedingToCheckout": "جاري الانتقال لإتمام الشراء..."
 		},
 		"table": {
 			"product": "المنتج",

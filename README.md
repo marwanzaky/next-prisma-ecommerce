@@ -1,8 +1,8 @@
 # MERN e-commerce
 <div style="display: flex;">
-  <img width="45%" height="auto" alt="mamolio vercel app_ (2)" src="https://github.com/user-attachments/assets/573e662d-5d05-4ee3-b488-78d22209c746" />
-  <img width="25%" height="auto" alt="mamolio vercel app_(iPhone 12 Pro) (3)" src="https://github.com/user-attachments/assets/a89e900c-ae8a-4e53-a370-7934cb944a54" />
-  <img width="25%" height="auto" alt="mamolio vercel app_(iPhone 12 Pro) (5)" src="https://github.com/user-attachments/assets/85d44382-d6ff-4a64-8be9-20418566c77d" />
+  <img width="45%" height="auto" alt="mamolio vercel app_ (2)" src="https://github.com/user-attachments/assets/17d26b41-f219-408f-b9b4-f31e3f4e9477" />
+  <img width="25%" height="auto" alt="mamolio vercel app_(iPhone 12 Pro) (3)" src="https://github.com/user-attachments/assets/8dd401b3-50cf-4b6d-96e3-c33647c41fab" />
+  <img width="25%" height="auto" alt="mamolio vercel app_(iPhone 12 Pro) (5)" src="https://github.com/user-attachments/assets/60de2a88-7182-40fd-bafa-40350438afca" />
 </div>
 
 
@@ -61,9 +61,9 @@ the website project is a modern ecommerce store built from the ground up to deli
 <table>
   <tr>
     <td width="50%" valign="top">
-      <strong>product discovery</strong>
+      <strong>dynamic product variants</strong>
       <br />
-      <span>search, filter, sort, and browse products across responsive layouts.</span>
+      <span>dynamic variant matrix that instantly updates pricing, descriptions, stock levels, and media carousels based on selected options.</span>
       <br /><br />
       <video width="100%" src="https://github.com/user-attachments/assets/835b486d-1d11-4a22-86f1-e19b9ad56fec" muted autoplay loop controls></video>
     </td>
@@ -89,6 +89,22 @@ the website project is a modern ecommerce store built from the ground up to deli
       <span>create rich product listings with descriptions, media, pricing, and variants.</span>
       <br /><br />
       <video width="100%" src="https://github.com/user-attachments/assets/e6ebfc1d-54fc-4fa6-8c2e-091e393675ed" muted autoplay loop controls></video>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>cart & checkout flow</strong>
+      <br />
+      <span>dynamic variant selection, localized multi-currency pricing, and secure end-to-end payment processing via stripe sandbox.</span>
+      <br /><br />
+      <video width="100%" src="https://github.com/user-attachments/assets/7c229770-9e00-468c-8ad0-269a6907689d" muted autoplay loop controls></video>
+    </td>
+    <td width="50%" valign="top">
+      <strong>ai internationalization</strong>
+      <br />
+      <span>automated multi-language localization translating product titles, descriptions, and reviews into en, fr, and ar using LLMs.</span>
+      <br /><br />
+      <video width="100%" src="https://github.com/user-attachments/assets/0cf2f33e-42ed-4e67-89a9-bc84196f7d52" muted autoplay loop controls></video>
     </td>
   </tr>
 </table>

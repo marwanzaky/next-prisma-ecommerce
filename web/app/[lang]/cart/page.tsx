@@ -26,7 +26,7 @@ export default function Page() {
 	const router = useRouter();
 	const { locale, t } = useI18n();
 
-	const { items, columns, tableData } = useCartPage();
+	const { items, columns, tableData, checkout } = useCartPage();
 
 	return (
 		<Container>
@@ -51,7 +51,7 @@ export default function Page() {
 							data={tableData}
 						/>
 
-						<CheckoutCard />
+						<CheckoutCard checkout={checkout} />
 					</div>
 				) : (
 					<Empty className="border border-dashed">

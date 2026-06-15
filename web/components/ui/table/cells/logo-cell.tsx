@@ -28,7 +28,7 @@ export function LogoCell({ label, subcategory, imgUrl, href }: LogoCellProps) {
 			</Link>
 
 			<div>
-				<div className="font-medium hover:text-primary transition-colors max-w-60 truncate">
+				<div className="font-medium hover:text-primary transition-colors max-w-40 truncate">
 					<Link href={href}>{label}</Link>
 				</div>
 

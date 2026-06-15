@@ -24,7 +24,6 @@ export default function Page() {
 		options,
 		description,
 		updateProduct,
-		loading,
 	} = useSell();
 
 	const { products } = useAppSelector((state) => state.userProducts);
@@ -95,7 +94,6 @@ export default function Page() {
 			submitButtonText={t("buttons.update")}
 			cancelButtonAction={resetForm}
 			injectLoadDescriptionPlugin
-			loading={loading}
 		/>
 	);
 }

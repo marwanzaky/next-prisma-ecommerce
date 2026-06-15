@@ -95,12 +95,7 @@ export function useCartPage() {
 	) => {
 		event.preventDefault();
 
-		const response = await paymentsService.createCheckoutSession({
-			items: items.map((item) => ({
-				id: item.variant.id,
-				quantity: item.quantity,
-			})),
-		});
+		const response = await paymentsService.createCheckoutSession();
 
 		(window as Window).location = response.url;
 	};

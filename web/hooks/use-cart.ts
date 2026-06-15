@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { toast } from "sonner";
 
 import { ProductVariant } from "@repo/database";
@@ -13,11 +15,17 @@ export function useCart() {
 
 	const { isAuthenticated } = useAppSelector((state) => state.auth);
 
+	const [addToCartLoading, setAddToCartLoading] = useState(false);
+
 	const addToCart = async (
 		productVariant: ProductVariant,
 		quantity: number = 1,
 	) => {
+		setAddToCartLoading(true);
+
 		await dispatch(postCartItemAsync({ productVariant, quantity })).unwrap();
+
+		setAddToCartLoading(false);
 
 		if (isAuthenticated) {
 			toast("Added to cart.", { position: "top-center" });
@@ -36,5 +44,5 @@ export function useCart() {
 		}
 	};
 
-	return { addToCart, removeFromCart };
+	return { addToCart, addToCartLoading, removeFromCart };
 }

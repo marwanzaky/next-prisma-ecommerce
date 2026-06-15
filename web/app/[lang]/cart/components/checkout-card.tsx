@@ -1,7 +1,11 @@
 "use client";
 
+import { useState } from "react";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
+import { useAppSelector } from "@/redux/store";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 
@@ -11,15 +15,23 @@ import { Field, FieldGroup, FieldLabel } from "@/shadcn/components/ui/field";
 import { Label } from "@/shadcn/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/shadcn/components/ui/radio-group";
 import { Separator } from "@/shadcn/components/ui/separator";
+import { Spinner } from "@/shadcn/components/ui/spinner";
 
 import { localizePath } from "@/lib/i18n";
 import { formatPrice } from "@/lib/string-utils";
 
 import { useCartPage } from "../use-cart";
 
-export default function CheckoutCard() {
+export default function CheckoutCard({
+	checkout,
+}: {
+	checkout: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+}) {
 	const { t, locale } = useI18n();
+	const { isAuthenticated } = useAppSelector((state) => state.auth);
 	const router = useRouter();
+
+	const [isLoading, setIsLoading] = useState(false);
 
 	return (
 		<Card className="md:w-1/3 h-fit rounded-md">
@@ -29,9 +41,23 @@ export default function CheckoutCard() {
 
 				<Button
 					className="w-full"
-					onClick={() => router.push(localizePath("/signin", locale))}
+					disabled={isLoading}
+					onClick={(event) => {
+						if (isAuthenticated) {
+							setIsLoading(true);
+							checkout(event);
+						} else {
+							router.push(localizePath("/signin", locale));
+						}
+					}}
 				>
-					{t("cartPage.checkoutCard.proceedToCheckout")}
+					{isLoading ? (
+						<>
+							<Spinner /> {t("cartPage.checkoutCard.proceedingToCheckout")}
+						</>
+					) : (
+						t("cartPage.checkoutCard.proceedToCheckout")
+					)}
 				</Button>
 			</CardContent>
 		</Card>

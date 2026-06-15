@@ -14,7 +14,6 @@ export default function Page() {
 		onDescriptionChange,
 		createProduct,
 		description,
-		loading,
 	} = useSell();
 
 	return (
@@ -27,7 +26,6 @@ export default function Page() {
 			description={description}
 			onSubmit={createProduct}
 			submitButtonText={t("buttons.save")}
-			loading={loading}
 		/>
 	);
 }

@@ -1,59 +1,98 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { BadRequestException, Controller, Post, Req } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
 
-import Stripe from "stripe";
+import { Checkout } from "stripe";
 
+import { cartWithItems } from "@repo/database";
 import { TranslatedText } from "@repo/types";
 
-import { Public } from "@/app/auth/auth.guard";
+import { StripeService } from "@/services/stripe/stripe.service";
 
 import { PrismaService } from "@/prisma.service";
-
-import { CreateCheckoutSessionDto } from "./dto/create-checkout-session.dto";
-
-import { PaymentsService } from "./payments.service";
+import { AuthenticatedRequest } from "@/types/request.type";
 
 @Controller("payments")
 export class PaymentsController {
 	constructor(
-		private readonly paymentsService: PaymentsService,
+		private readonly stripeService: StripeService,
 		private readonly prisma: PrismaService,
 	) {}
 
 	@Post("create-checkout-session")
-	@Public()
 	@ApiOperation({
 		summary: "Create a checkout session",
 	})
-	async create(@Body() body: CreateCheckoutSessionDto) {
-		const products = await this.prisma.product.findMany({
+	async create(@Req() req: AuthenticatedRequest) {
+		const cart = await this.prisma.cart.findUnique({
+			where: { userId: req.user.id },
+			...cartWithItems,
+		});
+
+		const user = await this.prisma.user.findUnique({
 			where: {
-				id: {
-					in: body.items.map((item) => item.id),
+				id: req.user.id,
+			},
+		});
+
+		if (!user) {
+			throw new BadRequestException("User not found.");
+		}
+
+		if (!cart || cart.items.length === 0) {
+			throw new BadRequestException("Your cart is empty or invalid.");
+		}
+
+		let totalAmount = 0;
+
+		const lineItems: Checkout.SessionCreateParams.LineItem[] = cart.items.map(
+			(item) => {
+				totalAmount += item.variant.price * item.quantity;
+				return {
+					price_data: {
+						currency: "usd",
+						product_data: {
+							name: (item.variant.product.name as TranslatedText).en,
+							description: item.variant.title,
+							images: item.variant.imgUrls.length
+								? [item.variant.imgUrls[0]]
+								: [],
+						},
+						unit_amount: item.variant.price,
+					},
+					quantity: item.quantity,
+				};
+			},
+		);
+
+		const order = await this.prisma.order.create({
+			data: {
+				userId: req.user.id,
+				totalAmount: totalAmount,
+				subtotalAmount: totalAmount,
+				status: "PENDING",
+				items: {
+					create: cart.items.map((item) => ({
+						variantId: item.variantId,
+						quantity: item.quantity,
+						price: item.variant.price,
+						name: (item.variant.product.name as TranslatedText)["en"],
+						variantTitle: item.variant.title,
+					})),
 				},
 			},
 		});
 
-		const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = body.items
-			.map((item) => {
-				const matchProduct = products.find((product) => product.id === item.id);
+		const session = await this.stripeService.createCheckoutSession({
+			lineItems,
+			customerEmail: user.email,
+			orderId: order.id,
+			userId: req.user.id,
+		});
 
-				if (matchProduct) {
-					return {
-						price_data: {
-							currency: "usd",
-							product_data: { name: (matchProduct.name as TranslatedText).en },
-							// unit_amount: matchProduct.price,
-						},
-						quantity: item.quantity,
-					};
-				}
-
-				return null;
-			})
-			.filter((item) => item !== null);
-
-		const session = await this.paymentsService.createCheckoutSession(lineItems);
+		await this.prisma.order.update({
+			where: { id: order.id },
+			data: { stripeSessionId: session.id },
+		});
 
 		return {
 			url: session.url,

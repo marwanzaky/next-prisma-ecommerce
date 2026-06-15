@@ -48,7 +48,7 @@ export function useSell() {
 	const { locale, t } = useI18n();
 	const productSchema = createProductSchema(t);
 
-	const { products, loading } = useAppSelector((state) => state.userProducts);
+	const { products } = useAppSelector((state) => state.userProducts);
 
 	const initialConfig: InitialConfigType = {
 		namespace: "MyEditor",
@@ -108,7 +108,6 @@ export function useSell() {
 			t,
 		}),
 		tableData,
-		loading,
 
 		initialConfig,
 		form,

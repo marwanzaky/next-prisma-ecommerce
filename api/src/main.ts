@@ -7,14 +7,25 @@ import helmet from "helmet";
 
 import { AppModule } from "@/app/app.module";
 
+import { AuthenticatedRequest } from "./types/request.type";
+
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create(AppModule, {
+		rawBody: true,
+	});
 
 	// Middlewares
 	app.useGlobalPipes(new ValidationPipe({ transform: true }));
 	app.enableCors();
 	app.use(helmet());
-	app.use(json({ limit: "4mb" }));
+	app.use(
+		json({
+			limit: "4mb",
+			verify: (req: AuthenticatedRequest, res, buf) => {
+				req.rawBody = buf;
+			},
+		}),
+	);
 
 	// Swagger config
 	const config = new DocumentBuilder()

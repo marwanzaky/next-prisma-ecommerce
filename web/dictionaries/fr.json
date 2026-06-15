@@ -203,7 +203,8 @@
 			"shipping": "Livraison",
 			"totalItem": "Total ({{count}} article)",
 			"totalItems": "Total ({{count}} articles)",
-			"proceedToCheckout": "Passer au paiement"
+			"proceedToCheckout": "Passer au paiement",
+			"proceedingToCheckout": "Redirection vers la caisse..."
 		},
 		"table": {
 			"product": "Produit",

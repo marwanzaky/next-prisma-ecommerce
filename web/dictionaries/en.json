@@ -203,7 +203,8 @@
 			"shipping": "Shipping",
 			"totalItem": "Total ({{count}} item)",
 			"totalItems": "Total ({{count}} items)",
-			"proceedToCheckout": "Proceed to checkout"
+			"proceedToCheckout": "Proceed to checkout",
+			"proceedingToCheckout": "Proceeding to checkout..."
 		},
 		"table": {
 			"product": "Product",

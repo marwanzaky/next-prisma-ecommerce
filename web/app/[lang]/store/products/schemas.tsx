@@ -51,7 +51,7 @@ export function createVariantSchema(t: ReturnType<typeof useI18n>["t"]) {
 				message: t("validation.maxPriceGteMinPrice"),
 				path: ["max"],
 			}),
-		stock: z.number().positive(),
+		stock: z.number().min(0, t("validation.invalidNumber")),
 		sku: z.string(),
 		selections: z.array(
 			z.object({
