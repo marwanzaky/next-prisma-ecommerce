@@ -14,8 +14,6 @@
 		"start:prod": "node dist/api/src/main.js",
 		"lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
 		"check-types": "tsc --noEmit",
-		"postinstall": "pnpm db:generate",
-		"db:generate": "pnpm --filter @repo/database generate",
 		"email": "email dev"
 	},
 	"dependencies": {

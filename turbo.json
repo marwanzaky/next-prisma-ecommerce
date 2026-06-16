@@ -17,21 +17,25 @@
 		"RESEND_FROM"
 	],
 	"tasks": {
+		"@repo/database#generate": {
+			"inputs": ["prisma/schema.prisma", "package.json"],
+			"outputs": ["generated/prisma/**"]
+		},
 		"build": {
-			"dependsOn": ["^build"],
+			"dependsOn": ["@repo/database#generate", "^build"],
 			"outputs": [".next/**", "!.next/cache/**", "dist/**"]
 		},
+		"dev": {
+			"dependsOn": ["@repo/database#generate", "^build"],
+			"persistent": true,
+			"cache": false
+		},
 		"check-types": {
-			"dependsOn": ["^check-types"],
+			"dependsOn": ["@repo/database#generate", "^check-types"],
 			"outputs": []
 		},
 		"lint": {
 			"outputs": []
-		},
-		"dev": {
-			"dependsOn": ["^build"],
-			"persistent": true,
-			"cache": false
 		}
 	}
 }
