@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 import { ProductWithVariantsReviewsUser } from "@repo/database";
 
-import { TranslatedText } from "@repo/types";
+import { formatDate, TranslatedText } from "@repo/types";
 
 import { useI18n } from "@/components/layout/i18n-provider";
 import { renderLexicalJSONToHTML } from "@/components/ui/lexical/render-lexical-json-to-html";
@@ -26,7 +26,7 @@ import {
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
 
 import { localizePath } from "@/lib/i18n";
-import { formatDate, initials } from "@/lib/string-utils";
+import { initials } from "@/lib/string-utils";
 
 export default function ProductAccordions({
 	product,

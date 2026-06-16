@@ -4,9 +4,9 @@ import Negotiator from "negotiator";
 
 import { match } from "@formatjs/intl-localematcher";
 
-import { Locale, locales } from "@repo/types";
+import { defaultLocale, Locale, locales } from "@repo/types";
 
-import { defaultLocale, hasLocale, localizePath } from "@/lib/i18n";
+import { hasLocale, localizePath } from "@/lib/i18n";
 
 function getPreferredLocale(request: NextRequest): Locale {
 	const negotiatorHeaders: Record<string, string> = {};

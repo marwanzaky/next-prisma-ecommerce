@@ -4,15 +4,24 @@ import { Resend } from "resend";
 
 import { render } from "@react-email/render";
 
-import Email from "./emails";
+import Email from "@/emails/email";
+import OrderConfirmationEmail, {
+	OrderConfirmationProps,
+} from "@/emails/orders";
 
 @Injectable()
 export class ResendService {
 	private resend = new Resend(process.env.RESEND_API_KEY);
 
+	private from: string;
+
+	constructor() {
+		this.from = process.env.RESEND_FROM!;
+	}
+
 	async sendEmailVerification(to: string, verifyUrl: string) {
 		const { data, error } = await this.resend.emails.send({
-			from: process.env.RESEND_FROM!,
+			from: this.from,
 			to: [to],
 			subject: "Verify your email",
 			html: await render(
@@ -22,6 +31,7 @@ export class ResendService {
 					buttonText: "Verify",
 					companyName: "Mamolio",
 					url: verifyUrl,
+					preview: "Thanks for signing up",
 				}),
 			),
 		});
@@ -35,7 +45,7 @@ export class ResendService {
 
 	async sendEmailResetPassword(to: string, resetUrl: string) {
 		const { data, error } = await this.resend.emails.send({
-			from: process.env.RESEND_FROM!,
+			from: this.from,
 			to: [to],
 			subject: "Reset your password",
 			html: await render(
@@ -46,8 +56,24 @@ export class ResendService {
 					buttonText: "Reset it now",
 					companyName: "Mamolio",
 					url: resetUrl,
+					preview: "Reset your password",
 				}),
 			),
+		});
+
+		if (error) {
+			throw error;
+		}
+
+		return data;
+	}
+
+	async sendOrderConfirmation(to: string, payload: OrderConfirmationProps) {
+		const { data, error } = await this.resend.emails.send({
+			from: this.from,
+			to: [to],
+			subject: `Order Confirmation - #${payload.orderNumber}`,
+			html: await render(OrderConfirmationEmail(payload)),
 		});
 
 		if (error) {

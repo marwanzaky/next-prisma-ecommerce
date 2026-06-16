@@ -1,20 +1,9 @@
-import { Locale } from "@repo/types";
-
-import { intlLocales } from "@/lib/i18n";
+import { formatPrice as formatPriceFun, Locale } from "@repo/types";
 
 const currency = process.env.NEXT_PUBLIC_CURRENCY || "USD";
 
 export function formatPrice(amount: number, locale: Locale): string {
-	const formatted = new Intl.NumberFormat(intlLocales[locale], {
-		style: "currency",
-		currency,
-	}).format(amount);
-
-	if (currency === "MAD") {
-		return formatted.replace("MAD", "Dhs");
-	}
-
-	return formatted;
+	return formatPriceFun(amount, locale, currency);
 }
 
 export function initials(fullName: string): string {
@@ -24,15 +13,6 @@ export function initials(fullName: string): string {
 		.splice(0, 2)
 		.join("")
 		.toUpperCase();
-}
-
-export function formatDate(date: Date | string): string {
-	const value = typeof date === "object" ? date : new Date(date);
-	return value.toLocaleDateString("en-us", {
-		year: "numeric",
-		month: "short",
-		day: "numeric",
-	});
 }
 
 export function createProductSlug(name: string, id: string): string {

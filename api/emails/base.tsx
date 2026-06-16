@@ -1,10 +1,8 @@
 import {
 	Body,
-	Button,
 	Column,
 	Container,
 	Head,
-	Heading,
 	Html,
 	Img,
 	Link,
@@ -16,24 +14,21 @@ import {
 } from "react-email";
 import { barebonesBoxedTailwindConfig } from "./theme";
 import { BarebonesFonts } from "./theme-fonts";
-
 import * as React from "react";
 
-interface EmailProps {
-	title: string;
-	description: string;
-	buttonText: string;
+export interface BaseProps {
 	companyName: string;
-	url: string;
+	preview: string;
+	unsubscribe?: boolean;
+	children: React.ReactNode;
 }
 
-export const Email = ({
-	title,
-	description,
-	buttonText,
+export const Base = ({
 	companyName,
-	url,
-}: EmailProps) => {
+	preview,
+	unsubscribe = false,
+	children,
+}: BaseProps) => {
 	const baseUrl = "https://react-email-demo-qf66lxnl3-resend.vercel.app/";
 
 	return (
@@ -41,25 +36,24 @@ export const Email = ({
 			<Head>
 				<BarebonesFonts />
 			</Head>
+
 			<Html>
 				<Body className="bg-bg-2 m-0 text-center font-sans">
-					<Preview>Reset your password</Preview>
+					<Preview>{preview}</Preview>
+
 					<Container className="mobile:mt-0 mx-auto mt-8 w-full max-w-[640px]">
 						<Section>
 							<Section className="bg-bg mobile:px-2 px-6 py-4">
+								{/* Header */}
 								<Section className="mb-3 px-6">
 									<Row>
 										<Column className="w-1/2 py-[7px] align-middle">
-											<Row>
-												<Column className="w-[32px] align-middle">
-													<Img
-														src={`${baseUrl}/static/shared/logo-black.png`}
-														alt=""
-														width={23}
-														className="block"
-													/>
-												</Column>
-											</Row>
+											<Img
+												src={`${baseUrl}/static/shared/logo-black.png`}
+												alt="Logo"
+												width={23}
+												className="block"
+											/>
 										</Column>
 										<Column
 											align="right"
@@ -72,37 +66,9 @@ export const Email = ({
 									</Row>
 								</Section>
 
-								<Section className="bg-bg-2 mobile:px-6 mobile:py-12 rounded-[8px] px-[40px] py-[64px] text-center">
-									<Section className="mb-3">
-										<Img
-											src={`${baseUrl}/static/shared/logo-black.png`}
-											alt="Logo"
-											width={48}
-											className="mx-auto mb-5 block"
-										/>
-										<Heading as="h1" className="font-28 text-fg m-0 font-sans">
-											{title}
-										</Heading>
-									</Section>
-
-									<Text className="font-16 text-fg-2 mx-auto mt-0 mb-8 max-w-[380px] text-center font-sans">
-										{description}
-									</Text>
-
-									<Section className="mb-6 text-center">
-										<Button
-											href={url}
-											className="bg-fg font-16 text-fg-inverted inline-block rounded-lg px-7 py-4 text-center font-sans leading-6"
-										>
-											{buttonText}
-										</Button>
-									</Section>
-
-									<Text className="font-13 text-fg-3 mx-auto mt-8 mb-0 max-w-[400px] text-center font-sans">
-										If you didn&apos;t request this, please ignore this email.
-										Your password won&apos;t change until you access the link
-										above and create a new one.
-									</Text>
+								{/* Main Card Content */}
+								<Section className="bg-bg-2 mobile:px-6 mobile:py-12 rounded-[8px] px-[40px] py-[48px] text-left">
+									{children}
 								</Section>
 
 								{/* Footer */}
@@ -123,7 +89,6 @@ export const Email = ({
 														src={`${baseUrl}/static/shared/social-x-black.png`}
 														alt="X"
 														width={18}
-														className="block"
 													/>
 												</Link>
 												<Link
@@ -134,7 +99,6 @@ export const Email = ({
 														src={`${baseUrl}/static/shared/social-in-black.png`}
 														alt="LinkedIn"
 														width={18}
-														className="block"
 													/>
 												</Link>
 												<Link
@@ -145,7 +109,6 @@ export const Email = ({
 														src={`${baseUrl}/static/shared/social-yt-black.png`}
 														alt="YouTube"
 														width={18}
-														className="block"
 													/>
 												</Link>
 												<Link
@@ -156,7 +119,6 @@ export const Email = ({
 														src={`${baseUrl}/static/shared/social-gh-black.png`}
 														alt="GitHub"
 														width={18}
-														className="block"
 													/>
 												</Link>
 											</Section>
@@ -166,12 +128,17 @@ export const Email = ({
 												<br />
 												Tech City, CA, 94102
 											</Text>
-											<Text className="font-11 text-fg-3 m-0 text-center font-sans">
-												<Link href="https://example.com/" className="text-fg-3">
-													Unsubscribe
-												</Link>{" "}
-												from {companyName} marketing emails.
-											</Text>
+											{unsubscribe && (
+												<Text className="font-11 text-fg-3 m-0 text-center font-sans">
+													<Link
+														href="https://example.com/"
+														className="text-fg-3"
+													>
+														Unsubscribe
+													</Link>{" "}
+													from {companyName} marketing emails.
+												</Text>
+											)}
 										</Column>
 									</Row>
 								</Section>
@@ -184,4 +151,10 @@ export const Email = ({
 	);
 };
 
-export default Email;
+Base.PreviewProps = {
+	companyName: "Mamolio",
+	preview: "Reset your password",
+	unsubscribe: true,
+} as BaseProps;
+
+export default Base;

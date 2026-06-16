@@ -15,8 +15,7 @@ import {
 	AlertDialogTrigger,
 } from "@/shadcn/components/ui/alert-dialog";
 import { Button } from "@/shadcn/components/ui/button";
-
-import { formatDate } from "@/lib/string-utils";
+import { formatDate } from "@repo/types";
 
 export const getMessagesColumns = ({
 	onDeleteMessage,

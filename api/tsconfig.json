@@ -6,8 +6,8 @@
 		"jsx": "react",
 		"paths": {
 			"@/*": ["./src/*"],
-			"@/prisma/*": ["./generated/prisma/*"]
+			"@/emails/*": ["./emails/*"]
 		}
 	},
-	"include": ["src/**/*"]
+	"include": ["src/**/*", "emails"]
 }

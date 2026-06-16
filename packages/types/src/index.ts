@@ -1,6 +1,6 @@
-export const locales = ["en", "fr", "ar"] as const;
+export * from "./lib/i18n";
 
-export type Locale = (typeof locales)[number];
+export * from "./lib/string-utils";
 
 export type TranslatedText = {
 	en: string;

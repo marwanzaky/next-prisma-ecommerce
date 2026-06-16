@@ -8,6 +8,8 @@ import { PrismaService } from "@/prisma.service";
 import { AuthenticatedRequest } from "@/types/request.type";
 
 import { Public } from "../auth/auth.guard";
+import { ResendService } from "@/services/resend/resend.service";
+import { formatDate, formatPrice } from "@repo/types";
 
 @Controller("webhooks")
 @Public()
@@ -15,6 +17,7 @@ export class WebhooksController {
 	constructor(
 		private prisma: PrismaService,
 		private stripe: StripeService,
+		private resend: ResendService,
 	) {}
 
 	@Post("stripe")
@@ -54,6 +57,39 @@ export class WebhooksController {
 
 				// Deduct Stock Inventory
 			]);
+
+			const order = await this.prisma.order.findUnique({
+				where: {
+					id: orderId,
+				},
+				include: {
+					items: {
+						include: {
+							variant: true,
+						},
+					},
+				},
+			});
+
+			const user = await this.prisma.user.findUnique({
+				where: {
+					id: userId,
+				},
+			});
+
+			if (order && user) {
+				await this.resend.sendOrderConfirmation(user.email, {
+					companyName: "Mamolio",
+					customerName: user.name,
+					items: order.items,
+					orderDate: formatDate(order.createdAt),
+					orderNumber: order.stripeSessionId?.substring(0, 20) ?? "",
+					receiptUrl: `${process.env.CLIENT_URL}/orders`,
+					shipping: formatPrice(0, "en"),
+					subtotal: formatPrice(order.subtotalAmount / 100, "en"),
+					total: formatPrice(order.totalAmount / 100, "en"),
+				});
+			}
 		}
 
 		return res.status(200).json({ received: true });
