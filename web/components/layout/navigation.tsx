@@ -246,6 +246,15 @@ export default function Navigation() {
 											<BadgeCheck />
 											{t("navigation.actions.account")}
 										</DropdownMenuItem>
+
+										<DropdownMenuItem
+											onClick={() => {
+												router.push(localizePath("/orders", locale));
+											}}
+										>
+											<ShoppingBag />
+											Orders
+										</DropdownMenuItem>
 									</DropdownMenuGroup>
 
 									<DropdownMenuSeparator />

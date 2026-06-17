@@ -7,10 +7,15 @@ import { CheckCircle } from "lucide-react";
 
 import { Button } from "@/shadcn/components/ui/button";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
+import { localizePath } from "@/lib/i18n";
+import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function SuccessPage() {
+	const { locale } = useI18n();
+
 	const searchParams = useSearchParams();
 	const sessionId = searchParams.get("session_id");
+	const orderId = searchParams.get("order_id");
 
 	return (
 		<div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center prose mx-auto">
@@ -30,10 +35,10 @@ export default function SuccessPage() {
 			)}
 
 			<div className="mt-8 flex gap-4">
-				<Link href="/orders">
-					<Button variant="outline">View my orders</Button>
+				<Link href={localizePath(`/orders/${orderId}`, locale)}>
+					<Button variant="outline">View my order</Button>
 				</Link>
-				<Link href="/">
+				<Link href={localizePath("/", locale)}>
 					<Button>Continue shopping</Button>
 				</Link>
 			</div>

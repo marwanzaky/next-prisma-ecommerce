@@ -1,7 +1,7 @@
-import { Controller, Get, Req } from "@nestjs/common";
+import { Controller, Get, Param, Req } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
 
-import { OrderWithItems,orderWithItems } from "@repo/database";
+import { OrderWithItems, orderWithItems } from "@repo/database";
 
 import { PrismaService } from "@/prisma.service";
 import { AuthenticatedRequest } from "@/types/request.type";
@@ -22,6 +22,21 @@ export class OrdersController {
 			},
 			orderBy: {
 				createdAt: "desc",
+			},
+			...orderWithItems,
+		});
+	}
+
+	@Get("my-orders/:orderId")
+	async getMyOrder(
+		@Req() req: AuthenticatedRequest,
+		@Param("orderId") orderId: string,
+	): Promise<OrderWithItems | null> {
+		return this.prisma.order.findUnique({
+			where: {
+				userId: req.user.id,
+				status: { in: ["PAID", "CANCELLED", "REFUNDED"] },
+				id: orderId,
 			},
 			...orderWithItems,
 		});

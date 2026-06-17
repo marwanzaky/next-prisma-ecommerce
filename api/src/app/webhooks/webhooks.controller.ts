@@ -32,6 +32,19 @@ export class WebhooksController {
 			process.env.STRIPE_WEBHOOK_SECRET!,
 		);
 
+		if (event.type === "checkout.session.expired") {
+			const session = event.data.object;
+
+			const orderId = session.metadata?.orderId;
+
+			this.prisma.order.update({
+				where: { id: orderId },
+				data: {
+					status: "CANCELLED",
+				},
+			});
+		}
+
 		if (event.type === "checkout.session.completed") {
 			const session = event.data.object;
 
