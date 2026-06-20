@@ -7,16 +7,18 @@ import {
 	configureStore,
 	createListenerMiddleware,
 	isRejected,
+	Middleware,
 } from "@reduxjs/toolkit";
 
 import storage from "@/lib/storage-utils";
 
-import authReducer, { AuthState } from "./slices/auth-slice";
+import authReducer, { AuthState, logOut } from "./slices/auth-slice";
 import cartReducer, { CartState } from "./slices/cart-slice";
 import favoritesReducer, { FavoritesState } from "./slices/favorites-slice";
 import userProductsReducer, {
 	UserProductsState,
 } from "./slices/user-products-slice";
+import { ApiError } from "next/dist/server/api-utils";
 
 const authPersistConfig = {
 	key: "auth",
@@ -28,12 +30,12 @@ const cartPersistConfig = {
 	storage,
 };
 
-const userProductsPersistConfig = {
-	key: "userProducts",
+const favoritesPersistConfig = {
+	key: "favorites",
 	storage,
 };
 
-const favoritesPersistConfig = {
+const userProductsPersistConfig = {
 	key: "userProducts",
 	storage,
 };
@@ -43,12 +45,29 @@ export const listenerMiddleware = createListenerMiddleware();
 listenerMiddleware.startListening({
 	predicate: isRejected,
 	effect: (action) => {
+		const error = action.payload as ApiError;
 		toast.error("Uh oh! Something went wrong.", {
-			description: action.error?.message || "Something went wrong",
+			description: error.message,
 			position: "top-center",
 		});
 	},
 });
+
+export const authGuardMiddleware: Middleware =
+	(store) => (next) => (action) => {
+		if (isRejected(action)) {
+			const payload = action.payload as ApiError;
+
+			if (payload.statusCode === 401) {
+				store.dispatch(logOut());
+
+				window.location.href = "/signin";
+
+				return;
+			}
+		}
+		return next(action);
+	};
 
 export const store = configureStore({
 	reducer: {
@@ -68,7 +87,9 @@ export const store = configureStore({
 			serializableCheck: {
 				ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
 			},
-		}).prepend(listenerMiddleware.middleware),
+		})
+			.prepend(listenerMiddleware.middleware)
+			.concat(authGuardMiddleware),
 });
 
 export const persistor = persistStore(store);

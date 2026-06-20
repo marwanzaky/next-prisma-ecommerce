@@ -1,14 +1,11 @@
 import Cookies from "js-cookie";
 
-import {
-	createAsyncThunk,
-	createSlice,
-	SerializedError,
-} from "@reduxjs/toolkit";
+import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { PublicUser } from "@repo/database";
 
 import { authService } from "@/services/auth-service";
 import { usersService } from "@/services/users-service";
+import { createAppThunk } from "@/lib/api-client";
 
 export type AuthState = {
 	user: PublicUser | null;
@@ -26,30 +23,30 @@ const initialState: AuthState = {
 	error: undefined,
 };
 
-const loginAsync = createAsyncThunk("auth/login", authService.login);
+const loginAsync = createAppThunk("auth/login", authService.login);
 
-const signupAsync = createAsyncThunk("auth/signup", authService.signup);
+const signupAsync = createAppThunk("auth/signup", authService.signup);
 
-const resetPasswordAsync = createAsyncThunk(
+const resetPasswordAsync = createAppThunk(
 	"auth/resetPassword",
 	authService.resetPassword,
 );
 
-const forgotPasswordAsync = createAsyncThunk(
+const forgotPasswordAsync = createAppThunk(
 	"auth/forgotPassword",
 	authService.forgotPassword,
 );
 
-const getMeAsync = createAsyncThunk("auth/getMe", usersService.getMe);
+const getMeAsync = createAppThunk("auth/getMe", usersService.getMe);
 
-const updateMeAsync = createAsyncThunk("auth/updateMe", usersService.updateMe);
+const updateMeAsync = createAppThunk("auth/updateMe", usersService.updateMe);
 
-const updateMyPasswordAsync = createAsyncThunk(
+const updateMyPasswordAsync = createAppThunk(
 	"auth/updateMyPassword",
 	usersService.updateMyPassword,
 );
 
-const deleteMeAsync = createAsyncThunk("auth/deleteMe", usersService.deleteMe);
+const deleteMeAsync = createAppThunk("auth/deleteMe", usersService.deleteMe);
 
 export const authSlice = createSlice({
 	name: "auth",

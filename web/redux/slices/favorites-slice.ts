@@ -1,11 +1,8 @@
-import {
-	createAsyncThunk,
-	createSlice,
-	SerializedError,
-} from "@reduxjs/toolkit";
+import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { ProductWithVariantsReviewsUser } from "@repo/database";
 
 import { favoritesService } from "@/services/favorites-service";
+import { createAppThunk } from "@/lib/api-client";
 
 export type FavoritesState = {
 	items: ProductWithVariantsReviewsUser[];
@@ -21,17 +18,17 @@ const initialState: FavoritesState = {
 	error: undefined,
 };
 
-const getFavoritesAsync = createAsyncThunk(
+const getFavoritesAsync = createAppThunk(
 	"favorites/getFavorites",
 	favoritesService.getMe,
 );
 
-const postFavoritesAsync = createAsyncThunk(
+const postFavoritesAsync = createAppThunk(
 	"favorites/postFavorites",
 	favoritesService.post,
 );
 
-const removeFavoritesAsync = createAsyncThunk(
+const removeFavoritesAsync = createAppThunk(
 	"favorites/removeFavorites",
 	favoritesService.remove,
 );

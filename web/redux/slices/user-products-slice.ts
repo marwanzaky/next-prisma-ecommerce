@@ -1,12 +1,9 @@
-import {
-	createAsyncThunk,
-	createSlice,
-	SerializedError,
-} from "@reduxjs/toolkit";
+import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { ProductWithVariantsReviewsUser } from "@repo/database";
 
 import { productsService } from "@/services/products-service";
 import { usersService } from "@/services/users-service";
+import { createAppThunk } from "@/lib/api-client";
 
 export type UserProductsState = {
 	products: ProductWithVariantsReviewsUser[];
@@ -20,27 +17,27 @@ const initialState: UserProductsState = {
 	error: undefined,
 };
 
-const getUserProductsAsync = createAsyncThunk(
+const getUserProductsAsync = createAppThunk(
 	"userProducts/getUserProducts",
 	usersService.getMeProducts,
 );
 
-const createUserProductAsync = createAsyncThunk(
+const createUserProductAsync = createAppThunk(
 	"userProducts/createUserProduct",
 	productsService.createProduct,
 );
 
-const updateUserProductAsync = createAsyncThunk(
+const updateUserProductAsync = createAppThunk(
 	"userProducts/updateUserProduct",
 	productsService.updateProduct,
 );
 
-const updateUserProductVariantAsync = createAsyncThunk(
+const updateUserProductVariantAsync = createAppThunk(
 	"userProducts/updateUserProductVariant",
 	productsService.updateProductVariant,
 );
 
-const removeUserProductAsync = createAsyncThunk(
+const removeUserProductAsync = createAppThunk(
 	"userProducts/removeUserProduct",
 	productsService.remove,
 );

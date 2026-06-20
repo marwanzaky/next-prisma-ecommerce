@@ -26,7 +26,7 @@ export class AuthService {
 	constructor(
 		private jwtService: JwtService,
 		private configService: ConfigService,
-		private prismaService: PrismaService,
+		private prisma: PrismaService,
 		private resendService: ResendService,
 	) {}
 
@@ -47,7 +47,7 @@ export class AuthService {
 	async loginWithGoogle(user: Profile): Promise<{ token: string }> {
 		const userEmail = user.emails?.[0].value || "";
 
-		const existingUser = await this.prismaService.user.findUnique({
+		const existingUser = await this.prisma.user.findUnique({
 			where: { email: userEmail },
 			select: {
 				id: true,
@@ -59,7 +59,7 @@ export class AuthService {
 			const randomPassword = generatePassword();
 			const hashedPassword = await hash(randomPassword, 12);
 
-			const createdUser = await this.prismaService.user.create({
+			const createdUser = await this.prisma.user.create({
 				data: {
 					email: userEmail,
 					name: `${user.name?.givenName ?? ""} ${user.name?.familyName ?? ""}`.trim(),
@@ -69,7 +69,7 @@ export class AuthService {
 				},
 			});
 
-			await this.prismaService.cart.create({
+			await this.prisma.cart.create({
 				data: {
 					userId: createdUser.id,
 					items: {
@@ -89,6 +89,16 @@ export class AuthService {
 	}
 
 	async signUp(signupDto: SignUpDto) {
+		const existingUser = await this.prisma.user.findUnique({
+			where: {
+				email: signupDto.email,
+			},
+		});
+
+		if (existingUser) {
+			throw new BadRequestException("Email already exists");
+		}
+
 		const verificationToken = randomBytes(32).toString("hex");
 		const emailVerificationTokenHash = createHash("sha256")
 			.update(verificationToken)
@@ -99,7 +109,7 @@ export class AuthService {
 
 		const hashedPassword = await hash(signupDto.password, 12);
 
-		const user = await this.prismaService.user.create({
+		const user = await this.prisma.user.create({
 			data: {
 				...signupDto,
 				password: hashedPassword,
@@ -109,7 +119,7 @@ export class AuthService {
 			},
 		});
 
-		await this.prismaService.cart.create({
+		await this.prisma.cart.create({
 			data: {
 				userId: user.id,
 			},
@@ -127,7 +137,7 @@ export class AuthService {
 	async login(loginDto: LoginDto) {
 		const { email, password } = loginDto;
 
-		const user = await this.prismaService.user.findUnique({
+		const user = await this.prisma.user.findUnique({
 			where: {
 				email,
 			},
@@ -151,7 +161,7 @@ export class AuthService {
 	async verifyEmail(token: string) {
 		const tokenHash = createHash("sha256").update(token).digest("hex");
 
-		const user = await this.prismaService.user.findFirst({
+		const user = await this.prisma.user.findFirst({
 			where: {
 				emailVerificationTokenHash: tokenHash,
 				emailVerificationTokenExpiresAt: {
@@ -167,7 +177,7 @@ export class AuthService {
 			throw new BadRequestException("Invalid or expired verification token");
 		}
 
-		await this.prismaService.user.update({
+		await this.prisma.user.update({
 			where: {
 				id: user.id,
 			},
@@ -187,7 +197,7 @@ export class AuthService {
 			message: "Token sent to email",
 		};
 
-		const user = await this.prismaService.user.findFirst({
+		const user = await this.prisma.user.findFirst({
 			where: { email: email.toLowerCase() },
 			select: { id: true, email: true },
 		});
@@ -199,7 +209,7 @@ export class AuthService {
 
 		const resetToken = randomBytes(32).toString("hex");
 
-		await this.prismaService.user.update({
+		await this.prisma.user.update({
 			where: { id: user.id },
 			data: {
 				passwordResetToken: createHash("sha256")
@@ -225,7 +235,7 @@ export class AuthService {
 	}) {
 		const hashedToken = createHash("sha256").update(token).digest("hex");
 
-		const user = await this.prismaService.user.findFirst({
+		const user = await this.prisma.user.findFirst({
 			where: {
 				passwordResetToken: hashedToken,
 				passwordResetExpires: {
@@ -244,7 +254,7 @@ export class AuthService {
 
 		const hashedPassword = await hash(newPassword, 12);
 
-		await this.prismaService.user.update({
+		await this.prisma.user.update({
 			where: {
 				id: user.id,
 			},
