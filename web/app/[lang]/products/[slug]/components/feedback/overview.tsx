@@ -14,6 +14,7 @@ import { ProductWithVariantsReviewsUser } from "@repo/database";
 
 import { Rating, RatingDistribution, TranslatedText } from "@repo/types";
 
+import { selectIsAuthenticated } from "@/redux/slices/auth-slice";
 import { useAppSelector } from "@/redux/store";
 
 import { productsService } from "@/services/products-service";
@@ -54,7 +55,8 @@ export default function Overview({
 	const router = useRouter();
 
 	const { locale, t } = useI18n();
-	const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+	const { user } = useAppSelector((state) => state.auth);
+	const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
 	const [displayDialog, setDisplayDialog] = useState(false);
 	const [hoverRating, setHoverRating] = useState(0);

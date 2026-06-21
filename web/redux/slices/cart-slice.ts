@@ -1,10 +1,16 @@
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
-import { CartItemWithProductVariant, ProductVariant } from "@repo/database";
+import {
+	CartItemWithProductVariant,
+	Product,
+	ProductVariant,
+} from "@repo/database";
 
 import { cartsService } from "@/services/carts-service";
 import { guestCartService } from "@/services/guest-cart-service";
 
 import { createAppThunk } from "@/lib/api-client";
+
+import { selectIsAuthenticated } from "./auth-slice";
 
 export type CartState = {
 	items: CartItemWithProductVariant[];
@@ -21,7 +27,7 @@ const initialState: CartState = {
 };
 
 const getCartMeAsync = createAppThunk("cart/getCartMe", (_, { getState }) =>
-	getState().auth.isAuthenticated
+	selectIsAuthenticated(getState())
 		? cartsService.getMe()
 		: guestCartService.getMe(),
 );
@@ -30,31 +36,32 @@ const postCartItemAsync = createAppThunk(
 	"cart/postCartItem",
 	(
 		{
-			productVariant,
+			product,
+			variant,
 			quantity,
-		}: { productVariant: ProductVariant; quantity: number },
+		}: { product: Product; variant: ProductVariant; quantity: number },
 		{ getState },
 	) =>
-		getState().auth.isAuthenticated
-			? cartsService.createCartItem(productVariant.id, quantity)
-			: guestCartService.postItem(productVariant, quantity),
+		selectIsAuthenticated(getState())
+			? cartsService.createCartItem(variant.id, quantity)
+			: guestCartService.postItem(product, variant, quantity),
 );
 
 const updateCartItemQuantityAsync = createAppThunk(
 	"cart/updateCartItemQuantity",
 	(
-		{ productId, quantity }: { productId: string; quantity: number },
+		{ variantId, quantity }: { variantId: string; quantity: number },
 		{ getState },
 	) =>
-		getState().auth.isAuthenticated
-			? cartsService.updateCartItemQuantity(productId, quantity)
-			: guestCartService.updateItemQuantity(productId, quantity),
+		selectIsAuthenticated(getState())
+			? cartsService.updateCartItemQuantity(variantId, quantity)
+			: guestCartService.updateItemQuantity(variantId, quantity),
 );
 
 const deleteCartItemAsync = createAppThunk(
 	"cart/deleteCartItem",
 	(productVariantId: string, { getState }) =>
-		getState().auth.isAuthenticated
+		selectIsAuthenticated(getState())
 			? cartsService.deleteCartItem(productVariantId)
 			: guestCartService.deleteItem(productVariantId),
 );

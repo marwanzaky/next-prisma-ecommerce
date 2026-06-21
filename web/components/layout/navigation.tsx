@@ -18,7 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Locale, localeLabels } from "@repo/types";
 
-import { logOut } from "@/redux/slices/auth-slice";
+import { logoutAsync, selectIsAuthenticated } from "@/redux/slices/auth-slice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 
 import { categoriesService } from "@/services/categories-service";
@@ -69,7 +69,9 @@ export default function Navigation() {
 
 	const { locale, t } = useI18n();
 
-	const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+	const { user } = useAppSelector((state) => state.auth);
+	const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
 	const { items } = useAppSelector((state) => state.cart);
 
 	const dispatch = useAppDispatch();
@@ -295,7 +297,7 @@ export default function Navigation() {
 
 									<DropdownMenuItem
 										onClick={async () => {
-											await dispatch(logOut());
+											await dispatch(logoutAsync());
 											window.localStorage.clear();
 											location.reload();
 										}}

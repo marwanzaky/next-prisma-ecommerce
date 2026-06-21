@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
 
-import { getMeAsync, loginAsync, setToken } from "@/redux/slices/auth-slice";
+import { getMeAsync, loginAsync } from "@/redux/slices/auth-slice";
 import { getCartMeAsync } from "@/redux/slices/cart-slice";
 import { getFavoritesAsync } from "@/redux/slices/favorites-slice";
 import { getUserProductsAsync } from "@/redux/slices/user-products-slice";
@@ -31,19 +31,5 @@ export function useAuth() {
 		await dispatch(getUserProductsAsync());
 	};
 
-	const googleAuth = async (token: string) => {
-		dispatch(setToken(token));
-
-		await dispatch(getMeAsync()).unwrap();
-
-		toast("Welcome back!", { position: "top-center" });
-
-		router.push(localizePath("/", locale));
-
-		await dispatch(getCartMeAsync());
-		await dispatch(getFavoritesAsync());
-		await dispatch(getUserProductsAsync());
-	};
-
-	return { login, googleAuth };
+	return { login };
 }

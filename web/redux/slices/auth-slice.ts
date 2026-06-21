@@ -1,15 +1,15 @@
-import Cookies from "js-cookie";
-
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { PublicUser } from "@repo/database";
 
 import { authService } from "@/services/auth-service";
 import { usersService } from "@/services/users-service";
+
 import { createAppThunk } from "@/lib/api-client";
+
+import { RootState } from "../store";
 
 export type AuthState = {
 	user: PublicUser | null;
-	isAuthenticated: boolean;
 
 	loading: boolean;
 	error?: SerializedError;
@@ -17,7 +17,6 @@ export type AuthState = {
 
 const initialState: AuthState = {
 	user: null,
-	isAuthenticated: false,
 
 	loading: false,
 	error: undefined,
@@ -26,6 +25,8 @@ const initialState: AuthState = {
 const loginAsync = createAppThunk("auth/login", authService.login);
 
 const signupAsync = createAppThunk("auth/signup", authService.signup);
+
+const logoutAsync = createAppThunk("auth/logout", authService.logout);
 
 const resetPasswordAsync = createAppThunk(
 	"auth/resetPassword",
@@ -48,39 +49,20 @@ const updateMyPasswordAsync = createAppThunk(
 
 const deleteMeAsync = createAppThunk("auth/deleteMe", usersService.deleteMe);
 
+export const selectIsAuthenticated = (state: RootState) => !!state.auth.user;
+
 export const authSlice = createSlice({
 	name: "auth",
 	initialState: initialState,
-	reducers: {
-		setToken: (state, action: { payload: string }) => {
-			state.isAuthenticated = true;
-
-			Cookies.set("token", action.payload, {
-				expires: 14,
-				secure: true,
-				sameSite: "strict",
-			});
-		},
-		logOut: (): AuthState => {
-			Cookies.remove("token");
-			return initialState;
-		},
-	},
+	reducers: {},
 	extraReducers: (builder) => {
 		// loginAsync
 		builder
 			.addCase(loginAsync.pending, (state) => {
 				state.loading = true;
 			})
-			.addCase(loginAsync.fulfilled, (state, action) => {
+			.addCase(loginAsync.fulfilled, (state) => {
 				state.loading = false;
-				state.isAuthenticated = true;
-
-				Cookies.set("token", action.payload.token, {
-					expires: 14,
-					secure: true,
-					sameSite: "strict",
-				});
 			})
 			.addCase(loginAsync.rejected, (state, action) => {
 				state.loading = false;
@@ -91,17 +73,22 @@ export const authSlice = createSlice({
 			.addCase(signupAsync.pending, (state) => {
 				state.loading = true;
 			})
-			.addCase(signupAsync.fulfilled, (state, action) => {
+			.addCase(signupAsync.fulfilled, (state) => {
 				state.loading = false;
-				state.isAuthenticated = true;
-
-				Cookies.set("token", action.payload.token, {
-					expires: 14,
-					secure: true,
-					sameSite: "strict",
-				});
 			})
 			.addCase(signupAsync.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error;
+			});
+		// logoutAsync
+		builder
+			.addCase(logoutAsync.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(logoutAsync.fulfilled, () => {
+				return initialState;
+			})
+			.addCase(logoutAsync.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error;
 			});
@@ -112,13 +99,6 @@ export const authSlice = createSlice({
 			})
 			.addCase(resetPasswordAsync.fulfilled, (state, action) => {
 				state.loading = false;
-				state.isAuthenticated = true;
-
-				Cookies.set("token", action.payload.token, {
-					expires: 14,
-					secure: true,
-					sameSite: "strict",
-				});
 			})
 			.addCase(resetPasswordAsync.rejected, (state, action) => {
 				state.loading = false;
@@ -157,12 +137,6 @@ export const authSlice = createSlice({
 			})
 			.addCase(updateMyPasswordAsync.fulfilled, (state, action) => {
 				state.loading = false;
-
-				Cookies.set("token", action.payload.token, {
-					expires: 14,
-					secure: true,
-					sameSite: "strict",
-				});
 			})
 			.addCase(updateMyPasswordAsync.rejected, (state, action) => {
 				state.loading = false;
@@ -174,7 +148,6 @@ export const authSlice = createSlice({
 				state.loading = true;
 			})
 			.addCase(deleteMeAsync.fulfilled, () => {
-				Cookies.remove("token");
 				return initialState;
 			})
 			.addCase(deleteMeAsync.rejected, (state, action) => {
@@ -184,13 +157,12 @@ export const authSlice = createSlice({
 	},
 });
 
-export const { setToken, logOut } = authSlice.actions;
-
 export {
 	deleteMeAsync,
 	forgotPasswordAsync,
 	getMeAsync,
 	loginAsync,
+	logoutAsync,
 	resetPasswordAsync,
 	signupAsync,
 	updateMeAsync,

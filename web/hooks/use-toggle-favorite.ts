@@ -4,6 +4,7 @@ import { toast } from "sonner";
 
 import { Product } from "@repo/database";
 
+import { selectIsAuthenticated } from "@/redux/slices/auth-slice";
 import {
 	postFavoritesAsync,
 	removeFavoritesAsync,
@@ -15,7 +16,8 @@ export function useToggleFavorite(product: Product) {
 
 	const dispatch = useAppDispatch();
 
-	const { isAuthenticated } = useAppSelector((state) => state.auth);
+	const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
 	const { items } = useAppSelector((state) => state.favorites);
 
 	const isFavorite = items.some((item) => item.id === product.id);

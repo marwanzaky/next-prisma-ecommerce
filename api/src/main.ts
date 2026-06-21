@@ -2,6 +2,7 @@ import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
+import cookieParser from "cookie-parser";
 import { json } from "express";
 import helmet from "helmet";
 
@@ -16,8 +17,12 @@ async function bootstrap() {
 
 	// Middlewares
 	app.useGlobalPipes(new ValidationPipe({ transform: true }));
-	app.enableCors();
+	app.enableCors({
+		origin: process.env.CLIENT_URL,
+		credentials: true,
+	});
 	app.use(helmet());
+	app.use(cookieParser());
 	app.use(
 		json({
 			limit: "4mb",

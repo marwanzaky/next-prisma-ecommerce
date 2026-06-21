@@ -14,8 +14,6 @@ import { User } from "@repo/database";
 import { PrismaService } from "@/prisma.service";
 import { AuthenticatedRequest, AuthenticatedUser } from "@/types/request.type";
 
-import { AuthService } from "./auth.service";
-
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
@@ -27,7 +25,6 @@ export class AuthGuard implements CanActivate {
 		private jwtService: JwtService,
 		private configService: ConfigService,
 		private reflector: Reflector,
-		private authService: AuthService,
 		private prismaService: PrismaService,
 	) {
 		this.jwtSecret = this.configService.get<string>("JWT_SECRET")!;
@@ -44,7 +41,7 @@ export class AuthGuard implements CanActivate {
 		}
 
 		const request: AuthenticatedRequest = context.switchToHttp().getRequest();
-		const token = this.authService.extractTokenFromHeader(request);
+		const token = request.cookies?.token;
 
 		if (!token) {
 			throw new UnauthorizedException(

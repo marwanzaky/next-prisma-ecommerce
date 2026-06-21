@@ -9,9 +9,10 @@ import { ordersService } from "@/services/orders-service";
 import { Container } from "@/components/common/container";
 import { Section } from "@/components/common/section";
 import { useI18n } from "@/components/layout/i18n-provider";
+import { DataTable } from "@/components/ui/data-table/data-table";
 
 import { Heading, TypographyMuted } from "@/shadcn/components/ui/typography";
-import { DataTable } from "@/components/ui/data-table/data-table";
+
 import { getOrdersColumns } from "./columns";
 
 export default function OrdersPage() {

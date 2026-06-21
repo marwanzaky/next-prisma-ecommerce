@@ -2,8 +2,9 @@ import { useState } from "react";
 
 import { toast } from "sonner";
 
-import { ProductVariant } from "@repo/database";
+import { Product, ProductVariant } from "@repo/database";
 
+import { selectIsAuthenticated } from "@/redux/slices/auth-slice";
 import {
 	deleteCartItemAsync,
 	postCartItemAsync,
@@ -13,17 +14,18 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 export function useCart() {
 	const dispatch = useAppDispatch();
 
-	const { isAuthenticated } = useAppSelector((state) => state.auth);
+	const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
 	const [addToCartLoading, setAddToCartLoading] = useState(false);
 
 	const addToCart = async (
-		productVariant: ProductVariant,
+		product: Product,
+		variant: ProductVariant,
 		quantity: number = 1,
 	) => {
 		setAddToCartLoading(true);
 
-		await dispatch(postCartItemAsync({ productVariant, quantity })).unwrap();
+		await dispatch(postCartItemAsync({ product, variant, quantity })).unwrap();
 
 		setAddToCartLoading(false);
 

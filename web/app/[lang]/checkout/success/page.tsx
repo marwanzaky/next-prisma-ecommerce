@@ -5,10 +5,12 @@ import { useSearchParams } from "next/navigation";
 
 import { CheckCircle } from "lucide-react";
 
+import { useI18n } from "@/components/layout/i18n-provider";
+
 import { Button } from "@/shadcn/components/ui/button";
 import { TypographyMuted } from "@/shadcn/components/ui/typography";
+
 import { localizePath } from "@/lib/i18n";
-import { useI18n } from "@/components/layout/i18n-provider";
 
 export default function SuccessPage() {
 	const { locale } = useI18n();

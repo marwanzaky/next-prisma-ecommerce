@@ -2,14 +2,15 @@ import { Controller, Headers, Post, Req, Res } from "@nestjs/common";
 
 import { Response } from "express";
 
+import { formatDate, formatPrice } from "@repo/types";
+
+import { ResendService } from "@/services/resend/resend.service";
 import { StripeService } from "@/services/stripe/stripe.service";
 
 import { PrismaService } from "@/prisma.service";
 import { AuthenticatedRequest } from "@/types/request.type";
 
 import { Public } from "../auth/auth.guard";
-import { ResendService } from "@/services/resend/resend.service";
-import { formatDate, formatPrice } from "@repo/types";
 
 @Controller("webhooks")
 @Public()

@@ -73,7 +73,7 @@ export function useCartPage() {
 		onQuantityChange(value, row) {
 			dispatch(
 				updateCartItemQuantityAsync({
-					productId: row.variantId,
+					variantId: row.variantId,
 					quantity: value,
 				}),
 			);

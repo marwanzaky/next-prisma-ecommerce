@@ -5,6 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { selectIsAuthenticated } from "@/redux/slices/auth-slice";
 import { useAppSelector } from "@/redux/store";
 
 import { useI18n } from "@/components/layout/i18n-provider";
@@ -28,10 +29,11 @@ export default function CheckoutCard({
 	checkout: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }) {
 	const { t, locale } = useI18n();
-	const { isAuthenticated } = useAppSelector((state) => state.auth);
 	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState(false);
+
+	const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
 	return (
 		<Card className="md:w-1/3 h-fit rounded-md">

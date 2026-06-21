@@ -3,6 +3,8 @@ import { EyeIcon, Trash2Icon } from "lucide-react";
 import { ContactMessage } from "@repo/database";
 import { ColumnDef } from "@tanstack/react-table";
 
+import { formatDate } from "@repo/types";
+
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -15,7 +17,6 @@ import {
 	AlertDialogTrigger,
 } from "@/shadcn/components/ui/alert-dialog";
 import { Button } from "@/shadcn/components/ui/button";
-import { formatDate } from "@repo/types";
 
 export const getMessagesColumns = ({
 	onDeleteMessage,

@@ -2,6 +2,7 @@ import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { ProductWithVariantsReviewsUser } from "@repo/database";
 
 import { favoritesService } from "@/services/favorites-service";
+
 import { createAppThunk } from "@/lib/api-client";
 
 export type FavoritesState = {

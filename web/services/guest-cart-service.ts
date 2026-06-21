@@ -1,4 +1,8 @@
-import { CartItemWithProductVariant, ProductVariant } from "@repo/database";
+import {
+	CartItemWithProductVariant,
+	Product,
+	ProductVariant,
+} from "@repo/database";
 
 const STORAGE_KEY = "guest_cart";
 
@@ -16,25 +20,24 @@ export const guestCartService = {
 		return { items: getItems() };
 	},
 	postItem: async (
-		productVariant: ProductVariant,
+		product: Product,
+		variant: ProductVariant,
 		quantity: number,
 	): Promise<{ items: CartItemWithProductVariant[] }> => {
 		const cartItems = getItems();
-		const index = cartItems.findIndex(
-			(item) => item.variantId === productVariant.id,
-		);
+		const index = cartItems.findIndex((item) => item.variantId === variant.id);
 
 		if (index > -1) {
 			cartItems[index].quantity += quantity;
 		} else {
 			cartItems.push({
 				quantity,
-				cartId: "1234",
-				id: "1234",
-				variantId: productVariant.id,
-				variant: productVariant as CartItemWithProductVariant["variant"],
-				createdAt: new Date(),
-				updatedAt: new Date(),
+				variantId: variant.id,
+				variant: { ...variant, product },
+				cartId: "",
+				id: "",
+				createdAt: "" as any,
+				updatedAt: "" as any,
 			});
 		}
 
@@ -46,11 +49,11 @@ export const guestCartService = {
 	},
 
 	updateItemQuantity: async (
-		productId: string,
+		variantId: string,
 		quantity: number,
 	): Promise<{ items: CartItemWithProductVariant[] }> => {
 		const cartItems = getItems();
-		const index = cartItems.findIndex((item) => item.variantId === productId);
+		const index = cartItems.findIndex((item) => item.variantId === variantId);
 
 		if (index > -1) {
 			if (quantity <= 0) {

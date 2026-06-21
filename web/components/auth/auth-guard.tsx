@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
+import { selectIsAuthenticated } from "@/redux/slices/auth-slice";
 import { useAppSelector } from "@/redux/store";
 
 import { useI18n } from "@/components/layout/i18n-provider";
@@ -14,7 +15,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
 
 	const { locale } = useI18n();
-	const { isAuthenticated } = useAppSelector((state) => state.auth);
+
+	const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
 	useEffect(() => {
 		if (!isAuthenticated) {

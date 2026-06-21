@@ -229,7 +229,7 @@ export default function ProductDetails({
 						size="xl"
 						className="flex-1"
 						onClick={() => {
-							addToCart(selectedVariant, quantity);
+							addToCart(product, selectedVariant, quantity);
 						}}
 						disabled={addToCartLoading}
 					>
@@ -262,7 +262,7 @@ export default function ProductDetails({
 					size="xl"
 					variant="secondary"
 					onClick={() => {
-						addToCart(selectedVariant, quantity);
+						addToCart(product, selectedVariant, quantity);
 
 						router.push(localizePath("/cart", locale));
 					}}

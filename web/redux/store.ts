@@ -1,5 +1,7 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
+import { ApiError } from "next/dist/server/api-utils";
+
 import { persistReducer, persistStore } from "redux-persist";
 import { toast } from "sonner";
 
@@ -12,13 +14,12 @@ import {
 
 import storage from "@/lib/storage-utils";
 
-import authReducer, { AuthState, logOut } from "./slices/auth-slice";
+import authReducer, { AuthState, logoutAsync } from "./slices/auth-slice";
 import cartReducer, { CartState } from "./slices/cart-slice";
 import favoritesReducer, { FavoritesState } from "./slices/favorites-slice";
 import userProductsReducer, {
 	UserProductsState,
 } from "./slices/user-products-slice";
-import { ApiError } from "next/dist/server/api-utils";
 
 const authPersistConfig = {
 	key: "auth",
@@ -43,7 +44,15 @@ const userProductsPersistConfig = {
 export const listenerMiddleware = createListenerMiddleware();
 
 listenerMiddleware.startListening({
-	predicate: isRejected,
+	predicate: (action) => {
+		if (!isRejected(action)) return false;
+
+		const error = action.payload as ApiError | undefined;
+
+		if (error?.statusCode === 401) return false;
+
+		return true;
+	},
 	effect: (action) => {
 		const error = action.payload as ApiError;
 		toast.error("Uh oh! Something went wrong.", {
@@ -58,8 +67,10 @@ export const authGuardMiddleware: Middleware =
 		if (isRejected(action)) {
 			const payload = action.payload as ApiError;
 
-			if (payload.statusCode === 401) {
-				store.dispatch(logOut());
+			const isAuthenticated = !!(store.getState() as RootState).auth.user;
+
+			if (payload.statusCode === 401 && isAuthenticated) {
+				(store.dispatch as AppDispatch)(logoutAsync());
 
 				window.location.href = "/signin";
 

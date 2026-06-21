@@ -1,12 +1,17 @@
-import { localizePath } from "@/lib/i18n";
-import { formatPrice } from "@/lib/string-utils";
+import Link from "next/link";
+
+import { EyeIcon } from "lucide-react";
+
+import { Order } from "@repo/database";
+import { ColumnDef } from "@tanstack/react-table";
+
+import { formatDate } from "@repo/types";
+
 import { Badge } from "@/shadcn/components/ui/badge";
 import { Button } from "@/shadcn/components/ui/button";
-import { Order } from "@repo/database";
-import { formatDate } from "@repo/types";
-import { ColumnDef } from "@tanstack/react-table";
-import { EyeIcon } from "lucide-react";
-import Link from "next/link";
+
+import { localizePath } from "@/lib/i18n";
+import { formatPrice } from "@/lib/string-utils";
 
 export const getOrdersColumns: ColumnDef<Order>[] = [
 	{

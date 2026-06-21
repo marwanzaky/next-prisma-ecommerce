@@ -3,6 +3,7 @@ import { ProductWithVariantsReviewsUser } from "@repo/database";
 
 import { productsService } from "@/services/products-service";
 import { usersService } from "@/services/users-service";
+
 import { createAppThunk } from "@/lib/api-client";
 
 export type UserProductsState = {
@@ -39,7 +40,7 @@ const updateUserProductVariantAsync = createAppThunk(
 
 const removeUserProductAsync = createAppThunk(
 	"userProducts/removeUserProduct",
-	productsService.remove,
+	productsService.removeProduct,
 );
 
 const userProductsSlice = createSlice({

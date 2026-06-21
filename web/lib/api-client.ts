@@ -1,19 +1,17 @@
-import Cookies from "js-cookie";
+import { ApiError } from "next/dist/server/api-utils";
+
+import { createAsyncThunk, GetThunkAPI } from "@reduxjs/toolkit";
+
+import { AppDispatch, RootState } from "@/redux/store";
 
 import config from "./config";
-import { createAsyncThunk, GetThunkAPI } from "@reduxjs/toolkit";
-import { ApiError } from "next/dist/server/api-utils";
-import { AppDispatch, RootState } from "@/redux/store";
 
 export async function clientFetch<T>(
 	endpoint: string,
 	options: RequestInit = {},
 ): Promise<T> {
-	const token = Cookies.get("token");
-
 	const headers: Record<string, string> = {
 		"Content-Type": "application/json",
-		...(token && { Authorization: `Bearer ${token}` }),
 		...(options.headers as Record<string, string>),
 	};
 
@@ -24,6 +22,7 @@ export async function clientFetch<T>(
 	const response = await fetch(`${config.serverUrl}${endpoint}`, {
 		...options,
 		headers,
+		credentials: "include",
 	});
 
 	if (!response.ok) {
@@ -61,10 +60,18 @@ export const createAppThunk = <Returned, ThunkArg = void>(
 					});
 				}
 
+				if (error instanceof Error) {
+					return thunkAPI.rejectWithValue({
+						name: error.name,
+						statusCode: 500,
+						message: error.message,
+					});
+				}
+
 				return thunkAPI.rejectWithValue({
-					name: error instanceof Error ? error.name : "Error",
+					name: "Error",
 					statusCode: 500,
-					message: error instanceof Error ? error.message : "An error occurred",
+					message: "An error occurred",
 				});
 			}
 		},

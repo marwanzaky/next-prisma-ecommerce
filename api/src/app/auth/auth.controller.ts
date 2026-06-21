@@ -13,7 +13,8 @@ import {
 import { AuthGuard } from "@nestjs/passport";
 import { ApiOperation } from "@nestjs/swagger";
 
-import { Response } from "express";
+import { CookieOptions, Response } from "express";
+import ms from "ms";
 
 import { GoogleRequest } from "@/types/request.type";
 
@@ -37,28 +38,45 @@ export class AuthController {
 
 	@Get("google/callback")
 	@UseGuards(AuthGuard("google"))
-	async googleAuthRedirect(@Req() req: GoogleRequest, @Res() res: Response) {
-		const clientUrl = process.env.CLIENT_URL!;
-
+	async googleAuthRedirect(
+		@Req() req: GoogleRequest,
+		@Res({ passthrough: true }) res: Response,
+	) {
 		const { token } = await this.authService.loginWithGoogle(req.user);
 
-		return res.redirect(`${clientUrl}/auth/success?token=${token}`);
+		res.cookie("token", token, getCookieOptions());
+
+		return res.redirect(process.env.CLIENT_URL!);
 	}
 
 	@Post("signup")
 	@ApiOperation({
 		summary: "Register a new user",
 	})
-	signUp(@Body() signupDto: SignUpDto) {
-		return this.authService.signUp(signupDto);
+	async signUp(
+		@Body() signupDto: SignUpDto,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const { token } = await this.authService.signUp(signupDto);
+
+		res.cookie("token", token, getCookieOptions());
+
+		return { success: true };
 	}
 
 	@Post("login")
 	@ApiOperation({
 		summary: "Log in and get an access token",
 	})
-	signin(@Body() loginDto: LoginDto) {
-		return this.authService.login(loginDto);
+	async signin(
+		@Body() loginDto: LoginDto,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const { token } = await this.authService.login(loginDto);
+
+		res.cookie("token", token, getCookieOptions());
+
+		return { success: true };
 	}
 
 	@Post("forgotPassword")
@@ -73,11 +91,19 @@ export class AuthController {
 	@ApiOperation({
 		summary: "Reset user password using reset token",
 	})
-	resetPassword(
+	async resetPassword(
 		@Body() { newPassword }: ResetPasswordDto,
-		@Param("token") token: string,
+		@Param("token") incomingToken: string,
+		@Res({ passthrough: true }) res: Response,
 	) {
-		return this.authService.resetPassword({ token, newPassword });
+		const { token } = await this.authService.resetPassword({
+			token: incomingToken,
+			newPassword,
+		});
+
+		res.cookie("token", token, getCookieOptions());
+
+		return { success: true };
 	}
 
 	@Get("verify")
@@ -87,4 +113,23 @@ export class AuthController {
 	verifyEmail(@Query() query: VerifyEmailDto) {
 		return this.authService.verifyEmail(query.token);
 	}
+
+	@Post("logout")
+	logout(@Res({ passthrough: true }) res: Response) {
+		res.clearCookie("token", {
+			...getCookieOptions(),
+			maxAge: undefined,
+		});
+
+		return { success: true };
+	}
+}
+
+export function getCookieOptions(): CookieOptions {
+	return {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+		sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+		maxAge: ms(process.env.JWT_EXPIRES as ms.StringValue),
+	};
 }

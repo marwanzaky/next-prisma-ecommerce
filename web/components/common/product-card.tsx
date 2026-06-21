@@ -108,7 +108,7 @@ export default function ProductCard({ data }: ProductCardProps) {
 					aria-label={t("productPage.actions.addToCart")}
 					variant="primary"
 					onClick={() => {
-						addToCart(variant);
+						addToCart(data, variant);
 					}}
 				/>
 			</div>

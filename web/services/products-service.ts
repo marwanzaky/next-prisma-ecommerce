@@ -130,7 +130,7 @@ export const productsService = {
 			},
 		);
 	},
-	remove: (id: string) =>
+	removeProduct: (id: string) =>
 		clientFetch<null>(`/products/${id}`, {
 			method: "DELETE",
 		}),
