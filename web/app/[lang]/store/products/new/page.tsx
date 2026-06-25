@@ -25,7 +25,6 @@ export default function Page() {
 			onDescriptionChange={onDescriptionChange}
 			description={description}
 			onSubmit={createProduct}
-			submitButtonText={t("buttons.save")}
 		/>
 	);
 }

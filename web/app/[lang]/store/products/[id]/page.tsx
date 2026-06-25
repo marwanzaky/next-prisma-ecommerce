@@ -91,7 +91,6 @@ export default function Page() {
 				},
 				(e) => console.log(e),
 			)}
-			submitButtonText={t("buttons.update")}
 			cancelButtonAction={resetForm}
 			injectLoadDescriptionPlugin
 		/>

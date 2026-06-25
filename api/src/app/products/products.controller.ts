@@ -15,6 +15,7 @@ import { FilesInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiConsumes, ApiOperation } from "@nestjs/swagger";
 
 import {
+	productWithCategory,
 	ProductWithVariantsReviewsUser,
 	productWithVariantsReviewsUser,
 } from "@repo/database";
@@ -30,6 +31,8 @@ import { UpdateProductDto } from "./dto/update-product.dto";
 import { UpdateProductVariantDto } from "./dto/update-product-variant.dto";
 
 import { ProductsService } from "./products.service";
+import { GeminiService } from "@/services/gemini/gemini.service";
+import { delay } from "@/helper/promise.helper";
 
 @Controller("products")
 @ApiBearerAuth("Authorization")
@@ -37,6 +40,7 @@ export class ProductsController {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly productsService: ProductsService,
+		private readonly geminiService: GeminiService,
 	) {}
 
 	@Post("admin/recalculate-ratings")
@@ -54,7 +58,36 @@ export class ProductsController {
 
 		return {
 			success: true,
-			message: `Successfully recalculate all product "avgRatings" and "ratingDistribution" (${products.length})`,
+		};
+	}
+
+	@Post("admin/sync-embeddings")
+	@Public()
+	@ApiOperation({
+		description:
+			"Scans the database for products where the embedding column is null, generates vectors via Gemini, and updates them in batches.",
+	})
+	async syncMissingEmbeddings() {
+		const products = await this.prisma.product.findMany({
+			...productWithCategory,
+		});
+
+		for (const product of products) {
+			const text = this.geminiService.formatProductText(product);
+			const vector = await this.geminiService.generateEmbedding(text);
+
+			await this.prisma.$executeRaw`
+				UPDATE "Product" 
+				SET embedding = ${JSON.stringify(vector)}::vector 
+				WHERE id = ${product.id}
+			`;
+
+			await delay(2000);
+		}
+
+		return {
+			success: true,
+			count: products.length,
 		};
 	}
 

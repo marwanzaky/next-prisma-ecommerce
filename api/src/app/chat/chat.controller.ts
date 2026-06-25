@@ -5,10 +5,16 @@ import { Public } from "@/app/auth/auth.guard";
 import { GeminiService } from "@/services/gemini/gemini.service";
 
 import { ChatSendMessageDto } from "./dto/chat-send-message.dto";
+import { PrismaService } from "@/prisma.service";
+import { chatbotTools, ChatService } from "./chat.service";
 
 @Controller("chat")
 export class ChatController {
-	constructor(private geminiService: GeminiService) {}
+	constructor(
+		private geminiService: GeminiService,
+		private prisma: PrismaService,
+		private chatService: ChatService,
+	) {}
 
 	@Post()
 	@Public()
@@ -20,10 +26,61 @@ export class ChatController {
 
 		const { message, previousChat } = body;
 
-		return await this.geminiService.sendMessage({
-			promptContent: message,
-			systemContent: system,
-			previousChat: previousChat.join("\n"),
+		const messageEmbedding =
+			await this.geminiService.generateEmbedding(message);
+
+		const matchedProducts: {
+			id: string;
+			name: string;
+			description: string;
+			category_name: string;
+			similarity: number;
+		}[] = await this.prisma.$queryRaw`
+    		SELECT * FROM match_products(${`[${messageEmbedding?.join(",")}]`}::vector, 0.4, 4)
+  		`;
+
+		const productContext = matchedProducts
+			.map(
+				(p) => `- ${p.name} (Category: ${p.category_name}): ${p.description}`,
+			)
+			.join("\n");
+
+		const chat = this.geminiService.ai.chats.create({
+			model: "gemini-3.1-flash-lite",
+			config: {
+				systemInstruction: `${system}\n\nGeneral store catalog context:\n${productContext}`,
+				tools: chatbotTools,
+			},
+			history: previousChat,
 		});
+
+		let response = await chat.sendMessage({ message });
+
+		if (response.functionCalls && response.functionCalls.length > 0) {
+			const call = response.functionCalls[0];
+
+			if (call.name === "getProductVariantsDetails") {
+				const args = call.args as { productName: string };
+
+				const dbResult = await this.chatService.getProductVariantsDetails(
+					args.productName,
+				);
+
+				response = await chat.sendMessage({
+					message: [
+						{
+							functionResponse: {
+								name: call.name,
+								response: { data: dbResult },
+							},
+						},
+					],
+				});
+
+				return response.text;
+			}
+		}
+
+		return response.text;
 	}
 }

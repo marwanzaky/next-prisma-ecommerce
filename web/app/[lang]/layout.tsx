@@ -30,6 +30,7 @@ import { generateOgMetadata, generateTwitterMetadata } from "@/lib/generate";
 import { getDirection, hasLocale, localizePath } from "@/lib/i18n";
 import { localizeUrl } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import Chatbot from "@/components/chatbot";
 
 const poppins = Poppins({
 	subsets: ["latin"],
@@ -147,20 +148,21 @@ export default async function RootLayout({
 					<DirectionProvider dir={direction}>
 						<I18nProvider dictionary={dictionary} locale={locale}>
 							<AppStateInit />
+
+							{/* Vercel */}
 							<Analytics />
 							<SpeedInsights />
+
+							{/* Services */}
 							<Toaster />
-							{/* <Chatbot /> */}
-
-							<Banner />
-
-							<Navigation />
+							<Chatbot />
 
 							{/* Page */}
+							<Banner />
+							<Navigation />
 							<TooltipProvider>
 								<main>{children}</main>
 							</TooltipProvider>
-
 							<Footer locale={locale} />
 						</I18nProvider>
 					</DirectionProvider>

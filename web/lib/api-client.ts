@@ -31,7 +31,12 @@ export async function clientFetch<T>(
 		throw new ApiError(error.statusCode, error.message);
 	}
 
-	return response.json();
+	const contentType = response.headers.get("content-type");
+	if (contentType && contentType.includes("application/json")) {
+		return response.json();
+	}
+
+	return response.text() as Promise<T>;
 }
 
 type AppThunkConfig = {

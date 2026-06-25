@@ -14,19 +14,21 @@ import { useI18n } from "@/components/layout/i18n-provider";
 
 import { getCategoriesColumns } from "./columns";
 
+export type CategoryInput = {
+	id: string;
+	name: string;
+	slug: string;
+	parentId?: string | null;
+	sortOrder: number;
+	image: {
+		url?: string;
+		file?: File;
+	};
+};
+
 export function useAdminCategories() {
 	const { t, locale } = useI18n();
-	const form = useForm<{
-		id: string;
-		name: string;
-		slug: string;
-		parentId?: string | null;
-		sortOrder: number;
-		image: {
-			url?: string;
-			file?: File;
-		};
-	}>({
+	const form = useForm<CategoryInput>({
 		mode: "onTouched",
 	});
 

@@ -8,9 +8,15 @@ import { PrismaService } from "@/prisma.service";
 
 import { ProductsController } from "./products.controller";
 import { ProductsService } from "./products.service";
+import { GeminiModule } from "@/services/gemini/gemini.module";
 
 @Module({
-	imports: [CloudinaryModule, CategoriesModule, TranslationModule],
+	imports: [
+		CloudinaryModule,
+		CategoriesModule,
+		TranslationModule,
+		GeminiModule,
+	],
 	controllers: [ProductsController],
 	providers: [ProductsService, PrismaService],
 	exports: [ProductsService, PrismaService],

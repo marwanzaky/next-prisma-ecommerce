@@ -24,7 +24,6 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import ImageInput from "@/components/ui/image-input";
 import { InputCurrencyRange } from "@/components/ui/input-currency-range";
 import { InputTags } from "@/components/ui/input-tags";
-import InputWithPlusMinusButtons from "@/components/ui/input-with-plus-minus-buttons";
 import { ImageToolbarButtonPlugin } from "@/components/ui/lexical/plugins/image-tooltbar-button-plugin";
 import { LoadDescriptionPlugin } from "@/components/ui/lexical/plugins/load-description-plugin";
 import { OnChangePlugin } from "@/components/ui/lexical/plugins/on-change-plugin";
@@ -78,7 +77,6 @@ type ProductBaseProps = {
 
 	injectLoadDescriptionPlugin?: boolean;
 
-	submitButtonText: string;
 	cancelButtonAction?: () => void;
 };
 
@@ -93,7 +91,6 @@ export function ProductBase({
 	onSubmit,
 	injectLoadDescriptionPlugin,
 
-	submitButtonText,
 	cancelButtonAction,
 }: ProductBaseProps) {
 	const {

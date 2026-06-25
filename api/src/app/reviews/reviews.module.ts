@@ -9,9 +9,15 @@ import { TranslationModule } from "@/services/translation/translation.module";
 import { PrismaService } from "@/prisma.service";
 
 import { ReviewsController } from "./reviews.controller";
+import { GeminiModule } from "@/services/gemini/gemini.module";
 
 @Module({
-	imports: [CloudinaryModule, CategoriesModule, TranslationModule],
+	imports: [
+		CloudinaryModule,
+		CategoriesModule,
+		TranslationModule,
+		GeminiModule,
+	],
 	controllers: [ReviewsController],
 	providers: [ProductsService, PrismaService],
 })

@@ -7,6 +7,7 @@ import {
 
 import {
 	Prisma,
+	productWithCategory,
 	ProductWithVariantsReviewsUser,
 	productWithVariantsReviewsUser,
 } from "@repo/database";
@@ -22,6 +23,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { GetAllProductsDto } from "./dto/get-all-products.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { UpdateProductVariantDto } from "./dto/update-product-variant.dto";
+import { GeminiService } from "@/services/gemini/gemini.service";
 
 @Injectable()
 export class ProductsService {
@@ -32,6 +34,7 @@ export class ProductsService {
 		private categoriesService: CategoriesService,
 		private cloudinaryService: CloudinaryService,
 		private translationService: TranslationService,
+		private geminiService: GeminiService,
 	) {
 		this.defaultLocale = process.env.DEFAULT_LOCALE as Locale;
 	}
@@ -165,7 +168,7 @@ export class ProductsService {
 			variants,
 		} = params;
 
-		return this.prisma.$transaction(
+		const createdProduct = await this.prisma.$transaction(
 			async (tx) => {
 				const product = await tx.product.create({
 					data: {
@@ -272,6 +275,30 @@ export class ProductsService {
 				timeout: 30000,
 			},
 		);
+
+		if (!createdProduct) {
+			return null;
+		}
+
+		const dbProductWithCategory = await this.prisma.product.findUnique({
+			where: { id: createdProduct.id },
+			...productWithCategory,
+		});
+
+		if (dbProductWithCategory) {
+			const formattedText = this.geminiService.formatProductText(
+				dbProductWithCategory,
+			);
+			const vector = await this.geminiService.generateEmbedding(formattedText);
+
+			await this.prisma.$executeRaw`
+				UPDATE "Product" 
+				SET embedding = ${vector}::vector 
+				WHERE id = ${createdProduct.id}
+			`;
+		}
+
+		return createdProduct;
 	}
 
 	async update(

@@ -60,6 +60,16 @@ export type UpdateProductVariant = Omit<
 	}[];
 };
 
+export const productWithCategory = {
+	include: {
+		category: true,
+	},
+} satisfies Prisma.ProductDefaultArgs;
+
+export type ProductWithCategory = Prisma.ProductGetPayload<
+	typeof productWithCategory
+>;
+
 export const productWithVariantsReviewsUser = {
 	include: {
 		options: {

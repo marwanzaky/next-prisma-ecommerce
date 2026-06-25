@@ -8,6 +8,7 @@ import { chatService } from "@/services/chat-service";
 
 import {
 	Dialog,
+	DialogTrigger,
 	DialogContent,
 	DialogDescription,
 	DialogFooter,
@@ -15,6 +16,7 @@ import {
 	DialogTitle,
 } from "@/shadcn/components/ui/dialog";
 import { Input } from "@/shadcn/components/ui/input";
+import { BotIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
 type ChatbotMessage = {
 	type: "ai" | "user";
@@ -58,6 +60,8 @@ function Message({
 export default function Chatbot() {
 	const ref = useRef<HTMLDivElement>(null);
 
+	const [open, setOpen] = useState(false);
+
 	const [inputValue, setInputValue] = useState("");
 	const [messages, setMessages] = useState<ChatbotMessage[]>([
 		{
@@ -83,9 +87,71 @@ export default function Chatbot() {
 		}
 	}, [messages]);
 
+	const onSumbit: React.KeyboardEventHandler<HTMLInputElement> = async (e) => {
+		if (e.key === "Enter" && inputValue) {
+			setMessages((value) => [
+				...value,
+				{
+					type: "user",
+					text: inputValue,
+					date: new Date().toLocaleTimeString([], {
+						hour: "numeric",
+						minute: "2-digit",
+						hour12: true,
+					}),
+				},
+			]);
+
+			setInputValue("");
+
+			const res = await chatService.chat({
+				message: inputValue,
+				previousChat: messages.map((item) => {
+					switch (item.type) {
+						case "ai":
+							return { role: "model", parts: [{ text: item.text }] };
+						default:
+							return { role: "user", parts: [{ text: item.text }] };
+					}
+				}),
+			});
+
+			setMessages((value) => [
+				...value,
+				{
+					type: "ai",
+					text: res,
+					date: new Date().toLocaleTimeString([], {
+						hour: "numeric",
+						minute: "2-digit",
+						hour12: true,
+					}),
+				},
+			]);
+		}
+	};
+
 	return (
-		<Dialog modal={false}>
-			<DialogContent className="max-w-sm left-auto top-auto translate-x-0 translate-y-0 bottom-4 right-4">
+		<Dialog open={open} onOpenChange={setOpen} modal={false}>
+			<DialogTrigger asChild>
+				<button
+					type="button"
+					aria-expanded={open}
+					className="fixed z-50 bottom-4 right-4 flex items-center gap-4 px-5 py-3 rounded-full shadow-lg bg-linear-to-r from-purple-200 via-pink-200 to-rose-100"
+				>
+					<BotIcon />
+
+					<span className="font-medium">AI Chat</span>
+
+					{open ? (
+						<ChevronUpIcon className="size-4" />
+					) : (
+						<ChevronDownIcon className="size-4" />
+					)}
+				</button>
+			</DialogTrigger>
+
+			<DialogContent className="md:max-w-sm left-auto top-auto translate-x-0 translate-y-0 bottom-4 right-4">
 				<DialogHeader>
 					<DialogTitle>AI Assistance</DialogTitle>
 					<DialogDescription>
@@ -115,51 +181,7 @@ export default function Chatbot() {
 						placeholder="Enter your message"
 						value={inputValue}
 						onChange={(e) => setInputValue(e.target.value)}
-						onKeyDown={async (e) => {
-							if (e.key === "Enter" && inputValue) {
-								chatService
-									.chat({
-										message: inputValue,
-										previousChat: messages.map((item) => {
-											if (item.type === "ai") {
-												return `Chat Bot: ${item.text}`;
-											} else if (item.type === "user") {
-												return `User: ${item.text}`;
-											}
-											return "";
-										}),
-									})
-									.then((answer) => {
-										setMessages((value) => [
-											...value,
-											{
-												type: "ai",
-												text: answer,
-												date: new Date().toLocaleTimeString([], {
-													hour: "numeric",
-													minute: "2-digit",
-													hour12: true,
-												}),
-											},
-										]);
-									});
-
-								setMessages((value) => [
-									...value,
-									{
-										type: "user",
-										text: inputValue,
-										date: new Date().toLocaleTimeString([], {
-											hour: "numeric",
-											minute: "2-digit",
-											hour12: true,
-										}),
-									},
-								]);
-
-								setInputValue("");
-							}
-						}}
+						onKeyDown={onSumbit}
 					/>
 				</DialogFooter>
 			</DialogContent>

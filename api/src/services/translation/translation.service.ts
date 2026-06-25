@@ -119,9 +119,9 @@ Do not include explanations or extra text.
 
 ${JSON.stringify(texts)}`;
 
-		const text = await this.geminiService.request(prompt);
+		const response = await this.geminiService.generateContent(prompt);
 
-		const cleaned = (text || "")
+		const cleaned = (response || "")
 			.replace(/```json\s*/i, "")
 			.replace(/```$/, "")
 			.trim();
@@ -135,6 +135,6 @@ ${JSON.stringify(texts)}`;
 	): Promise<string | undefined> {
 		const prompt = `Translate the following text to ${labledLocale[language]}. Provide only the translated text without any additional explanation or notes:\n\n${text}`;
 
-		return await this.geminiService.request(prompt);
+		return await this.geminiService.generateContent(prompt);
 	}
 }

@@ -1,15 +1,10 @@
 import { clientFetch } from "@/lib/api-client";
+import { ChatSendMessage } from "@repo/types";
 
 export const chatService = {
-	chat: ({
-		message,
-		previousChat,
-	}: {
-		message: string;
-		previousChat: string[];
-	}) =>
+	chat: (body: ChatSendMessage) =>
 		clientFetch<string>("/chat", {
 			method: "POST",
-			body: JSON.stringify({ message, previousChat }),
+			body: JSON.stringify(body),
 		}),
 };
