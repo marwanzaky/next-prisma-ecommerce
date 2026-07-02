@@ -11,7 +11,6 @@ import { AuthGuard } from "./auth/auth.guard";
 import { AuthModule } from "./auth/auth.module";
 import { CartsModule } from "./carts/carts.module";
 import { CategoriesModule } from "./categories/categories.module";
-import { ChatModule } from "./chat/chat.module";
 import { FavoritesModule } from "./favorites/favorites.module";
 import { OrdersModule } from "./orders/orders.module";
 import { PaymentsModule } from "./payments/payments.module";
@@ -38,7 +37,6 @@ import { RolesGuard } from "../guards/roles.guard";
 		FavoritesModule,
 		PaymentsModule,
 		ContactMessagesModule,
-		ChatModule,
 		UploadsModule,
 		AdminCategoriesModule,
 		CategoriesModule,

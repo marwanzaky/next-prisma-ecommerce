@@ -9,8 +9,8 @@
 ## about
 the website project is a modern ecommerce store built from the ground up to deliver speed, security, and scalability. designed with nextjs 16, tailwind 4, nestjs, and postgresql.
 
-- stable demo: https://mamolio.store
-- beta demo (supporting product variants): https://v2.mamolio.store
+- live demo (postgresql): https://mamolio.store
+- live demo (mongodb): https://goodies2buy.vercel.app
 
 <div>
   <img src="https://img.shields.io/badge/-TypeScript-2c3e50.svg?logo=typescript&style=flat">

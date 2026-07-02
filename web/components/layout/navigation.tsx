@@ -143,25 +143,27 @@ export default function Navigation() {
 				<Logo className="block sm:hidden" />
 
 				<div className="flex-1 flex items-center justify-end">
-					<ButtonIcon
-						className="hidden sm:inline-flex"
-						icon="storefront"
-						aria-label="Go to Sell page"
-						onClick={() => router.push(localizePath("/store/products", locale))}
-					/>
-					<ButtonIcon
-						icon="favorite"
-						aria-label="Go to Favorites page"
-						onClick={() => router.push(localizePath("/favorites", locale))}
-					/>
-					<ButtonIcon
-						className="relative"
-						icon="shopping_cart"
-						aria-label="Go to Cart page"
-						onClick={() => router.push(localizePath("/cart", locale))}
-					>
-						{items.length > 0 && <Badge>{items.length}</Badge>}
-					</ButtonIcon>
+					<Link href={localizePath("/store/products", locale)}>
+						<ButtonIcon
+							className="hidden sm:inline-flex"
+							icon="storefront"
+							aria-label="Go to Sell page"
+						/>
+					</Link>
+
+					<Link href={localizePath("/favorites", locale)}>
+						<ButtonIcon icon="favorite" aria-label="Go to Favorites page" />
+					</Link>
+
+					<Link href={localizePath("/cart", locale)}>
+						<ButtonIcon
+							className="relative"
+							icon="shopping_cart"
+							aria-label="Go to Cart page"
+						>
+							{items.length > 0 && <Badge>{items.length}</Badge>}
+						</ButtonIcon>
+					</Link>
 
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
